@@ -32,28 +32,31 @@
                     </div>
                 </div>
 
-                {{-- Main Table --}}
+                 {{-- Main Table --}}
                 <h3 class="text-lg font-semibold text-gray-700">Semua Kertas Siasatan</h3>
                 <div class="overflow-x-auto bg-white rounded shadow">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bil</th>
-                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No. KS</th>
-                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tarikh KS</th>
-                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No. Repot</th>
-                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pegawai Penyiasat</th>
-                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status KS</th>
-                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status Kes</th>
-                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tindakan</th>
-                            </tr>
-                        </thead>
-                        {{-- Table body updated dynamically by Alpine.js --}}
-                        <tbody id="kertas-siasatan-tbody" x-html="tableHtml" class="bg-white divide-y divide-gray-200">
-                            {{-- Initial content rendered on page load --}}
-                            @include('kertas_siasatan._table_rows', ['kertasSiasatans' => $kertasSiasatans])
-                        </tbody>
-                    </table>
+                    <div style="min-height: 200px;">
+                        {{-- Add table-layout: fixed and potentially width: 100% --}}
+                        <table class="min-w-full divide-y divide-gray-200" style="table-layout: fixed; width: 100%;">
+                            <thead class="bg-gray-50">
+                                 <tr>
+                                    {{-- Add approximate widths to header columns --}}
+                                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 5%;">Bil</th>
+                                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 20%;">No. KS</th>
+                                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 10%;">Tarikh KS</th>
+                                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 15%;">No. Repot</th>
+                                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 15%;">Pegawai Penyiasat</th>
+                                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 10%;">Status KS</th>
+                                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 10%;">Status Kes</th>
+                                    <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 15%;">Tindakan</th>
+                                </tr>
+                            </thead>
+                            {{-- Table body updated dynamically --}}
+                            <tbody id="kertas-siasatan-tbody" x-html="tableHtml" class="bg-white divide-y divide-gray-200">
+                                {{-- Initial content rendered on page load (now handled by Alpine init) --}}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
                 {{-- Pagination Links (Not updated dynamically by this simple search) --}}
@@ -72,50 +75,58 @@
     </div> {{-- End padding --}}
 
     {{-- Alpine.js function for real-time search --}}
-    @push('scripts')
+ @push('scripts')
     <script>
         function realtimeSearch(searchUrl) {
             return {
-                searchTerm: '{{ request('search_no_ks', '') }}', // Initialize with current search term from request
-                // Initialize tableHtml with the server-rendered content via Blade include, properly escaped
+                // ... existing properties: searchTerm, tableHtml, loading ...
+                searchTerm: '{{ request('search_no_ks', '') }}',
                 tableHtml: `{!! addslashes(view('kertas_siasatan._table_rows', ['kertasSiasatans' => $kertasSiasatans])->render()) !!}`,
-                loading: false, // Flag for loading state (optional)
+                loading: false,
+                loadingTimeout: null, // Add a property to hold the timeout ID
 
                 search() {
+                    // Clear any previous loading timeout
+                    clearTimeout(this.loadingTimeout);
+
                     this.loading = true;
                     const url = new URL(searchUrl);
-                    url.searchParams.set('search_no_ks', this.searchTerm); // Add search term to URL
-                    url.searchParams.set('page', '1'); // Reset to page 1 when searching
+                    url.searchParams.set('search_no_ks', this.searchTerm);
+                    url.searchParams.set('page', '1');
 
-                    // Display loading state in the table body
-                    this.tableHtml = '<tr><td colspan="8" class="text-center py-4 text-gray-500">Mencari...</td></tr>';
+                    // Set a timeout to show loading indicator only if search takes > 300ms
+                    this.loadingTimeout = setTimeout(() => {
+                        if (this.loading) { // Check if still loading
+                            this.tableHtml = '<tr><td colspan="8" class="text-center py-10 text-gray-500"><svg class="animate-spin h-5 w-5 text-gray-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg></td></tr>';
+                        }
+                    }, 300); // 300 milliseconds delay
 
                     fetch(url, {
                         headers: {
-                            'X-Requested-With': 'XMLHttpRequest', // Identify as AJAX request
-                            'Accept': 'text/html', // We expect HTML partial back
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'text/html', // Still expecting HTML partial
                         }
                     })
                     .then(response => {
+                        clearTimeout(this.loadingTimeout); // Clear timeout on successful response start
                         if (!response.ok) {
-                            // If response is not OK, try to get error text
                             return response.text().then(text => {
                                 throw new Error(`Network response was not ok (${response.status}): ${text}`);
                             });
                         }
-                        return response.text(); // Get response as HTML string
+                        return response.text();
                     })
                     .then(html => {
-                        this.tableHtml = html; // Update table body content
-                        // Note: Pagination links are not updated by this fetch.
+                        this.tableHtml = html;
                     })
                     .catch(error => {
+                        clearTimeout(this.loadingTimeout); // Clear timeout on error
                         console.error('Error fetching search results:', error);
-                        // Display error message in the table body
                         this.tableHtml = '<tr><td colspan="8" class="text-center text-red-500 py-4">Ralat memuatkan hasil carian. Semak konsol untuk butiran.</td></tr>';
                     })
                     .finally(() => {
-                        this.loading = false; // Reset loading state
+                        this.loading = false; // Set loading to false regardless of outcome
+                        // No need to clear timeout here again, already done in then/catch
                     });
                 }
             }
