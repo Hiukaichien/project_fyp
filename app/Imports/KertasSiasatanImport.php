@@ -5,15 +5,18 @@ namespace App\Imports;
 use App\Models\KertasSiasatan;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Maatwebsite\Excel\Concerns\WithValidation; // For basic validation
-use Maatwebsite\Excel\Concerns\Importable;
+use Maatwebsite\Excel\Concerns\WithUpserts;
+use Maatwebsite\Excel\Concerns\WithValidation;
+use Maatwebsite\Excel\Concerns\SkipsOnFailure;
+use Maatwebsite\Excel\Validators\Failure;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
-class KertasSiasatanImport implements ToModel, WithHeadingRow, WithValidation
-{
-    use Importable;
+// "WithHeadingRow" convert excel heading to snake_case and lowercase. 
+// Eg: No. Kertas Siasatan > no_kertas_siasatan
 
+class KertasSiasatanImport implements ToModel, WithHeadingRow, WithUpserts, WithValidation, SkipsOnFailure
+{
     /**
     * @param array $row
     *
@@ -21,81 +24,117 @@ class KertasSiasatanImport implements ToModel, WithHeadingRow, WithValidation
     */
     public function model(array $row)
     {
-        // --- CRUCIAL: IPRS Data Lookup ---
-        // Option A: Assume KS No. is provided in Excel and needs lookup for other fields
-        $no_ks = $row['no_kertas_siasatan']; // Adjust heading name as per your Excel file
-        // $iprsData = $this->lookupIprsData($no_ks); // Implement this lookup function
-
-        // Option B: Assume all 7 fields are directly in the Excel file
-        // Validate Tarikh KS format (Excel might have different formats)
-        $tarikh_ks = null;
-        if (!empty($row['tarikh_ks'])) {
-             try {
-                 // Try parsing common Excel date formats (numeric or string)
-                 if (is_numeric($row['tarikh_ks'])) {
-                     $tarikh_ks = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['tarikh_ks'])->format('Y-m-d');
-                 } else {
-                      $tarikh_ks = Carbon::parse($row['tarikh_ks'])->format('Y-m-d');
-                 }
-             } catch (\Exception $e) {
-                 // Handle invalid date format if necessary, maybe skip row or log error
-                 // For now, we set it to null if parsing fails
-                 Log::warning("Invalid date format for KS {$row['no_kertas_siasatan']}: {$row['tarikh_ks']}");
-                 $tarikh_ks = null;
-             }
-        }
 
 
-        // --- Create or Update Logic ---
-        // Use updateOrCreate to handle existing KS numbers if the Excel might contain updates
-        return KertasSiasatan::updateOrCreate(
-            [
-                'no_ks' => $row['no_kertas_siasatan'] // Key to find existing record
-            ],
-            [
-                // Fields from Excel/IPRS Lookup
-                // Adjust heading names ('tarikh_ks', 'no_repot' etc.) to match your Excel file exactly!
-                'tarikh_ks'         => $tarikh_ks,
-                'no_report'         => $row['no_repot'] ?? null,
-                'jenis_jabatan_ks'  => $row['jenis_jabatan_ks'] ?? null, // Use actual column names from Excel
-                'pegawai_penyiasat' => $row['pegawai_penyiasat'] ?? null,
-                'status_ks'         => $row['status_ks'] ?? null,
-                'status_kes'        => $row['status_kes'] ?? null,
-                'seksyen'           => $row['seksyen'] ?? null,
-                // Add defaults for other fields if needed, otherwise they remain null
-            ]
+
+
+        $data = [
+            'no_ks'              => trim($row['no_kertas_siasatan'] ?? ''), //used trim for data consistency
+            'tarikh_ks'          => $this->transformDate($row['tarikh_ks'] ?? null), 
+            'no_report'          => $row['no_repot'] ?? null,         
+            'jenis_jabatan_ks'   => $row['jenis_jabatan_ks'] ?? null,
+            'pegawai_penyiasat'  => $row['pegawai_penyiasat'] ?? null, 
+            'status_ks'          => $row['status_ks'] ?? null,        
+            'status_kes'         => $row['status_kes'] ?? null,       
+            'seksyen'            => $row['seksyen'] ?? null,          
+        ];
+
+        // Use updateOrCreate to update existing records or create new ones
+        // The first argument is the array of attributes to find the record by.
+        // The second argument is the array of attributes to update or create with.
+        $kertasSiasatan = KertasSiasatan::updateOrCreate(
+            ['no_ks' => $data['no_ks']], // Match existing record by 'no_ks'
+            $data                       // Data to fill/update
         );
+        
+        // If you have model events (Observers) that calculate statuses,
+        // they should trigger automatically on updateOrCreate.
+        // If not, and you need to call them manually after upsert:
+        // $kertasSiasatan->calculateEdarLebih24Jam();
+        // $kertasSiasatan->calculateTerbengkalai3Bulan();
+        // $kertasSiasatan->calculateBaruKemaskini();
+        // $kertasSiasatan->save(); // Important if manual calculations modify the model
+
+        return $kertasSiasatan;
     }
 
-    // Define validation rules for Excel columns
+    /**
+     * Specify the unique column(s) for upserting.
+     */
+    public function uniqueBy()
+    {
+        return 'no_ks';
+    }
+
+    /**
+     * Helper function to parse dates from various common formats.
+     */
+    private function transformDate($value, $format = 'Y-m-d')
+    {
+        if (empty($value)) {
+            return null;
+        }
+
+        // Handle Excel numeric date format
+        if (is_numeric($value)) {
+            try {
+                return Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value))->format($format);
+            } catch (\Exception $e) {
+                // Fallback if it's not a valid Excel numeric date
+            }
+        }
+        
+        $formatsToTry = [
+            'd/m/Y', 'm/d/Y', 'Y-m-d', 'd-m-Y', 'm-d-Y', 'Y/m/d',
+            'd/m/Y H:i:s', 'Y-m-d H:i:s',
+        ];
+
+        foreach ($formatsToTry as $inputFormat) {
+            try {
+                return Carbon::createFromFormat($inputFormat, $value)->format($format);
+            } catch (\Exception $e) {
+                // Continue to next format if parsing fails
+            }
+        }
+
+        try {
+            return Carbon::parse($value)->format($format);
+        } catch (\Exception $e) {
+            Log::warning("Could not parse date: \"{$value}\". Error: {$e->getMessage()}");
+            return null;
+        }
+    }
+
+    
+     // Validation rules for each row.
+
     public function rules(): array
     {
         return [
-             // Adjust heading names to match your Excel file!
-            '*.no_kertas_siasatan' => ['required', 'string', 'distinct'], // Ensure KS No. is present and unique within the file
-            '*.tarikh_ks' => ['nullable'], // Allow empty, handle format in model()
-            '*.no_repot' => ['nullable', 'string'],
-            '*.jenis_jabatan_ks' => ['nullable', 'string'],
-            '*.pegawai_penyiasat' => ['nullable', 'string'],
-            '*.status_ks' => ['nullable', 'string'],
-            '*.status_kes' => ['nullable', 'string'],
-            '*.seksyen' => ['nullable', 'string'],
+            // Key based on your CSV header "No. Kertas Siasatan"
+            'no_kertas_siasatan' => 'required|string|max:255',
+
+            // Add other rules as needed for your Excel columns. For example:
+            // 'tarikh_ks' => 'nullable', // Validates the raw value from Excel before transformation
+            // 'no_repot' => 'nullable|string|max:255',
         ];
     }
 
-    // Implement your IPRS data lookup if needed
-    /*
-    private function lookupIprsData(string $no_ks)
+    
+    // Handle validation failures
+     
+    public function onFailure(Failure ...$failures)
     {
-        // Connect to IPRS DB, read file, or call API
-        // Return an array or object with fields: tarikh_ks, no_report, ...
-        // Example:
-        // return IprsDataSource::find($no_ks); // Assuming an IprsDataSource model/service
+        foreach ($failures as $failure) {
+            Log::error("Excel Import Validation Failure - Row: {$failure->row()}, Attribute: {$failure->attribute()}, Errors: " . implode(', ', $failure->errors()) . ", Values: " . implode(', ', $failure->values()));
+        }
+    }
+
+
+    public function customValidationMessages()
+    {
         return [
-            'tarikh_ks' => '2020-01-10', // Dummy data
-            'no_report' => 'TRIANG/000118/20',
-            // ... other fields
+            'no_kertas_siasatan.required' => 'Lajur "No. Kertas Siasatan" diperlukan dan tidak boleh kosong.',
         ];
     }
-    */
 }
