@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\KertasSiasatan;
 use Illuminate\Http\Request;
-use Maatwebsite\Excel\Facades\Excel; // Import Facade
-use App\Imports\KertasSiasatanImport; // We will create this Import class
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\KertasSiasatanImport;
 
 class KertasSiasatanController extends Controller
 {
@@ -17,21 +17,59 @@ class KertasSiasatanController extends Controller
         // Main query for the paginated list
         $query = KertasSiasatan::query();
 
+        // Explicitly select all columns from the kertas_siasatans table
+        // to ensure all attributes are available on the model.
+        $query->select('kertas_siasatans.*');
+
         if ($request->filled('search_no_ks')) {
             $query->where('no_ks', 'like', '%' . $request->search_no_ks . '%');
         }
         // Add other filters as needed
 
-        // Apply ordering before pagination
-        $query->orderBy('created_at', 'desc');
+        // Sanitize GET parameters for sorting to prevent issues with the sortable package
+        // if 'sort' parameter is present but empty.
+        $sortParamName = config('columnsortable.sort_parameter_name', 'sort');
+        // Ensure $sortParamName is not an empty string, fall back to 'sort' if it is.
+        if (empty($sortParamName)) {
+            $sortParamName = 'sort';
+        }
 
-        // Paginate results - adjust per page as needed
-        $kertasSiasatans = $query->paginate(15)->withQueryString(); // Keep query string for pagination links
+        $directionParamName = config('columnsortable.direction_parameter_name', 'direction');
+        // Ensure $directionParamName is not an empty string, fall back to 'direction' if it is.
+        if (empty($directionParamName)) {
+            $directionParamName = 'direction';
+        }
+
+        // Check the actual GET query parameters
+        if ($request->query->has($sortParamName) && $request->query->get($sortParamName) === '') {
+            $currentQueryAsArray = $request->query->all(); // Get current GET params as an array
+            unset($currentQueryAsArray[$sortParamName]);   // Remove 'sort' if it's an empty string
+
+            if (isset($currentQueryAsArray[$directionParamName])) {
+                unset($currentQueryAsArray[$directionParamName]); // Also remove 'direction' if 'sort' was empty
+            }
+            // Replace the GET parameters bag with the cleaned array.
+
+            $request->query->replace($currentQueryAsArray);
+        }
+        
+        // Apply ordering using sortable() scope from Kyslik/column-sortable
+        $kertasSiasatans = $query->sortable(['created_at' => 'desc']) // Default sort
+                                 ->paginate(15)
+                                 ->withQueryString(); // Appends all current query params (now sanitized) to pagination links
 
         // Handle AJAX requests for search filtering
         if ($request->ajax()) {
-            // Return only the table rows partial view
-            return view('kertas_siasatan._table_rows', compact('kertasSiasatans'))->render();
+            // The view partial will receive sorted and paginated data
+            $tableHtml = view('kertas_siasatan._table_rows', compact('kertasSiasatans'))->render();
+            // Pagination links will also include sort parameters due to withQueryString()
+            // and the package's handling of sortable links.
+            $paginationHtml = $kertasSiasatans->links()->toHtml();
+
+            return response()->json([
+                'table_html' => $tableHtml,
+                'pagination_html' => $paginationHtml,
+            ]);
         }
 
         // Fetch separate lists for the special status tables (only for full page load)
@@ -114,7 +152,7 @@ class KertasSiasatanController extends Controller
         // --- Validation ---
         $validatedData = $request->validate([
             // Basic Info (Usually not editable via form, but validate if they are)
-            // 'no_ks' => 'sometimes|required|string|max:255|unique:kertas_siasatans,no_ks,'.$kertasSiasatan->id,
+            'no_ks' => 'sometimes|required|string|max:255|unique:kertas_siasatans,no_ks,'.$kertasSiasatan->getKey(),
             'tarikh_ks' => 'nullable|date',
             'no_report' => 'nullable|string|max:255',
             'jenis_jabatan_ks' => 'nullable|string|max:255',
@@ -148,10 +186,10 @@ class KertasSiasatanController extends Controller
             'no_daftar_kes_senjata_api' => 'nullable|string|max:255',
             'no_daftar_kes_berharga' => 'nullable|string|max:255',
             'gambar_rampasan_dilampirkan' => 'nullable|in:YA,TIDAK',
-            'kedudukan_barang_kes' => 'nullable|string|max:255', // Consider specific options if using select/radio
+            'kedudukan_barang_kes' => 'nullable|string|max:255', 
             'surat_serah_terima_stor' => 'nullable|in:ADA,TIADA',
             'arahan_pelupusan' => 'nullable|in:YA,TIDAK',
-            'tatacara_pelupusan' => 'nullable|string|max:255', // Consider specific options if using select/radio
+            'tatacara_pelupusan' => 'nullable|string|max:255', 
             'resit_kew38e_dilampirkan' => 'nullable|in:YA,TIDAK',
             'sijil_pelupusan_dilampirkan' => 'nullable|in:YA,TIDAK',
             'gambar_pelupusan_dilampirkan' => 'nullable|in:ADA,TIADA',
@@ -161,14 +199,14 @@ class KertasSiasatanController extends Controller
             // Pakar Judi / Forensik
             'surat_mohon_pakar_judi' => 'nullable|in:ADA,TIADA',
             'laporan_pakar_judi' => 'nullable|in:ADA,TIADA',
-            'keputusan_pakar_judi' => 'nullable|string|max:255', // Consider specific options if using select/radio
+            'keputusan_pakar_judi' => 'nullable|string|max:255', 
             'kategori_perjudian' => 'nullable|string|max:255',
             'surat_mohon_forensik' => 'nullable|in:ADA,TIADA',
             'laporan_forensik' => 'nullable|in:ADA,TIADA',
-            'keputusan_forensik' => 'nullable|string|max:255', // Consider specific options if using select/radio
+            'keputusan_forensik' => 'nullable|string|max:255', 
 
             // Dokumen Lain
-            'surat_jamin_polis' => 'nullable|string|max:255', // Consider specific options if using select/radio
+            'surat_jamin_polis' => 'nullable|string|max:255', 
             'lakaran_lokasi' => 'nullable|in:ADA,TIADA',
             'gambar_lokasi' => 'nullable|in:ADA,TIADA',
 
@@ -227,11 +265,12 @@ class KertasSiasatanController extends Controller
         // --- Update Logic ---
         $kertasSiasatan->fill($validatedData); // Mass assign validated data
 
-        // --- Perform Calculations & Handle Conditionals ---
-        $kertasSiasatan->calculateEdarLebih24Jam();
-        $kertasSiasatan->calculateTerbengkalai3Bulan();
-        $kertasSiasatan->calculateBaruKemaskini();
-        $kertasSiasatan->handleConditionalDates(); // Ensure dates are nulled if conditions change
+        // Calculations and conditional date handling are now done by the model's 'saving' event.
+        // No need to call them explicitly here:
+        // $kertasSiasatan->calculateEdarLebih24Jam();
+        // $kertasSiasatan->calculateTerbengkalai3Bulan();
+        // $kertasSiasatan->calculateBaruKemaskini();
+        // $kertasSiasatan->handleConditionalDates();
 
         $kertasSiasatan->save(); // Save the updated model
 

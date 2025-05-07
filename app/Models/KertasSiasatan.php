@@ -4,15 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Carbon\Carbon;
+use Carbon\Carbon; // For date calculations
+use Kyslik\ColumnSortable\Sortable; 
 
 class KertasSiasatan extends Model
 {
-    use HasFactory;
+    use HasFactory, Sortable;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
-        // Basic Info (Some might be non-editable, adjust as needed)
-        // 'no_ks', // Usually not editable after creation
+        'no_ks',
         'tarikh_ks',
         'no_report',
         'jenis_jabatan_ks',
@@ -20,27 +25,20 @@ class KertasSiasatan extends Model
         'status_ks',
         'status_kes',
         'seksyen',
-
-        // Minit Edaran
         'tarikh_minit_a',
         'tarikh_minit_b',
         'tarikh_minit_c',
         'tarikh_minit_d',
-
-        // Status Semasa Diperiksa
+        'edar_lebih_24_jam_status', // System calculated, but allow mass assignment if set directly
+        'terbengkalai_3_bulan_status', // System calculated
+        'baru_kemaskini_status', // System calculated
         'status_ks_semasa_diperiksa',
         'tarikh_status_ks_semasa_diperiksa',
-
-        // Rakaman Percakapan
         'rakaman_pengadu',
         'rakaman_saspek',
         'rakaman_saksi',
-
-        // ID Siasatan Lampiran
         'id_siasatan_dilampirkan',
         'tarikh_id_siasatan_dilampirkan',
-
-        // Barang Kes
         'barang_kes_am_didaftar',
         'no_daftar_kes_am',
         'no_daftar_kes_senjata_api',
@@ -55,8 +53,6 @@ class KertasSiasatan extends Model
         'gambar_pelupusan_dilampirkan',
         'surat_serah_terima_penuntut',
         'ulasan_barang_kes',
-
-        // Pakar Judi / Forensik
         'surat_mohon_pakar_judi',
         'laporan_pakar_judi',
         'keputusan_pakar_judi',
@@ -64,13 +60,9 @@ class KertasSiasatan extends Model
         'surat_mohon_forensik',
         'laporan_forensik',
         'keputusan_forensik',
-
-        // Dokumen Lain
         'surat_jamin_polis',
         'lakaran_lokasi',
         'gambar_lokasi',
-
-        // RJ Forms
         'rj2_status', 'rj2_tarikh',
         'rj9_status', 'rj9_tarikh',
         'rj10a_status', 'rj10a_tarikh',
@@ -79,11 +71,7 @@ class KertasSiasatan extends Model
         'semboyan_kesan_tangkap_status', 'semboyan_kesan_tangkap_tarikh',
         'waran_tangkap_status', 'waran_tangkap_tarikh',
         'ulasan_isu_rj',
-
-        // Surat Pemberitahuan
         'pem1_status', 'pem2_status', 'pem3_status', 'pem4_status',
-
-        // Isu-Isu
         'isu_tpr_tuduh',
         'isu_ks_lengkap_tiada_rujuk_tpr',
         'isu_tpr_arah_lupus_belum_laksana',
@@ -96,24 +84,19 @@ class KertasSiasatan extends Model
         'isu_kbsjd_simpan_ks',
         'isu_sio_simpan_ks',
         'isu_ks_pada_tpr',
-
-        // KS Hantar Status
         'ks_hantar_tpr_status', 'ks_hantar_tpr_tarikh',
         'ks_hantar_kjsj_status', 'ks_hantar_kjsj_tarikh',
         'ks_hantar_d5_status', 'ks_hantar_d5_tarikh',
         'ks_hantar_kbsjd_status', 'ks_hantar_kbsjd_tarikh',
-
-        // Ulasan Pemeriksa
         'ulasan_isu_menarik',
         'ulasan_keseluruhan',
-
-        // Note: Calculated fields are usually NOT in fillable as they are set by the system
-        // 'edar_lebih_24_jam_status',
-        // 'terbengkalai_3_bulan_status',
-        // 'baru_kemaskini_status',
     ];
 
-    // Cast date fields to Carbon instances
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array<string, string>
+     */
     protected $casts = [
         'tarikh_ks' => 'date:Y-m-d',
         'tarikh_minit_a' => 'date:Y-m-d',
@@ -133,99 +116,156 @@ class KertasSiasatan extends Model
         'ks_hantar_kjsj_tarikh' => 'date:Y-m-d',
         'ks_hantar_d5_tarikh' => 'date:Y-m-d',
         'ks_hantar_kbsjd_tarikh' => 'date:Y-m-d',
+        'updated_at' => 'datetime',
+        'created_at' => 'datetime',
     ];
 
-    // --- Auto-Calculation Logic (Example using Mutators/Events) ---
-    // Option 1: Using Model Observers (Recommended for complex logic/side effects)
-    // php artisan make:observer KertasSiasatanObserver --model=KertasSiasatan
-    // Register in AppServiceProvider or create a dedicated service provider.
-    // In KertasSiasatanObserver.php:
-    /*
-    public function saving(KertasSiasatan $ks)
-    {
-        $ks->calculateEdarLebih24Jam();
-        $ks->calculateTerbengkalai3Bulan();
-        $ks->calculateBaruKemaskini();
-        // Ensure conditional dates are nulled if the condition is false
-        $ks->handleConditionalDates();
-    }
-    */
+    /**
+     * Defines which columns are sortable.
+     *
+     * @var array
+     */
+    public $sortable = [
+        'id',
+        'no_ks',
+        'tarikh_ks',
+        'no_report',
+        'pegawai_penyiasat',
+        'status_ks',
+        'status_kes',
+        'created_at',
+        'updated_at'
+    ];
 
-    // Option 2: Using Mutators (Simpler for direct attribute changes)
-    // Note: Mutators run *before* saving. Calculations might need latest data.
-    // Observers (triggered by saving/updating events) are generally better for this.
+    /**
+     * Defines columns that are aliased for sorting or can be used as
+     * a model-level default sort.
+     * The controller's sortable() method parameters (e.g., ['created_at' => 'desc'])
+     * will take precedence for the initial default sort of the table.
+     * This array is more for aliasing or if sortable() is called without parameters.
+     *
+     * @var array
+     */
+    public $sortableAs = [
+        // Example: If you had a 'user_full_name' that was a CONCAT in SQL,
+        // you could alias it here. For standard columns, it's less common unless
+        // you want to provide a model-level default sort if the controller doesn't.
+        // 'no_ks', // If you wanted 'no_ks' to be a default sort candidate from the model.
+    ];
 
-    // Helper methods for calculation (can be called from Observer or Controller)
+    // --- Calculation Logic ---
+
     public function calculateEdarLebih24Jam()
     {
-        if ($this->tarikh_minit_a && $this->tarikh_minit_b) {
-            $dateA = Carbon::parse($this->tarikh_minit_a);
-            $dateB = Carbon::parse($this->tarikh_minit_b);
-            // Assuming B should be within 24 hours *after* A
-            if ($dateB->diffInHours($dateA) > 24) {
+        if ($this->tarikh_ks && $this->tarikh_minit_a) {
+            $tarikhKs = Carbon::parse($this->tarikh_ks);
+            $tarikhMinitA = Carbon::parse($this->tarikh_minit_a);
+            if ($tarikhMinitA->diffInHours($tarikhKs) > 24) {
                 $this->edar_lebih_24_jam_status = 'YA, EDARAN LEWAT 24 JAM';
             } else {
                 $this->edar_lebih_24_jam_status = 'EDARAN DALAM TEMPOH 24 JAM & KURANG';
             }
         } else {
-            $this->edar_lebih_24_jam_status = null; // Reset if dates are missing
+            $this->edar_lebih_24_jam_status = null;
         }
     }
 
     public function calculateTerbengkalai3Bulan()
     {
-        if ($this->tarikh_minit_a && $this->tarikh_minit_d) {
-            $dateA = Carbon::parse($this->tarikh_minit_a);
-            $dateD = Carbon::parse($this->tarikh_minit_d);
-             // Assuming D should be within 3 months *after* A
-            if ($dateD->diffInMonths($dateA) >= 3) { // Use >= 3 for "more than or equal to 3 months"
-                $this->terbengkalai_3_bulan_status = 'YA, TERBENGKALAI LEBIH 3 BULAN';
-            } else {
-                $this->terbengkalai_3_bulan_status = 'TIDAK TERBENGKALAI';
-            }
+        // Determine the last significant activity date.
+        // This could be tarikh_minit_d, or updated_at, or another specific date field
+        // For this example, let's assume tarikh_minit_d is the most relevant.
+        // If tarikh_minit_d is null, consider it not terbengkalai or use another logic.
+        $lastActivityDate = null;
+        if ($this->tarikh_minit_d) {
+            $lastActivityDate = Carbon::parse($this->tarikh_minit_d);
+        } elseif ($this->updated_at) { // Fallback to last update if no minit D
+            $lastActivityDate = Carbon::parse($this->updated_at);
+        }
+
+
+        if ($lastActivityDate && $lastActivityDate->diffInMonths(Carbon::now()) >= 3) {
+            $this->terbengkalai_3_bulan_status = 'YA, TERBENGKALAI LEBIH 3 BULAN';
         } else {
-            $this->terbengkalai_3_bulan_status = null; // Reset
+            $this->terbengkalai_3_bulan_status = 'TIDAK TERBENGKALAI';
         }
     }
 
-     public function calculateBaruKemaskini()
-     {
-         // Logic needs clarification based on C & D dates comparison
-         // Example: Check if D is very recent compared to C, or if D exists and C doesn't?
-         // Placeholder logic:
-         if ($this->tarikh_minit_c && $this->tarikh_minit_d) {
-              $dateC = Carbon::parse($this->tarikh_minit_c);
-              $dateD = Carbon::parse($this->tarikh_minit_d);
-              // Example: If D is after C and within a short timeframe (e.g., 7 days)? Adjust as needed.
-              if ($dateD->isAfter($dateC) /* && $dateD->diffInDays($dateC) <= 7 */ ) {
-                 $this->baru_kemaskini_status = 'YA, BARU DIGERAKKAN UNTUK DIKEMASKINI';
-              } else {
-                 $this->baru_kemaskini_status = 'TIADA ISU';
-              }
-         } else {
-             $this->baru_kemaskini_status = 'TIADA ISU'; // Default or null
-         }
-     }
+    public function calculateBaruKemaskini()
+    {
+        // This logic might depend on previous status or specific actions.
+        // Example: If it was 'YA, TERBENGKALAI LEBIH 3 BULAN' and updated_at is recent.
+        // Let's assume if it was terbengkalai and updated recently, it's "baru dikemaskini"
+        
+        // Ensure updated_at is not null before calling methods on it.
+        if ($this->updated_at && $this->terbengkalai_3_bulan_status === 'YA, TERBENGKALAI LEBIH 3 BULAN' && Carbon::parse($this->updated_at)->isAfter(Carbon::now()->subDays(7))) {
+            $this->baru_kemaskini_status = 'YA, BARU DIGERAKKAN UNTUK DIKEMASKINI';
+        } else {
+             // If it's not terbengkalai, or not recently updated after being terbengkalai
+            $this->baru_kemaskini_status = 'TIADA ISU';
+        }
+    }
 
-    // Helper to nullify dates when conditions are not met
-    public function handleConditionalDates() {
+    /**
+     * Handles nullifying dates if their corresponding status/enum is not 'YA' or 'Cipta' etc.
+     * Call this before saving in the update method.
+     */
+    public function handleConditionalDates()
+    {
         if ($this->status_ks_semasa_diperiksa == null || $this->status_ks_semasa_diperiksa == '') {
             $this->tarikh_status_ks_semasa_diperiksa = null;
         }
-        if ($this->id_siasatan_dilampirkan != 'YA') {
+        if ($this->id_siasatan_dilampirkan !== 'YA') {
             $this->tarikh_id_siasatan_dilampirkan = null;
         }
-        if ($this->rj2_status != 'Cipta') $this->rj2_tarikh = null;
-        if ($this->rj9_status != 'Cipta') $this->rj9_tarikh = null;
-        if ($this->rj10a_status != 'Cipta') $this->rj10a_tarikh = null;
-        if ($this->rj10b_status != 'Cipta') $this->rj10b_tarikh = null;
-        if ($this->rj99_status != 'Cipta') $this->rj99_tarikh = null;
-        if ($this->semboyan_kesan_tangkap_status != 'Cipta') $this->semboyan_kesan_tangkap_tarikh = null;
-        if ($this->waran_tangkap_status != 'Mohon') $this->waran_tangkap_tarikh = null;
-        if ($this->ks_hantar_tpr_status != 'YA') $this->ks_hantar_tpr_tarikh = null;
-        if ($this->ks_hantar_kjsj_status != 'YA') $this->ks_hantar_kjsj_tarikh = null;
-        if ($this->ks_hantar_d5_status != 'YA') $this->ks_hantar_d5_tarikh = null;
-        if ($this->ks_hantar_kbsjd_status != 'YA') $this->ks_hantar_kbsjd_tarikh = null;
+        if ($this->rj2_status !== 'Cipta') {
+            $this->rj2_tarikh = null;
+        }
+        if ($this->rj9_status !== 'Cipta') {
+            $this->rj9_tarikh = null;
+        }
+        if ($this->rj10a_status !== 'Cipta') {
+            $this->rj10a_tarikh = null;
+        }
+        if ($this->rj10b_status !== 'Cipta') {
+            $this->rj10b_tarikh = null;
+        }
+        if ($this->rj99_status !== 'Cipta') {
+            $this->rj99_tarikh = null;
+        }
+        if ($this->semboyan_kesan_tangkap_status !== 'Cipta') {
+            $this->semboyan_kesan_tangkap_tarikh = null;
+        }
+        if ($this->waran_tangkap_status !== 'Mohon') {
+            $this->waran_tangkap_tarikh = null;
+        }
+        if ($this->ks_hantar_tpr_status !== 'YA') {
+            $this->ks_hantar_tpr_tarikh = null;
+        }
+        if ($this->ks_hantar_kjsj_status !== 'YA') {
+            $this->ks_hantar_kjsj_tarikh = null;
+        }
+        if ($this->ks_hantar_d5_status !== 'YA') {
+            $this->ks_hantar_d5_tarikh = null;
+        }
+        if ($this->ks_hantar_kbsjd_status !== 'YA') {
+            $this->ks_hantar_kbsjd_tarikh = null;
+        }
+    }
 
+    /**
+     * Boot method to register model event listeners.
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Calculate statuses before saving
+        static::saving(function ($model) {
+            $model->calculateEdarLebih24Jam();
+            $model->calculateTerbengkalai3Bulan();
+            $model->calculateBaruKemaskini();
+            $model->handleConditionalDates(); 
+        });
     }
 }
