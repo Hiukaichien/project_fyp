@@ -25,7 +25,7 @@
                         <label for="search_no_ks" class="text-sm font-medium text-gray-700">Cari No. KS:</label>
                         <input type="text" name="search_no_ks" id="search_no_ks"
                                x-model="searchTerm"
-                               @input.debounce.500ms="search" {{-- Trigger search 500ms after user stops typing --}}
+                               @input.debounce.500ms="search"
                                placeholder="Taip No. KS untuk mencari..."
                                class="form-input rounded-md shadow-sm text-sm flex-grow">
                         <button @click="searchTerm = ''; search()" type="button" class="text-sm text-blue-600 hover:underline ml-2">Set Semula</button>
@@ -36,11 +36,9 @@
                 <h3 class="text-lg font-semibold text-gray-700">Semua Kertas Siasatan</h3>
                 <div class="overflow-x-auto bg-white rounded shadow">
                     <div style="min-height: 200px;">
-                        {{-- Add table-layout: fixed and potentially width: 100% --}}
                         <table class="min-w-full divide-y divide-gray-200" style="table-layout: fixed; width: 100%;">
                             <thead class="bg-gray-50">
                                  <tr>
-                                    {{-- Add approximate widths to header columns --}}
                                      <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 5%;">@sortablelink('id', 'Bil')</th>
                                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 20%;">@sortablelink('no_ks', 'No. KS')</th>
                                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 10%;">@sortablelink('tarikh_ks', 'Tarikh KS')</th>
@@ -51,7 +49,6 @@
                                     <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 15%;">Tindakan</th>
                                 </tr>
                             </thead>
-                            {{-- Table body updated dynamically --}}
                             <tbody id="kertas-siasatan-tbody" x-html="tableHtml" class="bg-white divide-y divide-gray-200">
                                 {{-- Initial content rendered on page load (now handled by Alpine init) --}}
                             </tbody>
@@ -59,79 +56,94 @@
                     </div>
                 </div>
 
-                {{-- Pagination Links (Not updated dynamically by this simple search) --}}
-                <div id="pagination-links" class="mt-4">
-                    {{ $kertasSiasatans->appends(request()->query())->links() }}
+                {{-- Pagination Links --}}
+                <div id="pagination-links" class="mt-4" x-html="paginationHtml">
+                    {{-- Initial pagination (will be replaced by Alpine if search happens) --}}
+                    {{-- If $kertasSiasatans might not exist on initial empty state, add a check --}}
+                    @if(isset($kertasSiasatans))
+                        {{ $kertasSiasatans->appends(request()->query())->links() }}
+                    @endif
                 </div>
 
                 {{-- Collapsible Tables for Specific Statuses --}}
-                {{-- Ensure resources/views/components/collapsible-table.blade.php exists --}}
                 <x-collapsible-table title="KS Lewat Edar (> 24 Jam)" :collection="$ksLewat24Jam" bgColor="bg-red-50" />
                 <x-collapsible-table title="KS Terbengkalai (> 3 Bulan)" :collection="$ksTerbengkalai" bgColor="bg-yellow-50" />
                 <x-collapsible-table title="KS Baru Dikemaskini" :collection="$ksBaruKemaskini" bgColor="bg-green-50" />
 
-            </div> {{-- End Alpine component scope --}}
-        </div> {{-- End container --}}
-    </div> {{-- End padding --}}
+            </div>
+        </div>
+    </div>
 
-    {{-- Alpine.js function for real-time search --}}
  @push('scripts')
     <script>
-        function realtimeSearch(searchUrl) {
+        function realtimeSearch(searchUrl) { //Search Realtime using AlphineJS
             return {
-                // ... existing properties: searchTerm, tableHtml, loading ...
                 searchTerm: '{{ request('search_no_ks', '') }}',
                 tableHtml: `{!! addslashes(view('kertas_siasatan._table_rows', ['kertasSiasatans' => $kertasSiasatans])->render()) !!}`,
+                // Add paginationHtml property and initialize it
+                paginationHtml: `{!! addslashes($kertasSiasatans->appends(request()->query())->links()->toHtml()) !!}`,
                 loading: false,
-                loadingTimeout: null, // Add a property to hold the timeout ID
+                loadingTimeout: null,
 
                 search() {
-                    // Clear any previous loading timeout
                     clearTimeout(this.loadingTimeout);
-
                     this.loading = true;
+
                     const url = new URL(searchUrl);
                     url.searchParams.set('search_no_ks', this.searchTerm);
+                    // Reset to page 1 for new searches to avoid showing an empty page if current page > new total pages
                     url.searchParams.set('page', '1');
+                    // If you want sorting to persist or be reset, handle 'sort' and 'direction' params here too
 
-                    // Set a timeout to show loading indicator only if search takes > 300ms
                     this.loadingTimeout = setTimeout(() => {
-                        if (this.loading) { // Check if still loading
-                            this.tableHtml = '<tr><td colspan="8" class="text-center py-10 text-gray-500"><svg class="animate-spin h-5 w-5 text-gray-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg></td></tr>';
+                        if (this.loading) {
+                            this.tableHtml = '<tr><td colspan="8" class="text-center py-10 text-gray-500"><svg class="animate-spin h-5 w-5 text-gray-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Memuatkan...</td></tr>';
+                            this.paginationHtml = ''; // Clear pagination while loading
                         }
-                    }, 300); // 300 milliseconds delay
+                    }, 300);
 
                     fetch(url, {
                         headers: {
                             'X-Requested-With': 'XMLHttpRequest',
-                            'Accept': 'text/html', // Still expecting HTML partial
+                            'Accept': 'application/json', // CHANGE: Expect JSON
                         }
                     })
                     .then(response => {
-                        clearTimeout(this.loadingTimeout); // Clear timeout on successful response start
+                        clearTimeout(this.loadingTimeout);
                         if (!response.ok) {
-                            return response.text().then(text => {
+                            return response.text().then(text => { // Get text for error details
                                 throw new Error(`Network response was not ok (${response.status}): ${text}`);
                             });
                         }
-                        return response.text();
+                        return response.json(); // CHANGE: Parse response as JSON
                     })
-                    .then(html => {
-                        this.tableHtml = html;
+                    .then(data => { // 'data' is now a JavaScript object
+                        this.tableHtml = data.table_html;
+                        this.paginationHtml = data.pagination_html; // Update pagination HTML
+
+                        // Update browser URL without full page reload for bookmarking/sharing search state
+                        const newUrl = new URL(window.location.href);
+                        newUrl.searchParams.set('search_no_ks', this.searchTerm);
+                        if (this.searchTerm === '') {
+                            newUrl.searchParams.delete('search_no_ks');
+                        }
+                        newUrl.searchParams.set('page', '1'); // Reflect that we loaded page 1
+                        // If you also fetch sort/direction from response, update them here
+                        window.history.pushState({path:newUrl.href},'',newUrl.href);
+
                     })
                     .catch(error => {
-                        clearTimeout(this.loadingTimeout); // Clear timeout on error
+                        clearTimeout(this.loadingTimeout);
                         console.error('Error fetching search results:', error);
                         this.tableHtml = '<tr><td colspan="8" class="text-center text-red-500 py-4">Ralat memuatkan hasil carian. Semak konsol untuk butiran.</td></tr>';
+                        this.paginationHtml = '<p class="text-red-500 text-center">Ralat memuatkan paginasi.</p>';
                     })
                     .finally(() => {
-                        this.loading = false; // Set loading to false regardless of outcome
-                        // No need to clear timeout here again, already done in then/catch
+                        this.loading = false;
                     });
                 }
             }
         }
     </script>
     @endpush
-
 </x-app-layout>
