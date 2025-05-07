@@ -126,13 +126,13 @@ class KertasSiasatan extends Model
      * @var array
      */
     public $sortable = [
-        'id',
-        'no_ks',
+        //'id',
+        //'no_ks',
         'tarikh_ks',
-        'no_report',
-        'pegawai_penyiasat',
-        'status_ks',
-        'status_kes',
+        //'no_report',
+        //'pegawai_penyiasat',
+        //'status_ks',
+        //'status_kes',
         'created_at',
         'updated_at'
     ];
