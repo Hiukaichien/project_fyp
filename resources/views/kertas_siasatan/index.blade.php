@@ -20,15 +20,51 @@
                 </div>
 
                 {{-- Search Input Area --}}
-                <div class="bg-gray-50 p-4 rounded shadow-sm">
-                    <div class="flex items-center space-x-3">
-                        <label for="search_no_ks" class="text-sm font-medium text-gray-700">Cari No. KS:</label>
-                        <input type="text" name="search_no_ks" id="search_no_ks"
-                               x-model="searchTerm"
-                               @input.debounce.500ms="search"
-                               placeholder="Taip No. KS untuk mencari..."
-                               class="form-input rounded-md shadow-sm text-sm flex-grow">
-                        <button @click="searchTerm = ''; search()" type="button" class="text-sm text-blue-600 hover:underline ml-2">Set Semula</button>
+                <div class="bg-gray-50 p-4 rounded shadow-sm space-y-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+                        <div class="lg:col-span-1">
+                            <label for="search_no_ks" class="text-sm font-medium text-gray-700">Cari No. KS:</label>
+                            <input type="text" name="search_no_ks" id="search_no_ks"
+                                   x-model="searchTerm"
+                                   @input.debounce.500ms="search"
+                                   placeholder="Taip No. KS..."
+                                   class="form-input rounded-md shadow-sm text-sm w-full mt-1">
+                        </div>
+                        <div class="lg:col-span-1">
+                            <label for="search_tarikh_ks" class="text-sm font-medium text-gray-700">Tarikh KS:</label>
+                            <input type="date" name="search_tarikh_ks" id="search_tarikh_ks"
+                                   x-model="searchTarikhKs"
+                                   @input.debounce.500ms="search"
+                                   class="form-input rounded-md shadow-sm text-sm w-full mt-1">
+                        </div>
+                        <div class="lg:col-span-1">
+                            <label for="search_pegawai_penyiasat" class="text-sm font-medium text-gray-700">Pegawai Penyiasat:</label>
+                            <input type="text" name="search_pegawai_penyiasat" id="search_pegawai_penyiasat"
+                                   x-model="searchPegawaiPenyiasat"
+                                   @input.debounce.500ms="search"
+                                   placeholder="Nama Pegawai..."
+                                   class="form-input rounded-md shadow-sm text-sm w-full mt-1">
+                        </div>
+                        <div class="lg:col-span-1">
+                            <label for="search_status_ks" class="text-sm font-medium text-gray-700">Status KS:</label>
+                            <select name="search_status_ks" id="search_status_ks"
+                                    x-model="searchStatusKs"
+                                    @change="search" {{-- Use @change for select elements --}}
+                                    class="form-select rounded-md shadow-sm text-sm w-full mt-1">
+                                <option value="">Semua Status</option>
+                                <option value="Siasatan Aktif">Siasatan Aktif</option>
+                                <option value="Rujuk TPR">Rujuk TPR</option>
+                                <option value="Rujuk PPN">Rujuk PPN</option>
+                                <option value="Rujuk KJSJ">Rujuk KJSJ</option>
+                                <option value="Rujuk KBSJD">Rujuk KBSJD</option>
+                                <option value="KUS/Sementara">KUS/Sementara</option>
+                                <option value="Jatuh Hukum">Jatuh Hukum</option>
+                                <option value="KUS/Fail">KUS/Fail</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex justify-end pt-2">
+                        <button @click="searchTerm = ''; searchTarikhKs = ''; searchPegawaiPenyiasat = ''; searchStatusKs = ''; search()" type="button" class="text-sm text-blue-600 hover:underline px-4 py-2">Set Semula</button>
                     </div>
                 </div>
 
@@ -79,6 +115,9 @@
         function realtimeSearch(searchUrl) { //Search Realtime using AlphineJS
             return {
                 searchTerm: '{{ request('search_no_ks', '') }}',
+                searchTarikhKs: '{{ request('search_tarikh_ks', '') }}',
+                searchPegawaiPenyiasat: '{{ request('search_pegawai_penyiasat', '') }}',
+                searchStatusKs: '{{ request('search_status_ks', '') }}',
                 tableHtml: `{!! addslashes(view('kertas_siasatan._table_rows', ['kertasSiasatans' => $kertasSiasatans])->render()) !!}`,
                 // Add paginationHtml property and initialize it
                 paginationHtml: `{!! addslashes($kertasSiasatans->appends(request()->query())->links()->toHtml()) !!}`,
@@ -90,10 +129,38 @@
                     this.loading = true;
 
                     const url = new URL(searchUrl);
-                    url.searchParams.set('search_no_ks', this.searchTerm);
+                    if (this.searchTerm) {
+                        url.searchParams.set('search_no_ks', this.searchTerm);
+                    } else {
+                        url.searchParams.delete('search_no_ks');
+                    }
+                    if (this.searchTarikhKs) {
+                        url.searchParams.set('search_tarikh_ks', this.searchTarikhKs);
+                    } else {
+                        url.searchParams.delete('search_tarikh_ks');
+                    }
+                    if (this.searchPegawaiPenyiasat) {
+                        url.searchParams.set('search_pegawai_penyiasat', this.searchPegawaiPenyiasat);
+                    } else {
+                        url.searchParams.delete('search_pegawai_penyiasat');
+                    }
+                    if (this.searchStatusKs) {
+                        url.searchParams.set('search_status_ks', this.searchStatusKs);
+                    } else {
+                        url.searchParams.delete('search_status_ks');
+                    }
+                    
                     // Reset to page 1 for new searches to avoid showing an empty page if current page > new total pages
                     url.searchParams.set('page', '1');
-                    // If you want sorting to persist or be reset, handle 'sort' and 'direction' params here too
+                    
+                    // Preserve existing sort parameters
+                    const currentUrlParams = new URLSearchParams(window.location.search);
+                    if (currentUrlParams.has('sort')) {
+                        url.searchParams.set('sort', currentUrlParams.get('sort'));
+                    }
+                    if (currentUrlParams.has('direction')) {
+                        url.searchParams.set('direction', currentUrlParams.get('direction'));
+                    }
 
                     this.loadingTimeout = setTimeout(() => {
                         if (this.loading) {

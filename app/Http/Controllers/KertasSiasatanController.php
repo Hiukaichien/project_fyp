@@ -24,6 +24,15 @@ class KertasSiasatanController extends Controller
         if ($request->filled('search_no_ks')) {
             $query->where('no_ks', 'like', '%' . $request->search_no_ks . '%');
         }
+        if ($request->filled('search_tarikh_ks')) {
+            $query->whereDate('tarikh_ks', $request->search_tarikh_ks);
+        }
+        if ($request->filled('search_pegawai_penyiasat')) {
+            $query->where('pegawai_penyiasat', 'like', '%' . $request->search_pegawai_penyiasat . '%');
+        }
+        if ($request->filled('search_status_ks')) {
+            $query->where('status_ks', $request->search_status_ks); // Changed from 'like' to '=' for exact match
+        }
         // Add other filters as needed
 
         // Sanitize GET parameters for sorting to prevent issues with the sortable package
