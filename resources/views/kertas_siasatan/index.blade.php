@@ -120,17 +120,6 @@
                     .then(data => { // 'data' is now a JavaScript object
                         this.tableHtml = data.table_html;
                         this.paginationHtml = data.pagination_html; // Update pagination HTML
-
-                        // Update browser URL without full page reload for bookmarking/sharing search state
-                        const newUrl = new URL(window.location.href);
-                        newUrl.searchParams.set('search_no_ks', this.searchTerm);
-                        if (this.searchTerm === '') {
-                            newUrl.searchParams.delete('search_no_ks');
-                        }
-                        newUrl.searchParams.set('page', '1'); // Reflect that we loaded page 1
-                        // If you also fetch sort/direction from response, update them here
-                        window.history.pushState({path:newUrl.href},'',newUrl.href);
-
                     })
                     .catch(error => {
                         clearTimeout(this.loadingTimeout);
