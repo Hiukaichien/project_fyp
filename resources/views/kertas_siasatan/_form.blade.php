@@ -1,9 +1,5 @@
 {{-- resources/views/kertas_siasatan/_form.blade.php --}}
-{{-- This partial contains the form fields for Kertas Siasatan --}}
-{{-- It expects the $kertasSiasatan variable to be available --}}
-{{-- Alpine x-data initialization should happen in the parent view (edit.blade.php) --}}
-
-@csrf {{-- CSRF Token --}}
+@csrf
 
 {{-- === Display Non-Editable Fields (Example - keep in edit.blade.php or show.blade.php ideally) === --}}
 {{-- It's often better to keep purely display elements out of a reusable form partial --}}
