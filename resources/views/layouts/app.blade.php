@@ -16,37 +16,28 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
-
-        {{-- Add x-cloak utility if not already present in your app.css --}}
-        <style>
-            [x-cloak] { display: none !important; }
-        </style>
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900"> {{-- Added dark:bg-gray-900 for consistency if you use dark mode elsewhere --}}
+        <div class="min-h-screen bg-gray-100">
             @include('layouts.navigation')
 
-            {{-- This div will handle the offset for the fixed sidebar/topbar --}}
-            <div class="sm:ml-64"> {{-- Margin for desktop sidebar (width w-64) --}}
-                <!-- Page Heading -->
-                @isset($header)
-                    {{-- pt-16 for mobile top bar (h-16), sm:pt-0 to remove padding when desktop sidebar is active --}}
-                    <header class="bg-white shadow pt-16 sm:pt-0">
-                        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                            {{ $header }}
-                        </div>
-                    </header>
-                @endisset
-
-                <!-- Page Content -->
-                <main>
-                    {{-- If there's no header, content needs padding for mobile top bar --}}
-                    <div class="{{ isset($header) ? '' : 'pt-16 sm:pt-0' }}">
-                        {{ $slot }}
+            <!-- Page Heading -->
+            @isset($header)
+                <header class="bg-white shadow">
+                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                        {{ $header }}
                     </div>
-                </main>
-            </div>
+                </header>
+            @endisset
+
+            <!-- Page Content -->
+            <main>
+                {{ $slot }}
+            </main>
         </div>
         @stack('scripts')
     </body>
 </html>
+
+
+
