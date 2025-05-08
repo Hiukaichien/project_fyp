@@ -155,61 +155,95 @@ class KertasSiasatan extends Model
 
     // --- Calculation Logic ---
 
-    public function calculateEdarLebih24Jam()
+    public function calculateEdarLebih24Jam() 
     {
-        if ($this->tarikh_ks && $this->tarikh_minit_a) {
-            $tarikhKs = Carbon::parse($this->tarikh_ks);
-            $tarikhMinitA = Carbon::parse($this->tarikh_minit_a);
-            if ($tarikhMinitA->diffInHours($tarikhKs) > 24) {
-                $this->edar_lebih_24_jam_status = 'YA, EDARAN LEWAT 24 JAM';
+        if ($this->tarikh_minit_a && $this->tarikh_minit_b) {
+            $tarikhA = Carbon::parse($this->tarikh_minit_a)->startOfDay(); // Use startOfDay if time part is not relevant for this rule
+            $tarikhB = Carbon::parse($this->tarikh_minit_b)->startOfDay();
+
+            // Ensure Tarikh B is actually after Tarikh A for a meaningful "duration"
+            if ($tarikhB->isAfter($tarikhA)) {
+                if ($tarikhB->diffInHours($tarikhA) > 24) {
+                    $this->edar_lebih_24_jam_status = 'YA, EDARAN LEWAT 24 JAM';
+                } else {
+                    $this->edar_lebih_24_jam_status = 'EDARAN DALAM TEMPOH 24 JAM & KURANG';
+                }
             } else {
-                $this->edar_lebih_24_jam_status = 'EDARAN DALAM TEMPOH 24 JAM & KURANG';
+                // Tarikh B is not after Tarikh A, so the condition "A minus B" for duration > 24h is not met
+                $this->edar_lebih_24_jam_status = 'EDARAN DALAM TEMPOH 24 JAM & KURANG'; // Or specific status like 'TARIKH B TIDAK SELEPAS A'
             }
         } else {
-            $this->edar_lebih_24_jam_status = null;
+            $this->edar_lebih_24_jam_status = null; // Or 'TIADA DATA MINIT A/B'
         }
     }
 
-    public function calculateTerbengkalai3Bulan()
+
+    public function calculateTerbengkalai3Bulan() 
     {
-        // Determine the last significant activity date.
-        // This could be tarikh_minit_d, or updated_at, or another specific date field
-        // For this example, let's assume tarikh_minit_d is the most relevant.
-        // If tarikh_minit_d is null, consider it not terbengkalai or use another logic.
-        $lastActivityDate = null;
-        if ($this->tarikh_minit_d) {
-            $lastActivityDate = Carbon::parse($this->tarikh_minit_d);
-        } elseif ($this->updated_at) { // Fallback to last update if no minit D
-            $lastActivityDate = Carbon::parse($this->updated_at);
-        }
+        if ($this->tarikh_minit_a && $this->tarikh_minit_d) {
+            $tarikhA = Carbon::parse($this->tarikh_minit_a);
+            $tarikhD = Carbon::parse($this->tarikh_minit_d);
 
-
-        if ($lastActivityDate && $lastActivityDate->diffInMonths(Carbon::now()) >= 3) {
-            $this->terbengkalai_3_bulan_status = 'YA, TERBENGKALAI LEBIH 3 BULAN';
+            // Ensure Tarikh D is after Tarikh A for the duration to be meaningful in this context
+            if ($tarikhD->isAfter($tarikhA)) {
+                if ($tarikhA->diffInMonths($tarikhD) >= 3) { // Duration between A and D
+                    $this->terbengkalai_3_bulan_status = 'YA, TERBENGKALAI LEBIH 3 BULAN';
+                } else {
+                    $this->terbengkalai_3_bulan_status = 'TIDAK TERBENGKALAI (A-D < 3 BULAN)';
+                }
+            } else {
+                // Tarikh D is not after Tarikh A, so the A-D duration condition is not met as specified
+                $this->terbengkalai_3_bulan_status = 'TIDAK TERBENGKALAI (D TIDAK SELEPAS A)';
+            }
         } else {
-            $this->terbengkalai_3_bulan_status = 'TIDAK TERBENGKALAI';
-        }
-    }
-
-    public function calculateBaruKemaskini()
-    {
-        // This logic might depend on previous status or specific actions.
-        // Example: If it was 'YA, TERBENGKALAI LEBIH 3 BULAN' and updated_at is recent.
-        // Let's assume if it was terbengkalai and updated recently, it's "baru dikemaskini"
-        
-        // Ensure updated_at is not null before calling methods on it.
-        if ($this->updated_at && $this->terbengkalai_3_bulan_status === 'YA, TERBENGKALAI LEBIH 3 BULAN' && Carbon::parse($this->updated_at)->isAfter(Carbon::now()->subDays(7))) {
-            $this->baru_kemaskini_status = 'YA, BARU DIGERAKKAN UNTUK DIKEMASKINI';
-        } else {
-             // If it's not terbengkalai, or not recently updated after being terbengkalai
-            $this->baru_kemaskini_status = 'TIADA ISU';
+            $this->terbengkalai_3_bulan_status = 'TIDAK TERBENGKALAI (TIADA DATA A/D)';
         }
     }
 
     /**
-     * Handles nullifying dates if their corresponding status/enum is not 'YA' or 'Cipta' etc.
-     * Call this before saving in the update method.
+     * Client Logic: KS Baru Kemaskini Setelah Semboyan JIPS
+     * TARIKH C MINUS TARIKH D = KS BARU DIKEMASKINI PERGERAKAN
+     *
+     * INTERPRETATION: If tarikh_minit_d exists, is chronologically after tarikh_minit_c,
+     * AND tarikh_minit_d is very recent (e.g., updated_at or tarikh_minit_d itself is within last 7 days from NOW).
+     * "Setelah Semboyan JIPS" is not directly used here without more info.
+     * THIS IS AN ASSUMPTION AND NEEDS CLIENT CLARIFICATION.
      */
+    public function calculateBaruKemaskini() // Renamed
+    {
+        $this->baru_kemaskini_status = 'TIADA PERGERAKAN BARU C-D'; // Default status
+
+        if ($this->tarikh_minit_c && $this->tarikh_minit_d) {
+            $tarikhC = Carbon::parse($this->tarikh_minit_c);
+            $tarikhD = Carbon::parse($this->tarikh_minit_d);
+
+            // Interpretation: "Baru Dikemaskini Pergerakan" means D happened after C, AND D is recent.
+            // The "recency" could be based on tarikh_minit_d itself or the record's updated_at.
+            // Let's use updated_at as a general indicator of recent interaction with the record *after* D.
+            // The client may need to specify if "Semboyan JIPS" refers to a specific flag or date.
+
+            if ($tarikhD->isAfter($tarikhC)) {
+                // Condition 1: Movement from C to D has occurred.
+                // Condition 2: The record itself was updated recently (within last 7 days).
+                // This implies that after the C->D movement, someone has touched/saved the record again recently.
+                if ($this->updated_at && Carbon::parse($this->updated_at)->isAfter(Carbon::now()->subDays(7))) {
+                    $this->baru_kemaskini_status = 'YA, BARU DIGERAKKAN UNTUK DIKEMASKINI';
+                } else {
+                   
+                    $this->baru_kemaskini_status = 'PERGERAKAN C-D LAMA'; 
+                }
+            } else {
+                // D is not after C, so no C->D "pergerakan" in that order.
+                 $this->baru_kemaskini_status = 'TIADA PERGERAKAN C KE D';
+            }
+        } elseif ($this->tarikh_minit_d && !$this->tarikh_minit_c) {
+
+             if ($this->updated_at && Carbon::parse($this->updated_at)->isAfter(Carbon::now()->subDays(7))) {
+                $this->baru_kemaskini_status = 'YA, BARU DIGERAKKAN UNTUK DIKEMASKINI (MINIT D)';
+            }
+        }
+        // Else, it remains the default 'TIADA PERGERAKAN BARU C-D'
+    }
     public function handleConditionalDates()
     {
         if ($this->status_ks_semasa_diperiksa == null || $this->status_ks_semasa_diperiksa == '') {
