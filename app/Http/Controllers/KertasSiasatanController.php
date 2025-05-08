@@ -132,7 +132,7 @@ class KertasSiasatanController extends Controller
         
         // Apply ordering using sortable() scope from Kyslik/column-sortable
         $kertasSiasatans = $query->sortable(['created_at' => 'desc']) // Default sort
-                                 ->paginate(15)
+                                 ->paginate(10)
                                  ->withQueryString(); // Appends all current query params (now sanitized) to pagination links
 
         // Handle AJAX requests for search filtering
