@@ -6,7 +6,8 @@ use App\Models\KertasSiasatan;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\KertasSiasatanImport;
-
+use Carbon\Carbon; 
+use Illuminate\Support\Facades\Log;
 class KertasSiasatanController extends Controller
 {
     /**
@@ -24,8 +25,75 @@ class KertasSiasatanController extends Controller
         if ($request->filled('search_no_ks')) {
             $query->where('no_ks', 'like', '%' . $request->search_no_ks . '%');
         }
+        // Handle flexible Tarikh KS input
         if ($request->filled('search_tarikh_ks')) {
-            $query->whereDate('tarikh_ks', $request->search_tarikh_ks);
+            $dateInput = trim($request->search_tarikh_ks);
+            $year = null;
+            $month = null;
+            $day = null;
+
+            // Normalize separators: replace '.' or '-' with '/'
+            $dateInput = str_replace(['.', '-'], '/', $dateInput);
+
+            // Attempt 1: Parse D/M/Y (including YY and YYYY variants)
+            // Regex: Day (1-2 digits), Month (1-2 digits), Year (2 or 4 digits)
+            if (preg_match('/^(\d{1,2})\/(\d{1,2})\/(\d{2}|\d{4})$/', $dateInput, $matches)) {
+                $d_match = (int)$matches[1];
+                $m_match = (int)$matches[2];
+                $y_match = (int)$matches[3];
+
+                if (strlen($matches[3]) == 2) { // YY format
+                    // Heuristic for YY to YYYY (e.g., 23 -> 2023, 98 -> 1998)
+                    // Adjust this based on your data's typical year range
+                    $y_match += ($y_match < 70 ? 2000 : 1900);
+                }
+                // Validate if it's a real date
+                if (checkdate($m_match, $d_match, $y_match)) {
+                    $day = $d_match;
+                    $month = $m_match;
+                    $year = $y_match;
+                }
+            }
+            // Attempt 2: Parse M/Y (if not D/M/Y)
+            // Regex: Month (1-2 digits), Year (2 or 4 digits)
+            elseif (preg_match('/^(\d{1,2})\/(\d{2}|\d{4})$/', $dateInput, $matches)) {
+                $m_match = (int)$matches[1];
+                $y_match = (int)$matches[2];
+                if (strlen($matches[2]) == 2) { // YY format
+                    $y_match += ($y_match < 70 ? 2000 : 1900);
+                }
+                // Validate month
+                if ($m_match >= 1 && $m_match <= 12) {
+                    $month = $m_match;
+                    $year = $y_match;
+                }
+            }
+            // Attempt 3: Parse YYYY only
+            elseif (preg_match('/^(\d{4})$/', $dateInput, $matches)) {
+                $year = (int)$matches[1];
+                // Basic validation for a reasonable year range if needed
+                // if ($year < 1900 || $year > Carbon::now()->year + 5) $year = null;
+            }
+            // Attempt 4: Parse YY only
+            elseif (preg_match('/^(\d{2})$/', $dateInput, $matches)) {
+                $y_match = (int)$matches[1];
+                $year = $y_match + ($y_match < 70 ? 2000 : 1900);
+            }
+
+            // Apply query based on what was successfully parsed
+            if ($year && $month && $day) {
+                $query->whereDate('tarikh_ks', Carbon::create($year, $month, $day)->toDateString());
+            } elseif ($year && $month) {
+                $query->whereYear('tarikh_ks', $year)
+                    ->whereMonth('tarikh_ks', $month);
+            } elseif ($year) {
+                $query->whereYear('tarikh_ks', $year);
+            } else {
+                // Optional: If you want to indicate that the date format was not recognized,
+                // you could add a message or simply return no results for the date part.
+                // For now, if it's not recognized, it won't filter by date.
+                Log::info("Unrecognized date format for search_tarikh_ks: " . $request->search_tarikh_ks);
+            }
         }
         if ($request->filled('search_pegawai_penyiasat')) {
             $query->where('pegawai_penyiasat', 'like', '%' . $request->search_pegawai_penyiasat . '%');

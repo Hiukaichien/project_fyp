@@ -1,14 +1,7 @@
 {{-- resources/views/kertas_siasatan/index.blade.php --}}
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Senarai Kertas Siasatan') }}
-        </h2>
-    </x-slot>
-
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            {{-- Alpine.js component scope for real-time search --}}
             <div x-data="realtimeSearch('{{ route('kertas_siasatan.index') }}')" class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 space-y-6">
 
                 {{-- Upload Button --}}
@@ -21,7 +14,7 @@
 
                 {{-- Search Input Area --}}
                 <div class="bg-gray-50 p-4 rounded shadow-sm space-y-3">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end"> {{-- Adjusted to lg:grid-cols-4 --}}
                         <div class="lg:col-span-1">
                             <label for="search_no_ks" class="text-sm font-medium text-gray-700">Cari No. KS:</label>
                             <input type="text" name="search_no_ks" id="search_no_ks"
@@ -30,13 +23,16 @@
                                    placeholder="Taip No. KS..."
                                    class="form-input rounded-md shadow-sm text-sm w-full mt-1">
                         </div>
+
                         <div class="lg:col-span-1">
                             <label for="search_tarikh_ks" class="text-sm font-medium text-gray-700">Tarikh KS:</label>
-                            <input type="date" name="search_tarikh_ks" id="search_tarikh_ks"
+                            <input type="text" name="search_tarikh_ks" id="search_tarikh_ks"
                                    x-model="searchTarikhKs"
-                                   @input.debounce.500ms="search"
+                                   @input.debounce.500ms="search" {{-- User types, then search --}}
+                                   placeholder="YYYY, M/YY, D/M/YY"
                                    class="form-input rounded-md shadow-sm text-sm w-full mt-1">
                         </div>
+
                         <div class="lg:col-span-1">
                             <label for="search_pegawai_penyiasat" class="text-sm font-medium text-gray-700">Pegawai Penyiasat:</label>
                             <input type="text" name="search_pegawai_penyiasat" id="search_pegawai_penyiasat"
@@ -49,16 +45,11 @@
                             <label for="search_status_ks" class="text-sm font-medium text-gray-700">Status KS:</label>
                             <select name="search_status_ks" id="search_status_ks"
                                     x-model="searchStatusKs"
-                                    @change="search" {{-- Use @change for select elements --}}
+                                    @change="search"
                                     class="form-select rounded-md shadow-sm text-sm w-full mt-1">
                                 <option value="">Semua Status</option>
                                 <option value="Siasatan Aktif">Siasatan Aktif</option>
-                                <option value="Rujuk TPR">Rujuk TPR</option>
-                                <option value="Rujuk PPN">Rujuk PPN</option>
-                                <option value="Rujuk KJSJ">Rujuk KJSJ</option>
-                                <option value="Rujuk KBSJD">Rujuk KBSJD</option>
-                                <option value="KUS/Sementara">KUS/Sementara</option>
-                                <option value="Jatuh Hukum">Jatuh Hukum</option>
+                                {{-- ... other options ... --}}
                                 <option value="KUS/Fail">KUS/Fail</option>
                             </select>
                         </div>
@@ -86,7 +77,7 @@
                                 </tr>
                             </thead>
                             <tbody id="kertas-siasatan-tbody" x-html="tableHtml" class="bg-white divide-y divide-gray-200">
-                                {{-- Initial content rendered on page load (now handled by Alpine init) --}}
+                                {{-- Initial content rendered on page load --}}
                             </tbody>
                         </table>
                     </div>
@@ -94,8 +85,6 @@
 
                 {{-- Pagination Links --}}
                 <div id="pagination-links" class="mt-4" x-html="paginationHtml">
-                    {{-- Initial pagination (will be replaced by Alpine if search happens) --}}
-                    {{-- If $kertasSiasatans might not exist on initial empty state, add a check --}}
                     @if(isset($kertasSiasatans))
                         {{ $kertasSiasatans->appends(request()->query())->links() }}
                     @endif
@@ -112,14 +101,13 @@
 
  @push('scripts')
     <script>
-        function realtimeSearch(searchUrl) { //Search Realtime using AlphineJS
+        function realtimeSearch(searchUrl) {
             return {
                 searchTerm: '{{ request('search_no_ks', '') }}',
-                searchTarikhKs: '{{ request('search_tarikh_ks', '') }}',
+                searchTarikhKs: '{{ request('search_tarikh_ks', '') }}', 
                 searchPegawaiPenyiasat: '{{ request('search_pegawai_penyiasat', '') }}',
                 searchStatusKs: '{{ request('search_status_ks', '') }}',
                 tableHtml: `{!! addslashes(view('kertas_siasatan._table_rows', ['kertasSiasatans' => $kertasSiasatans])->render()) !!}`,
-                // Add paginationHtml property and initialize it
                 paginationHtml: `{!! addslashes($kertasSiasatans->appends(request()->query())->links()->toHtml()) !!}`,
                 loading: false,
                 loadingTimeout: null,
@@ -129,31 +117,21 @@
                     this.loading = true;
 
                     const url = new URL(searchUrl);
-                    if (this.searchTerm) {
-                        url.searchParams.set('search_no_ks', this.searchTerm);
-                    } else {
-                        url.searchParams.delete('search_no_ks');
-                    }
-                    if (this.searchTarikhKs) {
-                        url.searchParams.set('search_tarikh_ks', this.searchTarikhKs);
-                    } else {
-                        url.searchParams.delete('search_tarikh_ks');
-                    }
-                    if (this.searchPegawaiPenyiasat) {
-                        url.searchParams.set('search_pegawai_penyiasat', this.searchPegawaiPenyiasat);
-                    } else {
-                        url.searchParams.delete('search_pegawai_penyiasat');
-                    }
-                    if (this.searchStatusKs) {
-                        url.searchParams.set('search_status_ks', this.searchStatusKs);
-                    } else {
-                        url.searchParams.delete('search_status_ks');
-                    }
+                    const updateSearchParam = (key, value) => {
+                        if (value) {
+                            url.searchParams.set(key, value);
+                        } else {
+                            url.searchParams.delete(key);
+                        }
+                    };
+
+                    updateSearchParam('search_no_ks', this.searchTerm);
+                    updateSearchParam('search_tarikh_ks', this.searchTarikhKs); // Send as text
+                    updateSearchParam('search_pegawai_penyiasat', this.searchPegawaiPenyiasat);
+                    updateSearchParam('search_status_ks', this.searchStatusKs);
                     
-                    // Reset to page 1 for new searches to avoid showing an empty page if current page > new total pages
                     url.searchParams.set('page', '1');
                     
-                    // Preserve existing sort parameters
                     const currentUrlParams = new URLSearchParams(window.location.search);
                     if (currentUrlParams.has('sort')) {
                         url.searchParams.set('sort', currentUrlParams.get('sort'));
@@ -165,33 +143,33 @@
                     this.loadingTimeout = setTimeout(() => {
                         if (this.loading) {
                             this.tableHtml = '<tr><td colspan="8" class="text-center py-10 text-gray-500"><svg class="animate-spin h-5 w-5 text-gray-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Memuatkan...</td></tr>';
-                            this.paginationHtml = ''; // Clear pagination while loading
+                            this.paginationHtml = '';
                         }
                     }, 300);
 
                     fetch(url, {
                         headers: {
                             'X-Requested-With': 'XMLHttpRequest',
-                            'Accept': 'application/json', // CHANGE: Expect JSON
+                            'Accept': 'application/json',
                         }
                     })
                     .then(response => {
                         clearTimeout(this.loadingTimeout);
                         if (!response.ok) {
-                            return response.text().then(text => { // Get text for error details
+                            return response.text().then(text => {
                                 throw new Error(`Network response was not ok (${response.status}): ${text}`);
                             });
                         }
-                        return response.json(); // CHANGE: Parse response as JSON
+                        return response.json();
                     })
-                    .then(data => { // 'data' is now a JavaScript object
+                    .then(data => {
                         this.tableHtml = data.table_html;
-                        this.paginationHtml = data.pagination_html; // Update pagination HTML
+                        this.paginationHtml = data.pagination_html;
                     })
                     .catch(error => {
                         clearTimeout(this.loadingTimeout);
                         console.error('Error fetching search results:', error);
-                        this.tableHtml = '<tr><td colspan="8" class="text-center text-red-500 py-4">Ralat memuatkan hasil carian. Semak konsol untuk butiran.</td></tr>';
+                        this.tableHtml = '<tr><td colspan="8" class="text-center text-red-500 py-4">Ralat memuatkan hasil carian.</td></tr>';
                         this.paginationHtml = '<p class="text-red-500 text-center">Ralat memuatkan paginasi.</p>';
                     })
                     .finally(() => {
