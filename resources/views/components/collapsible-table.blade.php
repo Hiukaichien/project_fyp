@@ -1,4 +1,3 @@
-{{-- resources/views/components/collapsible-table.blade.php --}}
 @props([
     'title' => 'Table',
     'collection' => collect(),

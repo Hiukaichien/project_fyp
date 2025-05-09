@@ -1,9 +1,4 @@
-{{-- resources/views/kertas_siasatan/_form.blade.php --}}
 @csrf
-
-{{-- === Display Non-Editable Fields (Example - keep in edit.blade.php or show.blade.php ideally) === --}}
-{{-- It's often better to keep purely display elements out of a reusable form partial --}}
-{{-- Or pass a flag like $isEditMode --}}
 
 {{-- === Fields requiring User Input / Audit === --}}
 
@@ -191,8 +186,7 @@
                    class="mt-1 block w-full form-input">
         </div>
     </div>
-    {{-- RJ9, RJ10A, RJ10B, RJ99, Semboyan, Waran Tangkap... Add similarly --}}
-    {{-- Example for Waran Tangkap --}}
+    {{-- RJ9, RJ10A, RJ10B, RJ99, Semboyan, Waran Tangkap... --}}
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 border p-3 rounded bg-gray-50">
          <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Permohonan Waran Tangkap Mahkamah</label>

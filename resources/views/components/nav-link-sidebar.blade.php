@@ -1,4 +1,3 @@
-{{-- resources/views/components/nav-link-sidebar.blade.php --}}
 @props(['active'])
 
 @php

@@ -1,5 +1,3 @@
-{{-- resources/views/kertas_siasatan/edit.blade.php --}}
-
 <x-app-layout>
 
 <x-slot name="header">
