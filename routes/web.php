@@ -1,8 +1,9 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\KertasSiasatanController; // Import the controller
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\KertasSiasatanController; // Import the controller
 
 Route::get('/', function () {
     // If using Breeze, this welcome route might be overridden or removed
@@ -23,6 +24,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/kertas_siasatan/upload', [KertasSiasatanController::class, 'create'])->name('kertas_siasatan.upload');
+    Route::get('/kertas_siasatan/project', [ProjectController::class, 'index'])->name('kertas_siasatan.project');
     
     // Add the resource routes for Kertas Siasatan here
     Route::resource('kertas_siasatan', KertasSiasatanController::class);
