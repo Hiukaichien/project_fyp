@@ -3,14 +3,6 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div x-data="realtimeSearch('{{ route('kertas_siasatan.index') }}')" class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 space-y-6">
 
-                {{-- Upload Button --}}
-                <div class="flex justify-end items-center">
-                    <a href="{{ route('kertas_siasatan.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                        Muat Naik Excel
-                    </a>
-                </div>
-
                 {{-- Search Input Area --}}
                 <div class="bg-gray-50 p-4 rounded shadow-sm space-y-3">
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
@@ -75,8 +67,16 @@
                     </div> --}}
                 </div>
 
+                <div class="flex justify-between items-center">
+                <h3 class="text-lg font-semibold text-gray-700">Semua Kertas Siasatan</h3>
+                {{-- Upload Button --}}
+                    <a href="{{ route('kertas_siasatan.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                        Muat Naik Excel
+                    </a>
+                </div>
+
                  {{-- Main Table --}}
-               <h3 class="text-lg font-semibold text-gray-700">Semua Kertas Siasatan</h3>
                 <div class="overflow-x-auto bg-white rounded shadow">
                     <div style="min-height: 200px;">
                         <table class="divide-y divide-gray-200" style="table-layout: fixed; min-width: 960px;">
