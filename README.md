@@ -3,11 +3,13 @@
 1. git clone repo
 2. copy env example rename to .env
 3. composer install --ignore-platform-reqs
-4. herd php artisan key:generate
-5. herd php artisan migrate
+4. php artisan key:generate
+5. php artisan migrate
 6. npm install
 7. npm run dev
+8. php artisan serve (Only run this if you are not using Laravel Herd.)
 
+7 and 8 are needed to run everytime reopen vscode.
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
