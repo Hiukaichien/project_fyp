@@ -31,10 +31,12 @@
                         </div>
                     @endif
 
-                    <h3 class="text-2xl font-semibold mb-2">{{ $project->name }}</h3>
-                    <p class="text-gray-600 dark:text-gray-400 mb-4">
-                        <strong>{{ __('Date:') }}</strong> {{ \Carbon\Carbon::parse($project->project_date)->format('F d, Y') }}
-                    </p>
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-2xl font-semibold">{{ $project->name }}</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                            <strong>{{ __('') }}</strong> {{ \Carbon\Carbon::parse($project->project_date)->format('F d, Y') }}
+                        </p>
+                    </div>
 
                     @if($project->description)
                         <div class="mb-4">
@@ -45,7 +47,14 @@
 
                     <hr class="my-6 border-gray-300 dark:border-gray-700">
 
-                    <h4 class="font-semibold text-lg mb-3">{{ __('Associated Papers') }}</h4>
+                    <div class="flex items-baseline mb-3">
+                        <h4 class="font-semibold text-lg">{{ __('Associated Papers') }}</h4>
+                        @if($associatedKertasSiasatanPaginated && $associatedKertasSiasatanPaginated->total() > 0)
+                            <span class="ml-2 text-sm">({{ $associatedKertasSiasatanPaginated->total() }}{{ __('') }})</span>
+                        @else
+                            <span class="ml-2 text-sm">(0 {{ __('') }})</span>
+                        @endif
+                    </div>
                     
                     @php
                         $allPapers = $project->allAssociatedPapers() ?? []; 
@@ -53,15 +62,7 @@
                     @endphp
 
                     {{-- KERTAS SIASATAN TABLE SECTION --}}
-                    <div class="mb-6 p-4 border border-gray-200 dark:border-gray-700 rounded-md">
-                        <h5 class="font-medium mt-2 capitalize text-md mb-2">Kertas Siasatan Papers
-                            @if($associatedKertasSiasatanPaginated)
-                                <span class="text-sm text-gray-500 dark:text-gray-400">({{ $associatedKertasSiasatanPaginated->total() }} {{ __('item(s)') }})</span>
-                            @else
-                                <span class="text-sm text-gray-500 dark:text-gray-400">(Tiada)</span>
-                            @endif
-                        </h5>
-                        
+                    <div class="mb-6 p-4 border border-gray-200 dark:border-gray-700 rounded-md">          
                         <div x-data="realtimeSearchForProjectKS('{{ route('kertas_siasatan.index') }}', '{{ $project->id }}', '{{ $pageNameForKSTable }}')" class="space-y-6">
                             {{-- Search Input Area --}}
                             <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded shadow-sm space-y-3">
