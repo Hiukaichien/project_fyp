@@ -3,6 +3,11 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div x-data="realtimeSearch('{{ route('kertas_siasatan.index') }}')" class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 space-y-6">
 
+                <x-collapsible-table title="KS Lewat Edar (> 24 Jam)" :collection="$ksLewat24Jam" bgColor="bg-red-50" />
+                <x-collapsible-table title="KS Terbengkalai (> 3 Bulan)" :collection="$ksTerbengkalai" bgColor="bg-yellow-50" />
+                <x-collapsible-table title="KS Baru Dikemaskini" :collection="$ksBaruKemaskini" bgColor="bg-green-50" />
+                <hr class="my-6 border-gray-300 dark:border-gray-700">
+                
                 {{-- Search Input Area --}}
                 <div class="bg-gray-50 p-4 rounded shadow-sm space-y-3">
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
@@ -104,10 +109,6 @@
                         {{ $kertasSiasatans->appends(request()->query())->links() }}
                     @endif
                 </div>
-
-                <x-collapsible-table title="KS Lewat Edar (> 24 Jam)" :collection="$ksLewat24Jam" bgColor="bg-red-50" />
-                <x-collapsible-table title="KS Terbengkalai (> 3 Bulan)" :collection="$ksTerbengkalai" bgColor="bg-yellow-50" />
-                <x-collapsible-table title="KS Baru Dikemaskini" :collection="$ksBaruKemaskini" bgColor="bg-green-50" />
             </div>
         </div>
     </div>
