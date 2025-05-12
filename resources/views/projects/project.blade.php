@@ -34,17 +34,19 @@
                             @foreach ($projects as $project)
                                 <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-md shadow-sm hover:shadow-md transition-shadow">
                                     <div class="flex justify-between items-start">
-                                        <div>
-                                            <a href="{{ route('projects.show', $project) }}" class="text-xl font-semibold text-blue-600 dark:text-blue-400 hover:underline">{{ $project->name }}</a>
-                                            <p class="text-sm text-gray-600 dark:text-gray-400">
-                                                {{ __('Date:') }} {{ \Carbon\Carbon::parse($project->project_date)->format('d M Y') }}
-                                            </p>
+                                        <div class="flex-grow mr-4">
+                                            <div class="flex justify-between items-center mb-1">
+                                                <a href="{{ route('projects.show', $project) }}" class="text-xl font-semibold text-blue-600 dark:text-blue-400 hover:underline">{{ $project->name }}</a>
+                                                <p class="text-sm text-gray-600 dark:text-gray-400 ml-2 whitespace-nowrap">
+                                                    {{ __('') }} {{ \Carbon\Carbon::parse($project->project_date)->format('d M Y') }}
+                                                </p>
+                                            </div>
                                             @if($project->description)
-                                            <p class="text-sm text-gray-500 dark:text-gray-300 mt-1">{{ Str::limit($project->description, 150) }}</p>
+                                            <p class="text-sm text-gray-500 dark:text-gray-300">{{ Str::limit($project->description, 150) }}</p>
                                             @endif
                                         </div>
                                         {{-- Optional: Add links for edit/delete here or on the show page --}}
-                                        {{-- <div class="flex space-x-2">
+                                        {{-- <div class="flex space-x-2 flex-shrink-0">
                                             <a href="{{ route('projects.edit', $project) }}" class="text-sm text-yellow-600 hover:underline">Edit</a>
                                             <form action="{{ route('projects.destroy', $project) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this project?');">
                                                 @csrf
