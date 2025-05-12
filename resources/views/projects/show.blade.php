@@ -40,10 +40,98 @@
 
                     @if($project->description)
                         <div class="mb-4">
-                            <h4 class="font-semibold text-lg">{{ __('Description:') }}</h4>
+                            <h4 class="font-semibold text-lg">{{ __('') }}</h4>
                             <p class="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{{ $project->description }}</p>
                         </div>
                     @endif
+
+                    
+
+                    <hr class="my-6 border-gray-300 dark:border-gray-700">
+
+                    <h4 class="font-semibold text-lg mb-3">{{ __('Add Existing Paper to Project') }}</h4>
+
+                    {{-- Kertas Siasatan Association Form with Searchable Dropdown --}}
+                    <div x-data="{
+                        searchTerm: '',
+                        selectedPaperId: null,
+                        selectedPaperText: '',
+                        isOpen: false,
+                        originalOptions: {{ $unassignedKertasSiasatan->map(fn($ks) => ['id' => $ks->id, 'text' => $ks->no_ks . ' - ' . ($ks->pegawai_penyiasat ?? 'N/A')])->values()->toJson() }},
+                        get filteredOptions() {
+                            const term = this.searchTerm ? this.searchTerm.trim().toLowerCase() : '';
+                            if (term === '') {
+                                return this.originalOptions; // Show all if search term is empty or just spaces
+                            }
+                            return this.originalOptions.filter(option => 
+                                option.text.toLowerCase().includes(term)
+                            );
+                        },
+                        selectOption(option) {
+                            this.selectedPaperId = option.id;
+                            this.selectedPaperText = option.text;
+                            this.searchTerm = option.text; // Display selected text in input
+                            this.isOpen = false;
+                        },
+                        resetSearch() { // Reset when user starts typing again after selection
+                            if (this.selectedPaperId) {
+                                this.selectedPaperId = null;
+                                // this.selectedPaperText = ''; // Keep searchTerm as is for filtering
+                            }
+                            this.isOpen = true;
+                        }
+                    }" class="mb-6 relative">
+                        <form action="{{ route('projects.associate_paper', $project->id) }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="paper_type" value="KertasSiasatan">
+                            <input type="hidden" name="paper_id" x-model="selectedPaperId">
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                                <div class="md:col-span-2">
+                                    <label for="kertas_siasatan_searchable_associate" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('') }}</label>
+                                    <input type="text" 
+                                           id="kertas_siasatan_searchable_associate"
+                                           x-model="searchTerm"
+                                           @input="resetSearch()"
+                                           @focus="isOpen = true"
+                                           @keydown.escape.prevent="isOpen = false"
+                                           @keydown.down.prevent="isOpen = true" {{-- Basic keyboard nav hint --}}
+                                           placeholder="Type to search No. KS or Pegawai..."
+                                           autocomplete="off"
+                                           class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                                    
+                                    <div x-show="isOpen" 
+                                         @click.away="isOpen = false"
+                                         class="absolute z-10 mt-1 w-full md:w-auto bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto"
+                                         style="min-width: calc( (100% / 3 * 2) - 1rem );"> {{-- Approximate width of md:col-span-2 --}}
+                                        <ul class="py-1">
+                                            <template x-if="filteredOptions.length === 0 && searchTerm.trim() !== ''">
+                                                <li class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">{{ __('No matching Kertas Siasatan found') }}</li>
+                                            </template>
+                                            <template x-if="originalOptions.length === 0 && searchTerm.trim() === ''">
+                                                 <li class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">{{ __('No unassigned Kertas Siasatan found') }}</li>
+                                            </template>
+                                            <template x-for="option in filteredOptions" :key="option.id">
+                                                <li @click="selectOption(option)"
+                                                    class="px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer"
+                                                    x-text="option.text">
+                                                </li>
+                                            </template>
+                                        </ul>
+                                    </div>
+                                    @if ($errors->has('paper_id') && old('paper_type') == 'KertasSiasatan')
+                                        <p class="text-red-500 text-xs mt-1">{{ $errors->first('paper_id') }}</p>
+                                    @endif
+                                </div>
+                                <div>
+                                    <button type="submit" :disabled="!selectedPaperId"
+                                            class="w-full inline-flex items-center justify-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-500 active:bg-green-700 focus:outline-none focus:border-green-700 focus:ring ring-green-300 disabled:opacity-50 transition ease-in-out duration-150">
+                                        {{ __('Add Kertas Siasatan') }}
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
 
                     <hr class="my-6 border-gray-300 dark:border-gray-700">
 
@@ -101,6 +189,12 @@
                                                 <option value="">Semua Status</option>
                                                 <option value="Siasatan Aktif">Siasatan Aktif</option>
                                                 <option value="KUS/Fail">KUS/Fail</option>
+                                                <option value="Rujuk TPR">Rujuk TPR</option>
+                                                <option value="Rujuk PPN">Rujuk PPN</option>
+                                                <option value="Rujuk KJSJ">Rujuk KJSJ</option>
+                                                <option value="Rujuk KBSJD">Rujuk KBSJD</option>
+                                                <option value="KUS/Sementara">KUS/Sementara</option>
+                                                <option value="Jatuh Hukum">Jatuh Hukum</option>
                                             </select>
                                             <button @click="resetFiltersAndSearch()"
                                                     type="button" title="Set Semula Carian"
@@ -138,7 +232,10 @@
                                             </tr>
                                         </thead>
                                         <tbody x-html="tableHtml" class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                                            @include('kertas_siasatan._table_rows', ['kertasSiasatans' => $associatedKertasSiasatanPaginated])
+                                            @include('projects._associated_kertas_siasatan_table_rows', [
+                                                'kertasSiasatans' => $associatedKertasSiasatanPaginated,
+                                                'project' => $project //project object to seperate from normal kertas siasatan table.
+                                            ])
                                         </tbody>
                                     </table>
                                 </div>
@@ -149,10 +246,10 @@
                                     @php
                                         // Restore 'page_name' in the appends array for Laravel's pagination links.
                                         // This helps Kyslik generate correct sort links if it needs to.
-                                        $appendsArray = collect(request()->query())
-                                            ->except(['page', $pageNameForKSTable]) // Remove default and our specific page param
-                                            ->put('project_id', $project->id)      // Ensure project_id is present
-                                            ->put('page_name', $pageNameForKSTable) // Restore this for Kyslik's link generation
+                                        $appendsArray = collect(request()->query()) // This uses the request() helper function
+                                            ->except(['page', $pageNameForKSTable]) 
+                                            ->put('project_id', $project->id)      
+                                            ->put('page_name', $pageNameForKSTable) 
                                             ->all();
                                     @endphp
                                     {{-- Pass the pageName to links() method for Laravel Paginator --}}
@@ -163,7 +260,6 @@
                     </div>
                     {{-- End Kertas Siasatan Section --}}
 
-                    {{-- ... (rest of your blade file for other paper types and add forms) ... --}}
                     @php
                         unset($allPapers['kertas_siasatan']);
                     @endphp
@@ -176,17 +272,6 @@
                                         {{ str_replace('_', ' ', Illuminate\Support\Str::title(Str::before($type, 'Papers'))) }} Papers
                                         <span class="text-sm text-gray-500 dark:text-gray-400">({{ $papers->count() }} {{ __('item(s)') }})</span>
                                     </h5>
-                                    @php
-                                        $modelNameForRoute = Illuminate\Support\Str::studly(Illuminate\Support\Str::singular(Str::before($type, 'Papers')));
-                                        $indexRouteName = Illuminate\Support\Str::plural(Illuminate\Support\Str::kebab($modelNameForRoute)) . '.index';
-                                        if ($modelNameForRoute === 'LaporanMatiMengejutPaper') $indexRouteName = 'laporan-mati-mengejut-papers.index';
-                                        if ($modelNameForRoute === 'OrangHilangPaper') $indexRouteName = 'orang-hilang-papers.index';
-                                    @endphp
-                                    @if(Route::has($indexRouteName))
-                                        <a href="{{ route($indexRouteName, ['project_id_filter' => $project->id]) }}" class="text-sm text-blue-600 dark:text-blue-400 hover:underline">
-                                            {{ __('Manage All') }} →
-                                        </a>
-                                    @endif
                                 </div>
                                 <ul class="space-y-2">
                                     @foreach ($papers->take(5) as $paper)
@@ -240,37 +325,6 @@
                          @endif
                     @endforelse
 
-                    <hr class="my-6 border-gray-300 dark:border-gray-700">
-
-                    <h4 class="font-semibold text-lg mb-3">{{ __('Add Existing Paper to Project') }}</h4>
-
-                    <form action="{{ route('projects.associate_paper', $project->id) }}" method="POST" class="mb-6">
-                        @csrf
-                        <input type="hidden" name="paper_type" value="KertasSiasatan">
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
-                            <div class="md:col-span-2">
-                                <label for="kertas_siasatan_id_associate" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Select Kertas Siasatan') }}</label>
-                                <select name="paper_id" id="kertas_siasatan_id_associate" required
-                                        class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                                    <option value="">-- {{ __('Select Paper') }} --</option>
-                                    @forelse ($unassignedKertasSiasatan as $ks)
-                                        <option value="{{ $ks->id }}">{{ $ks->no_ks }} - {{ $ks->pegawai_penyiasat ?? 'N/A' }}</option>
-                                    @empty
-                                        <option value="" disabled>{{ __('No unassigned Kertas Siasatan found') }}</option>
-                                    @endforelse
-                                </select>
-                                @if ($errors->has('paper_id') && old('paper_type') == 'KertasSiasatan')
-                                    <p class="text-red-500 text-xs mt-1">{{ $errors->first('paper_id') }}</p>
-                                @endif
-                            </div>
-                            <div>
-                                <button type="submit" class="w-full inline-flex items-center justify-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-500 active:bg-green-700 focus:outline-none focus:border-green-700 focus:ring ring-green-300 disabled:opacity-25 transition ease-in-out duration-150">
-                                    {{ __('Add Kertas Siasatan') }}
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-
                     @php
                         $otherPaperTypesForAdding = [
                             'JenayahPaper' => $unassignedJenayahPapers,
@@ -285,33 +339,87 @@
 
                     @foreach($otherPaperTypesForAdding as $modelName => $unassignedPapers)
                         @if($unassignedPapers && $unassignedPapers->isNotEmpty())
-                            <form action="{{ route('projects.associate_paper', $project->id) }}" method="POST" class="mb-6">
-                                @csrf
-                                <input type="hidden" name="paper_type" value="{{ $modelName }}">
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
-                                    <div class="md:col-span-2">
-                                        <label for="{{ Str::snake($modelName) }}_id_associate" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Select ') }}{{ Str::title(Str::snake($modelName, ' ')) }}</label>
-                                        <select name="paper_id" id="{{ Str::snake($modelName) }}_id_associate" required
-                                                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                                            <option value="">-- {{ __('Select Paper') }} --</option>
-                                            @foreach ($unassignedPapers as $paper)
-                                                @php
-                                                    $displayIdentifier = $paper->no_ks ?? $paper->no_kst ?? $paper->no_lmm ?? $paper->no_ks_oh ?? $paper->name ?? "ID: {$paper->id}";
-                                                @endphp
-                                                <option value="{{ $paper->id }}">{{ $displayIdentifier }}</option>
-                                            @endforeach
-                                        </select>
-                                        @if ($errors->has('paper_id') && old('paper_type') == $modelName)
-                                            <p class="text-red-500 text-xs mt-1">{{ $errors->first('paper_id') }}</p>
-                                        @endif
+                            <div x-data="{
+                                searchTerm: '',
+                                selectedPaperId: null,
+                                selectedPaperText: '',
+                                isOpen: false,
+                                originalOptions: {{ $unassignedPapers->map(function($paper) use ($modelName) {
+                                    $displayIdentifier = $paper->no_ks ?? $paper->no_kst ?? $paper->no_lmm ?? $paper->no_ks_oh ?? $paper->name ?? "ID: {$paper->id}";
+                                    return ['id' => $paper->id, 'text' => $displayIdentifier];
+                                })->values()->toJson() }},
+                                get filteredOptions() {
+                                    const term = this.searchTerm ? this.searchTerm.trim().toLowerCase() : '';
+                                    if (term === '') {
+                                        return this.originalOptions; // Show all if search term is empty or just spaces
+                                    }
+                                    return this.originalOptions.filter(option => 
+                                        option.text.toLowerCase().includes(term)
+                                    );
+                                },
+                                selectOption(option) {
+                                    this.selectedPaperId = option.id;
+                                    this.selectedPaperText = option.text;
+                                    this.searchTerm = option.text;
+                                    this.isOpen = false;
+                                },
+                                resetSearch() {
+                                    if (this.selectedPaperId) {
+                                        this.selectedPaperId = null;
+                                    }
+                                    this.isOpen = true;
+                                }
+                            }" class="mb-6 relative">
+                                <form action="{{ route('projects.associate_paper', $project->id) }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="paper_type" value="{{ $modelName }}">
+                                    <input type="hidden" name="paper_id" x-model="selectedPaperId">
+
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                                        <div class="md:col-span-2">
+                                            <label for="{{ Str::snake($modelName) }}_searchable_associate" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('Search & Select ') }}{{ Str::title(Str::snake($modelName, ' ')) }}</label>
+                                            <input type="text"
+                                                   id="{{ Str::snake($modelName) }}_searchable_associate"
+                                                   x-model="searchTerm"
+                                                   @input="resetSearch()"
+                                                   @focus="isOpen = true"
+                                                   @keydown.escape.prevent="isOpen = false"
+                                                   placeholder="Type to search..."
+                                                   autocomplete="off"
+                                                   class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+
+                                            <div x-show="isOpen"
+                                                 @click.away="isOpen = false"
+                                                 class="absolute z-10 mt-1 w-full md:w-auto bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto"
+                                                 style="min-width: calc( (100% / 3 * 2) - 1rem );">
+                                                <ul class="py-1">
+                                                    <template x-if="filteredOptions.length === 0 && searchTerm.trim() !== ''">
+                                                        <li class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">{{ __('No matching ') }}{{ Str::title(Str::snake($modelName, ' ')) }}{{ __(' found') }}</li>
+                                                    </template>
+                                                     <template x-if="originalOptions.length === 0 && searchTerm.trim() === ''">
+                                                        <li class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">{{ __('No unassigned ') }}{{ Str::title(Str::snake($modelName, ' ')) }}{{ __(' found') }}</li>
+                                                    </template>
+                                                    <template x-for="option in filteredOptions" :key="option.id">
+                                                        <li @click="selectOption(option)"
+                                                            class="px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer"
+                                                            x-text="option.text">
+                                                        </li>
+                                                    </template>
+                                                </ul>
+                                            </div>
+                                            @if ($errors->has('paper_id') && old('paper_type') == $modelName)
+                                                <p class="text-red-500 text-xs mt-1">{{ $errors->first('paper_id') }}</p>
+                                            @endif
+                                        </div>
+                                        <div>
+                                            <button type="submit" :disabled="!selectedPaperId"
+                                                    class="w-full inline-flex items-center justify-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-500 active:bg-green-700 focus:outline-none focus:border-green-700 focus:ring ring-green-300 disabled:opacity-50 transition ease-in-out duration-150">
+                                                {{ __('Add ') }}{{ Str::title(Str::snake($modelName, ' ')) }}
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <button type="submit" class="w-full inline-flex items-center justify-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-500 active:bg-green-700 focus:outline-none focus:border-green-700 focus:ring ring-green-300 disabled:opacity-25 transition ease-in-out duration-150">
-                                            {{ __('Add ') }}{{ Str::title(Str::snake($modelName, ' ')) }}
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
+                                </form>
+                            </div>
                         @endif
                     @endforeach
                 </div>
