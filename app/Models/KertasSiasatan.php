@@ -153,6 +153,14 @@ class KertasSiasatan extends Model
         // 'no_ks', // If you wanted 'no_ks' to be a default sort candidate from the model.
     ];
 
+    /**
+     * Get the project that this Kertas Siasatan belongs to.
+     */
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
+
     // --- Calculation Logic ---
 
     public function calculateEdarLebih24Jam() 
