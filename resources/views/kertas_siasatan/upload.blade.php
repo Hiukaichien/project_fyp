@@ -112,24 +112,32 @@
                 <div>
                     <h3 class="text-lg font-medium text-gray-900 mb-4">Eksport Kertas Siasatan Mengikut Projek</h3>
 
-                    {{-- Note: You'll need to pass $projects to this view from your controller for the dropdown to work --}}
-                    {{-- Example: $projects = App\Models\Project::orderBy('name')->get(); --}}
-                    {{-- And define the route 'kertas_siasatan.export_by_project' --}}
-                    <form action="{{ route('kertas_siasatan.export_by_project') }}" method="GET"> {{-- Or POST if preferred --}}
-                        {{-- @csrf --}} {{-- Not needed for GET, but include if using POST --}}
+                    @if (session('info')) {{-- Display info message if export had no data --}}
+                        <div class="mb-4 bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative" role="alert">
+                            <span class="block sm:inline">{{ session('info') }}</span>
+                        </div>
+                    @endif
+                    
+                    <form action="{{ route('kertas_siasatan.export_by_project') }}" method="GET">
                         
                         <div class="mb-4">
                             <label for="project_id_export" class="block text-sm font-medium text-gray-700">Pilih Projek</label>
                             <select name="project_id" id="project_id_export" required
-                                    class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                                    class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md @error('project_id') border-red-500 @enderror">
                                 <option value="">-- Sila Pilih Projek --</option>
-                                {{-- Loop through projects passed from controller --}}
-                                {{-- @foreach ($projects_for_export as $project) --}}
-                                {{--     <option value="{{ $project->id }}">{{ $project->name }} ({{ $project->project_date->format('d/m/Y') }})</option> --}}
-                                {{-- @endforeach --}}
-                                <option value="1">Contoh Projek 1 (Perlu data sebenar)</option>
-                                <option value="2">Contoh Projek 2 (Perlu data sebenar)</option>
+                                @if(isset($projects_for_export) && $projects_for_export->isNotEmpty())
+                                    @foreach ($projects_for_export as $project)
+                                        <option value="{{ $project->id }}" {{ old('project_id') == $project->id ? 'selected' : '' }}>
+                                            {{ $project->name }} ({{ $project->project_date->format('d/m/Y') }})
+                                        </option>
+                                    @endforeach
+                                @else
+                                    <option value="" disabled>Tiada projek ditemui.</option>
+                                @endif
                             </select>
+                            @error('project_id')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <div class="flex items-center justify-end mt-4">
