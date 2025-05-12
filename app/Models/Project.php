@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Kyslik\ColumnSortable\Sortable;
 
 use App\Models\KertasSiasatan;
 use App\Models\JenayahPaper;
@@ -16,7 +17,7 @@ use App\Models\OrangHilangPaper;
 
 class Project extends Model
 {
-    use HasFactory;
+    use HasFactory, Sortable;
 
     /**
      * The attributes that are mass assignable.
@@ -38,6 +39,19 @@ class Project extends Model
         'project_date' => 'date:Y-m-d', // Ensures it's treated as a Carbon date object
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+    ];
+
+    /**
+     * Attributes that are sortable.
+     *
+     * @var array
+     */
+    public $sortable = [
+        'id',
+        'name',
+        'project_date',
+        'created_at',
+        'updated_at'
     ];
 
     /**

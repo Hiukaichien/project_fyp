@@ -17,12 +17,8 @@ class KertasSiasatanController extends Controller
     public function index(Request $request)
     {
         $query = KertasSiasatan::query();
-
-        // Explicitly select all columns from the kertas_siasatans table
-        // to ensure all attributes are available on the model.
         $query->select('kertas_siasatans.*');
 
-        // Filter by project_id if provided in the request (for project show page integration)
         if ($request->filled('project_id')) {
             $query->where('kertas_siasatans.project_id', $request->input('project_id'));
         }
@@ -30,122 +26,58 @@ class KertasSiasatanController extends Controller
         if ($request->filled('search_no_ks')) {
             $query->where('no_ks', 'like', '%' . $request->search_no_ks . '%');
         }
-        // Handle flexible Tarikh KS input
+        
         if ($request->filled('search_tarikh_ks')) {
             $dateInput = trim($request->search_tarikh_ks);
-            $year = null;
-            $month = null;
-            $day = null;
-
-            // Normalize separators: replace '.' or '-' with '/'
+            $year = null; $month = null; $day = null;
             $dateInput = str_replace(['.', '-'], '/', $dateInput);
-
-            // Attempt 1: Parse D/M/Y (including YY and YYYY variants)
-            // Regex: Day (1-2 digits), Month (1-2 digits), Year (2 or 4 digits)
             if (preg_match('/^(\d{1,2})\/(\d{1,2})\/(\d{2}|\d{4})$/', $dateInput, $matches)) {
-                $d_match = (int)$matches[1];
-                $m_match = (int)$matches[2];
-                $y_match = (int)$matches[3];
-
-                if (strlen($matches[3]) == 2) { // YY format
-                    // Heuristic for YY to YYYY (e.g., 23 -> 2023, 98 -> 1998)
-                    // Adjust this based on your data's typical year range
-                    $y_match += ($y_match < 70 ? 2000 : 1900);
-                }
-                // Validate if it's a real date
-                if (checkdate($m_match, $d_match, $y_match)) {
-                    $day = $d_match;
-                    $month = $m_match;
-                    $year = $y_match;
-                }
-            }
-            // Attempt 2: Parse M/Y (if not D/M/Y)
-            // Regex: Month (1-2 digits), Year (2 or 4 digits)
-            elseif (preg_match('/^(\d{1,2})\/(\d{2}|\d{4})$/', $dateInput, $matches)) {
-                $m_match = (int)$matches[1];
-                $y_match = (int)$matches[2];
-                if (strlen($matches[2]) == 2) { // YY format
-                    $y_match += ($y_match < 70 ? 2000 : 1900);
-                }
-                // Validate month
-                if ($m_match >= 1 && $m_match <= 12) {
-                    $month = $m_match;
-                    $year = $y_match;
-                }
-            }
-            // Attempt 3: Parse YYYY only
-            elseif (preg_match('/^(\d{4})$/', $dateInput, $matches)) {
+                $d_match = (int)$matches[1]; $m_match = (int)$matches[2]; $y_match = (int)$matches[3];
+                if (strlen($matches[3]) == 2) { $y_match += ($y_match < 70 ? 2000 : 1900); }
+                if (checkdate($m_match, $d_match, $y_match)) { $day = $d_match; $month = $m_match; $year = $y_match; }
+            } elseif (preg_match('/^(\d{1,2})\/(\d{2}|\d{4})$/', $dateInput, $matches)) {
+                $m_match = (int)$matches[1]; $y_match = (int)$matches[2];
+                if (strlen($matches[2]) == 2) { $y_match += ($y_match < 70 ? 2000 : 1900); }
+                if ($m_match >= 1 && $m_match <= 12) { $month = $m_match; $year = $y_match; }
+            } elseif (preg_match('/^(\d{4})$/', $dateInput, $matches)) {
                 $year = (int)$matches[1];
-                // Basic validation for a reasonable year range if needed
-                // if ($year < 1900 || $year > Carbon::now()->year + 5) $year = null;
+            } elseif (preg_match('/^(\d{2})$/', $dateInput, $matches)) {
+                $y_match = (int)$matches[1]; $year = $y_match + ($y_match < 70 ? 2000 : 1900);
             }
-            // Attempt 4: Parse YY only
-            elseif (preg_match('/^(\d{2})$/', $dateInput, $matches)) {
-                $y_match = (int)$matches[1];
-                $year = $y_match + ($y_match < 70 ? 2000 : 1900);
-            }
-
-            // Apply query based on what was successfully parsed
-            if ($year && $month && $day) {
-                $query->whereDate('tarikh_ks', Carbon::create($year, $month, $day)->toDateString());
-            } elseif ($year && $month) {
-                $query->whereYear('tarikh_ks', $year)
-                    ->whereMonth('tarikh_ks', $month);
-            } elseif ($year) {
-                $query->whereYear('tarikh_ks', $year);
-            } else {
-                // Optional: If you want to indicate that the date format was not recognized,
-                // you could add a message or simply return no results for the date part.
-                // For now, if it's not recognized, it won't filter by date.
-                Log::info("Unrecognized date format for search_tarikh_ks: " . $request->search_tarikh_ks);
-            }
+            if ($year && $month && $day) { $query->whereDate('tarikh_ks', Carbon::create($year, $month, $day)->toDateString()); }
+            elseif ($year && $month) { $query->whereYear('tarikh_ks', $year)->whereMonth('tarikh_ks', $month); }
+            elseif ($year) { $query->whereYear('tarikh_ks', $year); }
+            else { Log::info("Unrecognized date format for search_tarikh_ks: " . $request->search_tarikh_ks); }
         }
         if ($request->filled('search_pegawai_penyiasat')) {
             $query->where('pegawai_penyiasat', 'like', '%' . $request->search_pegawai_penyiasat . '%');
         }
         if ($request->filled('search_status_ks')) {
-            $query->where('status_ks', $request->search_status_ks); // Changed from 'like' to '=' for exact match
+            $query->where('status_ks', $request->search_status_ks);
         }
-        // Add other filters as needed
 
-        // Sanitize GET parameters for sorting to prevent issues with the sortable package
-        // if 'sort' parameter is present but empty.
         $sortParamName = config('columnsortable.sort_parameter_name', 'sort');
-        // Ensure $sortParamName is not an empty string, fall back to 'sort' if it is.
-        if (empty($sortParamName)) {
-            $sortParamName = 'sort';
-        }
-
+        if (empty($sortParamName)) $sortParamName = 'sort';
         $directionParamName = config('columnsortable.direction_parameter_name', 'direction');
-        // Ensure $directionParamName is not an empty string, fall back to 'direction' if it is.
-        if (empty($directionParamName)) {
-            $directionParamName = 'direction';
-        }
+        if (empty($directionParamName)) $directionParamName = 'direction';
 
-        // Check the actual GET query parameters
         if ($request->query->has($sortParamName) && $request->query->get($sortParamName) === '') {
-            $currentQueryAsArray = $request->query->all(); // Get current GET params as an array
-            unset($currentQueryAsArray[$sortParamName]);   // Remove 'sort' if it's an empty string
-
+            $currentQueryAsArray = $request->query->all();
+            unset($currentQueryAsArray[$sortParamName]);
             if (isset($currentQueryAsArray[$directionParamName])) {
-                unset($currentQueryAsArray[$directionParamName]); // Also remove 'direction' if 'sort' was empty
+                unset($currentQueryAsArray[$directionParamName]);
             }
-            // Replace the GET parameters bag with the cleaned array.
-
             $request->query->replace($currentQueryAsArray);
         }
         
-        // Apply ordering using sortable() scope from Kyslik/column-sortable
-        $kertasSiasatans = $query->sortable(['created_at' => 'desc']) // Default sort
-                                 ->paginate(10)
-                                 ->withQueryString(); // Appends all current query params (now sanitized) to pagination links
+        $pageName = $request->input('page_name_param', 'page'); // Default to 'page' if not provided
 
-        // Handle AJAX requests for search filtering
+        $kertasSiasatans = $query->sortable()
+                         ->paginate(10, ['*'], $pageName) 
+                         ->appends($request->except('page_name_param')); 
+
         if ($request->ajax()) {
-            // The view partial will receive sorted and paginated data
             $tableHtml = view('kertas_siasatan._table_rows', compact('kertasSiasatans'))->render();
-            // Pagination links will also include sort parameters due to withQueryString()
-            // and the package's handling of sortable links.
             $paginationHtml = $kertasSiasatans->links()->toHtml();
 
             return response()->json([
@@ -154,12 +86,11 @@ class KertasSiasatanController extends Controller
             ]);
         }
 
-        // Fetch separate lists for the special status tables (only for full page load)
+        // For full page load (main KS index)
         $ksLewat24Jam = KertasSiasatan::where('edar_lebih_24_jam_status', 'YA, EDARAN LEWAT 24 JAM')->orderBy('tarikh_ks', 'desc')->get();
         $ksTerbengkalai = KertasSiasatan::where('terbengkalai_3_bulan_status', 'YA, TERBENGKALAI LEBIH 3 BULAN')->orderBy('tarikh_ks', 'desc')->get();
         $ksBaruKemaskini = KertasSiasatan::where('baru_kemaskini_status', 'YA, BARU DIGERAKKAN UNTUK DIKEMASKINI')->orderBy('updated_at', 'desc')->get();
 
-        // Return the full view for normal requests
         return view('kertas_siasatan.index', compact(
             'kertasSiasatans',
             'ksLewat24Jam',
@@ -168,19 +99,12 @@ class KertasSiasatanController extends Controller
         ));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     * We'll use this route/view for the upload form.
-     */
     public function create()
     {
         return view('kertas_siasatan.upload'); // View for upload form
     }
 
-    /**
-     * Store a newly created resource in storage.
-     * This will handle the Excel upload.
-     */
+        //handle excel upload
     public function store(Request $request)
     {
         $request->validate([
@@ -196,17 +120,12 @@ class KertasSiasatanController extends Controller
 
         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
              $failures = $e->failures();
-             // Handle validation errors within the Excel file
              return redirect()->back()->withErrors(['excel_errors' => $failures])->withInput();
         } catch (\Exception $e) {
-            // Handle other potential errors during import
              return redirect()->back()->with('error', 'Ralat semasa memproses fail: ' . $e->getMessage())->withInput();
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(KertasSiasatan $kertasSiasatan) // Route Model Binding
     {
          return view('kertas_siasatan.show', compact('kertasSiasatan'));
@@ -345,16 +264,8 @@ class KertasSiasatanController extends Controller
         ]);
 
         // --- Update Logic ---
-        $kertasSiasatan->fill($validatedData); // Mass assign validated data
-
-        // Calculations and conditional date handling are now done by the model's 'saving' event.
-        // No need to call them explicitly here:
-        // $kertasSiasatan->calculateEdarLebih24Jam();
-        // $kertasSiasatan->calculateTerbengkalai3Bulan();
-        // $kertasSiasatan->calculateBaruKemaskini();
-        // $kertasSiasatan->handleConditionalDates();
-
-        $kertasSiasatan->save(); // Save the updated model
+        $kertasSiasatan->fill($validatedData); 
+        $kertasSiasatan->save(); 
 
         return redirect()->route('kertas_siasatan.index')
                          ->with('success', 'Kertas Siasatan ' . $kertasSiasatan->no_ks . ' berjaya dikemaskini.');
@@ -370,7 +281,6 @@ class KertasSiasatanController extends Controller
             return redirect()->route('kertas_siasatan.index')
                              ->with('success', 'Kertas Siasatan ' . $kertasSiasatan->no_ks . ' berjaya dipadam.');
         } catch (\Exception $e) {
-            // Handle potential deletion constraints or errors
             return redirect()->route('kertas_siasatan.index')
                              ->with('error', 'Gagal memadam Kertas Siasatan: ' . $e->getMessage());
         }

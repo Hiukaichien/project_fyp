@@ -21,7 +21,11 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Project::orderBy('project_date', 'desc')->get();
+        // Use sortable scope and paginate the results
+        // Default sort can be set in Project model using $sortableAs array or apply a default here
+        $projects = Project::sortable()
+                            ->orderBy('project_date', 'desc') // Retain default sort if no sort params from request
+                            ->paginate(10); // Paginate results
         return view('projects.project', compact('projects'));
     }
 
@@ -55,24 +59,27 @@ class ProjectController extends Controller
     public function show(Project $project)
     {
         // Fetch unassigned Kertas Siasatan papers for the dropdown
+        // Assuming KertasSiasatan model has Sortable trait
         $unassignedKertasSiasatan = KertasSiasatan::whereNull('project_id')
-                                                ->orderBy('no_ks')
+                                                ->sortable() // Apply default sort from KertasSiasatan model
+                                                ->orderBy('no_ks') // Can be fallback or primary sort
                                                 ->get();
 
         // Fetch other unassigned paper types as needed for their respective dropdowns
-        $unassignedJenayahPapers = JenayahPaper::whereNull('project_id')->get(); 
-        $unassignedNarkotikPapers = NarkotikPaper::whereNull('project_id')->get();
-        $unassignedTrafikSeksyenPapers = TrafikSeksyenPaper::whereNull('project_id')->get();
-        $unassignedTrafikRulePapers = TrafikRulePaper::whereNull('project_id')->orderBy('no_kst')->get();
-        $unassignedKomersilPapers = KomersilPaper::whereNull('project_id')->get();
-        $unassignedLaporanMatiMengejutPapers = LaporanMatiMengejutPaper::whereNull('project_id')->get(); // Corrected model name
-        $unassignedOrangHilangPapers = OrangHilangPaper::whereNull('project_id')->get();
+        // Apply sortable() assuming these models also use the Sortable trait
+        $unassignedJenayahPapers = JenayahPaper::whereNull('project_id')->sortable()->get(); 
+        $unassignedNarkotikPapers = NarkotikPaper::whereNull('project_id')->sortable()->get();
+        $unassignedTrafikSeksyenPapers = TrafikSeksyenPaper::whereNull('project_id')->sortable()->get();
+        $unassignedTrafikRulePapers = TrafikRulePaper::whereNull('project_id')->sortable()->orderBy('no_kst')->get(); // Keep specific orderBy if needed
+        $unassignedKomersilPapers = KomersilPaper::whereNull('project_id')->sortable()->get();
+        $unassignedLaporanMatiMengejutPapers = LaporanMatiMengejutPaper::whereNull('project_id')->sortable()->get();
+        $unassignedOrangHilangPapers = OrangHilangPaper::whereNull('project_id')->sortable()->get();
 
         // Fetch paginated Kertas Siasatan associated with this project
         // Use a unique page name, e.g., 'ks_page', to avoid conflicts if other paginators are on the page
         $associatedKertasSiasatanPaginated = $project->kertasSiasatan()
                                                      ->sortable() // Assuming KertasSiasatan model uses Sortable trait
-                                                     ->paginate(15, ['*'], 'ks_project_page');
+                                                     ->paginate(10, ['*'], 'ks_project_page');
 
         return view('projects.show', compact(
             'project',
