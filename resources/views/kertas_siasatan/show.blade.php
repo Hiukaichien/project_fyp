@@ -5,6 +5,11 @@
                 Butiran Kertas Siasatan: {{ $kertasSiasatan->no_ks }}
             </h2>
             <div>
+                @if($kertasSiasatan->project)
+                    <a href="{{ route('projects.show', $kertasSiasatan->project->id) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm mr-2">
+                        Kembali ke Projek: {{ $kertasSiasatan->project->name }}
+                    </a>
+                @endif
                 <a href="{{ route('kertas_siasatan.index') }}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-sm mr-2">
                     Kembali ke Senarai
                 </a>
