@@ -8,6 +8,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\KertasSiasatanImport;
 use Carbon\Carbon; 
 use Illuminate\Support\Facades\Log;
+
 class KertasSiasatanController extends Controller
 {
     /**
@@ -15,12 +16,16 @@ class KertasSiasatanController extends Controller
      */
     public function index(Request $request)
     {
-        // Main query for the paginated list
         $query = KertasSiasatan::query();
 
         // Explicitly select all columns from the kertas_siasatans table
         // to ensure all attributes are available on the model.
         $query->select('kertas_siasatans.*');
+
+        // Filter by project_id if provided in the request (for project show page integration)
+        if ($request->filled('project_id')) {
+            $query->where('kertas_siasatans.project_id', $request->input('project_id'));
+        }
 
         if ($request->filled('search_no_ks')) {
             $query->where('no_ks', 'like', '%' . $request->search_no_ks . '%');

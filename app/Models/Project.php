@@ -5,6 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Models\KertasSiasatan;
+use App\Models\JenayahPaper;
+use App\Models\NarkotikPaper;
+use App\Models\TrafikSeksyenPaper;
+use App\Models\TrafikRulePaper;
+use App\Models\KomersilPaper;
+use App\Models\LaporanMatiMengejutPaper; 
+use App\Models\OrangHilangPaper;
+
 class Project extends Model
 {
     use HasFactory;
@@ -27,107 +36,106 @@ class Project extends Model
      */
     protected $casts = [
         'project_date' => 'date:Y-m-d', // Ensures it's treated as a Carbon date object
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
     /**
-     * Get all of the Jenayah papers associated with the project.
+     * Define relationships to each paper type.
      */
+    public function kertasSiasatan()
+    {
+        return $this->hasMany(KertasSiasatan::class, 'project_id');
+    }
+
     public function jenayahPapers()
     {
-        // Assuming your JenayahPaper model is named 'JenayahPaper'
-        // and the foreign key in 'jenayah_papers' table is 'project_id'
         return $this->hasMany(JenayahPaper::class, 'project_id');
     }
 
-    /**
-     * Get all of the Narkotik papers associated with the project.
-     */
     public function narkotikPapers()
     {
-        // Assuming your NarkotikPaper model is named 'NarkotikPaper'
         return $this->hasMany(NarkotikPaper::class, 'project_id');
     }
 
-    /**
-     * Get all of the Komersil papers associated with the project.
-     */
-    public function komersilPapers()
-    {
-        // Assuming your KomersilPaper model is named 'KomersilPaper'
-        return $this->hasMany(KomersilPaper::class, 'project_id');
-    }
-
-    /**
-     * Get all of the Trafik Seksyen papers associated with the project.
-     */
     public function trafikSeksyenPapers()
     {
-        // Assuming your TrafikSeksyenPaper model is named 'TrafikSeksyenPaper'
         return $this->hasMany(TrafikSeksyenPaper::class, 'project_id');
     }
 
-    /**
-     * Get all of the Trafik Rule papers associated with the project.
-     */
     public function trafikRulePapers()
     {
-        // Assuming your TrafikRulePaper model is named 'TrafikRulePaper'
         return $this->hasMany(TrafikRulePaper::class, 'project_id');
     }
 
-    /**
-     * Get all of the Orang Hilang papers associated with the project.
-     */
+    public function komersilPapers()
+    {
+        return $this->hasMany(KomersilPaper::class, 'project_id');
+    }
+
+    public function laporanMatiMengejutPapers() // Renamed method
+    {
+        return $this->hasMany(LaporanMatiMengejutPaper::class, 'project_id'); // Changed model class
+    }
+
     public function orangHilangPapers()
     {
-        // Assuming your OrangHilangPaper model is named 'OrangHilangPaper'
         return $this->hasMany(OrangHilangPaper::class, 'project_id');
     }
 
     /**
-     * Get all of the Laporan Mati Mengejut papers associated with the project.
-     */
-    public function laporanMatiMengejutPapers()
-    {
-        // Assuming your LaporanMatiMengejutPaper model is named 'LaporanMatiMengejutPaper'
-        return $this->hasMany(LaporanMatiMengejutPaper::class, 'project_id');
-    }
-
-    /**
-     * An example of a helper method to get all papers from all types for a project.
-     * This might be useful for a project overview page.
-     * Note: This will return a collection of collections, or you could merge them.
+     * Get all associated papers grouped by type.
+     * The keys in the returned array should match what the view expects
+     * (e.g., 'kertas_siasatan', 'jenayah_papers').
      */
     public function allAssociatedPapers()
     {
+        // Eager load the relationships to avoid N+1 issues if this method is called multiple times
+        // or if the project object is used elsewhere where these relations are looped.
+        $this->loadMissing([
+            'kertasSiasatan', 
+            'jenayahPapers', 
+            'narkotikPapers', 
+            'trafikSeksyenPapers',
+            'trafikRulePapers',
+            'komersilPapers',
+            'laporanMatiMengejutPapers', // Renamed relationship
+            'orangHilangPapers'
+        ]);
+
         return [
-            'jenayah' => $this->jenayahPapers,
-            'narkotik' => $this->narkotikPapers,
-            'komersil' => $this->komersilPapers,
-            'trafik_seksyen' => $this->trafikSeksyenPapers,
-            'trafik_rule' => $this->trafikRulePapers,
-            'orang_hilang' => $this->orangHilangPapers,
-            'laporan_mati_mengejut' => $this->laporanMatiMengejutPapers,
+            'kertas_siasatan' => $this->kertasSiasatan, // Ensure key matches str_replace in view if it was 'kertas_siasatan_papers'
+            'jenayah_papers' => $this->jenayahPapers,
+            'narkotik_papers' => $this->narkotikPapers,
+            'trafik_seksyen_papers' => $this->trafikSeksyenPapers,
+            'trafik_rule_papers' => $this->trafikRulePapers,
+            'komersil_papers' => $this->komersilPapers,
+            'laporan_mati_mengejut_papers' => $this->laporanMatiMengejutPapers, // Renamed key and property
+            'orang_hilang_papers' => $this->orangHilangPapers,
         ];
     }
 
     /**
-     * If you want a single merged collection of all papers (might lose type distinction easily):
-     * Be cautious with this if different paper types have vastly different fields you need to access.
+     * Get all associated papers merged into a single collection.
+     * (Alternative to allAssociatedPapers if you don't need grouping by type in some contexts)
      */
     public function allPapersMerged()
     {
-        $allPapers = collect([]);
-        $allPapers = $allPapers->merge($this->jenayahPapers);
-        $allPapers = $allPapers->merge($this->narkotikPapers);
-        $allPapers = $allPapers->merge($this->komersilPapers);
-        $allPapers = $allPapers->merge($this->trafikSeksyenPapers);
-        $allPapers = $allPapers->merge($this->trafikRulePapers);
-        $allPapers = $allPapers->merge($this->orangHilangPapers);
-        $allPapers = $allPapers->merge($this->laporanMatiMengejutPapers);
+        $collections = [
+            $this->kertasSiasatan()->get(),
+            $this->jenayahPapers()->get(),
+            $this->narkotikPapers()->get(),
+            $this->trafikSeksyenPapers()->get(),
+            $this->trafikRulePapers()->get(),
+            $this->komersilPapers()->get(),
+            $this->laporanMatiMengejutPapers()->get(), // Renamed method call
+            $this->orangHilangPapers()->get(),
+        ];
 
-        // You might want to sort this merged collection, e.g., by a common date field
-        // return $allPapers->sortBy('tarikh_ks_dibuka_variant'); // if you add such an accessor
-        return $allPapers;
+        $merged = collect();
+        foreach ($collections as $collection) {
+            $merged = $merged->merge($collection);
+        }
+        return $merged;
     }
 }

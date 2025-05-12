@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('kertas_siasatans', function (Blueprint $table) {
             // Basic Info (Partially from Excel/IPRS Lookup)
             $table->id(); // Auto Generate Bil
+
             $table->string('no_ks')->unique(); // No. Kertas Siasatan - Primary Business Key
             $table->date('tarikh_ks')->nullable(); // Tarikh KS
             $table->string('no_report')->nullable(); // No. Repot
