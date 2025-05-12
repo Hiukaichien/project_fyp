@@ -32,28 +32,42 @@
                     @else
                         <div class="space-y-4">
                             @foreach ($projects as $project)
-                                <div class="p-4 border border-gray-200 dark:border-gray-700 rounded-md shadow-sm hover:shadow-md transition-shadow">
+                                <div class="block p-4 border border-gray-200 dark:border-gray-700 rounded-md shadow-sm hover:shadow-lg transition-shadow duration-150 ease-in-out">
                                     <div class="flex justify-between items-start">
                                         <div class="flex-grow mr-4">
-                                            <div class="flex justify-between items-center mb-1">
-                                                <a href="{{ route('projects.show', $project) }}" class="text-xl font-semibold text-blue-600 dark:text-blue-400 hover:underline">{{ $project->name }}</a>
-                                                <p class="text-sm text-gray-600 dark:text-gray-400 ml-2 whitespace-nowrap">
-                                                    {{ __('') }} {{ \Carbon\Carbon::parse($project->project_date)->format('d M Y') }}
-                                                </p>
+                                            <a href="{{ route('projects.show', $project) }}" class="block">
+                                                <div class="flex justify-between items-center mb-1">
+                                                    <span class="text-xl font-semibold text-blue-600 dark:text-blue-400 group-hover:underline">{{ $project->name }}</span>
+                                                    <div class="text-right">
+                                                        <p class="text-sm text-gray-600 dark:text-gray-400 ml-2 whitespace-nowrap">
+                                                            {{ \Carbon\Carbon::parse($project->project_date)->format('d M Y') }}
+                                                        </p>
+                                                        <p class="text-xs text-gray-400 dark:text-gray-500 ml-2 whitespace-nowrap" title="Last Updated">
+                                                            {{ __('Updated:') }} {{ $project->updated_at->format('d M Y, H:i') }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                @if($project->description)
+                                                <p class="text-sm text-gray-500 dark:text-gray-300">{{ Str::limit($project->description, 150) }}</p>
+                                                @endif
+                                            </a>
+                                            {{-- Edit, Delete, and Download Actions --}}
+                                            <div class="mt-3 flex justify-end space-x-3">
+                                                <a href="{{ route('projects.download_csv', $project) }}" class="text-green-600 dark:text-green-400 hover:text-green-500" title="{{ __('Download Associated Papers CSV') }}">
+                                                    <i class="fas fa-file-csv"></i>
+                                                </a>
+                                                <a href="{{ route('projects.edit', $project) }}" class="text-yellow-600 dark:text-yellow-400 hover:text-yellow-500" title="{{ __('Edit Project') }}">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <form action="{{ route('projects.destroy', $project) }}" method="POST" onsubmit="return confirm('{{ __('Are you sure you want to delete this project and all its associated paper links? This action cannot be undone.') }}');" class="inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="text-red-600 dark:text-red-400 hover:text-red-500" title="{{ __('Delete Project') }}">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </button>
+                                                </form>
                                             </div>
-                                            @if($project->description)
-                                            <p class="text-sm text-gray-500 dark:text-gray-300">{{ Str::limit($project->description, 150) }}</p>
-                                            @endif
                                         </div>
-                                        {{-- Optional: Add links for edit/delete here or on the show page --}}
-                                        {{-- <div class="flex space-x-2 flex-shrink-0">
-                                            <a href="{{ route('projects.edit', $project) }}" class="text-sm text-yellow-600 hover:underline">Edit</a>
-                                            <form action="{{ route('projects.destroy', $project) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this project?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="text-sm text-red-600 hover:underline">Delete</button>
-                                            </form>
-                                        </div> --}}
                                     </div>
                                 </div>
                             @endforeach
