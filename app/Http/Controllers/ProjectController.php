@@ -13,6 +13,8 @@ use App\Models\TrafikRulePaper;
 use App\Models\KomersilPaper;  
 use App\Models\LaporanMatiMengejutPaper; 
 use App\Models\OrangHilangPaper; 
+use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\StreamedResponse; // Add this import
 
 class ProjectController extends Controller
 {
@@ -80,6 +82,11 @@ class ProjectController extends Controller
         $associatedKertasSiasatanPaginated = $project->kertasSiasatan()
                                                      ->sortable() // Assuming KertasSiasatan model uses Sortable trait
                                                      ->paginate(10, ['*'], 'ks_project_page');
+        
+        // Get all associated papers for the "other papers" list
+        // This ensures we have the full collections for display, not paginated.
+        $allPapers = $project->allAssociatedPapers();
+
 
         return view('projects.show', compact(
             'project',
@@ -91,35 +98,31 @@ class ProjectController extends Controller
             'unassignedKomersilPapers',
             'unassignedLaporanMatiMengejutPapers', // Corrected variable name
             'unassignedOrangHilangPapers',
-            'associatedKertasSiasatanPaginated' // Pass paginated associated KS
+            'associatedKertasSiasatanPaginated', // Pass paginated associated KS
+            'allPapers' // Pass all papers for the other lists
         ));
     }
 
     /**
      * Show the form for editing the specified resource.
-     * (Stub - implement if needed)
      */
     public function edit(Project $project)
     {
-        // return view('projects.edit', compact('project'));
-        // For now, redirect or show a message if not implemented
-        return Redirect::route('projects.show', $project)->with('info', 'Edit functionality not yet implemented.');
+        return view('projects.edit', compact('project'));
     }
 
     /**
      * Update the specified resource in storage.
-     * (Stub - implement if needed)
      */
     public function update(Request $request, Project $project)
     {
-        // $validatedData = $request->validate([
-        //     'name' => 'required|string|max:255',
-        //     'project_date' => 'required|date',
-        //     'description' => 'nullable|string',
-        // ]);
-        // $project->update($validatedData);
-        // return Redirect::route('projects.index')->with('success', 'Project updated successfully.');
-        return Redirect::route('projects.show', $project)->with('info', 'Update functionality not yet implemented.');
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'project_date' => 'required|date',
+            'description' => 'nullable|string',
+        ]);
+        $project->update($validatedData);
+        return Redirect::route('projects.show', $project)->with('success', 'Project updated successfully.');
     }
 
     /**
@@ -175,6 +178,7 @@ class ProjectController extends Controller
 
     /**
      * Disassociate a paper from the project.
+     * This function is called via a route when a form is submitted from a Blade view.
      */
     public function disassociatePaper(Request $request, Project $project, $paperType, $paperId)
     {
@@ -200,5 +204,63 @@ class ProjectController extends Controller
         $paper->save();
 
         return redirect()->route('projects.show', $project)->with('success', ucfirst($paperType) . ' successfully removed from the project.');
+    }
+
+    /**
+     * Download associated papers as a CSV file.
+     */
+    public function downloadAssociatedPapersCsv(Project $project)
+    {
+        $allPapersData = $project->allAssociatedPapers(); // Assuming this method returns all types of papers
+
+        $fileName = Str::slug($project->name) . '-associated-papers.csv';
+
+        $headers = [
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+
+        $columns = ['Paper Type', 'Identifier', 'Details', 'Status KS', 'Status Kes', 'Pegawai Penyiasat', 'Tarikh KS']; // Adjust columns as needed
+
+        $callback = function() use ($allPapersData, $columns, $project) { // Added $project here
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+
+            foreach ($allPapersData as $type => $papersCollection) {
+                $paperTypeDisplay = Str::title(str_replace('_', ' ', Str::before($type, 'Papers')));
+                if ($type === 'kertas_siasatan') { // KertasSiasatan might be paginated, handle it
+                    $papersCollection = $project->kertasSiasatan()->get(); // Get all KS for this project
+                }
+
+                foreach ($papersCollection as $paper) {
+                    $identifier = $paper->no_ks ?? $paper->no_kst ?? $paper->no_lmm ?? $paper->no_ks_oh ?? $paper->name ?? "ID: {$paper->id}";
+                    $details = ''; // Add any other specific details you want to extract
+                                    // For example, $paper->description or other fields
+                    
+                    $statusKs = $paper->status_ks ?? '-';
+                    $statusKes = $paper->status_kes ?? '-';
+                    $pegawaiPenyiasat = $paper->pegawai_penyiasat ?? '-';
+                    $tarikhKs = isset($paper->tarikh_ks) ? (is_string($paper->tarikh_ks) ? \Carbon\Carbon::parse($paper->tarikh_ks)->format('d/m/Y') : optional($paper->tarikh_ks)->format('d/m/Y')) : '-';
+
+
+                    $row = [
+                        $paperTypeDisplay,
+                        $identifier,
+                        $details, // You might want to populate this with more specific info
+                        $statusKs,
+                        $statusKes,
+                        $pegawaiPenyiasat,
+                        $tarikhKs,
+                    ];
+                    fputcsv($file, $row);
+                }
+            }
+            fclose($file);
+        };
+
+        return new StreamedResponse($callback, 200, $headers);
     }
 }
