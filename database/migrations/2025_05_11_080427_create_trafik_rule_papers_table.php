@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('trafik_rule_papers', function (Blueprint $table) {
+       Schema::create('trafik_rule_papers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('project_id')->nullable()->constrained('projects')->onDelete('set null');
+            $table->foreignId('project_id')->nullable()->constrained()->onDelete('set null');
 
-            // Core Fields
+            // Common Core Fields
             $table->string('no_kst')->unique();
             $table->date('tarikh_kst_dibuka')->nullable();
             $table->string('no_repot_polis')->nullable()->index();
@@ -24,32 +24,21 @@ return new class extends Migration
             $table->string('status_kst')->nullable()->index();
             $table->string('status_kes')->nullable()->index();
             $table->string('kes_klasifikasi')->nullable();
-            // 'SEKSYEN DIBUKA' seems to be replaced by 'TARIKH LAPORAN POLIS' in this CSV section for this specific type
-            // The next distinct field is PEGAWAI PEMERIKSA JIPS
-            $table->date('tarikh_laporan_polis_header')->nullable(); // CSV Header: TARIKH LAPORAN POLIS (first instance for this category)
+            $table->string('seksyen_dibuka')->nullable();
+            $table->date('tarikh_laporan_polis')->nullable();
             $table->string('pegawai_pemeriksa_jips')->nullable();
-
-            // Minit Dates (Standardized)
-            // CSV for TRAFIK (KES RULE) has: "TARIKH EDARAN MINIT PERTAMA (A)", "TARIKH EDARAN MINIT AKHIR"
             $table->date('tarikh_minit_a')->nullable();
-            $table->date('tarikh_minit_b')->nullable();
-            $table->date('tarikh_minit_c')->nullable();
             $table->date('tarikh_minit_d')->nullable();
 
-            // Calculated Statuses
-            $table->string('edar_lebih_24_jam_status')->nullable();
-            $table->string('terbengkalai_3_bulan_status')->nullable();
-            $table->string('baru_kemaskini_status')->nullable();
-
-            // TRAFIK (KES RULE) Specific Columns
-            $table->string('edaran_minit_pertama_lebih_48jam_ab_flag')->nullable();
-            $table->string('kst_terbengkalai_flag')->nullable();
-            $table->text('pengiraan_kst_terbengkalai')->nullable();
-            $table->string('kst_io_aio_renew_selepas_semboyan')->nullable();
+            // Other fields
+            $table->string('kst_terbengkalai_melebihi_3bulan')->nullable();
+            $table->string('pengiraan_ks_terbengkalai_melebihi_3bulan')->nullable();
+            $table->string('kst_io_aio_renew__tarikh_selepas_semboyan')->nullable();
             $table->string('rakam_pengadu_pihak_kemalangan_tuntutan_112ktj')->nullable();
             $table->string('diari_siasatan_dikemaskini')->nullable();
             $table->date('tarikh_akhir_diari_dikemaskini')->nullable();
-            $table->date('tarikh_daftar_bk_kenderaan')->nullable();
+            $table->string('no_daftar_ekshibit_kulit_ks')->nullable();
+            $table->date('tarikh_io_aio_daftar_bk_kenderaan')->nullable();
             $table->string('no_daftar_bk_kenderaan_er')->nullable();
             $table->string('bk_tiada_rekod_daftar')->nullable();
             $table->string('gambar_bk_dilampirkan_ks')->nullable();
@@ -64,10 +53,44 @@ return new class extends Migration
             $table->string('kes_cedera_parah_hospital_rujuk_kbspt_dbs43_status')->nullable();
             $table->string('saman_pol257_dikeluarkan_status')->nullable();
             $table->string('no_saman_pol257')->nullable();
-            $table->string('pem1_status')->nullable();
-            $table->string('pem2_status')->nullable();
-            $table->string('pem3_status')->nullable();
-            $table->string('pem4_status')->nullable();
+            $table->string('pem1')->nullable();
+            $table->string('pem2')->nullable();
+            $table->string('pem3')->nullable();
+            $table->string('pem4')->nullable();
+            $table->string('rj9')->nullable();
+            $table->date('tarikh_cipta_rj9')->nullable();
+            $table->string('rj99')->nullable();
+            $table->date('tarikh_cipta_rj99')->nullable();
+            $table->string('rj10a')->nullable();
+            $table->date('tarikh_cipta_rj10a')->nullable();
+            $table->string('rj10b')->nullable();
+            $table->date('tarikh_cipta_rj10b')->nullable();
+            $table->string('rj2')->nullable();
+            $table->date('tarikh_cipta_rj2')->nullable();
+            $table->string('rj2b')->nullable();
+            $table->date('tarikh_cipta_rj2b')->nullable();
+            $table->string('rj21')->nullable();
+            $table->date('tarikh_cipta_rj21')->nullable();
+            $table->string('adakah_okt_surat_jamin_polis_pdrma43')->nullable();
+            $table->string('adakah_pdrma43_okt_dijamin_penjamin')->nullable();
+            $table->text('ulasan_surat_jamin_polis_pdrma43')->nullable();
+            $table->string('ks_telah_lengkap_gagal_rujuk_tpr_arahan_tuduh')->nullable();
+            $table->string('ks_telah_ada_arahan_tuduh_tidak_laksana')->nullable();
+            $table->date('tarikh_tpr_beri_arahan_tuduh')->nullable();
+            $table->string('io_aio_gagal_kesan_tangkap_suspek')->nullable();
+            $table->string('io_aio_tidak_hantar_surat_panggilan_saksi')->nullable();
+            $table->string('io_aio_tidak_mohon_waran_tangkap')->nullable();
+            $table->string('io_aio_tidak_wanted_okt_rj10a')->nullable();
+            $table->string('adakah_tpr_beri_arahan_nfa')->nullable();
+            $table->date('tarikh_tpr_beri_arahan_nfa')->nullable();
+            $table->text('ulasan_kes_di_nfa')->nullable();
+            $table->string('adakah_kes_nfa_rujuk_semula_koroner')->nullable();
+            $table->string('adakah_ks_berkeputusan_jatuh_hukum')->nullable();
+            $table->date('tarikh_keputusan_jatuh_hukum')->nullable();
+            $table->string('adakah_ks_difolio_susunan_kandungan')->nullable();
+            $table->text('ulasan_penemuan_menarik1')->nullable();
+            $table->text('ulasan_penemuan_menarik2')->nullable();
+            $table->text('ulasan_lain_lain')->nullable();
 
             $table->timestamps();
         });
