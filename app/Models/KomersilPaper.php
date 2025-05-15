@@ -20,7 +20,7 @@ class KomersilPaper extends Model
         'tarikh_laporan_polis' => 'date:Y-m-d',
         'tarikh_minit_a' => 'date:Y-m-d', // Mapped from "TARIKH EDARAN MINIT PERTAMA (A)"
         'tarikh_minit_b' => 'date:Y-m-d', // Mapped from "TARIKH EDARAN MINIT KEDUA (B)"
-        'tarikh_minit_c' => 'date:Y-m-d', // Likely null for Komersil
+        'tarikh_minit_c' => 'date:Y-m-d', // Likely null for Komersil, standardized
         'tarikh_minit_d' => 'date:Y-m-d', // Mapped from "TARIKH EDARAN MINIT AKHIR"
         'tarikh_akhir_diari_dikemaskini' => 'date:Y-m-d',
         'tarikh_daftar_bk_berharga_tunai' => 'date:Y-m-d',
@@ -43,6 +43,21 @@ class KomersilPaper extends Model
         'tarikh_tpr_beri_arahan_nfa' => 'date:Y-m-d',
         'tarikh_tpr_beri_arahan_dnaa' => 'date:Y-m-d',
         'tarikh_keputusan_jatuh_hukum' => 'date:Y-m-d',
+
+        // Added e-FSA related date casts (assuming up to 3 instances based on CSV structure)
+        'efsa_bank_1_tarikh_dimohon' => 'date:Y-m-d',
+        'efsa_bank_1_laporan_diterima_tarikh' => 'date:Y-m-d',
+        'efsa_bank_2_tarikh_dimohon' => 'date:Y-m-d',
+        'efsa_bank_2_laporan_diterima_tarikh' => 'date:Y-m-d',
+        'efsa_bank_3_tarikh_dimohon' => 'date:Y-m-d',
+        'efsa_bank_3_laporan_diterima_tarikh' => 'date:Y-m-d',
+        'efsa_telco_1_tarikh_dimohon' => 'date:Y-m-d',
+        'efsa_telco_1_laporan_diterima_tarikh' => 'date:Y-m-d',
+        'efsa_telco_2_tarikh_dimohon' => 'date:Y-m-d',
+        'efsa_telco_2_laporan_diterima_tarikh' => 'date:Y-m-d',
+        'efsa_telco_3_tarikh_dimohon' => 'date:Y-m-d',
+        'efsa_telco_3_laporan_diterima_tarikh' => 'date:Y-m-d',
+        
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];

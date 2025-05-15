@@ -86,6 +86,33 @@ return new class extends Migration
             $table->date('rj2b_tarikh_cipta')->nullable();
             $table->string('rj21_status')->nullable();
             $table->date('rj21_tarikh_cipta')->nullable();
+
+            // Add missing PDRM(A)43 fields from KOMERSIL CSV column
+            $table->string('surat_jamin_polis_pdrma43_status')->nullable(); // ADAKAH OKT DIKELUARKAN SURAT JAMIN POLIS - PDRM(A)43
+            $table->string('pdrma43_jamin_diri_sendiri_status')->nullable(); // ADAKAH PDRM(A)43 DIKELUARKAN OKT JAMIN DIRI SENDIRI
+            $table->string('pdrma43_dijamin_penjamin_status')->nullable(); // ADAKAH PDRM(A)43 DIKELUARKAN OKT DIJAMIN OLEH PENJAMIN
+            $table->text('ulasan_surat_jamin_polis_pdrma43')->nullable(); // ULASAN MENGENAI SURAT JAMIN POLIS - PDRM(A)43 DIKELUARKAN
+
+            // Detailed e-FSA Application Fields (Bank - up to 3 instances)
+            $table->string('efsa_bank_1_nama')->nullable();
+            $table->date('efsa_bank_1_tarikh_dimohon')->nullable();
+
+            $table->string('efsa_bank_2_nama')->nullable();
+            $table->date('efsa_bank_2_tarikh_dimohon')->nullable();
+
+            $table->string('efsa_bank_3_nama')->nullable();
+            $table->date('efsa_bank_3_tarikh_dimohon')->nullable();
+
+            // Detailed e-FSA Application Fields (Telco - up to 3 instances)
+            $table->string('efsa_telco_1_nama')->nullable();
+            $table->date('efsa_telco_1_tarikh_dimohon')->nullable();
+
+            $table->string('efsa_telco_2_nama')->nullable();
+            $table->date('efsa_telco_2_tarikh_dimohon')->nullable();
+
+            $table->string('efsa_telco_3_nama')->nullable();
+            $table->date('efsa_telco_3_tarikh_dimohon')->nullable();
+
             $table->string('permohonan_efsa_bank_status')->nullable();
             $table->string('permohonan_efsa_bank_tarikh_info')->nullable();
             $table->string('permohonan_efsa_telco_status')->nullable();
@@ -106,14 +133,13 @@ return new class extends Migration
             $table->string('tpr_beri_arahan_nfa_status')->nullable();
             $table->date('tarikh_tpr_beri_arahan_nfa')->nullable();
             $table->text('ulasan_kes_nfa')->nullable();
-            $table->string('kes_nfa_tpr_rujuk_koroner_status')->nullable();
             $table->string('tpr_beri_arahan_dnaa_status')->nullable();
             $table->date('tarikh_tpr_beri_arahan_dnaa')->nullable();
             $table->text('ulasan_kes_dnaa')->nullable();
             $table->string('io_tuduh_semula_dnaa_status')->nullable();
             $table->string('ks_jatuh_hukum_status')->nullable();
             $table->date('tarikh_keputusan_jatuh_hukum')->nullable();
-            $table->string('ks_difolio_ikut_susunan_status')->nullable();
+            $table->string('ks_difolio_ikut_susunan_kandungan')->nullable();
             $table->text('ulasan_penemuan_menarik1')->nullable();
             $table->text('ulasan_penemuan_menarik2')->nullable();
             $table->text('ulasan_lain_lain')->nullable();
