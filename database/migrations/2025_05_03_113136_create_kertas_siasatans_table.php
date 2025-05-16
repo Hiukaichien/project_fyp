@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('kertas_siasatans', function (Blueprint $table) {
             // Basic Info (Partially from Excel/IPRS Lookup)
             $table->id(); // Auto Generate Bil
+            $table->foreignId('project_id')->nullable()->constrained('projects')->onDelete('set null'); // Add this line
 
             $table->string('no_ks')->unique(); // No. Kertas Siasatan - Primary Business Key
             $table->date('tarikh_ks')->nullable(); // Tarikh KS
