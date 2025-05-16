@@ -61,7 +61,7 @@
                         get filteredOptions() {
                             const term = this.searchTerm ? this.searchTerm.trim().toLowerCase() : '';
                             if (term === '') {
-                                return this.originalOptions; // Show all if search term is empty or just spaces
+                                return this.originalOptions;
                             }
                             return this.originalOptions.filter(option => 
                                 option.text.toLowerCase().includes(term)
@@ -70,17 +70,16 @@
                         selectOption(option) {
                             this.selectedPaperId = option.id;
                             this.selectedPaperText = option.text;
-                            this.searchTerm = option.text; // Display selected text in input
+                            this.searchTerm = option.text;
                             this.isOpen = false;
                         },
-                        resetSearch() { // Reset when user starts typing again after selection
+                        resetSearch() {
                             if (this.selectedPaperId) {
                                 this.selectedPaperId = null;
-                                // this.selectedPaperText = ''; // Keep searchTerm as is for filtering
                             }
                             this.isOpen = true;
                         }
-                    }" class="mb-6 relative">
+                    }" @click.away="isOpen = false" class="mb-6 relative">
                         <form action="{{ route('projects.associate_paper', $project->id) }}" method="POST">
                             @csrf
                             <input type="hidden" name="paper_type" value="KertasSiasatan">
@@ -94,16 +93,16 @@
                                            x-model="searchTerm"
                                            @input="resetSearch()"
                                            @focus="isOpen = true"
+                                           @click="isOpen = true"
                                            @keydown.escape.prevent="isOpen = false"
-                                           @keydown.down.prevent="isOpen = true" {{-- Basic keyboard nav hint --}}
+                                           @keydown.down.prevent="isOpen = true"
                                            placeholder="Type to search No. KS or Pegawai..."
                                            autocomplete="off"
                                            class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
                                     
                                     <div x-show="isOpen" 
-                                         @click.away="isOpen = false"
                                          class="absolute z-10 mt-1 w-full md:w-auto bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto"
-                                         style="min-width: calc( (100% / 3 * 2) - 1rem );"> {{-- Approximate width of md:col-span-2 --}}
+                                         style="min-width: calc( (100% / 3 * 2) - 1rem );">
                                         <ul class="py-1">
                                             <template x-if="filteredOptions.length === 0 && searchTerm.trim() !== ''">
                                                 <li class="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">{{ __('No matching Kertas Siasatan found') }}</li>
@@ -351,7 +350,7 @@
                                 get filteredOptions() {
                                     const term = this.searchTerm ? this.searchTerm.trim().toLowerCase() : '';
                                     if (term === '') {
-                                        return this.originalOptions; // Show all if search term is empty or just spaces
+                                        return this.originalOptions;
                                     }
                                     return this.originalOptions.filter(option => 
                                         option.text.toLowerCase().includes(term)
@@ -369,7 +368,7 @@
                                     }
                                     this.isOpen = true;
                                 }
-                            }" class="mb-6 relative">
+                            }" @click.away="isOpen = false" class="mb-6 relative">
                                 <form action="{{ route('projects.associate_paper', $project->id) }}" method="POST">
                                     @csrf
                                     <input type="hidden" name="paper_type" value="{{ $modelName }}">
@@ -383,13 +382,13 @@
                                                    x-model="searchTerm"
                                                    @input="resetSearch()"
                                                    @focus="isOpen = true"
+                                                   @click="isOpen = true"
                                                    @keydown.escape.prevent="isOpen = false"
                                                    placeholder="Type to search..."
                                                    autocomplete="off"
                                                    class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
 
                                             <div x-show="isOpen"
-                                                 @click.away="isOpen = false"
                                                  class="absolute z-10 mt-1 w-full md:w-auto bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto"
                                                  style="min-width: calc( (100% / 3 * 2) - 1rem );">
                                                 <ul class="py-1">
