@@ -6,7 +6,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\KertasSiasatanController; // Import the controller
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 // Modify the dashboard route to redirect to the Kertas Siasatan index
