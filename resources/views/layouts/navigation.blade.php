@@ -12,13 +12,14 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('kertas_siasatan.index')" :active="request()->routeIs('kertas_siasatan.index') || request()->routeIs('dashboard')">
+                    <x-nav-link :href="route('projects.index')" :active="request()->routeIs('dashboard') || request()->routeIs('projects.*')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
                  
-                    <x-nav-link :href="route('projects.index')" :active="request()->routeIs('projects.*')">
+                    {{-- The "Projects" link is now redundant as "Dashboard" leads to the project list --}}
+                    {{-- <x-nav-link :href="route('projects.index')" :active="request()->routeIs('projects.*')">
                         {{ __('Projects') }} 
-                    </x-nav-link>
+                    </x-nav-link> --}}
 
                 </div>
             </div>
@@ -72,12 +73,8 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('kertas_siasatan.index')" :active="request()->routeIs('kertas_siasatan.index') || request()->routeIs('dashboard')">
+            <x-responsive-nav-link :href="route('projects.index')" :active="request()->routeIs('dashboard') || request()->routeIs('projects.*')">
                 {{ __('Dashboard') }}
-            </x-responsive-nav-link>
-            {{-- MODIFIED Project Link for Responsive Menu --}}
-            <x-responsive-nav-link :href="route('projects.index')" :active="request()->routeIs('projects.*')">
-                {{ __('Projects') }}  {{-- Changed label to Projects (plural) for consistency --}}
             </x-responsive-nav-link>
         </div>
 

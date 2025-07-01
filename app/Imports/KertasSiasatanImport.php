@@ -17,6 +17,13 @@ use Illuminate\Support\Facades\Log;
 
 class KertasSiasatanImport implements ToModel, WithHeadingRow, WithUpserts, WithValidation, SkipsOnFailure
 {
+    protected $projectId;
+
+    public function __construct($projectId)
+    {
+        $this->projectId = $projectId;
+    }
+
     /**
     * @param array $row
     *
@@ -24,10 +31,6 @@ class KertasSiasatanImport implements ToModel, WithHeadingRow, WithUpserts, With
     */
     public function model(array $row)
     {
-
-
-
-
         $data = [
             'no_ks'              => trim($row['no_kertas_siasatan'] ?? ''), //used trim for data consistency
             'tarikh_ks'          => $this->transformDate($row['tarikh_ks'] ?? null), 
@@ -36,7 +39,8 @@ class KertasSiasatanImport implements ToModel, WithHeadingRow, WithUpserts, With
             'pegawai_penyiasat'  => $row['pegawai_penyiasat'] ?? null, 
             'status_ks'          => $row['status_ks'] ?? null,        
             'status_kes'         => $row['status_kes'] ?? null,       
-            'seksyen'            => $row['seksyen'] ?? null,          
+            'seksyen'            => $row['seksyen'] ?? null,
+            'project_id'         => $this->projectId, // Associate with the selected project
         ];
 
         // Use updateOrCreate to update existing records or create new ones

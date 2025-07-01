@@ -9,9 +9,9 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-// Modify the dashboard route to redirect to the Kertas Siasatan index
+// The main dashboard route now redirects to the project list.
 Route::get('/dashboard', function () {
-    return redirect()->route('kertas_siasatan.index'); // Redirect to KS index
+    return redirect()->route('projects.index'); // Redirect to projects index
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
@@ -20,14 +20,17 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Specific Kertas Siasatan routes should be defined before parameterized ones
-    Route::get('/kertas_siasatan/upload', [KertasSiasatanController::class, 'create'])->name('kertas_siasatan.create');
+    // The dedicated upload route is removed. Uploading is now part of the project view.
+    // Route::get('/kertas_siasatan/upload', [KertasSiasatanController::class, 'create'])->name('kertas_siasatan.create');
+    
     Route::get('/kertas_siasatan/export-by-project', [KertasSiasatanController::class, 'exportByProject'])->name('kertas_siasatan.export_by_project');
 
-    // General Kertas Siasatan routes
-    Route::get('/kertas_siasatan', [KertasSiasatanController::class, 'index'])->name('kertas_siasatan.index');
+    // Kertas Siasatan store route for upload
     Route::post('/kertas_siasatan', [KertasSiasatanController::class, 'store'])->name('kertas_siasatan.store');
     
+    // The global kertas_siasatan.index route has been removed to enforce project-centric view.
+    // All browsing of Kertas Siasatan is now done through the projects.show route.
+
     // Parameterized Kertas Siasatan routes (these come after more specific ones)
     Route::get('/kertas_siasatan/{kertas_siasatan}', [KertasSiasatanController::class, 'show'])->name('kertas_siasatan.show');
     Route::get('/kertas_siasatan/{kertas_siasatan}/edit', [KertasSiasatanController::class, 'edit'])->name('kertas_siasatan.edit');

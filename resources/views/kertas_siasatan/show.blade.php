@@ -6,13 +6,15 @@
             </h2>
             <div>
                 @if($kertasSiasatan->project)
-                    <a href="{{ route('projects.show', $kertasSiasatan->project->id) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm mr-2">
+                    <a href="{{ route('projects.show', $kertasSiasatan->project_id) }}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-sm mr-2">
                         Kembali ke Projek: {{ $kertasSiasatan->project->name }}
                     </a>
+                @else
+                    {{-- Fallback if the paper somehow has no project --}}
+                    <a href="{{ route('projects.index') }}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-sm mr-2">
+                        Kembali ke Senarai Projek
+                    </a>
                 @endif
-                <a href="{{ route('kertas_siasatan.index') }}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-sm mr-2">
-                    Kembali ke Senarai
-                </a>
                 <a href="{{ route('kertas_siasatan.edit', $kertasSiasatan->id) }}" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded text-sm">
                     Audit / Kemaskini
                 </a>

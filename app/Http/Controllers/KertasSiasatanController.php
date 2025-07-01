@@ -16,120 +16,29 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 class KertasSiasatanController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * The index method has been removed. All browsing of Kertas Siasatan records
+     * is now handled through the ProjectController@show method, which provides
+     * a project-scoped dashboard view.
      */
-    public function index(Request $request)
-    {
-        $query = KertasSiasatan::query();
-        $query->select('kertas_siasatans.*');
 
-        if ($request->filled('project_id')) {
-            $query->where('kertas_siasatans.project_id', $request->input('project_id'));
-        }
-
-        if ($request->filled('search_no_ks')) {
-            $query->where('no_ks', 'like', '%' . $request->search_no_ks . '%');
-        }
-
-        if ($request->filled('search_tarikh_ks')) {
-            $dateInput = trim($request->search_tarikh_ks);
-            $year = null; $month = null; $day = null;
-            $dateInput = str_replace(['.', '-'], '/', $dateInput);
-            if (preg_match('/^(\d{1,2})\/(\d{1,2})\/(\d{2}|\d{4})$/', $dateInput, $matches)) {
-                $d_match = (int)$matches[1]; $m_match = (int)$matches[2]; $y_match = (int)$matches[3];
-                if (strlen($matches[3]) == 2) { $y_match += ($y_match < 70 ? 2000 : 1900); }
-                if (checkdate($m_match, $d_match, $y_match)) { $day = $d_match; $month = $m_match; $year = $y_match; }
-            } elseif (preg_match('/^(\d{1,2})\/(\d{2}|\d{4})$/', $dateInput, $matches)) {
-                $m_match = (int)$matches[1]; $y_match = (int)$matches[2];
-                if (strlen($matches[2]) == 2) { $y_match += ($y_match < 70 ? 2000 : 1900); }
-                if ($m_match >= 1 && $m_match <= 12) { $month = $m_match; $year = $y_match; }
-            } elseif (preg_match('/^(\d{4})$/', $dateInput, $matches)) {
-                $year = (int)$matches[1];
-            } elseif (preg_match('/^(\d{2})$/', $dateInput, $matches)) {
-                $y_match = (int)$matches[1]; $year = $y_match + ($y_match < 70 ? 2000 : 1900);
-            }
-            if ($year && $month && $day) { $query->whereDate('tarikh_ks', Carbon::create($year, $month, $day)->toDateString()); }
-            elseif ($year && $month) { $query->whereYear('tarikh_ks', $year)->whereMonth('tarikh_ks', $month); }
-            elseif ($year) { $query->whereYear('tarikh_ks', $year); }
-            else { Log::info("Unrecognized date format for search_tarikh_ks: " . $request->search_tarikh_ks); }
-        }
-        if ($request->filled('search_pegawai_penyiasat')) {
-            $query->where('pegawai_penyiasat', 'like', '%' . $request->search_pegawai_penyiasat . '%');
-        }
-        if ($request->filled('search_status_ks')) {
-            $query->where('status_ks', $request->search_status_ks);
-        }
-
-        $sortParamName = config('columnsortable.sort_parameter_name', 'sort');
-        if (empty($sortParamName)) $sortParamName = 'sort';
-        $directionParamName = config('columnsortable.direction_parameter_name', 'direction');
-        if (empty($directionParamName)) $directionParamName = 'direction';
-
-        if ($request->query->has($sortParamName) && $request->query->get($sortParamName) === '') {
-            $currentQueryAsArray = $request->query->all();
-            unset($currentQueryAsArray[$sortParamName]);
-            if (isset($currentQueryAsArray[$directionParamName])) {
-                unset($currentQueryAsArray[$directionParamName]);
-            }
-            $request->query->replace($currentQueryAsArray);
-        }
-
-        $pageName = $request->input('page_name_param', 'page');
-
-        $kertasSiasatans = $query->sortable()
-                         ->paginate(10, ['*'], $pageName)
-                         ->appends($request->except(['page', 'page_name_param']));
-
-        if ($request->ajax()) {
-            $viewName = 'kertas_siasatan._table_rows';
-            $viewData = ['kertasSiasatans' => $kertasSiasatans];
-
-            if ($request->filled('project_id')) {
-                $project = Project::find($request->input('project_id'));
-                if ($project) {
-                    $viewName = 'projects._associated_kertas_siasatan_table_rows';
-                    $viewData['project'] = $project;
-                }
-            }
-
-            $tableHtml = view($viewName, $viewData)->render();
-            $paginationHtml = $kertasSiasatans->links()->toHtml();
-
-            return response()->json([
-                'table_html' => $tableHtml,
-                'pagination_html' => $paginationHtml,
-            ]);
-        }
-
-        $ksLewat24Jam = KertasSiasatan::where('edar_lebih_24_jam_status', 'YA, EDARAN LEWAT 24 JAM')->orderBy('tarikh_ks', 'desc')->get();
-        $ksTerbengkalai = KertasSiasatan::where('terbengkalai_3_bulan_status', 'YA, TERBENGKALAI LEBIH 3 BULAN')->orderBy('tarikh_ks', 'desc')->get();
-        $ksBaruKemaskini = KertasSiasatan::where('baru_kemaskini_status', 'YA, BARU DIGERAKKAN UNTUK DIKEMASKINI')->orderBy('updated_at', 'desc')->get();
-
-        return view('kertas_siasatan.index', compact(
-            'kertasSiasatans',
-            'ksLewat24Jam',
-            'ksTerbengkalai',
-            'ksBaruKemaskini'
-        ));
-    }
-
-    public function create()
-    {
-        $projects_for_export = Project::orderBy('name')->get();
-        return view('kertas_siasatan.upload', compact('projects_for_export'));
-    }
+    /**
+     * The create method has been removed. The upload form is now integrated
+     * directly into the projects.show view.
+     */
 
     public function store(Request $request)
     {
         $request->validate([
+            'project_id' => 'required|exists:projects,id',
             'excel_file' => 'required|mimes:xlsx,xls,csv|max:10240',
         ]);
 
         try {
-            Excel::import(new KertasSiasatanImport, $request->file('excel_file'));
+            // Pass the project_id to the import class constructor
+            Excel::import(new KertasSiasatanImport($request->project_id), $request->file('excel_file'));
 
-            return redirect()->route('kertas_siasatan.index')
-                             ->with('success', 'Fail Excel berjaya dimuatnaik dan diproses.');
+            return redirect()->route('projects.show', $request->project_id)
+                             ->with('success', 'Fail Excel berjaya dimuatnaik dan Kertas Siasatan telah dikaitkan dengan projek ini.');
 
         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
              $failures = $e->failures();
@@ -244,18 +153,28 @@ class KertasSiasatanController extends Controller
         $kertasSiasatan->fill($validatedData);
         $kertasSiasatan->save();
 
-        return redirect()->route('kertas_siasatan.index')
+        // Redirect back to the project dashboard if it exists, otherwise to the KS show page
+        if ($kertasSiasatan->project) {
+            return redirect()->route('projects.show', $kertasSiasatan->project_id)
+                             ->with('success', 'Kertas Siasatan ' . $kertasSiasatan->no_ks . ' berjaya dikemaskini.');
+        }
+
+        return redirect()->route('kertas_siasatan.show', $kertasSiasatan)
                          ->with('success', 'Kertas Siasatan ' . $kertasSiasatan->no_ks . ' berjaya dikemaskini.');
     }
 
     public function destroy(KertasSiasatan $kertasSiasatan)
     {
         try {
+            $projectId = $kertasSiasatan->project_id;
             $kertasSiasatan->delete();
-            return redirect()->route('kertas_siasatan.index')
+            
+            $redirectRoute = $projectId ? route('projects.show', $projectId) : route('projects.index');
+
+            return redirect($redirectRoute)
                              ->with('success', 'Kertas Siasatan ' . $kertasSiasatan->no_ks . ' berjaya dipadam.');
         } catch (\Exception $e) {
-            return redirect()->route('kertas_siasatan.index')
+            return redirect()->back()
                              ->with('error', 'Gagal memadam Kertas Siasatan: ' . $e->getMessage());
         }
     }
@@ -270,7 +189,7 @@ class KertasSiasatanController extends Controller
         $kertasSiasatans = $project->kertasSiasatan()->get();
 
         if ($kertasSiasatans->isEmpty()) {
-            return Redirect::route('kertas_siasatan.create')->with('info', 'Tiada Kertas Siasatan yang dikaitkan dengan projek "' . $project->name . '" untuk dieksport.');
+            return Redirect::back()->with('info', 'Tiada Kertas Siasatan yang dikaitkan dengan projek "' . $project->name . '" untuk dieksport.');
         }
 
         $fileName = 'kertas-siasatan-' . Str::slug($project->name) . '.csv';

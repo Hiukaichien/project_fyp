@@ -17,6 +17,7 @@ class KertasSiasatan extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'project_id',
         'no_ks',
         'tarikh_ks',
         'no_report',

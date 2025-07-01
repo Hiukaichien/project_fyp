@@ -15,6 +15,8 @@ use App\Models\LaporanMatiMengejutPaper;
 use App\Models\OrangHilangPaper; 
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\StreamedResponse; // Add this import
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class ProjectController extends Controller
 {
@@ -58,35 +60,81 @@ class ProjectController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Project $project)
+    public function show(Project $project, Request $request)
     {
-        // Fetch unassigned Kertas Siasatan papers for the dropdown
-        // Assuming KertasSiasatan model has Sortable trait
-        $unassignedKertasSiasatan = KertasSiasatan::whereNull('project_id')
-                                                ->sortable() // Apply default sort from KertasSiasatan model
-                                                ->orderBy('no_ks') // Can be fallback or primary sort
-                                                ->get();
+        // This method now also handles searching and filtering for the project's Kertas Siasatan
+        $query = $project->kertasSiasatan();
 
-        // Fetch other unassigned paper types as needed for their respective dropdowns
-        // Apply sortable() assuming these models also use the Sortable trait
+        if ($request->filled('search_no_ks')) {
+            $query->where('no_ks', 'like', '%' . $request->search_no_ks . '%');
+        }
+
+        if ($request->filled('search_tarikh_ks')) {
+            $dateInput = trim($request->search_tarikh_ks);
+            $year = null; $month = null; $day = null;
+            $dateInput = str_replace(['.', '-'], '/', $dateInput);
+            if (preg_match('/^(\d{1,2})\/(\d{1,2})\/(\d{2}|\d{4})$/', $dateInput, $matches)) {
+                $d_match = (int)$matches[1]; $m_match = (int)$matches[2]; $y_match = (int)$matches[3];
+                if (strlen($matches[3]) == 2) { $y_match += ($y_match < 70 ? 2000 : 1900); }
+                if (checkdate($m_match, $d_match, $y_match)) { $day = $d_match; $month = $m_match; $year = $y_match; }
+            } elseif (preg_match('/^(\d{1,2})\/(\d{2}|\d{4})$/', $dateInput, $matches)) {
+                $m_match = (int)$matches[1]; $y_match = (int)$matches[2];
+                if (strlen($matches[2]) == 2) { $y_match += ($y_match < 70 ? 2000 : 1900); }
+                if ($m_match >= 1 && $m_match <= 12) { $month = $m_match; $year = $y_match; }
+            } elseif (preg_match('/^(\d{4})$/', $dateInput, $matches)) {
+                $year = (int)$matches[1];
+            } elseif (preg_match('/^(\d{2})$/', $dateInput, $matches)) {
+                $y_match = (int)$matches[1]; $year = $y_match + ($y_match < 70 ? 2000 : 1900);
+            }
+            if ($year && $month && $day) { $query->whereDate('tarikh_ks', Carbon::create($year, $month, $day)->toDateString()); }
+            elseif ($year && $month) { $query->whereYear('tarikh_ks', $year)->whereMonth('tarikh_ks', $month); }
+            elseif ($year) { $query->whereYear('tarikh_ks', $year); }
+            else { Log::info("Unrecognized date format for search_tarikh_ks: " . $request->search_tarikh_ks); }
+        }
+        if ($request->filled('search_pegawai_penyiasat')) {
+            $query->where('pegawai_penyiasat', 'like', '%' . $request->search_pegawai_penyiasat . '%');
+        }
+        if ($request->filled('search_status_ks')) {
+            $query->where('status_ks', $request->search_status_ks);
+        }
+
+        // Handle AJAX requests for the Kertas Siasatan table
+        if ($request->ajax()) {
+            $pageName = $request->input('page_name_param', 'page');
+            $kertasSiasatans = $query->sortable()->paginate(10, ['*'], $pageName)->appends($request->except('page', 'page_name_param'));
+
+            $tableHtml = view('projects._associated_kertas_siasatan_table_rows', [
+                'kertasSiasatans' => $kertasSiasatans,
+                'project' => $project
+            ])->render();
+            $paginationHtml = $kertasSiasatans->links()->toHtml();
+
+            return response()->json([
+                'table_html' => $tableHtml,
+                'pagination_html' => $paginationHtml,
+            ]);
+        }
+
+        // --- For initial page load ---
+        $unassignedKertasSiasatan = KertasSiasatan::whereNull('project_id')->sortable()->orderBy('no_ks')->get();
         $unassignedJenayahPapers = JenayahPaper::whereNull('project_id')->sortable()->get(); 
         $unassignedNarkotikPapers = NarkotikPaper::whereNull('project_id')->sortable()->get();
         $unassignedTrafikSeksyenPapers = TrafikSeksyenPaper::whereNull('project_id')->sortable()->get();
-        $unassignedTrafikRulePapers = TrafikRulePaper::whereNull('project_id')->sortable()->orderBy('no_kst')->get(); // Keep specific orderBy if needed
+        $unassignedTrafikRulePapers = TrafikRulePaper::whereNull('project_id')->sortable()->orderBy('no_kst')->get();
         $unassignedKomersilPapers = KomersilPaper::whereNull('project_id')->sortable()->get();
         $unassignedLaporanMatiMengejutPapers = LaporanMatiMengejutPaper::whereNull('project_id')->sortable()->get();
         $unassignedOrangHilangPapers = OrangHilangPaper::whereNull('project_id')->sortable()->get();
-
-        // Fetch paginated Kertas Siasatan associated with this project
-        // Use a unique page name, e.g., 'ks_page', to avoid conflicts if other paginators are on the page
-        $associatedKertasSiasatanPaginated = $project->kertasSiasatan()
-                                                     ->sortable() // Assuming KertasSiasatan model uses Sortable trait
-                                                     ->paginate(10, ['*'], 'ks_project_page');
         
-        // Get all associated papers for the "other papers" list
-        // This ensures we have the full collections for display, not paginated.
+        $pageNameForKSTable = 'ks_project_page';
+        $associatedKertasSiasatanPaginated = $query->sortable()->paginate(10, ['*'], $pageNameForKSTable);
+        
         $allPapers = $project->allAssociatedPapers();
 
+        // Calculate stats scoped to the current project
+        $projectKSQuery = $project->kertasSiasatan();
+        $ksLewat24Jam = $projectKSQuery->clone()->where('edar_lebih_24_jam_status', 'YA, EDARAN LEWAT 24 JAM')->orderBy('tarikh_ks', 'desc')->get();
+        $ksTerbengkalai = $projectKSQuery->clone()->where('terbengkalai_3_bulan_status', 'YA, TERBENGKALAI LEBIH 3 BULAN')->orderBy('tarikh_ks', 'desc')->get();
+        $ksBaruKemaskini = $projectKSQuery->clone()->where('baru_kemaskini_status', 'YA, BARU DIGERAKKAN UNTUK DIKEMASKINI')->orderBy('updated_at', 'desc')->get();
 
         return view('projects.show', compact(
             'project',
@@ -96,12 +144,16 @@ class ProjectController extends Controller
             'unassignedTrafikSeksyenPapers',
             'unassignedTrafikRulePapers',
             'unassignedKomersilPapers',
-            'unassignedLaporanMatiMengejutPapers', // Corrected variable name
+            'unassignedLaporanMatiMengejutPapers',
             'unassignedOrangHilangPapers',
-            'associatedKertasSiasatanPaginated', // Pass paginated associated KS
-            'allPapers' // Pass all papers for the other lists
+            'associatedKertasSiasatanPaginated',
+            'allPapers',
+            'ksLewat24Jam',
+            'ksTerbengkalai',
+            'ksBaruKemaskini'
         ));
     }
+
 
     /**
      * Show the form for editing the specified resource.

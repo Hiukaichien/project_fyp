@@ -389,7 +389,7 @@
 
             {{-- Submit Button --}}
             <div class="flex justify-end pt-4 mt-6 border-t">
-                <a href="{{ route('kertas_siasatan.index') }}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-3 shadow-sm">
+                <a href="{{ $kertasSiasatan->project ? route('projects.show', $kertasSiasatan->project_id) : route('projects.index') }}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-3 shadow-sm">
                     Batal
                 </a>
                 <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-sm">

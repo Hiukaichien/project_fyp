@@ -26,26 +26,16 @@
                 @endif
 
                 {{-- Display general form validation errors (not specific to Excel rows or file itself) --}}
-                @if ($errors->any() && !$errors->has('excel_errors') && !$errors->has('excel_file'))
+                @if ($errors->any() && !$errors->has('excel_errors'))
                     <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
                         <strong class="font-bold">Ralat Borang!</strong>
                         <ul class="mt-2 list-disc list-inside text-sm">
                             @foreach ($errors->all() as $error)
-                                @if ($error !== $errors->first('excel_file')) {{-- Avoid duplicating excel_file error --}}
-                                    <li>{{ $error }}</li>
-                                @endif
+                                <li>{{ $error }}</li>
                             @endforeach
                         </ul>
                     </div>
                 @endif
-
-                {{-- Display specific file upload validation errors --}}
-                @error('excel_file')
-                    <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-                        <strong class="font-bold">Ralat Fail!</strong>
-                        <span class="block sm:inline">{{ $message }}</span>
-                    </div>
-                @enderror
 
                 {{-- Display Excel row validation errors (from Maatwebsite\Excel\Validators\ValidationException) --}}
                 @if ($errors->has('excel_errors'))
@@ -76,12 +66,25 @@
                         <li><code>status_kes</code></li>
                         <li><code>seksyen</code></li>
                     </ul>
-                    <p class="mt-2">Sistem akan cuba mengemaskini rekod sedia ada berdasarkan <code>no_kertas_siasatan</code> atau mencipta rekod baru.</p>
+                    <p class="mt-2">Sistem akan cuba mengemaskini rekod sedia ada berdasarkan <code>no_kertas_siasatan</code> atau mencipta rekod baru dan mengaitkannya dengan projek yang dipilih.</p>
                 </div>
 
 
                 <form action="{{ route('kertas_siasatan.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf {{-- CRITICAL: CSRF Protection --}}
+
+                    <div class="mb-4">
+                        <label for="project_id" class="block text-sm font-medium text-gray-700">Pilih Projek Untuk Import (Wajib)</label>
+                        <select name="project_id" id="project_id" required
+                                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                            <option value="">-- Sila Pilih Projek --</option>
+                            @foreach ($projects as $project)
+                                <option value="{{ $project->id }}" {{ old('project_id') == $project->id ? 'selected' : '' }}>
+                                    {{ $project->name }} ({{ $project->project_date->format('d/m/Y') }})
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
 
                     <div class="mb-4">
                         <label for="excel_file" class="block text-sm font-medium text-gray-700">Pilih Fail Excel (.xlsx, .xls, .csv)</label>
@@ -97,7 +100,7 @@
                     </div>
 
                     <div class="flex items-center justify-end mt-4">
-                        <a href="{{ route('kertas_siasatan.index') }}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-2">
+                        <a href="{{ url()->previous(route('projects.index')) }}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-2">
                             Batal
                         </a>
                         <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
@@ -125,8 +128,8 @@
                             <select name="project_id" id="project_id_export" required
                                     class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md @error('project_id') border-red-500 @enderror">
                                 <option value="">-- Sila Pilih Projek --</option>
-                                @if(isset($projects_for_export) && $projects_for_export->isNotEmpty())
-                                    @foreach ($projects_for_export as $project)
+                                @if(isset($projects) && $projects->isNotEmpty())
+                                    @foreach ($projects as $project)
                                         <option value="{{ $project->id }}" {{ old('project_id') == $project->id ? 'selected' : '' }}>
                                             {{ $project->name }} ({{ $project->project_date->format('d/m/Y') }})
                                         </option>
