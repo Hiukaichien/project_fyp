@@ -17,141 +17,82 @@ use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\StreamedResponse; // Add this import
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Yajra\DataTables\DataTables;
 
 class ProjectController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+     public function index()
     {
-        // Use sortable scope and paginate the results
-        // Default sort can be set in Project model using $sortableAs array or apply a default here
-        $projects = Project::sortable()
-                            ->orderBy('project_date', 'desc') // Retain default sort if no sort params from request
-                            ->paginate(10); // Paginate results
+        $projects = Project::sortable()->orderBy('project_date', 'desc')->paginate(10);
         return view('projects.project', compact('projects'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('projects.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'project_date' => 'required|date',
-            'description' => 'nullable|string', // Description is in your model's fillable
+            'description' => 'nullable|string',
         ]);
-
         Project::create($validatedData);
-
         return Redirect::route('projects.index')->with('success', 'Project created successfully.');
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified project dashboard.
      */
-    public function show(Project $project, Request $request)
+    public function show(Project $project)
     {
-        // This method now also handles searching and filtering for the project's Kertas Siasatan
-        $query = $project->kertasSiasatan();
-
-        if ($request->filled('search_no_ks')) {
-            $query->where('no_ks', 'like', '%' . $request->search_no_ks . '%');
-        }
-
-        if ($request->filled('search_tarikh_ks')) {
-            $dateInput = trim($request->search_tarikh_ks);
-            $year = null; $month = null; $day = null;
-            $dateInput = str_replace(['.', '-'], '/', $dateInput);
-            if (preg_match('/^(\d{1,2})\/(\d{1,2})\/(\d{2}|\d{4})$/', $dateInput, $matches)) {
-                $d_match = (int)$matches[1]; $m_match = (int)$matches[2]; $y_match = (int)$matches[3];
-                if (strlen($matches[3]) == 2) { $y_match += ($y_match < 70 ? 2000 : 1900); }
-                if (checkdate($m_match, $d_match, $y_match)) { $day = $d_match; $month = $m_match; $year = $y_match; }
-            } elseif (preg_match('/^(\d{1,2})\/(\d{2}|\d{4})$/', $dateInput, $matches)) {
-                $m_match = (int)$matches[1]; $y_match = (int)$matches[2];
-                if (strlen($matches[2]) == 2) { $y_match += ($y_match < 70 ? 2000 : 1900); }
-                if ($m_match >= 1 && $m_match <= 12) { $month = $m_match; $year = $y_match; }
-            } elseif (preg_match('/^(\d{4})$/', $dateInput, $matches)) {
-                $year = (int)$matches[1];
-            } elseif (preg_match('/^(\d{2})$/', $dateInput, $matches)) {
-                $y_match = (int)$matches[1]; $year = $y_match + ($y_match < 70 ? 2000 : 1900);
-            }
-            if ($year && $month && $day) { $query->whereDate('tarikh_ks', Carbon::create($year, $month, $day)->toDateString()); }
-            elseif ($year && $month) { $query->whereYear('tarikh_ks', $year)->whereMonth('tarikh_ks', $month); }
-            elseif ($year) { $query->whereYear('tarikh_ks', $year); }
-            else { Log::info("Unrecognized date format for search_tarikh_ks: " . $request->search_tarikh_ks); }
-        }
-        if ($request->filled('search_pegawai_penyiasat')) {
-            $query->where('pegawai_penyiasat', 'like', '%' . $request->search_pegawai_penyiasat . '%');
-        }
-        if ($request->filled('search_status_ks')) {
-            $query->where('status_ks', $request->search_status_ks);
-        }
-
-        // Handle AJAX requests for the Kertas Siasatan table
-        if ($request->ajax()) {
-            $pageName = $request->input('page_name_param', 'page');
-            $kertasSiasatans = $query->sortable()->paginate(10, ['*'], $pageName)->appends($request->except('page', 'page_name_param'));
-
-            $tableHtml = view('projects._associated_kertas_siasatan_table_rows', [
-                'kertasSiasatans' => $kertasSiasatans,
-                'project' => $project
-            ])->render();
-            $paginationHtml = $kertasSiasatans->links()->toHtml();
-
-            return response()->json([
-                'table_html' => $tableHtml,
-                'pagination_html' => $paginationHtml,
-            ]);
-        }
-
-        // --- For initial page load ---
-        $unassignedKertasSiasatan = KertasSiasatan::whereNull('project_id')->sortable()->orderBy('no_ks')->get();
-        $unassignedJenayahPapers = JenayahPaper::whereNull('project_id')->sortable()->get(); 
-        $unassignedNarkotikPapers = NarkotikPaper::whereNull('project_id')->sortable()->get();
-        $unassignedTrafikSeksyenPapers = TrafikSeksyenPaper::whereNull('project_id')->sortable()->get();
-        $unassignedTrafikRulePapers = TrafikRulePaper::whereNull('project_id')->sortable()->orderBy('no_kst')->get();
-        $unassignedKomersilPapers = KomersilPaper::whereNull('project_id')->sortable()->get();
-        $unassignedLaporanMatiMengejutPapers = LaporanMatiMengejutPaper::whereNull('project_id')->sortable()->get();
-        $unassignedOrangHilangPapers = OrangHilangPaper::whereNull('project_id')->sortable()->get();
-        
-        $pageNameForKSTable = 'ks_project_page';
-        $associatedKertasSiasatanPaginated = $query->sortable()->paginate(10, ['*'], $pageNameForKSTable);
-        
-        $allPapers = $project->allAssociatedPapers();
+        // The show method is now much simpler. It only needs to load the initial page.
+        // All table data will be loaded via the getKertasSiasatanData method.
 
         // Calculate stats scoped to the current project
-        $projectKSQuery = $project->kertasSiasatan();
-        $ksLewat24Jam = $projectKSQuery->clone()->where('edar_lebih_24_jam_status', 'YA, EDARAN LEWAT 24 JAM')->orderBy('tarikh_ks', 'desc')->get();
-        $ksTerbengkalai = $projectKSQuery->clone()->where('terbengkalai_3_bulan_status', 'YA, TERBENGKALAI LEBIH 3 BULAN')->orderBy('tarikh_ks', 'desc')->get();
-        $ksBaruKemaskini = $projectKSQuery->clone()->where('baru_kemaskini_status', 'YA, BARU DIGERAKKAN UNTUK DIKEMASKINI')->orderBy('updated_at', 'desc')->get();
+        $ksLewat24Jam = $project->kertasSiasatan()->where('edar_lebih_24_jam_status', 'YA, EDARAN LEWAT 24 JAM')->get();
+        $ksTerbengkalai = $project->kertasSiasatan()->where('terbengkalai_3_bulan_status', 'YA, TERBENGKALAI LEBIH 3 BULAN')->get();
+        $ksBaruKemaskini = $project->kertasSiasatan()->where('baru_kemaskini_status', 'YA, BARU DIGERAKKAN UNTUK DIKEMASKINI')->get();
 
         return view('projects.show', compact(
             'project',
-            'unassignedKertasSiasatan',
-            'unassignedJenayahPapers',
-            'unassignedNarkotikPapers',
-            'unassignedTrafikSeksyenPapers',
-            'unassignedTrafikRulePapers',
-            'unassignedKomersilPapers',
-            'unassignedLaporanMatiMengejutPapers',
-            'unassignedOrangHilangPapers',
-            'associatedKertasSiasatanPaginated',
-            'allPapers',
             'ksLewat24Jam',
             'ksTerbengkalai',
             'ksBaruKemaskini'
         ));
+    }
+
+    /**
+     * Provides the data for the Yajra Datatable.
+     */
+    public function getKertasSiasatanData(Project $project)
+    {
+        $query = KertasSiasatan::where('project_id', $project->id)->select('kertas_siasatans.*');
+
+        return DataTables::of($query)
+            ->addColumn('action', function ($row) {
+                $viewUrl = route('kertas_siasatan.show', $row->id);
+                $editUrl = route('kertas_siasatan.edit', $row->id);
+                // The disassociate route needs the project object
+                $disassociateUrl = route('projects.disassociate_paper', ['project' => $row->project_id, 'paperType' => 'KertasSiasatan', 'paperId' => $row->id]);
+
+                $actionBtn = '<div class="space-x-2">';
+                $actionBtn .= '<a href="'.$viewUrl.'" class="text-indigo-600 hover:text-indigo-900" title="Lihat"><i class="fas fa-eye"></i></a>';
+                $actionBtn .= '<a href="'.$editUrl.'" class="text-green-600 hover:text-green-900" title="Audit/Kemaskini"><i class="fas fa-edit"></i></a>';
+                $actionBtn .= '<form action="'.$disassociateUrl.'" method="POST" class="inline" onsubmit="return confirm(\'Anda pasti ingin mengeluarkan Kertas Siasatan ini?\')">'.csrf_field().'<button type="submit" class="text-orange-600 hover:text-orange-900" title="Keluarkan dari Projek"><i class="fas fa-unlink"></i></button></form>';
+                $actionBtn .= '</div>';
+                return $actionBtn;
+            })
+            ->editColumn('tarikh_ks', function($row){
+                return $row->tarikh_ks ? $row->tarikh_ks->format('d/m/Y') : '-';
+            })
+            ->rawColumns(['action'])
+            ->make(true);
     }
 
 
