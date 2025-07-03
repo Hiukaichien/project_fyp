@@ -21,10 +21,7 @@ use Yajra\DataTables\DataTables;
 
 class ProjectController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-     public function index()
+    public function index()
     {
         $projects = Project::sortable()->orderBy('project_date', 'desc')->paginate(10);
         return view('projects.project', compact('projects'));
@@ -46,15 +43,8 @@ class ProjectController extends Controller
         return Redirect::route('projects.index')->with('success', 'Project created successfully.');
     }
 
-    /**
-     * Display the specified project dashboard.
-     */
     public function show(Project $project)
     {
-        // The show method is now much simpler. It only needs to load the initial page.
-        // All table data will be loaded via the getKertasSiasatanData method.
-
-        // Calculate stats scoped to the current project
         $ksLewat24Jam = $project->kertasSiasatan()->where('edar_lebih_24_jam_status', 'YA, EDARAN LEWAT 24 JAM')->get();
         $ksTerbengkalai = $project->kertasSiasatan()->where('terbengkalai_3_bulan_status', 'YA, TERBENGKALAI LEBIH 3 BULAN')->get();
         $ksBaruKemaskini = $project->kertasSiasatan()->where('baru_kemaskini_status', 'YA, BARU DIGERAKKAN UNTUK DIKEMASKINI')->get();
@@ -67,9 +57,6 @@ class ProjectController extends Controller
         ));
     }
 
-    /**
-     * Provides the data for the Yajra Datatable.
-     */
     public function getKertasSiasatanData(Project $project)
     {
         $query = KertasSiasatan::where('project_id', $project->id)->select('kertas_siasatans.*');
@@ -78,22 +65,38 @@ class ProjectController extends Controller
             ->addColumn('action', function ($row) {
                 $viewUrl = route('kertas_siasatan.show', $row->id);
                 $editUrl = route('kertas_siasatan.edit', $row->id);
-                // The disassociate route needs the project object
                 $disassociateUrl = route('projects.disassociate_paper', ['project' => $row->project_id, 'paperType' => 'KertasSiasatan', 'paperId' => $row->id]);
 
-                $actionBtn = '<div class="space-x-2">';
+                $actionBtn = '<div class="space-x-2 flex items-center">';
                 $actionBtn .= '<a href="'.$viewUrl.'" class="text-indigo-600 hover:text-indigo-900" title="Lihat"><i class="fas fa-eye"></i></a>';
                 $actionBtn .= '<a href="'.$editUrl.'" class="text-green-600 hover:text-green-900" title="Audit/Kemaskini"><i class="fas fa-edit"></i></a>';
                 $actionBtn .= '<form action="'.$disassociateUrl.'" method="POST" class="inline" onsubmit="return confirm(\'Anda pasti ingin mengeluarkan Kertas Siasatan ini?\')">'.csrf_field().'<button type="submit" class="text-orange-600 hover:text-orange-900" title="Keluarkan dari Projek"><i class="fas fa-unlink"></i></button></form>';
                 $actionBtn .= '</div>';
                 return $actionBtn;
             })
-            ->editColumn('tarikh_ks', function($row){
-                return $row->tarikh_ks ? $row->tarikh_ks->format('d/m/Y') : '-';
-            })
+            ->editColumn('tarikh_ks', fn($row) => $row->tarikh_ks ? $row->tarikh_ks->format('d/m/Y') : '-')
+            ->editColumn('tarikh_minit_a', fn($row) => $row->tarikh_minit_a ? $row->tarikh_minit_a->format('d/m/Y') : '-')
+            ->editColumn('tarikh_minit_b', fn($row) => $row->tarikh_minit_b ? $row->tarikh_minit_b->format('d/m/Y') : '-')
+            ->editColumn('tarikh_minit_c', fn($row) => $row->tarikh_minit_c ? $row->tarikh_minit_c->format('d/m/Y') : '-')
+            ->editColumn('tarikh_minit_d', fn($row) => $row->tarikh_minit_d ? $row->tarikh_minit_d->format('d/m/Y') : '-')
+            ->editColumn('tarikh_status_ks_semasa_diperiksa', fn($row) => $row->tarikh_status_ks_semasa_diperiksa ? $row->tarikh_status_ks_semasa_diperiksa->format('d/m/Y') : '-')
+            ->editColumn('tarikh_id_siasatan_dilampirkan', fn($row) => $row->tarikh_id_siasatan_dilampirkan ? $row->tarikh_id_siasatan_dilampirkan->format('d/m/Y') : '-')
+            ->editColumn('rj2_tarikh', fn($row) => $row->rj2_tarikh ? $row->rj2_tarikh->format('d/m/Y') : '-')
+            ->editColumn('rj9_tarikh', fn($row) => $row->rj9_tarikh ? $row->rj9_tarikh->format('d/m/Y') : '-')
+            ->editColumn('rj10a_tarikh', fn($row) => $row->rj10a_tarikh ? $row->rj10a_tarikh->format('d/m/Y') : '-')
+            ->editColumn('rj10b_tarikh', fn($row) => $row->rj10b_tarikh ? $row->rj10b_tarikh->format('d/m/Y') : '-')
+            ->editColumn('rj99_tarikh', fn($row) => $row->rj99_tarikh ? $row->rj99_tarikh->format('d/m/Y') : '-')
+            ->editColumn('semboyan_kesan_tangkap_tarikh', fn($row) => $row->semboyan_kesan_tangkap_tarikh ? $row->semboyan_kesan_tangkap_tarikh->format('d/m/Y') : '-')
+            ->editColumn('waran_tangkap_tarikh', fn($row) => $row->waran_tangkap_tarikh ? $row->waran_tangkap_tarikh->format('d/m/Y') : '-')
+            ->editColumn('ks_hantar_tpr_tarikh', fn($row) => $row->ks_hantar_tpr_tarikh ? $row->ks_hantar_tpr_tarikh->format('d/m/Y') : '-')
+            ->editColumn('ks_hantar_kjsj_tarikh', fn($row) => $row->ks_hantar_kjsj_tarikh ? $row->ks_hantar_kjsj_tarikh->format('d/m/Y') : '-')
+            ->editColumn('ks_hantar_d5_tarikh', fn($row) => $row->ks_hantar_d5_tarikh ? $row->ks_hantar_d5_tarikh->format('d/m/Y') : '-')
+            ->editColumn('ks_hantar_kbsjd_tarikh', fn($row) => $row->ks_hantar_kbsjd_tarikh ? $row->ks_hantar_kbsjd_tarikh->format('d/m/Y') : '-')
             ->rawColumns(['action'])
             ->make(true);
     }
+    
+    // 
 
 
     /**
