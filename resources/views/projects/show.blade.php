@@ -139,27 +139,53 @@
 
                     <div class="overflow-x-auto bg-white dark:bg-gray-800 rounded shadow">
                         <div style="min-height: 100px;">
-                            <table class="divide-y divide-gray-200 dark:divide-gray-700" style="table-layout: fixed; min-width: 960px;">
+                            <table class="divide-y divide-gray-200 dark:divide-gray-700" style="min-width: 6000px;">
                                 <thead class="bg-gray-50 dark:bg-gray-700">
                                      <tr>
-                                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider" style="width: 5%;">No.</th>
-                                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider" style="width: 20%;">
-                                            <button @click="handleSortClick('no_ks')" class="w-full text-left flex items-center space-x-1">
-                                                <span>No. KS</span>
-                                                <i class="fa fa-fw" :class="{ 'fa-sort': currentSort !== 'no_ks', 'fa-sort-up': currentSort === 'no_ks' && currentDirection === 'asc', 'fa-sort-down': currentSort === 'no_ks' && currentDirection === 'desc' }"></i>
-                                            </button>
-                                        </th>
-                                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider" style="width: 10%;">
-                                            <button @click="handleSortClick('tarikh_ks')" class="w-full text-left flex items-center space-x-1">
-                                                <span>Tarikh KS</span>
-                                                <i class="fa fa-fw" :class="{ 'fa-sort': currentSort !== 'tarikh_ks', 'fa-sort-up': currentSort === 'tarikh_ks' && currentDirection === 'asc', 'fa-sort-down': currentSort === 'tarikh_ks' && currentDirection === 'desc' }"></i>
-                                            </button>
-                                        </th>
-                                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider" style="width: 15%;">No. Repot</th>
-                                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider" style="width: 15%;">Pegawai Penyiasat</th>
-                                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider" style="width: 10%;">Status KS</th>
-                                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider" style="width: 10%;">Status Kes</th>
-                                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider" style="width: 15%;">Tindakan</th>
+                                        <th class="sticky left-0 bg-gray-50 dark:bg-gray-700 px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Tindakan</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">No.</th>
+                                        
+                                        {{-- Maklumat Asas --}}
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">No. KS</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Tarikh KS</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">No. Repot</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Jenis Jabatan</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Pegawai Penyiasat</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status KS</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status Kes</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Seksyen</th>
+                                        
+                                        {{-- Minit & Status --}}
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Minit A</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Minit B</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Minit C</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Minit D</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status Edaran</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status Terbengkalai</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status Kemaskini</th>
+
+                                        {{-- Status Semasa Diperiksa --}}
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status KS Diperiksa</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Tarikh Status Diperiksa</th>
+
+                                        {{-- Rakaman Percakapan --}}
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Rakam Pengadu</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Rakam Saspek</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Rakam Saksi</th>
+
+                                        {{-- Barang Kes --}}
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">BK Didaftar</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">No. Daftar AM</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">No. Daftar Senjata</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">No. Daftar Berharga</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Gambar Rampasan</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Kedudukan BK</th>
+
+                                        {{-- Isu Isu --}}
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Isu TPR Tuduh</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Isu KS Lengkap</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Isu TPR Lupus</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Isu TPR Pulang</th>
                                     </tr>
                                 </thead>
                                 <tbody id="kertas-siasatan-tbody" x-html="tableHtml" class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -250,7 +276,7 @@
 
                 this.loadingTimeout = setTimeout(() => {
                     if (this.loading) {
-                        this.tableHtml = `<tr><td colspan="8" class="text-center py-10 text-gray-500"><svg class="animate-spin h-5 w-5 text-gray-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Memuatkan...</td></tr>`;
+                        this.tableHtml = `<tr><td colspan="35" class="text-center py-10 text-gray-500"><svg class="animate-spin h-5 w-5 text-gray-500 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Memuatkan...</td></tr>`;
                         this.paginationHtml = '';
                     }
                 }, 300);
@@ -279,7 +305,7 @@
                 })
                 .catch(error => {
                     console.error('Error fetching search results:', error);
-                    this.tableHtml = `<tr><td colspan="8" class="text-center text-red-500 py-4">Ralat memuatkan hasil carian.</td></tr>`;
+                    this.tableHtml = `<tr><td colspan="35" class="text-center text-red-500 py-4">Ralat memuatkan hasil carian.</td></tr>`;
                     this.paginationHtml = '<p class="text-red-500 text-center">Ralat memuatkan paginasi.</p>';
                 })
                 .finally(() => { this.loading = false; });
