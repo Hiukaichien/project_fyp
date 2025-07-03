@@ -206,28 +206,30 @@
     <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.0.8/js/dataTables.tailwindcss.js"></script>
     <script>
-    $(document).ready(function() {
-        $('#kertas-siasatan-datatable').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: '{{ route('projects.kertas_siasatan_data', $project->id) }}',
-            columns: [
-                { data: 'action', name: 'action', orderable: false, searchable: false },
-                { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-                { data: 'no_ks', name: 'no_ks' },
-                { data: 'tarikh_ks', name: 'tarikh_ks' },
-                { data: 'no_report', name: 'no_report' },
-                { data: 'pegawai_penyiasat', name: 'pegawai_penyiasat' },
-                { data: 'status_ks', name: 'status_ks' },
-                { data: 'status_kes', name: 'status_kes' },
-                { data: 'seksyen', name: 'seksyen' }
-            ],
-            order: [[1, 'desc']], // Default order by ID
-            columnDefs: [
-                { "width": "120px", "targets": 0 }
-            ]
-        });
+$(document).ready(function() {
+    $('#kertas-siasatan-datatable').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: '{{ route('projects.kertas_siasatan_data', $project->id) }}',
+        columns: [
+            { data: 'action', name: 'action', orderable: false, searchable: false },
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            { data: 'no_ks', name: 'no_ks' },
+            { data: 'tarikh_ks', name: 'tarikh_ks' },
+            { data: 'no_report', name: 'no_report' },
+            { data: 'pegawai_penyiasat', name: 'pegawai_penyiasat' },
+            { data: 'status_ks', name: 'status_ks' },
+            { data: 'status_kes', name: 'status_kes' },
+            { data: 'seksyen', name: 'seksyen' }
+        ],
+        // FIX: Change the default order to a valid database column.
+        // We'll use 'tarikh_ks' (index 3) as the default sort, descending.
+        order: [[3, 'desc']], 
+        columnDefs: [
+            { "width": "120px", "targets": 0 }
+        ]
     });
+});
     </script>
     @endpush
 </x-app-layout>

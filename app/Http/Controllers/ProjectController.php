@@ -63,7 +63,12 @@ class ProjectController extends Controller
      */
     public function getKertasSiasatanData(Project $project, Request $request)
     {
-        $query = KertasSiasatan::where('project_id', $project->id);
+        // FIX: Select only the columns needed for the DataTable for better performance.
+        $query = KertasSiasatan::where('project_id', $project->id)
+            ->select([
+                'id', 'no_ks', 'tarikh_ks', 'no_report', 'pegawai_penyiasat',
+                'status_ks', 'status_kes', 'seksyen', 'project_id'
+            ]);
 
         return DataTables::of($query)
             ->addIndexColumn() // Adds the DT_RowIndex column for numbering
@@ -85,25 +90,8 @@ class ProjectController extends Controller
                 $actionBtn .= '</div>';
                 return $actionBtn;
             })
-            // Helper function for safe date formatting
+            // FIX: Only format the 'tarikh_ks' column as it's the only date displayed.
             ->editColumn('tarikh_ks', fn($row) => optional($row->tarikh_ks)->format('d/m/Y'))
-            ->editColumn('tarikh_minit_a', fn($row) => optional($row->tarikh_minit_a)->format('d/m/Y'))
-            ->editColumn('tarikh_minit_b', fn($row) => optional($row->tarikh_minit_b)->format('d/m/Y'))
-            ->editColumn('tarikh_minit_c', fn($row) => optional($row->tarikh_minit_c)->format('d/m/Y'))
-            ->editColumn('tarikh_minit_d', fn($row) => optional($row->tarikh_minit_d)->format('d/m/Y'))
-            ->editColumn('tarikh_status_ks_semasa_diperiksa', fn($row) => optional($row->tarikh_status_ks_semasa_diperiksa)->format('d/m/Y'))
-            ->editColumn('tarikh_id_siasatan_dilampirkan', fn($row) => optional($row->tarikh_id_siasatan_dilampirkan)->format('d/m/Y'))
-            ->editColumn('rj2_tarikh', fn($row) => optional($row->rj2_tarikh)->format('d/m/Y'))
-            ->editColumn('rj9_tarikh', fn($row) => optional($row->rj9_tarikh)->format('d/m/Y'))
-            ->editColumn('rj10a_tarikh', fn($row) => optional($row->rj10a_tarikh)->format('d/m/Y'))
-            ->editColumn('rj10b_tarikh', fn($row) => optional($row->rj10b_tarikh)->format('d/m/Y'))
-            ->editColumn('rj99_tarikh', fn($row) => optional($row->rj99_tarikh)->format('d/m/Y'))
-            ->editColumn('semboyan_kesan_tangkap_tarikh', fn($row) => optional($row->semboyan_kesan_tangkap_tarikh)->format('d/m/Y'))
-            ->editColumn('waran_tangkap_tarikh', fn($row) => optional($row->waran_tangkap_tarikh)->format('d/m/Y'))
-            ->editColumn('ks_hantar_tpr_tarikh', fn($row) => optional($row->ks_hantar_tpr_tarikh)->format('d/m/Y'))
-            ->editColumn('ks_hantar_kjsj_tarikh', fn($row) => optional($row->ks_hantar_kjsj_tarikh)->format('d/m/Y'))
-            ->editColumn('ks_hantar_d5_tarikh', fn($row) => optional($row->ks_hantar_d5_tarikh)->format('d/m/Y'))
-            ->editColumn('ks_hantar_kbsjd_tarikh', fn($row) => optional($row->ks_hantar_kbsjd_tarikh)->format('d/m/Y'))
             ->rawColumns(['action'])
             ->make(true);
     }
