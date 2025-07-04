@@ -23,6 +23,9 @@ use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Yajra\DataTables\DataTables;
+// --- FIX: Import ValidationException for proper error handling ---
+use Illuminate\Validation\ValidationException;
+
 
 class ProjectController extends Controller
 {
@@ -104,8 +107,8 @@ class ProjectController extends Controller
             Excel::import(new PaperImport($project->id, $validated['paper_type']), $request->file('excel_file'));
             $friendlyName = Str::of($validated['paper_type'])->replace('Paper', ' Paper')->headline();
             return back()->with('success', $friendlyName . ' berjaya diimport ke projek ini.');
-        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
-            return back()->withErrors(['excel_errors' => $e->failures()])->withInput();
+        } catch (ValidationException $e) {
+            return back()->withErrors($e->errors())->withInput();
         } catch (\Exception $e) {
             return back()->with('error', 'Ralat semasa memproses fail: ' . $e->getMessage())->withInput();
         }
@@ -169,46 +172,56 @@ class ProjectController extends Controller
         ];
     }
 
-    // --- DATATABLES SERVER-SIDE METHODS ---
-    private function buildActionButtons($row, $paperType) {
+    private function buildActionButtons($row, $paperType)
+    {
         $disassociateUrl = route('projects.disassociate_paper', ['project' => $row->project_id, 'paperType' => $paperType, 'paperId' => $row->id]);
-        return '<div class="flex items-center space-x-2">' .
-               '<form action="'.$disassociateUrl.'" method="POST" class="inline" onsubmit="return confirm(\'Anda pasti ingin mengeluarkan kertas ini?\')">' .
+        
+        // --- This logic is correct and does not need to change ---
+        $showUrl = route('kertas_siasatan.show', ['paperType' => $paperType, 'id' => $row->id]);
+        $editUrl = route('kertas_siasatan.edit', ['paperType' => $paperType, 'id' => $row->id]);
+
+        $actions = '<a href="'.$showUrl.'" class="text-indigo-600 hover:text-indigo-900" title="Lihat"><i class="fas fa-eye"></i></a>';
+        $actions .= '<a href="'.$editUrl.'" class="text-green-600 hover:text-green-900" title="Audit/Kemaskini"><i class="fas fa-edit"></i></a>';
+
+        $actions .= '<form action="'.$disassociateUrl.'" method="POST" class="inline" onsubmit="return confirm(\'Anda pasti ingin mengeluarkan kertas ini?\')">' .
                csrf_field() .
-               '<button type="submit" class="text-orange-600" title="Keluarkan"><i class="fas fa-unlink"></i></button></form>' .
-               '</div>';
+               '<button type="submit" class="text-orange-600" title="Keluarkan"><i class="fas fa-unlink"></i></button></form>';
+        
+        return '<div class="flex items-center space-x-2">' . $actions . '</div>';
     }
 
+    // --- DATATABLES SERVER-SIDE METHODS ---
+    // --- FIX: Added ->addIndexColumn() to every method ---
     public function getKertasSiasatanData(Project $project) {
         $query = KertasSiasatan::where('project_id', $project->id);
-        return DataTables::of($query)->addColumn('action', fn($row) => $this->buildActionButtons($row, 'KertasSiasatan'))->rawColumns(['action'])->make(true);
+        return DataTables::of($query)->addIndexColumn()->addColumn('action', fn($row) => $this->buildActionButtons($row, 'KertasSiasatan'))->rawColumns(['action'])->make(true);
     }
     public function getJenayahPapersData(Project $project) {
         $query = JenayahPaper::where('project_id', $project->id);
-        return DataTables::of($query)->addColumn('action', fn($row) => $this->buildActionButtons($row, 'JenayahPaper'))->rawColumns(['action'])->make(true);
+        return DataTables::of($query)->addIndexColumn()->addColumn('action', fn($row) => $this->buildActionButtons($row, 'JenayahPaper'))->rawColumns(['action'])->make(true);
     }
     public function getNarkotikPapersData(Project $project) {
         $query = NarkotikPaper::where('project_id', $project->id);
-        return DataTables::of($query)->addColumn('action', fn($row) => $this->buildActionButtons($row, 'NarkotikPaper'))->rawColumns(['action'])->make(true);
+        return DataTables::of($query)->addIndexColumn()->addColumn('action', fn($row) => $this->buildActionButtons($row, 'NarkotikPaper'))->rawColumns(['action'])->make(true);
     }
     public function getKomersilPapersData(Project $project) {
         $query = KomersilPaper::where('project_id', $project->id);
-        return DataTables::of($query)->addColumn('action', fn($row) => $this->buildActionButtons($row, 'KomersilPaper'))->rawColumns(['action'])->make(true);
+        return DataTables::of($query)->addIndexColumn()->addColumn('action', fn($row) => $this->buildActionButtons($row, 'KomersilPaper'))->rawColumns(['action'])->make(true);
     }
     public function getTrafikSeksyenPapersData(Project $project) {
         $query = TrafikSeksyenPaper::where('project_id', $project->id);
-        return DataTables::of($query)->addColumn('action', fn($row) => $this->buildActionButtons($row, 'TrafikSeksyenPaper'))->rawColumns(['action'])->make(true);
+        return DataTables::of($query)->addIndexColumn()->addColumn('action', fn($row) => $this->buildActionButtons($row, 'TrafikSeksyenPaper'))->rawColumns(['action'])->make(true);
     }
     public function getTrafikRulePapersData(Project $project) {
         $query = TrafikRulePaper::where('project_id', $project->id);
-        return DataTables::of($query)->addColumn('action', fn($row) => $this->buildActionButtons($row, 'TrafikRulePaper'))->rawColumns(['action'])->make(true);
+        return DataTables::of($query)->addIndexColumn()->addColumn('action', fn($row) => $this->buildActionButtons($row, 'TrafikRulePaper'))->rawColumns(['action'])->make(true);
     }
     public function getOrangHilangPapersData(Project $project) {
         $query = OrangHilangPaper::where('project_id', $project->id);
-        return DataTables::of($query)->addColumn('action', fn($row) => $this->buildActionButtons($row, 'OrangHilangPaper'))->rawColumns(['action'])->make(true);
+        return DataTables::of($query)->addIndexColumn()->addColumn('action', fn($row) => $this->buildActionButtons($row, 'OrangHilangPaper'))->rawColumns(['action'])->make(true);
     }
     public function getLaporanMatiMengejutPapersData(Project $project) {
         $query = LaporanMatiMengejutPaper::where('project_id', $project->id);
-        return DataTables::of($query)->addColumn('action', fn($row) => $this->buildActionButtons($row, 'LaporanMatiMengejutPaper'))->rawColumns(['action'])->make(true);
+        return DataTables::of($query)->addIndexColumn()->addColumn('action', fn($row) => $this->buildActionButtons($row, 'LaporanMatiMengejutPaper'))->rawColumns(['action'])->make(true);
     }
 }

@@ -10,19 +10,19 @@ use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Validators\Failure;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\BeforeImport;
+use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
+use Maatwebsite\Excel\Concerns\WithValidation;
 
-class PaperImport implements ToModel, WithHeadingRow, WithUpserts, SkipsOnFailure
+
+class PaperImport implements ToModel, WithHeadingRow, WithUpserts, SkipsOnFailure, WithEvents, WithValidation
 {
     protected $projectId;
     protected $paperType;
     protected $modelClass;
 
-    /**
-     * Constructor to accept the project and paper type.
-     *
-     * @param int $projectId
-     * @param string $paperType The class name of the model (e.g., 'JenayahPaper')
-     */
     public function __construct(int $projectId, string $paperType)
     {
         $this->projectId = $projectId;
@@ -34,226 +34,151 @@ class PaperImport implements ToModel, WithHeadingRow, WithUpserts, SkipsOnFailur
         }
     }
 
-    /**
-     * Process each row from the Excel file.
-     *
-     * @param array $row
-     * @return \Illuminate\Database\Eloquent\Model|null
-     */
+    public function registerEvents(): array
+    {
+        return [
+            BeforeImport::class => function (BeforeImport $event) {
+                $expectedHeaders = array_values($this->getColumnMapping());
+                $actualHeaders = $event->getReader()->getActiveSheet()->toArray()[0];
+                $cleanedActualHeaders = array_map(fn($h) => Str::snake(trim(strtolower($h))), $actualHeaders);
+                $missingHeaders = array_diff($expectedHeaders, $cleanedActualHeaders);
+
+                if (!empty($missingHeaders)) {
+                    $message = 'Fail tidak dapat diimport. Lajur berikut tiada atau salah eja: ' . implode(', ', $missingHeaders);
+                    throw ValidationException::withMessages(['excel_file' => $message]);
+                }
+            },
+        ];
+    }
+
     public function model(array $row)
     {
-        //
         $columnMap = $this->getColumnMapping();
         $uniqueDbColumn = $this->uniqueBy();
-
-        // Find the Excel header name for the unique DB column
         $uniqueExcelHeader = array_search($uniqueDbColumn, $columnMap);
-        if (!$uniqueExcelHeader || !isset($row[$uniqueExcelHeader]) || empty($row[$uniqueExcelHeader])) {
-            Log::warning("Skipping row due to missing or empty unique key '{$uniqueExcelHeader}' for paper type {$this->paperType}.", ['row' => $row]);
-            return null; // Skip this row if the unique key is not present or empty
-        }
 
         $data = ['project_id' => $this->projectId];
 
-        // Dynamically build the data array from the Excel row using the map
         foreach ($columnMap as $dbColumn => $excelHeader) {
             $value = $row[$excelHeader] ?? null;
-
-            // Check if the attribute is a date field and transform it
             $isDateColumn = str_contains($dbColumn, 'tarikh') || str_contains($dbColumn, '_at');
-            if ($isDateColumn) {
-                $data[$dbColumn] = $this->transformDate($value);
-            } else {
-                $data[$dbColumn] = $value;
-            }
+            $data[$dbColumn] = $isDateColumn ? $this->transformDate($value) : (is_string($value) ? trim($value) : $value);
         }
 
-        // Use the dynamic model class to create or update the record
         return $this->modelClass::updateOrCreate(
-            [$uniqueDbColumn => $data[$uniqueDbColumn]], // Unique identifier
-            $data                                       // Data to fill/update
+            [$uniqueDbColumn => $data[$uniqueDbColumn]],
+            $data
         );
     }
-
+    
     /**
-     * Defines the unique database column for each paper type to handle upserts.
-     * This must be a column in your database table.
+     * --- FIX: Reverting to the explicit, hardcoded validation logic from your original file ---
+     * This is the most reliable way and directly mirrors the code that worked.
      */
+    public function rules(): array
+    {
+        switch ($this->paperType) {
+            case 'JenayahPaper':
+                return ['no_kertas_siasatan' => 'required|string|max:255'];
+            case 'NarkotikPaper':
+                return ['no_k_siasatan' => 'required|string|max:255'];
+            case 'KomersilPaper':
+                return ['no_kertas_siasatan' => 'required|string|max:255'];
+            case 'TrafikSeksyenPaper':
+            case 'TrafikRulePaper':
+                return ['no_kertas_siasatan' => 'required|string|max:255'];
+            case 'OrangHilangPaper':
+                return ['no_kertas_siasatan' => 'required|string|max:255'];
+            case 'LaporanMatiMengejutPaper':
+                return ['no_sdrllm' => 'required|string|max:255'];
+            case 'KertasSiasatan':
+            default:
+                return ['no_kertas_siasatan' => 'required|string|max:255'];
+        }
+    }
+
+    public function customValidationMessages()
+    {
+        switch ($this->paperType) {
+            case 'JenayahPaper':
+                return ['no_kertas_siasatan.required' => 'Lajur "no_kertas_siasatan" diperlukan.'];
+            case 'NarkotikPaper':
+                return ['no_k_siasatan.required' => 'Lajur "no_k_siasatan" diperlukan.'];
+            case 'KomersilPaper':
+                return ['no_kertas_siasatan.required' => 'Lajur "no_kertas_siasatan" diperlukan.'];
+            case 'TrafikSeksyenPaper':
+            case 'TrafikRulePaper':
+                return ['no_kertas_siasatan.required' => 'Lajur "no_kertas_siasatan" diperlukan.'];
+            case 'OrangHilangPaper':
+                return ['no_kertas_siasatan.required' => 'Lajur "no_kertas_siasatan" diperlukan.'];
+            case 'LaporanMatiMengejutPaper':
+                return ['no_sdrllm.required' => 'Lajur "no_sdrllm" diperlukan.'];
+            case 'KertasSiasatan':
+            default:
+                return ['no_kertas_siasatan.required' => 'Lajur "no_kertas_siasatan" diperlukan.'];
+        }
+    }
+
     public function uniqueBy(): string
     {
         switch ($this->paperType) {
             case 'TrafikRulePaper':
             case 'TrafikSeksyenPaper':
-                return 'no_kst'; // From 'trafik.csv', the main identifier is 'no_kertas_siasatan'
+                return 'no_kst';
             case 'LaporanMatiMengejutPaper':
-                return 'no_lmm'; // From 'laporanmati.csv', the header is 'no_sdr_llm'
+                return 'no_lmm';
             case 'OrangHilangPaper':
-                return 'no_ks_oh'; // From 'oranghilang.csv', the header is 'no_kertas_siasatan'
-            case 'JenayahPaper':
-            case 'NarkotikPaper':
-            case 'KomersilPaper':
+                return 'no_ks_oh';
             default:
                 return 'no_ks';
         }
     }
 
-    /**
-     * Gets the specific Excel-to-Database column mapping for each paper type.
-     * The key is the database column name (model attribute).
-     * The value is the snake_case version of the Excel header that `WithHeadingRow` generates.
-     */
     private function getColumnMapping(): array
     {
-        // Define base mappings that might be common, though specifics are safer
-        $baseMapping = [
-            'pegawai_penyiasat' => 'pegawai_penyiasat',
-            'seksyen'           => 'seksyen',
-        ];
-
+        // Using the simplified 4-column mapping
         switch ($this->paperType) {
             case 'JenayahPaper':
-                return [
-                    'no_ks' => 'no_kertas_siasatan',
-                    'io_aio' => 'pegawai_penyiasat',
-                    'seksyen_dibuka' => 'seksyen',
-                    'tarikh_laporan_polis' => 'tarikh_laporan_polis',
-                    'pegawai_pemeriksa_jips' => 'pegawai_pemeriksa_jips_bukit_aman',
-                    'tarikh_minit_a' => 'tarikh_edaran_pertama',
-                    'tarikh_minit_d' => 'tarikh_edaran_akhir',
-                    // Add other Jenayah specific mappings here
-                ];
-
+                return ['no_ks' => 'no_kertas_siasatan', 'io_aio' => 'pegawai_penyiasat', 'seksyen' => 'seksyen', 'tarikh_laporan_polis' => 'tarikh_laporan_polis'];
             case 'NarkotikPaper':
-                return [
-                    'no_ks' => 'no_k_siasatan',
-                    'io_aio' => 'peg_penyiasat',
-                    'tarikh_laporan_polis' => 'tarikh_laporan_polis',
-                    'seksyen_dibuka' => 'seksyen',
-                    'tarikh_minit_a' => 'tarikh_edaran_pertama',
-                    'tarikh_minit_d' => 'tarikh_edaran_akhir',
-                    // Add other Narkotik specific mappings here
-                ];
-
+                return ['no_ks' => 'no_k_siasatan', 'io_aio' => 'peg_penyiasat', 'seksyen' => 'seksyen', 'tarikh_laporan_polis' => 'tarikh_laporan_polis'];
             case 'KomersilPaper':
-                return [
-                    'no_ks' => 'no_kertas_siasatan',
-                    'io_aio' => 'pegawai_siasatan',
-                    'seksyen_dibuka' => 'seksyen',
-                    'tarikh_ks_dibuka' => 'tarikh_kertas_siasatan_dibuka',
-                    'pegawai_pemeriksa_jips' => 'pegawai_pemeriksa_jips',
-                    'tarikh_minit_a' => 'tarikh_edaran_pertama',
-                    'tarikh_minit_d' => 'tarikh_edaran_akhir',
-                    // Add other Komersil specific mappings here
-                ];
-
+                return ['no_ks' => 'no_kertas_siasatan', 'io_aio' => 'pegawai_siasatan', 'seksyen' => 'seksyen', 'tarikh_ks_dibuka' => 'tarikh_kertas_siasatan_dibuka'];
             case 'TrafikSeksyenPaper':
+                return ['no_kst' => 'no_kertas_siasatan', 'io_aio' => 'pegawai_penyiasat', 'seksyen' => 'seksyen', 'tarikh_daftar' => 'tarikh_daftar'];
             case 'TrafikRulePaper':
-                return [
-                    'no_kst' => 'no_kertas_siasatan',
-                    'io_aio' => 'pegawai_penyiasat',
-                    'seksyen_dibuka' => 'seksyen',
-                    'tarikh_kst_dibuka' => 'tarikh_daftar',
-                    'no_saman' => 'no_saman',
-                    'pegawai_pemeriksa_jips' => 'pegawai_pemeriksa_jips',
-                    'tarikh_minit_a' => 'tarikh_edaran_pertama',
-                    'tarikh_minit_d' => 'tarikh_minit_akhir',
-                    // Add other Trafik specific mappings here
-                ];
-
+                return ['no_kst' => 'no_kertas_siasatan', 'io_aio' => 'pegawai_penyiasat', 'seksyen_dibuka' => 'seksyen', 'tarikh_kst_dibuka' => 'tarikh_daftar'];
             case 'OrangHilangPaper':
-                return [
-                    'no_ks_oh' => 'no_kertas_siasatan',
-                    'io_aio' => 'pegawai_penyiasat',
-                    'tarikh_laporan_polis' => 'tarikh_laporan_polis',
-                    'tarikh_ks_oh_dibuka' => 'tarikh_kertas_siasatan',
-                    'tarikh_minit_a' => 'tarikh_edaran_pertama',
-                    'tarikh_minit_d' => 'tarikh_edaran_akhir',
-                    // Add other Orang Hilang specific mappings here
-                ];
-            
+                return ['no_ks_oh' => 'no_kertas_siasatan', 'io_aio' => 'pegawai_penyiasat', 'tarikh_laporan_polis' => 'tarikh_laporan_polis', 'tarikh_ks_oh_dibuka' => 'tarikh_kertas_siasatan'];
             case 'LaporanMatiMengejutPaper':
-                return [
-                    'no_lmm' => 'no_sdrllm', // Note the header is 'NO SDR/LLM', which becomes 'no_sdrllm'
-                    'io_aio' => 'pegawai_penyiasat',
-                    'no_repot_polis' => 'no_laporan_polis',
-                    'tarikh_laporan_polis_header' => 'tarkh_laporan_polis',
-                    'pegawai_pemeriksa_jips' => 'pegawai_pemeriksa_jips',
-                    'tarikh_minit_a' => 'tarikh_edaran_pertama',
-                    'tarikh_minit_d' => 'tarikh_edaran_akhir',
-                    // Add other LMM specific mappings here
-                ];
-
-            default:
-                // Fallback or default mapping if needed, e.g., for the original KertasSiasatan
-                return [
-                    'no_ks'             => 'no_kertas_siasatan',
-                    'tarikh_ks'         => 'tarikh_ks',
-                    'no_report'         => 'no_repot',
-                    'pegawai_penyiasat'  => 'pegawai_penyiasat',
-                    'status_ks'          => 'status_ks',
-                    'status_kes'         => 'status_kes',
-                    'seksyen'            => 'seksyen',
-                ];
+                return ['no_lmm' => 'no_sdrllm', 'io_aio' => 'pegawai_penyiasat', 'no_repot_polis' => 'no_laporan_polis', 'tarikh_laporan_polis' => 'tarikh_laporan_polis'];
+            default: // KertasSiasatan
+                return ['no_ks' => 'no_kertas_siasatan', 'tarikh_ks' => 'tarikh_ks', 'no_report' => 'no_repot', 'pegawai_penyiasat' => 'pegawai_penyiasat'];
         }
     }
 
-    /**
-     * Helper function to parse dates from various common formats.
-     */
     private function transformDate($value, $format = 'Y-m-d')
     {
-        if (empty($value)) {
-            return null;
-        }
-
-        // Handle Excel's numeric date format
+        if (empty($value)) return null;
         if (is_numeric($value)) {
-            try {
-                // The third parameter (timezone) is optional but good practice
-                return Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value))->format($format);
-            } catch (\Exception $e) {
-                // It's a number but not a valid Excel date, so we can't process it as a date.
-                return null;
-            }
+            try { return Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value))->format($format); } catch (\Exception $e) { return null; }
         }
-
-        // Handle string formats
-        $formatsToTry = [
-            'd/m/Y', 'd.m.Y', 'd-m-Y',
-            'm/d/Y', 'm.d.Y', 'm-d-Y',
-            'Y-m-d H:i:s', 'Y-m-d',
-        ];
-
+        $formatsToTry = ['d/m/Y', 'd.m.Y', 'd-m-Y', 'm/d/Y', 'm.d.Y', 'm-d-Y', 'Y-m-d H:i:s', 'Y-m-d'];
         foreach ($formatsToTry as $inputFormat) {
-            try {
-                return Carbon::createFromFormat($inputFormat, $value)->format($format);
-            } catch (\Exception $e) {
-                continue; // Try next format
-            }
+            try { return Carbon::createFromFormat($inputFormat, $value)->format($format); } catch (\Exception $e) { continue; }
         }
-        
-        // Final attempt with PHP's flexible parser
-        try {
-            return Carbon::parse($value)->format($format);
-        } catch (\Exception $e) {
-            Log::warning("Could not parse date format for value: '{$value}'. Error: " . $e->getMessage());
-            return null;
-        }
+        try { return Carbon::parse($value)->format($format); } catch (\Exception $e) { Log::warning("Could not parse date format for value: '{$value}'. Error: " . $e->getMessage()); return null; }
     }
     
-    /**
-     * Handles validation failures.
-     * This method is part of the SkipsOnFailure concern.
-     */
     public function onFailure(Failure ...$failures)
     {
-        foreach ($failures as $failure) {
-            Log::error("Excel Import Failure", [
-                'row' => $failure->row(),
-                'attribute' => $failure->attribute(),
-                'errors' => $failure->errors(),
+        foreach ($failures as $failure) { 
+            Log::error("Excel Import Validation Failure", [
+                'row' => $failure->row(), 
+                'attribute' => $failure->attribute(), 
+                'errors' => $failure->errors(), 
                 'values' => $failure->values()
-            ]);
+            ]); 
         }
     }
 }

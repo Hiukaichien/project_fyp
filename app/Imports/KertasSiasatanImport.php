@@ -50,14 +50,7 @@ class KertasSiasatanImport implements ToModel, WithHeadingRow, WithUpserts, With
             ['no_ks' => $data['no_ks']], // Match existing record by 'no_ks'
             $data                       // Data to fill/update
         );
-        
-        // If you have model events (Observers) that calculate statuses,
-        // they should trigger automatically on updateOrCreate.
-        // If not, and you need to call them manually after upsert:
-        // $kertasSiasatan->calculateEdarLebih24Jam();
-        // $kertasSiasatan->calculateTerbengkalai3Bulan();
-        // $kertasSiasatan->calculateBaruKemaskini();
-        // $kertasSiasatan->save(); // Important if manual calculations modify the model
+    
 
         return $kertasSiasatan;
     }

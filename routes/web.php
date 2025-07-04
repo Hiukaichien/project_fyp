@@ -52,6 +52,16 @@ Route::middleware('auth')->group(function () {
     // The main list/index is now handled via the project show page.
     Route::resource('kertas_siasatan', KertasSiasatanController::class)->except(['index', 'create']);
 
+    Route::get('/papers/{paperType}/{id}', [KertasSiasatanController::class, 'show'])->name('kertas_siasatan.show');
+    Route::get('/papers/{paperType}/{id}/edit', [KertasSiasatanController::class, 'edit'])->name('kertas_siasatan.edit');
+    Route::put('/papers/{paperType}/{id}', [KertasSiasatanController::class, 'update'])->name('kertas_siasatan.update');
+    
+    // This destroy route remains specific to the KertasSiasatan model
+    Route::delete('/kertas_siasatan/{kertasSiasatan}', [KertasSiasatanController::class, 'destroy'])->name('kertas_siasatan.destroy');
+// ...
+    
+    // Resource route for Projects remains the same
+    Route::resource('projects', ProjectController::class);
 
     // --- OBSOLETE ROUTES (COMMENTED OUT FOR REFERENCE) ---
     // The functionality of these routes is now handled by ProjectController@importPapers
