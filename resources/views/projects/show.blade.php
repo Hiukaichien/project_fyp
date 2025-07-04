@@ -1,7 +1,22 @@
 <x-app-layout>
-    {{-- Add DataTables CSS to the head --}}
+    {{-- Add DataTables CSS and custom CSS for sort icons --}}
     @push('styles')
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.tailwindcss.css">
+    <style>
+        /* Add sorting icons to the table headers */
+        table.dataTable th.dt-ordering-asc::after,
+        table.dataTable th.dt-ordering-desc::after {
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            margin-left: 0.5em;
+        }
+        table.dataTable th.dt-ordering-asc::after {
+            content: "\f0de"; /* fa-sort-up */
+        }
+        table.dataTable th.dt-ordering-desc::after {
+            content: "\f0dd"; /* fa-sort-down */
+        }
+    </style>
     @endpush
 
     <x-slot name="header">
@@ -82,10 +97,20 @@
             <input type="hidden" name="project_id" value="{{ $project->id }}">
             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ __('Import Kertas Siasatan to Project') }}</h2>
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                Muat naik fail Excel untuk menambah atau mengemaskini rekod Kertas Siasatan untuk projek **{{ $project->name }}**.
+                Muat naik fail Excel untuk menambah atau mengemaskini rekod Kertas Siasatan untuk projek <strong>{{ $project->name }}</strong>.
             </p>
+                                <div class="mb-4 p-4 bg-blue-50 dark:bg-gray-700 border border-blue-200 dark:border-blue-600 rounded text-blue-800 dark:text-blue-200 text-sm">
+                        <p>Sila pastikan fail Excel anda mengandungi sekurang-kurangnya lajur berikut dengan tajuk yang betul:</p>
+                        <ul class="list-disc list-inside ml-4 mt-2">
+                            <li><code>no_kertas_siasatan</code> (Wajib & Unik)</li>
+                            <li><code>tarikh_ks</code></li>
+                            <li><code>no_repot</code></li>
+                            <li><code>pegawai_penyiasat</code>, etc.</li>
+                        </ul>
+                        <p class="mt-2">Semua rekod dalam fail ini akan dikaitkan secara automatik dengan projek <span class="font-bold">{{ $project->name }}</span>.</p>
+                    </div>
             <div class="mt-6">
-                <label for="excel_file_modal" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilih Fail Excel (.xlsx, .xls, .csv)</label>
+                <label for="excel_file_modal" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilih Fail Excel (.xlsx,.xls,.csv)</label>
                 <input type="file" name="excel_file" id="excel_file_modal" required accept=".xlsx,.xls,.csv" class="mt-1 block w-full text-sm text-gray-500 dark:text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-blue-900/40 dark:file:text-blue-200 dark:hover:file:bg-blue-900/60 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
             </div>
             <div class="mt-6 flex justify-end">
@@ -115,18 +140,15 @@
         $('#kertas-siasatan-datatable').DataTable({
             processing: true,
             serverSide: true,
-            // scrollY, scrollX, and scrollCollapse options are removed to allow manual scrolling.
             ajax: {
                 url: "{{ route('projects.kertas_siasatan_data', $project->id) }}",
                 type: "POST",
-                data: function (d) {
-                    d._token = '{{ csrf_token() }}';
-                }
+                data: { _token: '{{ csrf_token() }}' }
             },
             columns: dtColumns,
-            order: [[1, 'desc']],
+            order: [[2, 'desc']], // Order by 'no_ks' column
             columnDefs: [
-                { "targets": 0, "width": "100px", "className": "sticky left-0 bg-white dark:bg-gray-800" }
+                { targets: 0, width: "100px", className: "sticky left-0 bg-white dark:bg-gray-800" }
             ]
         });
     });
