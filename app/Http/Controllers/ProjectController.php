@@ -50,11 +50,18 @@ class ProjectController extends Controller
 
     public function show(Project $project)
     {
-        // Data for summary cards (can be expanded later)
+        // Data for summary cards
         $ksLewat24Jam = $project->kertasSiasatan()->where('edar_lebih_24_jam_status', 'LIKE', '%LEWAT%')->get();
         $ksTerbengkalai = $project->kertasSiasatan()->where('terbengkalai_3_bulan_status', 'LIKE', '%TERBENGKALAI%')->get();
-
-        return view('projects.show', compact('project', 'ksLewat24Jam', 'ksTerbengkalai'));
+        $ksBaruKemaskini = $project->kertasSiasatan()->where('baru_kemaskini_status', 'LIKE', '%BARU DIKEMASKINI%')->get();
+        
+        // Pass all three variables to the view
+        return view('projects.show', compact(
+            'project',
+            'ksLewat24Jam',
+            'ksTerbengkalai',
+            'ksBaruKemaskini' 
+        ));
     }
 
     public function edit(Project $project)

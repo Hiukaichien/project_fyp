@@ -42,6 +42,7 @@ class PaperImport implements ToModel, WithHeadingRow, WithUpserts, SkipsOnFailur
      */
     public function model(array $row)
     {
+        //
         $columnMap = $this->getColumnMapping();
         $uniqueDbColumn = $this->uniqueBy();
 

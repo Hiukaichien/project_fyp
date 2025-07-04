@@ -58,6 +58,11 @@
                 @if($project->description)<p class="text-gray-700 dark:text-gray-300 whitespace-pre-wrap mt-4 border-t border-gray-200 dark:border-gray-700 pt-4">{{ $project->description }}</p>@endif
             </div>
 
+                        {{-- Collapsible Summary Tables --}}
+            <x-collapsible-table title="KS Lewat Edar (> 24 Jam)" :collection="$ksLewat24Jam" bgColor="bg-red-50 dark:bg-red-900/20" />
+            <x-collapsible-table title="KS Terbengkalai (> 3 Bulan)" :collection="$ksTerbengkalai" bgColor="bg-yellow-50 dark:bg-yellow-900/20" />
+            <x-collapsible-table title="KS Baru Dikemaskini" :collection="$ksBaruKemaskini" bgColor="bg-green-50 dark:bg-green-900/20" />
+
             {{-- Tabbed Interface for Datatables --}}
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6" x-data="{ activeTab: 'kertasSiasatan' }">
                 <!-- Tab Headers -->
