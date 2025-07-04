@@ -12,33 +12,55 @@ class TrafikRulePaper extends Model
     use HasFactory, Sortable;
 
     protected $table = 'trafik_rule_papers';
+
+    /**
+     * All attributes are mass assignable.
+     */
     protected $guarded = [];
 
+    /**
+     * The attributes that should be cast to native types.
+     * This is based on the final, corrected migration for the trafik.csv file.
+     */
     protected $casts = [
         'project_id' => 'integer',
-        'tarikh_kst_dibuka' => 'date:Y-m-d',
-        'tarikh_laporan_polis_header' => 'date:Y-m-d', // Renamed as 'seksyen_dibuka' seems missing
-        'tarikh_minit_a' => 'date:Y-m-d', // Mapped from "TARIKH EDARAN MINIT PERTAMA (A)"
-        'tarikh_minit_b' => 'date:Y-m-d', // Likely null for this category
-        'tarikh_minit_c' => 'date:Y-m-d', // Likely null for this category
-        'tarikh_minit_d' => 'date:Y-m-d', // Mapped from "TARIKH EDARAN MINIT AKHIR"
-        'tarikh_akhir_diari_dikemaskini' => 'date:Y-m-d',
-        'tarikh_daftar_bk_kenderaan' => 'date:Y-m-d',
-        'tarikh_serahan_bk_pemilik' => 'date:Y-m-d',
+        'tarikh_daftar' => 'date:Y-m-d', // From CSV: TARIKH DAFTAR
+        'tarikh_minit_a' => 'date:Y-m-d',
+        // 'tarikh_minit_b' and 'tarikh_minit_c' removed
+        'tarikh_minit_d' => 'date:Y-m-d',
+        'tarikh_hantar_puspakom' => 'date:Y-m-d',
+        'tarikh_hantar_patalogi' => 'date:Y-m-d',
+        'tarikh_hantar_kimia' => 'date:Y-m-d',
+        'tarikh_terima_laporan_pakar' => 'date:Y-m-d',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
 
+    /**
+     * The columns that are sortable.
+     */
     public $sortable = [
-        'id', 'no_kst', 'tarikh_kst_dibuka', 'status_kst', 'status_kes', 'pegawai_pemeriksa_jips', 'io_aio', 'created_at', 'updated_at'
-        // Add other sortable columns specific to Trafik Rule
+        'id',
+        'no_kst',
+        'tarikh_daftar',
+        'io_aio',
+        'seksyen',
+        'pegawai_pemeriksa_jips',
+        'created_at',
+        'updated_at'
     ];
 
+    /**
+     * Get the project that this paper belongs to.
+     */
     public function project()
     {
         return $this->belongsTo(Project::class);
     }
 
+    /**
+     * The "booted" method of the model.
+     */
     protected static function boot()
     {
         parent::boot();
@@ -47,58 +69,63 @@ class TrafikRulePaper extends Model
         });
     }
 
+    /**
+     * Apply all business logic calculations before saving.
+     */
     public function applyClientSpecificCalculations()
     {
-        $this->calculateEdaranPertamaLebih24JamClientLogic();
-        $this->calculateTerbengkalai3BulanClientLogic();
-        $this->calculateBaruKemaskiniClientLogic();
+        $this->calculateEdaranLebih48Jam();
+        $this->calculateTerbengkalai3Bulan();
+        $this->calculateBaruKemaskini();
     }
 
-    // PASTE THE 3 CLIENT-SPECIFIC CALCULATION METHODS HERE
-    public function calculateEdaranPertamaLebih24JamClientLogic()
+    /**
+     * Calculates if the first minute distribution was late.
+     */
+    public function calculateEdaranLebih48Jam()
     {
-        // For Trafik Rule, tarikh_minit_b might be null based on CSV
-        if ($this->tarikh_minit_a && $this->tarikh_minit_b) {
+        if ($this->tarikh_daftar && $this->tarikh_minit_a) {
+            $tarikhBuka = Carbon::parse($this->tarikh_daftar)->startOfDay();
             $tarikhA = Carbon::parse($this->tarikh_minit_a)->startOfDay();
-            $tarikhB = Carbon::parse($this->tarikh_minit_b)->startOfDay();
-            if ($tarikhB->isAfter($tarikhA) && $tarikhB->diffInHours($tarikhA) > 24) {
-                $this->edar_lebih_24_jam_status = 'YA, EDARAN LEWAT 24 JAM';
+            
+            if ($tarikhA->isAfter($tarikhBuka) && $tarikhA->diffInHours($tarikhBuka) > 48) {
+                $this->edar_lebih_24_jam_status = 'YA, EDARAN LEWAT 48 JAM';
             } else {
-                $this->edar_lebih_24_jam_status = 'EDARAN DALAM TEMPOH 24 JAM & KURANG';
+                $this->edar_lebih_24_jam_status = 'EDARAN DALAM TEMPOH 48 JAM';
             }
         } else {
-            $this->edar_lebih_24_jam_status = null;
+            $this->edar_lebih_24_jam_status = null; // Cannot calculate
         }
     }
-
-    public function calculateTerbengkalai3BulanClientLogic()
+    
+    /**
+     * Calculates if the case is abandoned based on the first and last minute dates.
+     */
+    public function calculateTerbengkalai3Bulan()
     {
         if ($this->tarikh_minit_a && $this->tarikh_minit_d) {
             $tarikhA = Carbon::parse($this->tarikh_minit_a);
             $tarikhD = Carbon::parse($this->tarikh_minit_d);
+
             if ($tarikhD->isAfter($tarikhA) && $tarikhA->diffInMonths($tarikhD) >= 3) {
                 $this->terbengkalai_3_bulan_status = 'YA, TERBENGKALAI LEBIH 3 BULAN';
             } else {
                 $this->terbengkalai_3_bulan_status = 'TIDAK TERBENGKALAI';
             }
         } else {
-            $this->terbengkalai_3_bulan_status = 'TIDAK TERBENGKALAI';
+            $this->terbengkalai_3_bulan_status = 'TIDAK TERBENGKALAI (TIADA DATA)';
         }
     }
 
-    public function calculateBaruKemaskiniClientLogic() // THIS IS AN INTERPRETATION
+    /**
+     * A simple logic to check if the record was recently updated.
+     */
+    public function calculateBaruKemaskini()
     {
-        $this->baru_kemaskini_status = 'TIADA PERGERAKAN BARU C-D';
-        // For Trafik Rule, tarikh_minit_c will likely be null
-        if ($this->tarikh_minit_c && $this->tarikh_minit_d) {
-            $tarikhC = Carbon::parse($this->tarikh_minit_c);
-            $tarikhD = Carbon::parse($this->tarikh_minit_d);
-            if ($tarikhD->isAfter($tarikhC) && $this->updated_at && Carbon::parse($this->updated_at)->isAfter(Carbon::now()->subDays(7))) {
-                $this->baru_kemaskini_status = 'YA, BARU DIGERAKKAN UNTUK DIKEMASKINI';
-            }
-        } elseif ($this->tarikh_minit_d && !$this->tarikh_minit_c) { // If C is not applicable/null
-             if ($this->updated_at && Carbon::parse($this->updated_at)->isAfter(Carbon::now()->subDays(7))) {
-                $this->baru_kemaskini_status = 'YA, BARU DIGERAKKAN UNTUK DIKEMASKINI (MINIT D)';
+        $this->baru_kemaskini_status = 'TIADA PERGERAKAN BARU';
+        if ($this->tarikh_minit_d && $this->updated_at) {
+            if (Carbon::parse($this->updated_at)->isAfter(Carbon::now()->subDays(7))) {
+                $this->baru_kemaskini_status = 'YA, BARU DIKEMASKINI';
             }
         }
     }

@@ -4,19 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect; // Import Redirect facade
-use App\Models\KertasSiasatan; // Assuming this is one of your paper models
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Validation\Rule;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\PaperImport;
+
+// Import all 8 paper models
+use App\Models\KertasSiasatan;
 use App\Models\JenayahPaper;
 use App\Models\NarkotikPaper;
 use App\Models\TrafikSeksyenPaper;
-use App\Models\TrafikRulePaper; 
-use App\Models\KomersilPaper;  
-use App\Models\LaporanMatiMengejutPaper; 
-use App\Models\OrangHilangPaper; 
+use App\Models\TrafikRulePaper;
+use App\Models\KomersilPaper;
+use App\Models\LaporanMatiMengejutPaper;
+use App\Models\OrangHilangPaper;
+
 use Illuminate\Support\Str;
-use Symfony\Component\HttpFoundation\StreamedResponse; // Add this import
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Yajra\DataTables\DataTables;
 
 class ProjectController extends Controller
@@ -45,63 +50,13 @@ class ProjectController extends Controller
 
     public function show(Project $project)
     {
-        $ksLewat24Jam = $project->kertasSiasatan()->where('edar_lebih_24_jam_status', 'YA, EDARAN LEWAT 24 JAM')->get();
-        $ksTerbengkalai = $project->kertasSiasatan()->where('terbengkalai_3_bulan_status', 'YA, TERBENGKALAI LEBIH 3 BULAN')->get();
-        $ksBaruKemaskini = $project->kertasSiasatan()->where('baru_kemaskini_status', 'YA, BARU DIGERAKKAN UNTUK DIKEMASKINI')->get();
-        
-        $unassignedKertasSiasatan = KertasSiasatan::whereNull('project_id')->orderBy('no_ks')->get();
+        // Data for summary cards (can be expanded later)
+        $ksLewat24Jam = $project->kertasSiasatan()->where('edar_lebih_24_jam_status', 'LIKE', '%LEWAT%')->get();
+        $ksTerbengkalai = $project->kertasSiasatan()->where('terbengkalai_3_bulan_status', 'LIKE', '%TERBENGKALAI%')->get();
 
-        return view('projects.show', compact(
-            'project',
-            'ksLewat24Jam',
-            'ksTerbengkalai',
-            'ksBaruKemaskini',
-            'unassignedKertasSiasatan'
-        ));
+        return view('projects.show', compact('project', 'ksLewat24Jam', 'ksTerbengkalai'));
     }
 
-    public function getKertasSiasatanData(Project $project)
-    {
-        $query = KertasSiasatan::where('project_id', $project->id);
-
-        return DataTables::of($query)
-            ->addIndexColumn()
-            ->addColumn('action', function ($row) {
-                $viewUrl = route('kertas_siasatan.show', $row->id);
-                $editUrl = route('kertas_siasatan.edit', $row->id);
-                $disassociateUrl = $row->project_id ? route('projects.disassociate_paper', ['project' => $row->project_id, 'paperType' => 'KertasSiasatan', 'paperId' => $row->id]) : '#';
-                
-                $actionBtn = '<div class="flex items-center space-x-2">';
-                $actionBtn .= '<a href="'.$viewUrl.'" class="text-indigo-600 hover:text-indigo-900" title="Lihat"><i class="fas fa-eye"></i></a>';
-                $actionBtn .= '<a href="'.$editUrl.'" class="text-green-600 hover:text-green-900" title="Audit/Kemaskini"><i class="fas fa-edit"></i></a>';
-                if ($disassociateUrl !== '#') {
-                    $actionBtn .= '<form action="'.$disassociateUrl.'" method="POST" class="inline" onsubmit="return confirm(\'Anda pasti ingin mengeluarkan Kertas Siasatan ini?\')">'.csrf_field().'<button type="submit" class="text-orange-600 hover:text-orange-900" title="Keluarkan dari Projek"><i class="fas fa-unlink"></i></button></form>';
-                }
-                $actionBtn .= '</div>';
-                return $actionBtn;
-            })
-            ->editColumn('tarikh_ks', fn($row) => optional($row->tarikh_ks)->format('d/m/Y'))
-            ->editColumn('tarikh_minit_a', fn($row) => optional($row->tarikh_minit_a)->format('d/m/Y'))
-            ->editColumn('tarikh_minit_b', fn($row) => optional($row->tarikh_minit_b)->format('d/m/Y'))
-            ->editColumn('tarikh_minit_c', fn($row) => optional($row->tarikh_minit_c)->format('d/m/Y'))
-            ->editColumn('tarikh_minit_d', fn($row) => optional($row->tarikh_minit_d)->format('d/m/Y'))
-            ->editColumn('tarikh_status_ks_semasa_diperiksa', fn($row) => optional($row->tarikh_status_ks_semasa_diperiksa)->format('d/m/Y'))
-            ->editColumn('tarikh_id_siasatan_dilampirkan', fn($row) => optional($row->tarikh_id_siasatan_dilampirkan)->format('d/m/Y'))
-            ->editColumn('rj2_tarikh', fn($row) => optional($row->rj2_tarikh)->format('d/m/Y'))
-            ->editColumn('rj9_tarikh', fn($row) => optional($row->rj9_tarikh)->format('d/m/Y'))
-            ->editColumn('rj10a_tarikh', fn($row) => optional($row->rj10a_tarikh)->format('d/m/Y'))
-            ->editColumn('rj10b_tarikh', fn($row) => optional($row->rj10b_tarikh)->format('d/m/Y'))
-            ->editColumn('rj99_tarikh', fn($row) => optional($row->rj99_tarikh)->format('d/m/Y'))
-            ->editColumn('semboyan_kesan_tangkap_tarikh', fn($row) => optional($row->semboyan_kesan_tangkap_tarikh)->format('d/m/Y'))
-            ->editColumn('waran_tangkap_tarikh', fn($row) => optional($row->waran_tangkap_tarikh)->format('d/m/Y'))
-            ->editColumn('ks_hantar_tpr_tarikh', fn($row) => optional($row->ks_hantar_tpr_tarikh)->format('d/m/Y'))
-            ->editColumn('ks_hantar_kjsj_tarikh', fn($row) => optional($row->ks_hantar_kjsj_tarikh)->format('d/m/Y'))
-            ->editColumn('ks_hantar_d5_tarikh', fn($row) => optional($row->ks_hantar_d5_tarikh)->format('d/m/Y'))
-            ->editColumn('ks_hantar_kbsjd_tarikh', fn($row) => optional($row->ks_hantar_kbsjd_tarikh)->format('d/m/Y'))
-            ->rawColumns(['action'])
-            ->make(true);
-    }
-    // ... all other methods remain the same ...
     public function edit(Project $project)
     {
         return view('projects.edit', compact('project'));
@@ -120,89 +75,133 @@ class ProjectController extends Controller
 
     public function destroy(Project $project)
     {
-        return Redirect::route('projects.index')->with('info', 'Delete functionality not yet implemented.');
+        // Safely disassociate all papers before deleting the project
+        foreach ($project->allAssociatedPapers() as $papersCollection) {
+            foreach ($papersCollection as $paper) {
+                $paper->project_id = null;
+                $paper->save();
+            }
+        }
+        $project->delete();
+        return Redirect::route('projects.index')->with('success', 'Project and all paper associations have been deleted.');
     }
 
-    public function associatePaper(Request $request, Project $project)
+    public function importPapers(Request $request, Project $project)
     {
         $validated = $request->validate([
-            'paper_id' => 'required', 
-            'paper_type' => 'required|string|in:KertasSiasatan,JenayahPaper,NarkotikPaper,TrafikSeksyenPaper,TrafikRulePaper,KomersilPaper,LaporanMatiMengejutPaper,OrangHilangPaper', 
+            'excel_file' => 'required|mimes:xlsx,xls,csv|max:20480',
+            'paper_type' => ['required', 'string', Rule::in(['KertasSiasatan', 'JenayahPaper', 'NarkotikPaper', 'KomersilPaper', 'TrafikSeksyenPaper', 'TrafikRulePaper', 'OrangHilangPaper', 'LaporanMatiMengejutPaper'])],
         ]);
-        $paperModelClass = 'App\\Models\\' . $validated['paper_type'];
-        if (!class_exists($paperModelClass)) {
-            return redirect()->route('projects.show', $project)->with('error', 'Invalid paper type specified.');
-        }
-        $paper = $paperModelClass::find($validated['paper_id']);
-        if (!$paper) {
-            return redirect()->route('projects.show', $project)->with('error', 'Paper not found.');
-        }
-        if ($paper->project_id) {
-             if ($paper->project_id == $project->id) {
-                 return redirect()->route('projects.show', $project)->with('info', ucfirst($validated['paper_type']) . ' is already associated with this project.');
-             } else {
-                 $otherProject = Project::find($paper->project_id);
-                 $otherProjectName = $otherProject ? $otherProject->name : 'another project';
-                 return redirect()->route('projects.show', $project)->with('error', ucfirst($validated['paper_type']) . ' is already associated with ' . $otherProjectName . '.');
-             }
-        }
-        $paper->project_id = $project->id;
-        $paper->save();
-        return redirect()->route('projects.show', $project)->with('success', ucfirst($validated['paper_type']) . ' successfully associated with the project.');
-    }
 
+        try {
+            Excel::import(new PaperImport($project->id, $validated['paper_type']), $request->file('excel_file'));
+            $friendlyName = Str::of($validated['paper_type'])->replace('Paper', ' Paper')->headline();
+            return back()->with('success', $friendlyName . ' berjaya diimport ke projek ini.');
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+            return back()->withErrors(['excel_errors' => $e->failures()])->withInput();
+        } catch (\Exception $e) {
+            return back()->with('error', 'Ralat semasa memproses fail: ' . $e->getMessage())->withInput();
+        }
+    }
+    
     public function disassociatePaper(Request $request, Project $project, $paperType, $paperId)
     {
         $validPaperTypes = ['KertasSiasatan', 'JenayahPaper', 'NarkotikPaper', 'TrafikSeksyenPaper', 'TrafikRulePaper', 'KomersilPaper', 'LaporanMatiMengejutPaper', 'OrangHilangPaper'];
         if (!in_array($paperType, $validPaperTypes)) {
-            return redirect()->route('projects.show', $project)->with('error', 'Invalid paper type specified for disassociation.');
+            return redirect()->route('projects.show', $project)->with('error', 'Invalid paper type specified.');
         }
         $paperModelClass = 'App\\Models\\' . $paperType;
-        if (!class_exists($paperModelClass)) {
-            return redirect()->route('projects.show', $project)->with('error', 'Invalid paper model specified.');
-        }
-        $paper = $paperModelClass::where('id', $paperId)->where('project_id', $project->id)->first();
-        if (!$paper) {
-            return redirect()->route('projects.show', $project)->with('error', 'Paper not found or not associated with this project.');
-        }
+        $paper = $paperModelClass::where('id', $paperId)->where('project_id', $project->id)->firstOrFail();
         $paper->project_id = null;
         $paper->save();
-        return redirect()->route('projects.show', $project)->with('success', ucfirst($paperType) . ' successfully removed from the project.');
+        $friendlyName = Str::of($paperType)->replace('Paper', ' Paper')->headline();
+        return redirect()->route('projects.show', $project)->with('success', $friendlyName . ' successfully removed from the project.');
     }
 
     public function downloadAssociatedPapersCsv(Project $project)
     {
-        $allPapersData = $project->allAssociatedPapers();
-        $fileName = Str::slug($project->name) . '-associated-papers.csv';
-        $headers = [
-            "Content-type"        => "text/csv",
-            "Content-Disposition" => "attachment; filename=$fileName",
-            "Pragma"              => "no-cache",
-            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
-            "Expires"             => "0"
-        ];
-        $columns = ['Paper Type', 'Identifier', 'Details', 'Status KS', 'Status Kes', 'Pegawai Penyiasat', 'Tarikh KS'];
-        $callback = function() use ($allPapersData, $columns, $project) {
+        $fileName = Str::slug($project->name) . '-all-papers.csv';
+        $headers = ["Content-type" => "text/csv", "Content-Disposition" => "attachment; filename=$fileName", "Pragma" => "no-cache", "Cache-Control" => "must-revalidate, post-check=0, pre-check=0", "Expires" => "0"];
+        
+        $columns = ['Jenis Kertas', 'No. Rujukan Unik', 'IO/AIO', 'Seksyen', 'Status', 'Tarikh'];
+
+        $callback = function() use ($project, $columns) {
             $file = fopen('php://output', 'w');
             fputcsv($file, $columns);
-            foreach ($allPapersData as $type => $papersCollection) {
-                $paperTypeDisplay = Str::title(str_replace('_', ' ', Str::before($type, 'Papers')));
-                if ($type === 'kertas_siasatan') {
-                    $papersCollection = $project->kertasSiasatan()->get();
-                }
-                foreach ($papersCollection as $paper) {
-                    $identifier = $paper->no_ks ?? $paper->no_kst ?? $paper->no_lmm ?? $paper->no_ks_oh ?? $paper->name ?? "ID: {$paper->id}";
-                    $details = '';
-                    $statusKs = $paper->status_ks ?? '-';
-                    $statusKes = $paper->status_kes ?? '-';
-                    $pegawaiPenyiasat = $paper->pegawai_penyiasat ?? '-';
-                    $tarikhKs = isset($paper->tarikh_ks) ? (is_string($paper->tarikh_ks) ? Carbon::parse($paper->tarikh_ks)->format('d/m/Y') : optional($paper->tarikh_ks)->format('d/m/Y')) : '-';
-                    $row = [$paperTypeDisplay, $identifier, $details, $statusKs, $statusKes, $pegawaiPenyiasat, $tarikhKs,];
-                    fputcsv($file, $row);
+
+            foreach ($project->allAssociatedPapers() as $type => $papers) {
+                foreach ($papers as $paper) {
+                    $paperData = $this->mapPaperDataForCsv($paper);
+                    fputcsv($file, $paperData);
                 }
             }
             fclose($file);
         };
+
         return new StreamedResponse($callback, 200, $headers);
+    }
+    
+    private function mapPaperDataForCsv($paper): array
+    {
+        $modelName = class_basename($paper);
+        $paperType = Str::of($modelName)->replace('Paper', ' Paper')->headline();
+        
+        $identifier = $paper->no_ks ?? $paper->no_kst ?? $paper->no_lmm ?? $paper->no_ks_oh ?? 'N/A';
+        $io = $paper->io_aio ?? $paper->pegawai_penyiasat ?? 'N/A';
+        $seksyen = $paper->seksyen ?? $paper->seksyen_dibuka ?? 'N/A';
+        $status = $paper->status_kes ?? $paper->status_ks ?? $paper->status_oh ?? $paper->status_lmm ?? 'N/A';
+        $date = $paper->tarikh_ks ?? $paper->tarikh_ks_dibuka ?? $paper->tarikh_laporan_polis ?? $paper->tarikh_daftar ?? 'N/A';
+
+        return [
+            $paperType,
+            $identifier,
+            $io,
+            $seksyen,
+            $status,
+            $date ? Carbon::parse($date)->format('d/m/Y') : 'N/A',
+        ];
+    }
+
+    // --- DATATABLES SERVER-SIDE METHODS ---
+    private function buildActionButtons($row, $paperType) {
+        $disassociateUrl = route('projects.disassociate_paper', ['project' => $row->project_id, 'paperType' => $paperType, 'paperId' => $row->id]);
+        return '<div class="flex items-center space-x-2">' .
+               '<form action="'.$disassociateUrl.'" method="POST" class="inline" onsubmit="return confirm(\'Anda pasti ingin mengeluarkan kertas ini?\')">' .
+               csrf_field() .
+               '<button type="submit" class="text-orange-600" title="Keluarkan"><i class="fas fa-unlink"></i></button></form>' .
+               '</div>';
+    }
+
+    public function getKertasSiasatanData(Project $project) {
+        $query = KertasSiasatan::where('project_id', $project->id);
+        return DataTables::of($query)->addColumn('action', fn($row) => $this->buildActionButtons($row, 'KertasSiasatan'))->rawColumns(['action'])->make(true);
+    }
+    public function getJenayahPapersData(Project $project) {
+        $query = JenayahPaper::where('project_id', $project->id);
+        return DataTables::of($query)->addColumn('action', fn($row) => $this->buildActionButtons($row, 'JenayahPaper'))->rawColumns(['action'])->make(true);
+    }
+    public function getNarkotikPapersData(Project $project) {
+        $query = NarkotikPaper::where('project_id', $project->id);
+        return DataTables::of($query)->addColumn('action', fn($row) => $this->buildActionButtons($row, 'NarkotikPaper'))->rawColumns(['action'])->make(true);
+    }
+    public function getKomersilPapersData(Project $project) {
+        $query = KomersilPaper::where('project_id', $project->id);
+        return DataTables::of($query)->addColumn('action', fn($row) => $this->buildActionButtons($row, 'KomersilPaper'))->rawColumns(['action'])->make(true);
+    }
+    public function getTrafikSeksyenPapersData(Project $project) {
+        $query = TrafikSeksyenPaper::where('project_id', $project->id);
+        return DataTables::of($query)->addColumn('action', fn($row) => $this->buildActionButtons($row, 'TrafikSeksyenPaper'))->rawColumns(['action'])->make(true);
+    }
+    public function getTrafikRulePapersData(Project $project) {
+        $query = TrafikRulePaper::where('project_id', $project->id);
+        return DataTables::of($query)->addColumn('action', fn($row) => $this->buildActionButtons($row, 'TrafikRulePaper'))->rawColumns(['action'])->make(true);
+    }
+    public function getOrangHilangPapersData(Project $project) {
+        $query = OrangHilangPaper::where('project_id', $project->id);
+        return DataTables::of($query)->addColumn('action', fn($row) => $this->buildActionButtons($row, 'OrangHilangPaper'))->rawColumns(['action'])->make(true);
+    }
+    public function getLaporanMatiMengejutPapersData(Project $project) {
+        $query = LaporanMatiMengejutPaper::where('project_id', $project->id);
+        return DataTables::of($query)->addColumn('action', fn($row) => $this->buildActionButtons($row, 'LaporanMatiMengejutPaper'))->rawColumns(['action'])->make(true);
     }
 }

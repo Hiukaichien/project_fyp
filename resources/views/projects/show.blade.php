@@ -3,19 +3,15 @@
     @push('styles')
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.tailwindcss.css">
     <style>
-        /* Add sorting icons to the table headers */
         table.dataTable th.dt-ordering-asc::after,
         table.dataTable th.dt-ordering-desc::after {
             font-family: "Font Awesome 5 Free";
             font-weight: 900;
             margin-left: 0.5em;
         }
-        table.dataTable th.dt-ordering-asc::after {
-            content: "\f0de"; /* fa-sort-up */
-        }
-        table.dataTable th.dt-ordering-desc::after {
-            content: "\f0dd"; /* fa-sort-down */
-        }
+        table.dataTable th.dt-ordering-asc::after { content: "\f0de"; } /* fa-sort-up */
+        table.dataTable th.dt-ordering-desc::after { content: "\f0dd"; } /* fa-sort-down */
+        [x-cloak] { display: none !important; }
     </style>
     @endpush
 
@@ -32,87 +28,94 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            {{-- Session Messages etc. --}}
-            @if (session('success')) <div class="mb-4 p-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800" role="alert">{{ session('success') }}</div> @endif
-            @if (session('error') || $errors->has('excel_errors') || $errors->has('excel_file'))
+            {{-- Session Messages for feedback --}}
+            @if (session('success')) <div class="mb-4 p-4 text-sm text-green-700 bg-green-100 rounded-lg" role="alert">{{ session('success') }}</div> @endif
+            @if (session('error')) <div class="mb-4 p-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">{{ session('error') }}</div> @endif
+            @if ($errors->any())
                 <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
                     <strong class="font-bold">Ralat Import!</strong>
-                    @if (session('error'))<span class="block sm:inline">{{ session('error') }}</span>@endif
                     @error('excel_file')<span class="block sm:inline">{{ $message }}</span>@enderror
                     @if ($errors->has('excel_errors'))
                         <ul class="mt-2 list-disc list-inside text-sm">
-                            @foreach ($errors->get('excel_errors') as $failure)<li>Baris {{ $failure->row() }}: {{ implode(', ', $failure->errors()) }} (Nilai: {{ implode(', ', $failure->values()) }})</li>@endforeach
+                            @foreach ($errors->get('excel_errors') as $failure)<li>Baris {{ $failure->row() }}: {{ implode(', ', $failure->errors()) }}</li>@endforeach
                         </ul>
                     @endif
                 </div>
             @endif
-            @if (session('info')) <div class="mb-4 p-4 text-sm text-blue-700 bg-blue-100 rounded-lg dark:bg-blue-200 dark:text-blue-800" role="alert">{{ session('info') }}</div> @endif
 
+            {{-- Project Details Card --}}
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
-                <div class="flex justify-between items-center mb-1">
+                <div class="flex justify-between items-start mb-1">
                     <div>
-                        <h3 class="text-2xl font-semibold">{{ $project->name }}</h3>
+                        <h3 class="text-2xl font-semibold text-gray-900 dark:text-gray-100">{{ $project->name }}</h3>
                         <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{ \Carbon\Carbon::parse($project->project_date)->format('F d, Y') }}</p>
                     </div>
                     <div class="flex-shrink-0 flex items-center space-x-4">
-                        <x-primary-button x-data="" x-on:click.prevent="$dispatch('open-modal', 'import-ks-modal')"><i class="fas fa-file-upload mr-2"></i> {{ __('Import') }}</x-primary-button>
+                        <x-primary-button x-data="" x-on:click.prevent="$dispatch('open-modal', 'import-papers-modal')"><i class="fas fa-file-upload mr-2"></i> {{ __('Import') }}</x-primary-button>
                         <a href="{{ route('projects.edit', $project) }}" class="text-yellow-600 dark:text-yellow-400 hover:text-yellow-500" title="{{ __('Edit Project') }}"><i class="fas fa-edit fa-lg"></i></a>
-                        <a href="{{ route('projects.download_csv', $project) }}" class="text-green-600 dark:text-green-400 hover:text-green-500" title="{{ __('Download Associated Papers CSV') }}"><i class="fas fa-file-csv fa-lg"></i></a>
                     </div>
                 </div>
-                @if($project->description)<p class="text-gray-700 dark:text-gray-300 whitespace-pre-wrap mt-4 border-t pt-4">{{ $project->description }}</p>@endif
+                @if($project->description)<p class="text-gray-700 dark:text-gray-300 whitespace-pre-wrap mt-4 border-t border-gray-200 dark:border-gray-700 pt-4">{{ $project->description }}</p>@endif
             </div>
 
-            <x-collapsible-table title="KS Lewat Edar (> 24 Jam)" :collection="$ksLewat24Jam" bgColor="bg-red-50 dark:bg-red-900/20" />
-            <x-collapsible-table title="KS Terbengkalai (> 3 Bulan)" :collection="$ksTerbengkalai" bgColor="bg-yellow-50 dark:bg-yellow-900/20" />
-            <x-collapsible-table title="KS Baru Dikemaskini" :collection="$ksBaruKemaskini" bgColor="bg-green-50 dark:bg-green-900/20" />
-            
-            <hr class="my-6 border-gray-300 dark:border-gray-700">
+            {{-- Tabbed Interface for Datatables --}}
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6" x-data="{ activeTab: 'kertasSiasatan' }">
+                <!-- Tab Headers -->
+                <div class="border-b border-gray-200 dark:border-gray-700">
+                    <nav class="-mb-px flex space-x-4 overflow-x-auto" aria-label="Tabs">
+                        <a href="#" @click.prevent="activeTab = 'kertasSiasatan'" :class="{ 'border-indigo-500 text-indigo-600': activeTab === 'kertasSiasatan' }" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">Kertas Siasatan</a>
+                        <a href="#" @click.prevent="activeTab = 'jenayah'" :class="{ 'border-indigo-500 text-indigo-600': activeTab === 'jenayah' }" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">Jenayah</a>
+                        <a href="#" @click.prevent="activeTab = 'narkotik'" :class="{ 'border-indigo-500 text-indigo-600': activeTab === 'narkotik' }" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">Narkotik</a>
+                        <a href="#" @click.prevent="activeTab = 'komersil'" :class="{ 'border-indigo-500 text-indigo-600': activeTab === 'komersil' }" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">Komersil</a>
+                        <a href="#" @click.prevent="activeTab = 'trafikSeksyen'" :class="{ 'border-indigo-500 text-indigo-600': activeTab === 'trafikSeksyen' }" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">Trafik (Seksyen)</a>
+                        <a href="#" @click.prevent="activeTab = 'trafikRule'" :class="{ 'border-indigo-500 text-indigo-600': activeTab === 'trafikRule' }" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">Trafik (Rule)</a>
+                        <a href="#" @click.prevent="activeTab = 'orangHilang'" :class="{ 'border-indigo-500 text-indigo-600': activeTab === 'orangHilang' }" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">Orang Hilang</a>
+                        <a href="#" @click.prevent="activeTab = 'lmm'" :class="{ 'border-indigo-500 text-indigo-600': activeTab === 'lmm' }" class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">LMM</a>
+                    </nav>
+                </div>
 
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">          
-                <h4 class="font-semibold text-lg mb-4">{{ __('Associated Kertas Siasatan') }}</h4>
-                <div class="overflow-x-auto">
-                    <table id="kertas-siasatan-datatable" class="w-full text-sm text-left" style="width:100%">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                            <tr>
-                                @php $fillableColumns = (new \App\Models\KertasSiasatan())->getFillable(); @endphp
-                                <th class="px-4 py-3 sticky left-0 bg-gray-50 dark:bg-gray-700 z-10">Tindakan</th>
-                                <th class="px-4 py-3">No.</th>
-                                @foreach($fillableColumns as $column)
-                                    @if($column !== 'project_id')<th scope="col" class="px-4 py-3">{{ Str::of($column)->replace('_', ' ')->title() }}</th>@endif
-                                @endforeach
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
+                <!-- Tab Content Panels -->
+                <div class="mt-6">
+                    <div x-show="activeTab === 'kertasSiasatan'" x-cloak><div class="overflow-x-auto"><table id="kertas-siasatan-datatable" class="w-full"><thead><tr><th>Action</th><th>No. KS</th><th>Tarikh KS</th><th>Pegawai Penyiasat</th></tr></thead></table></div></div>
+                    <div x-show="activeTab === 'jenayah'" x-cloak><div class="overflow-x-auto"><table id="jenayah-datatable" class="w-full"><thead><tr><th>Action</th><th>No. KS</th><th>IO/AIO</th><th>Seksyen</th><th>Tarikh Laporan</th></tr></thead></table></div></div>
+                    <div x-show="activeTab === 'narkotik'" x-cloak><div class="overflow-x-auto"><table id="narkotik-datatable" class="w-full"><thead><tr><th>Action</th><th>No. KS</th><th>IO/AIO</th><th>Seksyen</th><th>Tarikh Laporan</th></tr></thead></table></div></div>
+                    <div x-show="activeTab === 'komersil'" x-cloak><div class="overflow-x-auto"><table id="komersil-datatable" class="w-full"><thead><tr><th>Action</th><th>No. KS</th><th>IO/AIO</th><th>Seksyen</th><th>Tarikh KS Dibuka</th></tr></thead></table></div></div>
+                    <div x-show="activeTab === 'trafikSeksyen'" x-cloak><div class="overflow-x-auto"><table id="trafik-seksyen-datatable" class="w-full"><thead><tr><th>Action</th><th>No. KST</th><th>IO/AIO</th><th>Seksyen</th><th>Tarikh Daftar</th></tr></thead></table></div></div>
+                    <div x-show="activeTab === 'trafikRule'" x-cloak><div class="overflow-x-auto"><table id="trafik-rule-datatable" class="w-full"><thead><tr><th>Action</th><th>No. KST</th><th>IO/AIO</th><th>No Saman</th><th>Tarikh Daftar</th></tr></thead></table></div></div>
+                    <div x-show="activeTab === 'orangHilang'" x-cloak><div class="overflow-x-auto"><table id="orang-hilang-datatable" class="w-full"><thead><tr><th>Action</th><th>No. KS(OH)</th><th>IO/AIO</th><th>Tarikh Laporan</th><th>Status</th></tr></thead></table></div></div>
+                    <div x-show="activeTab === 'lmm'" x-cloak><div class="overflow-x-auto"><table id="lmm-datatable" class="w-full"><thead><tr><th>Action</th><th>No. LMM</th><th>IO/AIO</th><th>Tarikh Laporan</th><th>Status SDR</th></tr></thead></table></div></div>
                 </div>
             </div>
         </div>
     </div>
 
     {{-- Import Modal --}}
-    <x-modal name="import-ks-modal" :show="$errors->has('excel_file') || $errors->has('excel_errors')" focusable>
-        <form action="{{ route('kertas_siasatan.store') }}" method="POST" enctype="multipart/form-data" class="p-6">
+    <x-modal name="import-papers-modal" :show="$errors->any()" focusable>
+        <form action="{{ route('projects.import', $project) }}" method="POST" enctype="multipart/form-data" class="p-6">
             @csrf
-            <input type="hidden" name="project_id" value="{{ $project->id }}">
-            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ __('Import Kertas Siasatan to Project') }}</h2>
-            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                Muat naik fail Excel untuk menambah atau mengemaskini rekod Kertas Siasatan untuk projek <strong>{{ $project->name }}</strong>.
-            </p>
-                                <div class="mb-4 p-4 bg-blue-50 dark:bg-gray-700 border border-blue-200 dark:border-blue-600 rounded text-blue-800 dark:text-blue-200 text-sm">
-                        <p>Sila pastikan fail Excel anda mengandungi sekurang-kurangnya lajur berikut dengan tajuk yang betul:</p>
-                        <ul class="list-disc list-inside ml-4 mt-2">
-                            <li><code>no_kertas_siasatan</code> (Wajib & Unik)</li>
-                            <li><code>tarikh_ks</code></li>
-                            <li><code>no_repot</code></li>
-                            <li><code>pegawai_penyiasat</code>, etc.</li>
-                        </ul>
-                        <p class="mt-2">Semua rekod dalam fail ini akan dikaitkan secara automatik dengan projek <span class="font-bold">{{ $project->name }}</span>.</p>
-                    </div>
+            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Import Papers to: {{ $project->name }}</h2>
+            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Sila pilih kategori kertas dan muat naik fail Excel yang sepadan.</p>
+            
             <div class="mt-6">
-                <label for="excel_file_modal" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilih Fail Excel (.xlsx,.xls,.csv)</label>
-                <input type="file" name="excel_file" id="excel_file_modal" required accept=".xlsx,.xls,.csv" class="mt-1 block w-full text-sm text-gray-500 dark:text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-blue-900/40 dark:file:text-blue-200 dark:hover:file:bg-blue-900/60 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <label for="paper_type_modal" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Kategori Kertas</label>
+                <select name="paper_type" id="paper_type_modal" required class="mt-1 block w-full form-select rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    <option value="" disabled selected>-- Sila Pilih Kategori --</option>
+                    <option value="KertasSiasatan">Kertas Siasatan (Am)</option>
+                    <option value="JenayahPaper">Jenayah</option>
+                    <option value="NarkotikPaper">Narkotik</option>
+                    <option value="KomersilPaper">Komersil</option>
+                    <option value="TrafikSeksyenPaper">Trafik (Seksyen)</option>
+                    <option value="TrafikRulePaper">Trafik (Rule)</option>
+                    <option value="OrangHilangPaper">Orang Hilang</option>
+                    <option value="LaporanMatiMengejutPaper">Laporan Mati Mengejut</option>
+                </select>
             </div>
+
+            <div class="mt-6">
+                <label for="excel_file_modal" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilih Fail Excel</label>
+                <input type="file" name="excel_file" id="excel_file_modal" required accept=".xlsx,.xls,.csv" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+            </div>
+
             <div class="mt-6 flex justify-end">
                 <x-secondary-button x-on:click="$dispatch('close')">{{ __('Cancel') }}</x-secondary-button>
                 <x-primary-button class="ms-3">{{ __('Import File') }}</x-primary-button>
@@ -126,31 +129,153 @@
     <script src="https://cdn.datatables.net/2.0.8/js/dataTables.tailwindcss.js"></script>
     <script>
     $(document).ready(function() {
-        const fillableColumns = @json((new \App\Models\KertasSiasatan())->getFillable());
-        let dtColumns = [
-            { data: 'action', name: 'action', orderable: false, searchable: false },
-            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false }
-        ];
-        fillableColumns.forEach(function(column) {
-            if (column !== 'project_id') {
-                dtColumns.push({ data: column, name: column, defaultContent: '-' });
+        const initializedTables = {};
+
+        // Function to initialize a DataTable if it hasn't been already
+        const initDataTable = (tableId, ajaxUrl, columns) => {
+            if (!initializedTables[tableId]) {
+                initializedTables[tableId] = $('#' + tableId).DataTable({
+                    processing: true,
+                    serverSide: true,
+                    ajax: {
+                        url: ajaxUrl,
+                        type: "POST",
+                        data: { _token: '{{ csrf_token() }}' }
+                    },
+                    columns: columns,
+                    scrollX: true, // Enable horizontal scrolling
+                    // Add any other default options here
+                });
+            }
+        };
+
+        // Define column configurations for each table
+        const tableConfigs = {
+            kertasSiasatan: {
+                id: 'kertas-siasatan-datatable',
+                url: "{{ route('projects.kertas_siasatan_data', $project->id) }}",
+                columns: [
+                    { data: 'action', name: 'action', orderable: false, searchable: false, title: 'Action' },
+                    { data: 'no_ks', name: 'no_ks', title: 'No. KS' },
+                    { data: 'tarikh_ks', name: 'tarikh_ks', title: 'Tarikh KS' },
+                    { data: 'pegawai_penyiasat', name: 'pegawai_penyiasat', title: 'Pegawai Penyiasat' },
+                    { data: 'status_ks', name: 'status_ks', title: 'Status KS' },
+                ]
+            },
+            jenayah: {
+                id: 'jenayah-datatable',
+                url: "{{ route('projects.jenayah_papers_data', $project->id) }}",
+                columns: [
+                    { data: 'action', name: 'action', orderable: false, searchable: false, title: 'Action' },
+                    { data: 'no_ks', name: 'no_ks', title: 'No. KS' },
+                    { data: 'io_aio', name: 'io_aio', title: 'IO/AIO' },
+                    { data: 'seksyen', name: 'seksyen', title: 'Seksyen' },
+                    { data: 'tarikh_laporan_polis', name: 'tarikh_laporan_polis', title: 'Tarikh Laporan' }
+                ]
+            },
+            narkotik: {
+                id: 'narkotik-datatable',
+                url: "{{ route('projects.narkotik_papers_data', $project->id) }}",
+                columns: [
+                    { data: 'action', name: 'action', orderable: false, searchable: false, title: 'Action' },
+                    { data: 'no_ks', name: 'no_ks', title: 'No. KS' },
+                    { data: 'io_aio', name: 'io_aio', title: 'IO/AIO' },
+                    { data: 'seksyen', name: 'seksyen', title: 'Seksyen' },
+                    { data: 'tarikh_laporan_polis', name: 'tarikh_laporan_polis', title: 'Tarikh Laporan' }
+                ]
+            },
+            komersil: {
+                id: 'komersil-datatable',
+                url: "{{ route('projects.komersil_papers_data', $project->id) }}",
+                columns: [
+                    { data: 'action', name: 'action', orderable: false, searchable: false, title: 'Action' },
+                    { data: 'no_ks', name: 'no_ks', title: 'No. KS' },
+                    { data: 'io_aio', name: 'io_aio', title: 'IO/AIO' },
+                    { data: 'seksyen', name: 'seksyen', title: 'Seksyen' },
+                    { data: 'tarikh_ks_dibuka', name: 'tarikh_ks_dibuka', title: 'Tarikh KS Dibuka' }
+                ]
+            },
+            trafikSeksyen: {
+                id: 'trafik-seksyen-datatable',
+                url: "{{ route('projects.trafik_seksyen_papers_data', $project->id) }}",
+                columns: [
+                    { data: 'action', name: 'action', orderable: false, searchable: false, title: 'Action' },
+                    { data: 'no_kst', name: 'no_kst', title: 'No. KST' },
+                    { data: 'io_aio', name: 'io_aio', title: 'IO/AIO' },
+                    { data: 'seksyen', name: 'seksyen', title: 'Seksyen' },
+                    { data: 'tarikh_daftar', name: 'tarikh_daftar', title: 'Tarikh Daftar' }
+                ]
+            },
+            trafikRule: {
+                id: 'trafik-rule-datatable',
+                url: "{{ route('projects.trafik_rule_papers_data', $project->id) }}",
+                columns: [
+                    { data: 'action', name: 'action', orderable: false, searchable: false, title: 'Action' },
+                    { data: 'no_kst', name: 'no_kst', title: 'No. KST' },
+                    { data: 'io_aio', name: 'io_aio', title: 'IO/AIO' },
+                    { data: 'no_saman', name: 'no_saman', title: 'No Saman' },
+                    { data: 'tarikh_daftar', name: 'tarikh_daftar', title: 'Tarikh Daftar' }
+                ]
+            },
+            orangHilang: {
+                id: 'orang-hilang-datatable',
+                url: "{{ route('projects.orang_hilang_papers_data', $project->id) }}",
+                columns: [
+                    { data: 'action', name: 'action', orderable: false, searchable: false, title: 'Action' },
+                    { data: 'no_ks_oh', name: 'no_ks_oh', title: 'No. KS(OH)' },
+                    { data: 'io_aio', name: 'io_aio', title: 'IO/AIO' },
+                    { data: 'tarikh_laporan_polis', name: 'tarikh_laporan_polis', title: 'Tarikh Laporan' },
+                    { data: 'status_oh', name: 'status_oh', title: 'Status OH' }
+                ]
+            },
+            lmm: {
+                id: 'lmm-datatable',
+                url: "{{ route('projects.laporan_mati_mengejut_papers_data', $project->id) }}",
+                columns: [
+                    { data: 'action', name: 'action', orderable: false, searchable: false, title: 'Action' },
+                    { data: 'no_lmm', name: 'no_lmm', title: 'No. LMM' },
+                    { data: 'io_aio', name: 'io_aio', title: 'IO/AIO' },
+                    { data: 'tarikh_laporan_polis', name: 'tarikh_laporan_polis', title: 'Tarikh Laporan' },
+                    { data: 'status_sdr', name: 'status_sdr', title: 'Status SDR' }
+                ]
+            }
+        };
+
+        // Initialize the first table immediately
+        initDataTable(
+            tableConfigs.kertasSiasatan.id,
+            tableConfigs.kertasSiasatan.url,
+            tableConfigs.kertasSiasatan.columns
+        );
+        
+        // Listen for tab clicks to initialize other tables on demand
+        $('a[data-tab]').on('click', function(e) {
+            const tabName = $(this).data('tab');
+            if (tableConfigs[tabName]) {
+                initDataTable(
+                    tableConfigs[tabName].id,
+                    tableConfigs[tabName].url,
+                    tableConfigs[tabName].columns
+                );
             }
         });
 
-        $('#kertas-siasatan-datatable').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: {
-                url: "{{ route('projects.kertas_siasatan_data', $project->id) }}",
-                type: "POST",
-                data: { _token: '{{ csrf_token() }}' }
-            },
-            columns: dtColumns,
-            order: [[2, 'desc']], // Order by 'no_ks' column
-            columnDefs: [
-                { targets: 0, width: "100px", className: "sticky left-0 bg-white dark:bg-gray-800" }
-            ]
+        // Use Alpine's watcher to trigger initialization when a tab becomes active
+        // This is a more robust way to handle dynamic content
+        document.addEventListener('alpine:init', () => {
+            Alpine.effect(() => {
+                const activeTab = Alpine.store('app').activeTab; // Assumes you set activeTab in a global store or component
+                
+                if (tableConfigs[activeTab]) {
+                    initDataTable(
+                        tableConfigs[activeTab].id,
+                        tableConfigs[activeTab].url,
+                        tableConfigs[activeTab].columns
+                    );
+                }
+            });
         });
+
     });
     </script>
     @endpush

@@ -15,62 +15,39 @@ return new class extends Migration
             $table->id();
             $table->foreignId('project_id')->nullable()->constrained('projects')->onDelete('set null');
 
-            // Core Fields
-            $table->string('no_ks_oh')->unique();
-            $table->date('tarikh_ks_oh_dibuka')->nullable();
-            $table->string('no_repot_polis')->nullable()->index();
-            $table->string('jabatan')->nullable();
-            $table->string('io_aio')->nullable();
-            $table->string('status_ks_oh')->nullable()->index();
-            $table->string('status_kes')->nullable()->index();
-            $table->string('kes_klasifikasi')->nullable();
-            // In CSV, 'SEKSYEN DIBUKA' is replaced by 'TARIKH LAPORAN POLIS' for this category
-            $table->date('tarikh_laporan_polis_header')->nullable();
-            $table->string('pegawai_pemeriksa_jips')->nullable();
+            // == Core Fields from CSV ==
+            $table->string('no_ks_oh')->unique(); // From: NO KERTAS SIASATAN
+            $table->string('io_aio')->nullable(); // From: PEGAWAI PENYIASAT
+            $table->string('no_laporan_polis_header')->nullable(); // From: the first 'TARIKH LAPORAN POLIS' which is a string
+            $table->date('tarikh_ks_oh_dibuka')->nullable(); // From: TARIKH KERTAS SIASATAN
+            $table->date('tarikh_laporan_polis')->nullable(); // From: the second 'TARIKH LAPORAN POLIS' which is a date
+            $table->date('tarikh_minit_a')->nullable(); // From: TARIKH EDARAN PERTAMA
+            $table->date('tarikh_minit_d')->nullable(); // From: TARIKH EDARAN AKHIR
+            $table->string('terbengkalai_tb')->nullable(); // From: TERBENGKALAI (TB)
+            $table->string('mps1_butiran_oh')->nullable(); // From: MPS 1 (BUTIRAN OH)
+            $table->string('mps2_oh_dijumpai')->nullable(); // From: MPS 2 (OH DIJUMPAI)
+            $table->string('percakapan_mangsa_dijumpai')->nullable(); // From: PERCAKAPAN MANGSA DIJUMPAI /BALIK)
+            $table->string('kategori_umur_oh')->nullable(); // From: KATEGORI UMUR OH
+            $table->string('jantina_oh')->nullable(); // From: JANTINA OH
+            $table->string('kewarganegaraan')->nullable(); // From: KEWARGANERAAN
+            $table->string('kedutaan')->nullable(); // From: KEDUTAAN
+            $table->string('pem1_status')->nullable(); // From: PEM 1
+            $table->string('pem2_status')->nullable(); // From: PEM 2
+            $table->string('pem3_status')->nullable(); // From: PEM 3
+            $table->string('pem4_status')->nullable(); // From: PEM 4
+            $table->string('gambar_orang_hilang')->nullable(); // From: GAMBAR ORANG HILANG
+            $table->string('hebahan_oh')->nullable(); // From: HEBAHAN OH
+            $table->string('pemakluman_ciq_jsj')->nullable(); // From: PEMAKLUMAN CIQ JSJ
+            $table->string('pemakluman_ke_nur_kasih')->nullable(); // From: PEMAKLUMAN KE NUR KASIH
+            $table->string('status_oh')->nullable(); // From: STATUS OH
+            $table->string('kep_dibuka_ks_jenayah')->nullable(); // From: ADAKAH KEP(OH) DIBUKA KS JIKA MELIBATKAN KES JENAYAH
+            $table->string('sitrep_warga_asing')->nullable(); // From: SITREP (WARGA ASING)
+            $table->text('ulasan_keseluruhan_ks')->nullable(); // From: ULASAN KESELURUHAN KS
 
-            // Minit Dates (Standardized)
-            // CSV for PENGURUSAN (ORANG HILANG) has: "TARIKH EDARAN MINIT PERTAMA", "TARIKH EDARAN MINIT AKHIR"
-            $table->date('tarikh_minit_a')->nullable();
-            $table->date('tarikh_minit_b')->nullable();
-            $table->date('tarikh_minit_c')->nullable();
-            $table->date('tarikh_minit_d')->nullable();
-
-            // Calculated Statuses
+            // == System Calculated Statuses (can be removed if calculated on-the-fly) ==
             $table->string('edar_lebih_24_jam_status')->nullable();
             $table->string('terbengkalai_3_bulan_status')->nullable();
             $table->string('baru_kemaskini_status')->nullable();
-
-            // PENGURUSAN (ORANG HILANG) Specific Columns
-            $table->string('kst_terbengkalai_melebihi_3_bulan_flag')->nullable(); // Note: CSV header says KST, assuming it means KS(OH) here
-            $table->text('pengiraan_ks_oh_terbengkalai')->nullable();
-            $table->string('ks_oh_io_aio_renew_selepas_semboyan')->nullable();
-            $table->string('rakam_percakapan_orang_hilang_dijumpai')->nullable();
-            $table->string('laporan_polis_orang_hilang_dijumpai')->nullable();
-            $table->string('unsur_jenayah_keatas_orang_hilang_status')->nullable();
-            $table->string('orang_hilang_bawah_umur_18_status')->nullable();
-            $table->string('semboyan_nur_alert_dihantar_status')->nullable();
-            $table->string('gambar_orang_hilang')->nullable();
-            $table->text('butiran_orang_hilang')->nullable();
-            $table->string('penjanaan_sistem_mps1_status')->nullable();
-            $table->string('penjanaan_sistem_mps2_status')->nullable();
-            $table->string('hebahan_media_orang_hilang_status')->nullable();
-            $table->string('diari_siasatan_dikemaskini')->nullable();
-            $table->date('tarikh_akhir_diari_dikemaskini')->nullable();
-            $table->string('gambar_tempat_kejadian_oh')->nullable();
-            $table->string('lakaran_rajah_kasar_lokasi_oh')->nullable();
-            $table->string('pem1_status')->nullable();
-            $table->string('pem2_status')->nullable();
-            $table->string('pem3_status')->nullable();
-            $table->string('pem4_status')->nullable();
-            $table->string('ks_rujuk_kbpd_arahan_lanjut_status')->nullable();
-            $table->string('ks_oh_dijumpai_rujuk_tpr_nfa_status')->nullable();
-            $table->string('ks_selesai_kus_fail_status')->nullable();
-            $table->string('tpr_beri_arahan_nfa_status')->nullable();
-            $table->date('tarikh_tpr_beri_arahan_nfa')->nullable();
-            $table->text('ulasan_kes_nfa')->nullable();
-            $table->text('ulasan_penemuan_kes_menarik1')->nullable();
-            $table->text('ulasan_penemuan_kes_menarik2')->nullable();
-            $table->text('ulasan_lain_lain')->nullable();
 
             $table->timestamps();
         });

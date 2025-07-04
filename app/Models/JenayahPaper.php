@@ -12,15 +12,23 @@ class JenayahPaper extends Model
     use HasFactory, Sortable;
 
     protected $table = 'jenayah_papers';
-    protected $guarded = []; // All attributes are mass assignable
+    
+    /**
+     * The attributes that are not mass assignable.
+     * An empty array means all attributes are mass assignable.
+     */
+    protected $guarded = [];
 
+    /**
+     * The attributes that should be cast to native types.
+     * This ensures data consistency for dates, numbers, etc.
+     */
     protected $casts = [
         'project_id' => 'integer',
         'tarikh_ks_dibuka' => 'date:Y-m-d',
         'tarikh_laporan_polis' => 'date:Y-m-d',
         'tarikh_minit_a' => 'date:Y-m-d',
-        'tarikh_minit_b' => 'date:Y-m-d',
-        'tarikh_minit_c' => 'date:Y-m-d',
+        // 'tarikh_minit_b' and 'tarikh_minit_c' removed as they are not in the final schema
         'tarikh_minit_d' => 'date:Y-m-d',
         'tarikh_akhir_diari_dikemaskini' => 'date:Y-m-d',
         'tarikh_daftar_bk_berharga_tunai' => 'date:Y-m-d',
@@ -28,6 +36,7 @@ class JenayahPaper extends Model
         'tarikh_daftar_bk_kenderaan' => 'date:Y-m-d',
         'tarikh_arahan_tpr_lucut_hak' => 'date:Y-m-d',
         'jumlah_lucut_hak_rm' => 'decimal:2',
+        'wang_tunai_lucut_hak_judi' => 'decimal:2', // Added from CSV analysis
         'tarikh_arahan_tpr_pulang_bk' => 'date:Y-m-d',
         'jumlah_serah_semula_pemilik_rm' => 'decimal:2',
         'tarikh_serahan_bk_pemilik' => 'date:Y-m-d',
@@ -50,77 +59,98 @@ class JenayahPaper extends Model
         'updated_at' => 'datetime',
     ];
 
+    /**
+     * The columns that are sortable.
+     */
     public $sortable = [
-        'id', 'no_ks', 'tarikh_ks_dibuka', 'status_ks', 'status_kes', 'pegawai_pemeriksa_jips', 'io_aio', 'created_at', 'updated_at'
-        // Add other sortable columns specific to Jenayah
+        'id', 
+        'no_ks', 
+        'tarikh_ks_dibuka', 
+        'status_ks', 
+        'status_kes', 
+        'pegawai_pemeriksa_jips', 
+        'io_aio', 
+        'seksyen',
+        'created_at', 
+        'updated_at'
     ];
 
+    /**
+     * Get the project that this paper belongs to.
+     */
     public function project()
     {
         return $this->belongsTo(Project::class);
     }
 
+    /**
+     * The "booted" method of the model.
+     */
     protected static function boot()
     {
         parent::boot();
         static::saving(function ($model) {
             $model->applyClientSpecificCalculations();
-            // You would also call a handleConditionalDatesForJenayah() if it exists and is needed
         });
     }
 
+    /**
+     * Apply all business logic calculations before saving.
+     */
     public function applyClientSpecificCalculations()
     {
-        $this->calculateEdaranPertamaLebih24JamClientLogic();
-        $this->calculateTerbengkalai3BulanClientLogic();
-        $this->calculateBaruKemaskiniClientLogic(); // THIS STILL NEEDS CLIENT CLARIFICATION
+        $this->calculateEdaranLebih48Jam();
+        $this->calculateTerbengkalai3Bulan();
+        // The logic for 'Baru Kemaskini' might need refinement based on business rules
+        $this->calculateBaruKemaskini();
     }
 
-    // PASTE THE 3 CLIENT-SPECIFIC CALCULATION METHODS HERE
-    // (calculateEdaranPertamaLebih24JamClientLogic, calculateTerbengkalai3BulanClientLogic, calculateBaruKemaskiniClientLogic)
-    // Ensure they use $this->tarikh_minit_a, $this->tarikh_minit_b, etc.
-    public function calculateEdaranPertamaLebih24JamClientLogic()
+    /**
+     * Logic based on the 'jenayah.csv' which has 'TARIKH EDARAN PERTAMA' (minit_a)
+     * and 'TARIKH EDARAN AKHIR' (minit_d).
+     * The concept of "Minit Kedua (B)" does not exist in the new data.
+     */
+    public function calculateEdaranLebih48Jam()
     {
-        if ($this->tarikh_minit_a && $this->tarikh_minit_b) {
+        // This logic might need adjustment. A common check is the time between
+        // the report date and the first minute date.
+        if ($this->tarikh_laporan_polis && $this->tarikh_minit_a) {
+            $tarikhLaporan = Carbon::parse($this->tarikh_laporan_polis)->startOfDay();
             $tarikhA = Carbon::parse($this->tarikh_minit_a)->startOfDay();
-            $tarikhB = Carbon::parse($this->tarikh_minit_b)->startOfDay();
-            if ($tarikhB->isAfter($tarikhA) && $tarikhB->diffInHours($tarikhA) > 24) {
-                $this->edar_lebih_24_jam_status = 'YA, EDARAN LEWAT 24 JAM';
+            
+            if ($tarikhA->isAfter($tarikhLaporan) && $tarikhA->diffInHours($tarikhLaporan) > 48) {
+                $this->edar_lebih_24_jam_status = 'YA, EDARAN LEWAT 48 JAM';
             } else {
-                $this->edar_lebih_24_jam_status = 'EDARAN DALAM TEMPOH 24 JAM & KURANG';
+                $this->edar_lebih_24_jam_status = 'EDARAN DALAM TEMPOH 48 JAM';
             }
         } else {
-            $this->edar_lebih_24_jam_status = null;
+            $this->edar_lebih_24_jam_status = null; // Cannot calculate
         }
     }
-
-    public function calculateTerbengkalai3BulanClientLogic()
+    
+    public function calculateTerbengkalai3Bulan()
     {
         if ($this->tarikh_minit_a && $this->tarikh_minit_d) {
             $tarikhA = Carbon::parse($this->tarikh_minit_a);
             $tarikhD = Carbon::parse($this->tarikh_minit_d);
+
             if ($tarikhD->isAfter($tarikhA) && $tarikhA->diffInMonths($tarikhD) >= 3) {
                 $this->terbengkalai_3_bulan_status = 'YA, TERBENGKALAI LEBIH 3 BULAN';
             } else {
                 $this->terbengkalai_3_bulan_status = 'TIDAK TERBENGKALAI';
             }
         } else {
-            $this->terbengkalai_3_bulan_status = 'TIDAK TERBENGKALAI';
+            $this->terbengkalai_3_bulan_status = 'TIDAK TERBENGKALAI (TIADA DATA)';
         }
     }
 
-    public function calculateBaruKemaskiniClientLogic() // THIS IS AN INTERPRETATION
+    public function calculateBaruKemaskini()
     {
-        $this->baru_kemaskini_status = 'TIADA PERGERAKAN BARU C-D';
-        if ($this->tarikh_minit_c && $this->tarikh_minit_d) {
-            $tarikhC = Carbon::parse($this->tarikh_minit_c);
-            $tarikhD = Carbon::parse($this->tarikh_minit_d);
-            if ($tarikhD->isAfter($tarikhC) && $this->updated_at && Carbon::parse($this->updated_at)->isAfter(Carbon::now()->subDays(7))) {
-                $this->baru_kemaskini_status = 'YA, BARU DIGERAKKAN UNTUK DIKEMASKINI';
-            }
-        } elseif ($this->tarikh_minit_d && !$this->tarikh_minit_c) {
-             if ($this->updated_at && Carbon::parse($this->updated_at)->isAfter(Carbon::now()->subDays(7))) {
-                $this->baru_kemaskini_status = 'YA, BARU DIGERAKKAN UNTUK DIKEMASKINI (MINIT D)';
+        $this->baru_kemaskini_status = 'TIADA PERGERAKAN BARU';
+        if ($this->tarikh_minit_d && $this->updated_at) {
+            // Check if the record was updated recently (e.g., within the last 7 days)
+            if (Carbon::parse($this->updated_at)->isAfter(Carbon::now()->subDays(7))) {
+                $this->baru_kemaskini_status = 'YA, BARU DIKEMASKINI';
             }
         }
     }
