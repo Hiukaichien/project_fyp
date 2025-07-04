@@ -60,7 +60,7 @@ Route::middleware('auth')->group(function () {
     // Use Route::resource for shorter.
 
     // ROUTE FOR YAJRA DATATABLES **
-    Route::get('/projects/{project}/kertas-siasatan-data', [ProjectController::class, 'getKertasSiasatanData'])->name('projects.kertas_siasatan_data');
+    Route::post('/projects/{project}/kertas-siasatan-data', [ProjectController::class, 'getKertasSiasatanData'])->name('projects.kertas_siasatan_data');
 });
 
 require __DIR__.'/auth.php';

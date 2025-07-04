@@ -23,7 +23,7 @@ class ProjectController extends Controller
 {
     public function index()
     {
-        $projects = Project::sortable()->orderBy('project_date', 'desc')->paginate(10);
+        $projects = Project::orderBy('project_date', 'desc')->paginate(10);
         return view('projects.project', compact('projects'));
     }
 
@@ -48,50 +48,56 @@ class ProjectController extends Controller
         $ksLewat24Jam = $project->kertasSiasatan()->where('edar_lebih_24_jam_status', 'YA, EDARAN LEWAT 24 JAM')->get();
         $ksTerbengkalai = $project->kertasSiasatan()->where('terbengkalai_3_bulan_status', 'YA, TERBENGKALAI LEBIH 3 BULAN')->get();
         $ksBaruKemaskini = $project->kertasSiasatan()->where('baru_kemaskini_status', 'YA, BARU DIGERAKKAN UNTUK DIKEMASKINI')->get();
+        
+        $unassignedKertasSiasatan = KertasSiasatan::whereNull('project_id')->orderBy('no_ks')->get();
 
         return view('projects.show', compact(
             'project',
             'ksLewat24Jam',
             'ksTerbengkalai',
-            'ksBaruKemaskini'
+            'ksBaruKemaskini',
+            'unassignedKertasSiasatan'
         ));
     }
 
-    /**
-     * Provides the data for the Yajra Datatable.
-     * This version is more robust and includes all columns.
-     */
-    public function getKertasSiasatanData(Project $project, Request $request)
+    public function getKertasSiasatanData(Project $project)
     {
-        // FIX: Select only the columns needed for the DataTable for better performance.
-        $query = KertasSiasatan::where('project_id', $project->id)
-            ->select([
-                'id', 'no_ks', 'tarikh_ks', 'no_report', 'pegawai_penyiasat',
-                'status_ks', 'status_kes', 'seksyen', 'project_id'
-            ]);
+        $query = KertasSiasatan::where('project_id', $project->id);
 
         return DataTables::of($query)
-            ->addIndexColumn() // Adds the DT_RowIndex column for numbering
+            ->addIndexColumn()
             ->addColumn('action', function ($row) {
-                // Check if project_id exists before creating the route
-                $disassociateUrl = $row->project_id 
-                    ? route('projects.disassociate_paper', ['project' => $row->project_id, 'paperType' => 'KertasSiasatan', 'paperId' => $row->id]) 
-                    : '#';
-
-                $actionBtn = '<div class="flex items-center space-x-2">';
-                $actionBtn .= '<a href="'.route('kertas_siasatan.show', $row->id).'" class="text-indigo-600 hover:text-indigo-900" title="Lihat"><i class="fas fa-eye"></i></a>';
-                $actionBtn .= '<a href="'.route('kertas_siasatan.edit', $row->id).'" class="text-green-600 hover:text-green-900" title="Audit/Kemaskini"><i class="fas fa-edit"></i></a>';
+                $viewUrl = route('kertas_siasatan.show', $row->id);
+                $editUrl = route('kertas_siasatan.edit', $row->id);
+                $disassociateUrl = $row->project_id ? route('projects.disassociate_paper', ['project' => $row->project_id, 'paperType' => 'KertasSiasatan', 'paperId' => $row->id]) : '#';
                 
-                // Only show the disassociate button if the URL is valid
+                $actionBtn = '<div class="flex items-center space-x-2">';
+                $actionBtn .= '<a href="'.$viewUrl.'" class="text-indigo-600 hover:text-indigo-900" title="Lihat"><i class="fas fa-eye"></i></a>';
+                $actionBtn .= '<a href="'.$editUrl.'" class="text-green-600 hover:text-green-900" title="Audit/Kemaskini"><i class="fas fa-edit"></i></a>';
                 if ($disassociateUrl !== '#') {
                     $actionBtn .= '<form action="'.$disassociateUrl.'" method="POST" class="inline" onsubmit="return confirm(\'Anda pasti ingin mengeluarkan Kertas Siasatan ini?\')">'.csrf_field().'<button type="submit" class="text-orange-600 hover:text-orange-900" title="Keluarkan dari Projek"><i class="fas fa-unlink"></i></button></form>';
                 }
-
                 $actionBtn .= '</div>';
                 return $actionBtn;
             })
-            // FIX: Only format the 'tarikh_ks' column as it's the only date displayed.
             ->editColumn('tarikh_ks', fn($row) => optional($row->tarikh_ks)->format('d/m/Y'))
+            ->editColumn('tarikh_minit_a', fn($row) => optional($row->tarikh_minit_a)->format('d/m/Y'))
+            ->editColumn('tarikh_minit_b', fn($row) => optional($row->tarikh_minit_b)->format('d/m/Y'))
+            ->editColumn('tarikh_minit_c', fn($row) => optional($row->tarikh_minit_c)->format('d/m/Y'))
+            ->editColumn('tarikh_minit_d', fn($row) => optional($row->tarikh_minit_d)->format('d/m/Y'))
+            ->editColumn('tarikh_status_ks_semasa_diperiksa', fn($row) => optional($row->tarikh_status_ks_semasa_diperiksa)->format('d/m/Y'))
+            ->editColumn('tarikh_id_siasatan_dilampirkan', fn($row) => optional($row->tarikh_id_siasatan_dilampirkan)->format('d/m/Y'))
+            ->editColumn('rj2_tarikh', fn($row) => optional($row->rj2_tarikh)->format('d/m/Y'))
+            ->editColumn('rj9_tarikh', fn($row) => optional($row->rj9_tarikh)->format('d/m/Y'))
+            ->editColumn('rj10a_tarikh', fn($row) => optional($row->rj10a_tarikh)->format('d/m/Y'))
+            ->editColumn('rj10b_tarikh', fn($row) => optional($row->rj10b_tarikh)->format('d/m/Y'))
+            ->editColumn('rj99_tarikh', fn($row) => optional($row->rj99_tarikh)->format('d/m/Y'))
+            ->editColumn('semboyan_kesan_tangkap_tarikh', fn($row) => optional($row->semboyan_kesan_tangkap_tarikh)->format('d/m/Y'))
+            ->editColumn('waran_tangkap_tarikh', fn($row) => optional($row->waran_tangkap_tarikh)->format('d/m/Y'))
+            ->editColumn('ks_hantar_tpr_tarikh', fn($row) => optional($row->ks_hantar_tpr_tarikh)->format('d/m/Y'))
+            ->editColumn('ks_hantar_kjsj_tarikh', fn($row) => optional($row->ks_hantar_kjsj_tarikh)->format('d/m/Y'))
+            ->editColumn('ks_hantar_d5_tarikh', fn($row) => optional($row->ks_hantar_d5_tarikh)->format('d/m/Y'))
+            ->editColumn('ks_hantar_kbsjd_tarikh', fn($row) => optional($row->ks_hantar_kbsjd_tarikh)->format('d/m/Y'))
             ->rawColumns(['action'])
             ->make(true);
     }
@@ -190,7 +196,7 @@ class ProjectController extends Controller
                     $statusKs = $paper->status_ks ?? '-';
                     $statusKes = $paper->status_kes ?? '-';
                     $pegawaiPenyiasat = $paper->pegawai_penyiasat ?? '-';
-                    $tarikhKs = isset($paper->tarikh_ks) ? (is_string($paper->tarikh_ks) ? \Carbon\Carbon::parse($paper->tarikh_ks)->format('d/m/Y') : optional($paper->tarikh_ks)->format('d/m/Y')) : '-';
+                    $tarikhKs = isset($paper->tarikh_ks) ? (is_string($paper->tarikh_ks) ? Carbon::parse($paper->tarikh_ks)->format('d/m/Y') : optional($paper->tarikh_ks)->format('d/m/Y')) : '-';
                     $row = [$paperTypeDisplay, $identifier, $details, $statusKs, $statusKes, $pegawaiPenyiasat, $tarikhKs,];
                     fputcsv($file, $row);
                 }
