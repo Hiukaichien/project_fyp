@@ -72,6 +72,10 @@
                     </div>
                     <div class="flex-shrink-0 flex items-center space-x-4">
                         <x-primary-button x-data="" x-on:click.prevent="$dispatch('open-modal', 'import-papers-modal')"><i class="fas fa-file-upload mr-2"></i> {{ __('Import') }}</x-primary-button>
+                        <!-- FIX: Added Export Button -->
+                        <button x-data="" x-on:click.prevent="$dispatch('open-modal', 'export-papers-modal')" class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-500 active:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                            <i class="fas fa-file-download mr-2"></i> {{ __('Export') }}
+                        </button>
                         <a href="{{ route('projects.edit', $project) }}" class="text-yellow-600 dark:text-yellow-400 hover:text-yellow-500" title="{{ __('Edit Project') }}"><i class="fas fa-edit fa-lg"></i></a>
                     </div>
                 </div>
@@ -131,6 +135,34 @@
             <div class="mt-6"><label for="paper_type_modal" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Kategori Kertas</label><select name="paper_type" id="paper_type_modal" required class="mt-1 block w-full form-select rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"><option value="" disabled selected>-- Sila Pilih Kategori --</option><option value="KertasSiasatan">Kertas Siasatan (Am)</option><option value="JenayahPaper">Jenayah</option><option value="NarkotikPaper">Narkotik</option><option value="KomersilPaper">Komersil</option><option value="TrafikSeksyenPaper">Trafik (Seksyen)</option><option value="TrafikRulePaper">Trafik (Rule)</option><option value="OrangHilangPaper">Orang Hilang</option><option value="LaporanMatiMengejutPaper">Laporan Mati Mengejut</option></select></div>
             <div class="mt-6"><label for="excel_file_modal" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilih Fail Excel</label><input type="file" name="excel_file" id="excel_file_modal" required accept=".xlsx,.xls,.csv" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"></div>
             <div class="mt-6 flex justify-end"><x-secondary-button x-on:click="$dispatch('close')">{{ __('Cancel') }}</x-secondary-button><x-primary-button class="ms-3">{{ __('Import File') }}</x-primary-button></div>
+        </form>
+    </x-modal>
+
+    <!-- Export Modal -->
+    <x-modal name="export-papers-modal" focusable>
+        <form action="{{ route('projects.export_papers', $project) }}" method="GET" class="p-6">
+            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Export Papers from: {{ $project->name }}</h2>
+            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Sila pilih kategori kertas yang ingin dieksport ke fail CSV.</p>
+            <div class="mt-6">
+                <label for="paper_type_export" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Kategori Kertas</label>
+                <select name="paper_type" id="paper_type_export" required class="mt-1 block w-full form-select rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    <option value="" disabled selected>-- Sila Pilih Kategori --</option>
+                    <option value="KertasSiasatan">Kertas Siasatan (Am)</option>
+                    <option value="JenayahPaper">Jenayah</option>
+                    <option value="NarkotikPaper">Narkotik</option>
+                    <option value="KomersilPaper">Komersil</option>
+                    <option value="TrafikSeksyenPaper">Trafik (Seksyen)</option>
+                    <option value="TrafikRulePaper">Trafik (Rule)</option>
+                    <option value="OrangHilangPaper">Orang Hilang</option>
+                    <option value="LaporanMatiMengejutPaper">Laporan Mati Mengejut</option>
+                </select>
+            </div>
+            <div class="mt-6 flex justify-end">
+                <x-secondary-button x-on:click="$dispatch('close')">{{ __('Cancel') }}</x-secondary-button>
+                <button type="submit" class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-500 active:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150 ms-3">
+                    Export to CSV
+                </button>
+            </div>
         </form>
     </x-modal>
 

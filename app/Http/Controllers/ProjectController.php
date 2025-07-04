@@ -23,9 +23,8 @@ use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Yajra\DataTables\DataTables;
-// --- FIX: Import ValidationException for proper error handling ---
 use Illuminate\Validation\ValidationException;
-
+use Illuminate\Support\Facades\Schema;
 
 class ProjectController extends Controller
 {
@@ -172,6 +171,49 @@ class ProjectController extends Controller
         ];
     }
 
+        public function exportPapers(Request $request, Project $project)
+    {
+        $validated = $request->validate([
+            'paper_type' => ['required', 'string', Rule::in(['KertasSiasatan', 'JenayahPaper', 'NarkotikPaper', 'KomersilPaper', 'TrafikSeksyenPaper', 'TrafikRulePaper', 'OrangHilangPaper', 'LaporanMatiMengejutPaper'])],
+        ]);
+
+        $paperType = $validated['paper_type'];
+        $modelClass = 'App\\Models\\' . $paperType;
+        
+        $papers = $modelClass::where('project_id', $project->id)->get();
+
+        if ($papers->isEmpty()) {
+            return back()->with('info', 'Tiada data ditemui untuk jenis kertas "' . Str::headline($paperType) . '" dalam projek ini.');
+        }
+
+        $fileName = Str::slug($project->name) . '-' . Str::slug($paperType) . '.csv';
+        $columns = Schema::getColumnListing((new $modelClass)->getTable());
+
+        $headers = [
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+
+        $callback = function() use ($papers, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+
+            foreach ($papers as $paper) {
+                $row = [];
+                foreach ($columns as $column) {
+                    $row[] = $paper->{$column};
+                }
+                fputcsv($file, $row);
+            }
+            fclose($file);
+        };
+
+        return new StreamedResponse($callback, 200, $headers);
+    }
+
     private function buildActionButtons($row, $paperType)
     {
         $disassociateUrl = route('projects.disassociate_paper', ['project' => $row->project_id, 'paperType' => $paperType, 'paperId' => $row->id]);
@@ -189,6 +231,7 @@ class ProjectController extends Controller
         
         return '<div class="flex items-center space-x-2">' . $actions . '</div>';
     }
+
 
     // --- DATATABLES SERVER-SIDE METHODS ---
     // --- FIX: Added ->addIndexColumn() to every method ---
