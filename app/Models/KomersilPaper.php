@@ -5,11 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
-use Kyslik\ColumnSortable\Sortable;
 
 class KomersilPaper extends Model
 {
-    use HasFactory, Sortable;
+    use HasFactory;
 
     protected $table = 'komersil_papers';
 
@@ -30,20 +29,6 @@ class KomersilPaper extends Model
         'tarikh_permohonan_telco' => 'date:Y-m-d', // Added from CSV analysis
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-    ];
-
-    /**
-     * The columns that are sortable.
-     */
-    public $sortable = [
-        'id',
-        'no_ks',
-        'tarikh_ks_dibuka',
-        'io_aio',
-        'seksyen',
-        'pegawai_pemeriksa_jips',
-        'created_at',
-        'updated_at'
     ];
 
     /**

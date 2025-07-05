@@ -5,11 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
-use Kyslik\ColumnSortable\Sortable;
 
 class JenayahPaper extends Model
 {
-    use HasFactory, Sortable;
+    use HasFactory;
 
     protected $table = 'jenayah_papers';
     
@@ -57,22 +56,6 @@ class JenayahPaper extends Model
         'tarikh_keputusan_jatuh_hukum' => 'date:Y-m-d',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-    ];
-
-    /**
-     * The columns that are sortable.
-     */
-    public $sortable = [
-        'id', 
-        'no_ks', 
-        'tarikh_ks_dibuka', 
-        'status_ks', 
-        'status_kes', 
-        'pegawai_pemeriksa_jips', 
-        'io_aio', 
-        'seksyen',
-        'created_at', 
-        'updated_at'
     ];
 
     /**

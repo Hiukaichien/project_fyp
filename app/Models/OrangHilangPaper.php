@@ -5,11 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
-use Kyslik\ColumnSortable\Sortable;
 
 class OrangHilangPaper extends Model
 {
-    use HasFactory, Sortable;
+    use HasFactory;
 
     protected $table = 'orang_hilang_papers';
 
@@ -30,19 +29,6 @@ class OrangHilangPaper extends Model
         'tarikh_minit_d' => 'date:Y-m-d',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-    ];
-
-    /**
-     * The columns that are sortable.
-     */
-    public $sortable = [
-        'id',
-        'no_ks_oh',
-        'tarikh_ks_oh_dibuka',
-        'io_aio',
-        'status_oh',
-        'created_at',
-        'updated_at'
     ];
 
     /**

@@ -5,11 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
-use Kyslik\ColumnSortable\Sortable;
 
 class NarkotikPaper extends Model
 {
-    use HasFactory, Sortable;
+    use HasFactory;
 
     protected $table = 'narkotik_papers';
 
@@ -38,22 +37,6 @@ class NarkotikPaper extends Model
         'updated_at' => 'datetime',
     ];
 
-    /**
-     * The columns that are sortable.
-     */
-    public $sortable = [
-        'id',
-        'no_ks',
-        'io_aio',
-        'seksyen',
-        'tarikh_laporan_polis',
-        'created_at',
-        'updated_at'
-    ];
-
-    /**
-     * Get the project that this paper belongs to.
-     */
     public function project()
     {
         return $this->belongsTo(Project::class);
