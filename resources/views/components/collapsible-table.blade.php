@@ -28,27 +28,26 @@
                         <tr>
                             <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">{{ $index + 1 }}</td>
                             
-                            {{-- Dynamically get the identifier --}}
+                            {{-- Dynamically get the identifier based on your specific rules --}}
                             <td class="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900">
-                                {{ $item->no_ks ?? $item->no_kst ?? $item->no_lmm ?? $item->no_ks_oh ?? 'N/A' }}
+                                {{ $item->no_sdr_lmm ?? $item->no_ks ?? 'N/A' }}
                             </td>
 
-                            {{-- Dynamically get the date --}}
+                            {{-- Dynamically get the primary date based on your specific rules --}}
                             <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">
                                 @php
-                                    // Check for various possible date columns
-                                    $dateValue = $item->tarikh_ks ?? $item->tarikh_ks_dibuka ?? $item->tarikh_laporan_polis ?? $item->tarikh_daftar ?? null;
+                                    $dateValue = $item->tarikh_laporan_polis ?? $item->tarikh_laporan_polis_system ?? $item->tarikh_ks_dibuka ?? $item->tarikh_daftar ?? $item->tarikh_ks ?? null;
                                 @endphp
                                 {{ $dateValue ? \Carbon\Carbon::parse($dateValue)->format('d/m/Y') : '-' }}
                             </td>
 
-                            {{-- Dynamically get the officer --}}
+                            {{-- Dynamically get the officer name, accounting for the typo and the specific name in Komersil --}}
                             <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">
-                                {{ $item->io_aio ?? $item->pegawai_penyiasat ?? 'N/A' }}
+                                {{ $item->pegawai_penyiasat ?? $item->pengawai_penyiasat ?? $item->pengawai_siasatan ?? 'N/A' }}
                             </td>
 
                             <td class="px-3 py-2 whitespace-nowrap text-sm font-medium space-x-1">
-                                {{-- Dynamically build the routes with the correct paperType --}}
+                                {{-- This route logic is already correct and does not need to be changed --}}
                                 <a href="{{ route('kertas_siasatan.show', ['paperType' => class_basename($item), 'id' => $item->id]) }}" class="text-indigo-600 hover:text-indigo-900" title="Lihat">
                                     <svg class="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                 </a>

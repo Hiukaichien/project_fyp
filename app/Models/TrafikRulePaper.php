@@ -24,9 +24,8 @@ class TrafikRulePaper extends Model
     protected $casts = [
         'project_id' => 'integer',
         'tarikh_daftar' => 'date:Y-m-d', // From CSV: TARIKH DAFTAR
-        'tarikh_minit_a' => 'date:Y-m-d',
-        // 'tarikh_minit_b' and 'tarikh_minit_c' removed
-        'tarikh_minit_d' => 'date:Y-m-d',
+        'tarikh_minit_pertama' => 'date:Y-m-d',
+        'tarikh_minit_akhir' => 'date:Y-m-d',
         'tarikh_hantar_puspakom' => 'date:Y-m-d',
         'tarikh_hantar_patalogi' => 'date:Y-m-d',
         'tarikh_hantar_kimia' => 'date:Y-m-d',

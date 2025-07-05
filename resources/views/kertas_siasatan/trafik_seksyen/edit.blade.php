@@ -13,8 +13,8 @@
 
                 {{-- Non-Editable Fields --}}
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-3 bg-gray-50 rounded border">
-                    <div><span class="font-semibold">No. KST:</span> {{ $paper->no_kst }}</div>
-                    <div><span class="font-semibold">Pegawai Penyiasat:</span> {{ $paper->io_aio }}</div>
+                    <div><span class="font-semibold">No. KS:</span> {{ $paper->no_ks }}</div>
+                    <div><span class="font-semibold">Pegawai Penyiasat:</span> {{ $paper->pegawai_penyiasat }}</div>
                     <div><span class="font-semibold">Seksyen:</span> {{ $paper->seksyen }}</div>
                     <div><span class="font-semibold">Tarikh Daftar:</span> {{ optional($paper->tarikh_daftar)->format('d/m/Y') ?? '-' }}</div>
                 </div>
@@ -32,12 +32,12 @@
                         <input type="text" name="pegawai_pemeriksa_jips" id="pegawai_pemeriksa_jips" value="{{ old('pegawai_pemeriksa_jips', $paper->pegawai_pemeriksa_jips) }}" class="mt-1 block w-full form-input">
                     </div>
                     <div>
-                        <label for="tarikh_minit_a" class="block text-sm font-medium text-gray-700">Tarikh Edaran Pertama</label>
-                        <input type="date" name="tarikh_minit_a" id="tarikh_minit_a" value="{{ old('tarikh_minit_a', optional($paper->tarikh_minit_a)->format('Y-m-d')) }}" class="mt-1 block w-full form-input">
+                        <label for="tarikh_minit_pertama" class="block text-sm font-medium text-gray-700">Tarikh Edaran Pertama</label>
+                        <input type="date" name="tarikh_minit_pertama" id="tarikh_minit_pertama" value="{{ old('tarikh_minit_pertama', optional($paper->tarikh_minit_pertama)->format('Y-m-d')) }}" class="mt-1 block w-full form-input">
                     </div>
                     <div>
-                        <label for="tarikh_minit_d" class="block text-sm font-medium text-gray-700">Tarikh Minit Akhir</label>
-                        <input type="date" name="tarikh_minit_d" id="tarikh_minit_d" value="{{ old('tarikh_minit_d', optional($paper->tarikh_minit_d)->format('Y-m-d')) }}" class="mt-1 block w-full form-input">
+                        <label for="tarikh_minit_akhir" class="block text-sm font-medium text-gray-700">Tarikh Edaran Akhir</label>
+                        <input type="date" name="tarikh_minit_akhir" id="tarikh_minit_akhir" value="{{ old('tarikh_minit_akhir', optional($paper->tarikh_minit_akhir)->format('Y-m-d')) }}" class="mt-1 block w-full form-input">
                     </div>
                 </div>
                 <hr>

@@ -16,19 +16,19 @@ return new class extends Migration
             $table->foreignId('project_id')->nullable()->constrained()->onDelete('set null');
 
             // Common Core Fields
-            $table->string('no_kst')->unique();
-            $table->date('tarikh_kst_dibuka')->nullable();
+            $table->string('no_ks')->unique();
+            $table->date('tarikh_ks_dibuka')->nullable();
             $table->string('no_repot_polis')->nullable()->index();
             $table->string('jabatan')->nullable();
-            $table->string('io_aio')->nullable();
-            $table->string('status_kst')->nullable()->index();
+            $table->string('pegawai_penyiasat')->nullable();
+            $table->string('status_ks')->nullable()->index();
             $table->string('status_kes')->nullable()->index();
             $table->string('kes_klasifikasi')->nullable();
             $table->string('seksyen_dibuka')->nullable();
             $table->date('tarikh_laporan_polis')->nullable();
             $table->string('pegawai_pemeriksa_jips')->nullable();
-            $table->date('tarikh_minit_a')->nullable();
-            $table->date('tarikh_minit_d')->nullable();
+            $table->date('tarikh_minit_pertama')->nullable();
+            $table->date('tarikh_minit_akhir')->nullable();
 
             // Other fields
             $table->string('kst_terbengkalai_melebihi_3bulan')->nullable();

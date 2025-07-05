@@ -136,25 +136,48 @@ class PaperImport implements ToModel, WithHeadingRow, WithUpserts, SkipsOnFailur
 
     private function getColumnMapping(): array
     {
-        // Using the simplified 4-column mapping
+        // The list of columns to import. 
+        // The database column and Excel header are the SAME for each.
+        $columns = [
+            'no_ks',
+            'pegawai_penyiasat',
+            'seksyen',
+            'tarikh_laporan_polis', // This will be the primary date column for most
+        ];
+
+        // Add specific columns for each paper type if they exist in their respective Excel files
         switch ($this->paperType) {
-            case 'JenayahPaper':
-                return ['no_ks' => 'no_kertas_siasatan', 'io_aio' => 'pegawai_penyiasat', 'seksyen' => 'seksyen', 'tarikh_laporan_polis' => 'tarikh_laporan_polis'];
-            case 'NarkotikPaper':
-                return ['no_ks' => 'no_k_siasatan', 'io_aio' => 'peg_penyiasat', 'seksyen' => 'seksyen', 'tarikh_laporan_polis' => 'tarikh_laporan_polis'];
             case 'KomersilPaper':
-                return ['no_ks' => 'no_kertas_siasatan', 'io_aio' => 'pegawai_siasatan', 'seksyen' => 'seksyen', 'tarikh_ks_dibuka' => 'tarikh_kertas_siasatan_dibuka'];
+                // If Komersil Excel has 'tarikh_ks_dibuka' instead of 'tarikh_laporan_polis'
+                $columns = array_diff($columns, ['tarikh_laporan_polis']); // Remove the default date
+                $columns[] = 'tarikh_ks_dibuka'; // Add the specific one
+                break;
+
             case 'TrafikSeksyenPaper':
-                return ['no_kst' => 'no_kertas_siasatan', 'io_aio' => 'pegawai_penyiasat', 'seksyen' => 'seksyen', 'tarikh_daftar' => 'tarikh_daftar'];
-            case 'TrafikRulePaper':
-                return ['no_kst' => 'no_kertas_siasatan', 'io_aio' => 'pegawai_penyiasat', 'seksyen_dibuka' => 'seksyen', 'tarikh_kst_dibuka' => 'tarikh_daftar'];
+                $columns = array_diff($columns, ['tarikh_laporan_polis']);
+                $columns[] = 'tarikh_daftar';
+                break;
+
             case 'OrangHilangPaper':
-                return ['no_ks_oh' => 'no_kertas_siasatan', 'io_aio' => 'pegawai_penyiasat', 'tarikh_laporan_polis' => 'tarikh_laporan_polis', 'tarikh_ks_oh_dibuka' => 'tarikh_kertas_siasatan'];
+                $columns = array_diff($columns, ['tarikh_laporan_polis_sistem']);
+                $columns[] = 'tarikh_ks';
+                $columns[] = 'tarikh_laporan_polis_sistem'; 
+                break;
+                
             case 'LaporanMatiMengejutPaper':
-                return ['no_lmm' => 'no_sdrllm', 'io_aio' => 'pegawai_penyiasat', 'no_repot_polis' => 'no_laporan_polis', 'tarikh_laporan_polis' => 'tarikh_laporan_polis'];
-            default: // KertasSiasatan
-                return ['no_ks' => 'no_kertas_siasatan', 'tarikh_ks' => 'tarikh_ks', 'no_report' => 'no_repot', 'pegawai_penyiasat' => 'pegawai_penyiasat'];
+                // LMM is completely different
+                $columns = [
+                    'no_sdr_lmm',
+                    'pegawai_penyiasat',
+                    'no_repot_polis',
+                    'tarikh_laporan_polis',
+                ];
+                break;
         }
+
+        // The array_flip() trick creates the mapping where key equals value.
+        // E.g., ['no_ks', 'seksyen'] becomes ['no_ks' => 'no_ks', 'seksyen' => 'seksyen']
+        return array_flip($columns);
     }
 
     private function transformDate($value, $format = 'Y-m-d')

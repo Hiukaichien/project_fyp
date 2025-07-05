@@ -23,9 +23,8 @@ class LaporanMatiMengejutPaper extends Model
     protected $casts = [
         'project_id' => 'integer',
         'tarikh_laporan_polis' => 'date:Y-m-d',
-        'tarikh_minit_a' => 'date:Y-m-d',
-        // 'tarikh_minit_b' and 'tarikh_minit_c' removed
-        'tarikh_minit_d' => 'date:Y-m-d',
+        'tarikh_minit_pertama' => 'date:Y-m-d',
+        'tarikh_minit_pertamakhir' => 'date:Y-m-d',
         'tarikh_permohonan_pm_dipohon' => 'date:Y-m-d',
         'tarikh_rujuk_tpr' => 'date:Y-m-d',
         'tarikh_rujuk_koroner' => 'date:Y-m-d',
@@ -67,9 +66,9 @@ class LaporanMatiMengejutPaper extends Model
      */
     public function calculateEdaranLebih48Jam()
     {
-        if ($this->tarikh_laporan_polis && $this->tarikh_minit_a) {
+        if ($this->tarikh_laporan_polis && $this->tarikh_minit_pertama) {
             $tarikhLaporan = Carbon::parse($this->tarikh_laporan_polis)->startOfDay();
-            $tarikhA = Carbon::parse($this->tarikh_minit_a)->startOfDay();
+            $tarikhA = Carbon::parse($this->tarikh_minit_pertama)->startOfDay();
             
             if ($tarikhA->isAfter($tarikhLaporan) && $tarikhA->diffInHours($tarikhLaporan) > 48) {
                 $this->edar_lebih_24_jam_status = 'YA, EDARAN LEWAT 48 JAM';
@@ -86,9 +85,9 @@ class LaporanMatiMengejutPaper extends Model
      */
     public function calculateTerbengkalai3Bulan()
     {
-        if ($this->tarikh_minit_a && $this->tarikh_minit_d) {
-            $tarikhA = Carbon::parse($this->tarikh_minit_a);
-            $tarikhD = Carbon::parse($this->tarikh_minit_d);
+        if ($this->tarikh_minit_pertama && $this->tarikh_minit_akhir) {
+            $tarikhA = Carbon::parse($this->tarikh_minit_pertama);
+            $tarikhD = Carbon::parse($this->tarikh_minit_akhir);
 
             if ($tarikhD->isAfter($tarikhA) && $tarikhA->diffInMonths($tarikhD) >= 3) {
                 $this->terbengkalai_3_bulan_status = 'YA, TERBENGKALAI LEBIH 3 BULAN';
@@ -106,7 +105,7 @@ class LaporanMatiMengejutPaper extends Model
     public function calculateBaruKemaskini()
     {
         $this->baru_kemaskini_status = 'TIADA PERGERAKAN BARU';
-        if ($this->tarikh_minit_d && $this->updated_at) {
+        if ($this->tarikh_minit_akhir && $this->updated_at) {
             if (Carbon::parse($this->updated_at)->isAfter(Carbon::now()->subDays(7))) {
                 $this->baru_kemaskini_status = 'YA, BARU DIKEMASKINI';
             }

@@ -17,12 +17,12 @@ return new class extends Migration
 
             // == Core Fields from CSV ==
             $table->string('no_ks')->unique(); // From: NO KERTAS SIASATAN
-            $table->string('io_aio')->nullable(); // From: PEGAWAI PENYIASAT
+            $table->string('pegawai_penyiasat')->nullable(); // From: PEGAWAI PENYIASAT
             $table->string('seksyen')->nullable(); // From: SEKSYEN
             $table->date('tarikh_laporan_polis')->nullable(); // From: TARIKH LAPORAN POLIS
             $table->string('pegawai_pemeriksa_jips')->nullable(); // From: PEGAWAI PEMERIKSA JIPS BUKIT AMAN
-            $table->date('tarikh_minit_a')->nullable(); // From: TARIKH EDARAN PERTAMA
-            $table->date('tarikh_minit_d')->nullable(); // From: TARIKH EDARAN AKHIR
+            $table->date('tarikh_minit_pertama')->nullable(); // From: TARIKH EDARAN PERTAMA
+            $table->date('tarikh_minit_akhir')->nullable(); // From: TARIKH EDARAN AKHIR
             $table->string('terbengkalai_tb')->nullable(); // From: TERBENGKALAI (TB)
             $table->string('no_ext_brg_kes')->nullable(); // From: NO EXT BRG KES
             $table->string('brg_kes_tak_daftar')->nullable(); // From: BRG KES TAK DAFTAR

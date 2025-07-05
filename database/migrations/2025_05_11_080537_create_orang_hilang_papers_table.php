@@ -16,10 +16,10 @@ return new class extends Migration
             $table->foreignId('project_id')->nullable()->constrained('projects')->onDelete('set null');
 
             // == Core Fields from CSV ==
-            $table->string('no_ks_oh')->unique(); // From: NO KERTAS SIASATAN
-            $table->string('io_aio')->nullable(); // From: PEGAWAI PENYIASAT
-            $table->string('no_laporan_polis_header')->nullable(); // From: the first 'TARIKH LAPORAN POLIS' which is a string
-            $table->date('tarikh_ks_oh_dibuka')->nullable(); // From: TARIKH KERTAS SIASATAN
+            $table->string('no_ks')->unique(); // From: NO KERTAS SIASATAN
+            $table->string('pegawai_penyiasat')->nullable(); // From: PEGAWAI PENYIASAT
+            $table->string('tarikh_laporan_polis_sistem')->nullable(); // From: the first 'TARIKH LAPORAN POLIS' which is a string
+            $table->date('tarikh_ks')->nullable(); // From: TARIKH KERTAS SIASATAN
             $table->date('tarikh_laporan_polis')->nullable(); // From: the second 'TARIKH LAPORAN POLIS' which is a date
             $table->date('tarikh_minit_a')->nullable(); // From: TARIKH EDARAN PERTAMA
             $table->date('tarikh_minit_d')->nullable(); // From: TARIKH EDARAN AKHIR

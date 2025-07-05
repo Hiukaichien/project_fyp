@@ -16,14 +16,14 @@ return new class extends Migration
             $table->foreignId('project_id')->nullable()->constrained('projects')->onDelete('set null');
 
             // == Core Fields from CSV ==
-            $table->string('no_kst')->unique(); // From: NO KERTAS SIASATAN
-            $table->string('io_aio')->nullable(); // From: PEGAWAI PENYIASAT
+            $table->string('no_ks')->unique(); // From: NO KERTAS SIASATAN
+            $table->string('pegawai_penyiasat')->nullable(); // From: PEGAWAI PENYIASAT
             $table->string('seksyen')->nullable(); // From: SEKSYEN
             $table->date('tarikh_daftar')->nullable(); // From: TARIKH DAFTAR
             $table->string('no_saman')->nullable(); // From: NO SAMAN
             $table->string('pegawai_pemeriksa_jips')->nullable(); // From: PEGAWAI PEMERIKSA (JIPS)
-            $table->date('tarikh_minit_a')->nullable(); // From: TARIKH EDARAN PERTAMA
-            $table->date('tarikh_minit_d')->nullable(); // From: TARIKH MINIT AKHIR
+            $table->date('tarikh_minit_pertama')->nullable(); // From: TARIKH EDARAN PERTAMA
+            $table->date('tarikh_minit_akhir')->nullable(); // From: TARIKH MINIT AKHIR
             $table->string('lewat_edaran_pertama_48_jam')->nullable(); // From: LEWAT EDARAN PERTAMA 48 JAM
             $table->string('tiada_gambar_tempat_kejadian')->nullable(); // From: TIADA GAMBAR TEMPAT KEJADIAN
             $table->string('keputusan_kes_rule')->nullable(); // From: KEPUTUSAN KES (RULE)

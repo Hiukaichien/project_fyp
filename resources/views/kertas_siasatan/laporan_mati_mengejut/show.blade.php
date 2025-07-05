@@ -20,7 +20,7 @@
             <div class="bg-white shadow overflow-hidden sm:rounded-lg">
                 <div class="px-4 py-5 sm:px-6">
                     <h3 class="text-lg leading-6 font-medium text-gray-900">
-                        Maklumat Rujukan (No. LMM: {{ $paper->no_lmm }})
+                        Maklumat Rujukan (No. LMM: {{ $paper->no_sdr_lmm }})
                     </h3>
                 </div>
                 <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
@@ -28,7 +28,7 @@
                         @foreach($paper->getAttributes() as $key => $value)
                             <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                 <dt class="text-sm font-medium text-gray-500">{{ Illuminate\Support\Str::title(str_replace('_', ' ', $key)) }}</dt>
-                                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $value ?? 'N/A' }}</dd>
+                                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $value ?? '-' }}</dd>
                             </div>
                         @endforeach
                     </dl>

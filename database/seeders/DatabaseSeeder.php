@@ -34,7 +34,7 @@ class DatabaseSeeder extends Seeder
 
         // 2. Create a default project to associate papers with
         $project = Project::updateOrCreate(
-            ['name' => 'Projek Siasatan 1'],
+            ['name' => 'Projek Siasatan PDRM 2024'],
             [
                 'project_date' => '2024-07-01',
                 'description' => 'Projek rintis untuk pengauditan dan kawal selia kertas siasatan.',
@@ -42,12 +42,13 @@ class DatabaseSeeder extends Seeder
         );
 
         // 3. Seed Jenayah Papers (20 records)
+        // Note: Using 'pegawai_penyiasat' as per your migration file.
         for ($i = 1; $i <= 20; $i++) {
             JenayahPaper::updateOrCreate(
                 ['no_ks' => 'JNY/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '/24'],
                 [
-                    'io_aio' => ['INSP ALI', 'SGT AHMAD', 'INSP FATIMAH', 'SGT CHONG', 'INSP MUTHU'][array_rand(['INSP ALI', 'SGT AHMAD', 'INSP FATIMAH', 'SGT CHONG', 'INSP MUTHU'])],
-                    'seksyen' => ['302 KK', '39B ADB', '420 KK', '376 KK', '324 KK'][array_rand(['302 KK', '39B ADB', '420 KK', '376 KK', '324 KK'])],
+                    'pegawai_penyiasat' => ['INSP ALI', 'SGT AHMAD', 'INSP FATIMAH'][array_rand(['INSP ALI', 'SGT AHMAD', 'INSP FATIMAH'])],
+                    'seksyen' => ['302 KK', '39B ADB', '420 KK'][array_rand(['302 KK', '39B ADB', '420 KK'])],
                     'tarikh_laporan_polis' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30))->format('Y-m-d'),
                     'project_id' => $project->id,
                 ]
@@ -55,66 +56,69 @@ class DatabaseSeeder extends Seeder
         }
 
         // 4. Seed Narkotik Papers (20 records)
+        // Note: Using 'pegawai_penyiasat' as per your migration file.
         for ($i = 1; $i <= 20; $i++) {
             NarkotikPaper::updateOrCreate(
                 ['no_ks' => 'NRK/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '/24'],
                 [
-                    'io_aio' => ['INSP WONG', 'SGT RAZALI', 'INSP CHUA', 'SGT LIM', 'INSP DAVID'][array_rand(['INSP WONG', 'SGT RAZALI', 'INSP CHUA', 'SGT LIM', 'INSP DAVID'])],
-                    'seksyen' => ['12(2) ADB 1952', '15(1)(a) ADB 1952', '39B ADB 1952', '6 ADB 1952'][array_rand(['12(2) ADB 1952', '15(1)(a) ADB 1952', '39B ADB 1952', '6 ADB 1952'])],
+                    'pegawai_penyiasat' => ['INSP WONG', 'SGT RAZALI', 'INSP CHUA'][array_rand(['INSP WONG', 'SGT RAZALI', 'INSP CHUA'])],
+                    'seksyen' => ['12(2) ADB 1952', '15(1)(a) ADB 1952', '39B ADB 1952'][array_rand(['12(2) ADB 1952', '15(1)(a) ADB 1952', '39B ADB 1952'])],
                     'tarikh_laporan_polis' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30))->format('Y-m-d'),
                     'project_id' => $project->id,
                 ]
             );
         }
 
-        // 5. Seed Trafik Seksyen Papers (20 records)
+        // 5. Seed Komersil Papers (20 records)
+        // Note: Using 'pengawai_siasatan' as per your migration file.
+        for ($i = 1; $i <= 20; $i++) {
+            KomersilPaper::updateOrCreate(
+                ['no_ks' => 'KML/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '/24'],
+                [
+                    'pegawai_siasatan' => ['ASP KUMAR', 'INSP ZAINAB', 'SGT LEE'][array_rand(['ASP KUMAR', 'INSP ZAINAB', 'SGT LEE'])],
+                    'seksyen' => ['420 KK', '4(1) AMLA', 'Seksyen 424 KK'][array_rand(['420 KK', '4(1) AMLA', 'Seksyen 424 KK'])],
+                    'tarikh_ks_dibuka' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30))->format('Y-m-d'),
+                    'project_id' => $project->id,
+                ]
+            );
+        }
+
+        // 6. Seed Trafik Seksyen Papers (20 records)
+        // Note: Using 'pegawai_penyiasat' as per your migration file.
         for ($i = 1; $i <= 20; $i++) {
             TrafikSeksyenPaper::updateOrCreate(
-                ['no_kst' => 'TRF-S/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '/24'],
+                ['no_ks' => 'TRF-S/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '/24'],
                 [
-                    'io_aio' => ['SGT MAJID', 'INSP TAN', 'SGT AMIN', 'INSP CHEN', 'SGT BALA'][array_rand(['SGT MAJID', 'INSP TAN', 'SGT AMIN', 'INSP CHEN', 'SGT BALA'])],
-                    'seksyen' => ['41(1) APJ 1987', '42(1) APJ 1987', '43(1) APJ 1987', 'Seksyen 44 APJ'][array_rand(['41(1) APJ 1987', '42(1) APJ 1987', '43(1) APJ 1987', 'Seksyen 44 APJ'])],
+                    'pegawai_penyiasat' => ['SGT MAJID', 'INSP TAN', 'SGT AMIN'][array_rand(['SGT MAJID', 'INSP TAN', 'SGT AMIN'])],
+                    'seksyen' => ['41(1) APJ 1987', '42(1) APJ 1987', '43(1) APJ 1987'][array_rand(['41(1) APJ 1987', '42(1) APJ 1987', '43(1) APJ 1987'])],
                     'tarikh_daftar' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30))->format('Y-m-d'),
                     'project_id' => $project->id,
                 ]
             );
         }
         
-        // 6. Seed Orang Hilang Papers (20 records)
+        // 7. Seed Orang Hilang Papers (20 records)
+        // Note: Using 'pegawai_penyiasat' as per your migration file.
         for ($i = 1; $i <= 20; $i++) {
-            $reportDate = Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30));
             OrangHilangPaper::updateOrCreate(
-                ['no_ks_oh' => 'OH/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '/24'],
+                ['no_ks' => 'OH/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '/24'],
                 [
-                    'io_aio' => ['SGT RINA', 'INSP LIM', 'SGT NORA', 'INSP RAJ', 'SGT FAIZ'][array_rand(['SGT RINA', 'INSP LIM', 'SGT NORA', 'INSP RAJ', 'SGT FAIZ'])],
-                    'tarikh_laporan_polis' => $reportDate->format('Y-m-d'),
-                    'tarikh_ks_oh_dibuka' => $reportDate->addDays(rand(0, 2))->format('Y-m-d'),
+                    'pegawai_penyiasat' => ['SGT RINA', 'INSP LIM', 'SGT NORA'][array_rand(['SGT RINA', 'INSP LIM', 'SGT NORA'])],
+                    'tarikh_ks' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30))->format('Y-m-d'),
+                    'tarikh_laporan_polis_sistem' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30))->format('Y-m-d'),
                     'project_id' => $project->id,
                 ]
             );
         }
 
-        // 7. Seed Laporan Mati Mengejut Papers (20 records)
+        // 8. Seed Laporan Mati Mengejut Papers (20 records)
         for ($i = 1; $i <= 20; $i++) {
             LaporanMatiMengejutPaper::updateOrCreate(
-                ['no_lmm' => 'LMM/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '/24'],
+                ['no_sdr_lmm' => 'LMM/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '/24'],
                 [
-                    'io_aio' => ['INSP AZMAN', 'SGT YUSOF', 'INSP SARAH', 'SGT HELMI', 'INSP MARIA'][array_rand(['INSP AZMAN', 'SGT YUSOF', 'INSP SARAH', 'SGT HELMI', 'INSP MARIA'])],
-                    'no_repot_polis' => 'IPD/REP/' . str_pad(rand(1000, 9999), 5, '0', STR_PAD_LEFT) . '/24',
+                    'pegawai_penyiasat' => ['INSP AZMAN', 'SGT YUSOF', 'INSP SARAH'][array_rand(['INSP AZMAN', 'SGT YUSOF', 'INSP SARAH'])],
+                    'no_laporan_polis' => 'IPD/REP/' . str_pad(rand(1000, 9999), 5, '0', STR_PAD_LEFT) . '/24',
                     'tarikh_laporan_polis' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30))->format('Y-m-d'),
-                    'project_id' => $project->id,
-                ]
-            );
-        }
-
-        // 8. Seed Komersil Papers (20 records)
-        for ($i = 1; $i <= 20; $i++) {
-            KomersilPaper::updateOrCreate(
-                ['no_ks' => 'KML/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '/24'],
-                [
-                    'io_aio' => ['ASP KUMAR', 'INSP ZAINAB', 'SGT LEE', 'INSP GOH', 'ASP FATTAH'][array_rand(['ASP KUMAR', 'INSP ZAINAB', 'SGT LEE', 'INSP GOH', 'ASP FATTAH'])],
-                    'seksyen' => ['420 KK', '4(1) AMLA', 'Seksyen 424 KK', 'Akta Syarikat 2016'][array_rand(['420 KK', '4(1) AMLA', 'Seksyen 424 KK', 'Akta Syarikat 2016'])],
-                    'tarikh_ks_dibuka' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30))->format('Y-m-d'),
                     'project_id' => $project->id,
                 ]
             );

@@ -16,13 +16,13 @@ return new class extends Migration
             $table->foreignId('project_id')->nullable()->constrained('projects')->onDelete('set null');
 
             // == Core Fields from CSV ==
-            $table->string('no_lmm')->unique(); // From: NO SDR/LLM
-            $table->string('io_aio')->nullable(); // From: PEGAWAI PENYIASAT
-            $table->string('no_repot_polis')->nullable()->index(); // From: NO LAPORAN POLIS
+            $table->string('no_sdr_lmm')->unique(); // From: NO SDR/LLM
+            $table->string('pegawai_penyiasat')->nullable(); // From: PEGAWAI PENYIASAT
+            $table->string('no_laporan_polis')->nullable()->index(); // From: NO LAPORAN POLIS
             $table->date('tarikh_laporan_polis')->nullable(); // From: TARKH LAPORAN POLIS
             $table->string('pegawai_pemeriksa_jips')->nullable(); // From: PEGAWAI PEMERIKSA (JIPS)
-            $table->date('tarikh_minit_a')->nullable(); // From: TARIKH EDARAN PERTAMA
-            $table->date('tarikh_minit_d')->nullable(); // From: TARIKH EDARAN AKHIR
+            $table->date('tarikh_minit_pertama')->nullable(); // From: TARIKH EDARAN PERTAMA
+            $table->date('tarikh_minit_akhir')->nullable(); // From: TARIKH EDARAN AKHIR
             $table->string('pem_1_2_3_4')->nullable(); // From: PEM 1/2/3/4
             $table->string('terbengkalai_tb')->nullable(); // From: TERBENGKALAI (TB)
             $table->date('tarikh_permohonan_pm_dipohon')->nullable(); // From: TARIKH PERMOHONAN P/MORTEM DI POHON
