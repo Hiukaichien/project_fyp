@@ -1,7 +1,6 @@
 @php
     // --- DYNAMIC CONFIGURATION SETUP ---
     // This PHP block prepares all configurations at the top of the file for clarity.
-    use App\Models\KertasSiasatan;
     use App\Models\JenayahPaper;
     use App\Models\NarkotikPaper;
     use App\Models\KomersilPaper;
@@ -14,7 +13,6 @@
 
     // A single source of truth for all table configurations
     $paperTypes = [
-        'kertasSiasatan' => ['model' => new KertasSiasatan(), 'route' => 'projects.kertas_siasatan_data', 'title' => 'Kertas Siasatan'],
         'jenayah' => ['model' => new JenayahPaper(), 'route' => 'projects.jenayah_papers_data', 'title' => 'Jenayah'],
         'narkotik' => ['model' => new NarkotikPaper(), 'route' => 'projects.narkotik_papers_data', 'title' => 'Narkotik'],
         'komersil' => ['model' => new KomersilPaper(), 'route' => 'projects.komersil_papers_data', 'title' => 'Komersil'],
@@ -132,7 +130,7 @@
             @csrf
             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Import Papers to: {{ $project->name }}</h2>
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Sila pilih kategori kertas dan muat naik fail Excel yang sepadan.</p>
-            <div class="mt-6"><label for="paper_type_modal" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Kategori Kertas</label><select name="paper_type" id="paper_type_modal" required class="mt-1 block w-full form-select rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"><option value="" disabled selected>-- Sila Pilih Kategori --</option><option value="KertasSiasatan">Kertas Siasatan (Am)</option><option value="JenayahPaper">Jenayah</option><option value="NarkotikPaper">Narkotik</option><option value="KomersilPaper">Komersil</option><option value="TrafikSeksyenPaper">Trafik (Seksyen)</option><option value="TrafikRulePaper">Trafik (Rule)</option><option value="OrangHilangPaper">Orang Hilang</option><option value="LaporanMatiMengejutPaper">Laporan Mati Mengejut</option></select></div>
+            <div class="mt-6"><label for="paper_type_modal" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Kategori Kertas</label><select name="paper_type" id="paper_type_modal" required class="mt-1 block w-full form-select rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"><option value="" disabled selected>-- Sila Pilih Kategori --</option><option value="JenayahPaper">Jenayah</option><option value="NarkotikPaper">Narkotik</option><option value="KomersilPaper">Komersil</option><option value="TrafikSeksyenPaper">Trafik (Seksyen)</option><option value="TrafikRulePaper">Trafik (Rule)</option><option value="OrangHilangPaper">Orang Hilang</option><option value="LaporanMatiMengejutPaper">Laporan Mati Mengejut</option></select></div>
             <div class="mt-6"><label for="excel_file_modal" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilih Fail Excel</label><input type="file" name="excel_file" id="excel_file_modal" required accept=".xlsx,.xls,.csv" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"></div>
             <div class="mt-6 flex justify-end"><x-secondary-button x-on:click="$dispatch('close')">{{ __('Cancel') }}</x-secondary-button><x-primary-button class="ms-3">{{ __('Import File') }}</x-primary-button></div>
         </form>
@@ -147,7 +145,6 @@
                 <label for="paper_type_export" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Kategori Kertas</label>
                 <select name="paper_type" id="paper_type_export" required class="mt-1 block w-full form-select rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                     <option value="" disabled selected>-- Sila Pilih Kategori --</option>
-                    <option value="KertasSiasatan">Kertas Siasatan (Am)</option>
                     <option value="JenayahPaper">Jenayah</option>
                     <option value="NarkotikPaper">Narkotik</option>
                     <option value="KomersilPaper">Komersil</option>
@@ -221,8 +218,8 @@
             @endforeach
         }
 
-        // Initialize the first table on page load
-        initDataTable('kertasSiasatan');
+            // Initialize the first table on page load
+            initDataTable('jenayah');
 
         // Handle tab clicks
         $('.tab-link').on('click', function(e) {

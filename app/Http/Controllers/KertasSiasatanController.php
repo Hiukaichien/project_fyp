@@ -5,13 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
-use App\Models\KertasSiasatan; // Keep for specific methods like destroy
 
 class KertasSiasatanController extends Controller
 {
     // A whitelist of valid models to prevent security issues and simplify class resolution.
     protected $validPaperTypes = [
-        'KertasSiasatan' => \App\Models\KertasSiasatan::class,
         'JenayahPaper' => \App\Models\JenayahPaper::class,
         'NarkotikPaper' => \App\Models\NarkotikPaper::class,
         'KomersilPaper' => \App\Models\KomersilPaper::class,
@@ -79,20 +77,5 @@ class KertasSiasatanController extends Controller
             abort(404, 'Invalid paper type specified.');
         }
         return $this->validPaperTypes[$paperType];
-    }
-
-    /**
-     * The destroy method remains specific to the KertasSiasatan model as per the original route.
-     */
-    public function destroy(KertasSiasatan $kertasSiasatan)
-    {
-        try {
-            $projectId = $kertasSiasatan->project_id;
-            $kertasSiasatan->delete();
-            $redirectRoute = $projectId ? route('projects.show', $projectId) : route('projects.index');
-            return redirect($redirectRoute)->with('success', 'Kertas Siasatan ' . $kertasSiasatan->no_ks . ' berjaya dipadam.');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Gagal memadam Kertas Siasatan: ' . $e->getMessage());
-        }
     }
 }

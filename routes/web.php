@@ -27,7 +27,6 @@ Route::middleware('auth')->group(function () {
      Route::get('/projects/{project}/download-csv', [ProjectController::class, 'downloadAssociatedPapersCsv'])->name('projects.download_csv');
 
     // DataTables routes
-    Route::post('/projects/{project}/kertas-siasatan-data', [ProjectController::class, 'getKertasSiasatanData'])->name('projects.kertas_siasatan_data');
     Route::post('/projects/{project}/jenayah-papers-data', [ProjectController::class, 'getJenayahPapersData'])->name('projects.jenayah_papers_data');
     Route::post('/projects/{project}/narkotik-papers-data', [ProjectController::class, 'getNarkotikPapersData'])->name('projects.narkotik_papers_data');
     Route::post('/projects/{project}/komersil-papers-data', [ProjectController::class, 'getKomersilPapersData'])->name('projects.komersil_papers_data');
@@ -44,8 +43,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/papers/{paperType}/{id}/edit', [KertasSiasatanController::class, 'edit'])->name('kertas_siasatan.edit');
     Route::put('/papers/{paperType}/{id}', [KertasSiasatanController::class, 'update'])->name('kertas_siasatan.update');
     
-    // Specific destroy route for KertasSiasatan model
-    Route::delete('/kertas_siasatan/{kertasSiasatan}', [KertasSiasatanController::class, 'destroy'])->name('kertas_siasatan.destroy');
 });
 
 require __DIR__.'/auth.php';

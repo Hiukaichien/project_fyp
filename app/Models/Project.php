@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Kyslik\ColumnSortable\Sortable;
 
-use App\Models\KertasSiasatan;
 use App\Models\JenayahPaper;
 use App\Models\NarkotikPaper;
 use App\Models\TrafikSeksyenPaper;
@@ -57,10 +56,6 @@ class Project extends Model
     /**
      * Define relationships to each paper type.
      */
-    public function kertasSiasatan()
-    {
-        return $this->hasMany(KertasSiasatan::class, 'project_id');
-    }
 
     public function jenayahPapers()
     {
@@ -100,14 +95,12 @@ class Project extends Model
     /**
      * Get all associated papers grouped by type.
      * The keys in the returned array should match what the view expects
-     * (e.g., 'kertas_siasatan', 'jenayah_papers').
      */
     public function allAssociatedPapers()
     {
         // Eager load the relationships to avoid N+1 issues if this method is called multiple times
         // or if the project object is used elsewhere where these relations are looped.
         $this->loadMissing([
-            'kertasSiasatan', 
             'jenayahPapers', 
             'narkotikPapers', 
             'trafikSeksyenPapers',
@@ -118,7 +111,6 @@ class Project extends Model
         ]);
 
         return [
-            'kertas_siasatan' => $this->kertasSiasatan, // Ensure key matches str_replace in view if it was 'kertas_siasatan_papers'
             'jenayah_papers' => $this->jenayahPapers,
             'narkotik_papers' => $this->narkotikPapers,
             'trafik_seksyen_papers' => $this->trafikSeksyenPapers,
@@ -136,7 +128,6 @@ class Project extends Model
     public function allPapersMerged()
     {
         $collections = [
-            $this->kertasSiasatan()->get(),
             $this->jenayahPapers()->get(),
             $this->narkotikPapers()->get(),
             $this->trafikSeksyenPapers()->get(),

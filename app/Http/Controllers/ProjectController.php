@@ -52,10 +52,21 @@ class ProjectController extends Controller
 
     public function show(Project $project)
     {
-        // Data for summary cards
-        $ksLewat24Jam = $project->kertasSiasatan()->where('edar_lebih_24_jam_status', 'LIKE', '%LEWAT%')->get();
-        $ksTerbengkalai = $project->kertasSiasatan()->where('terbengkalai_3_bulan_status', 'LIKE', '%TERBENGKALAI%')->get();
-        $ksBaruKemaskini = $project->kertasSiasatan()->where('baru_kemaskini_status', 'LIKE', '%BARU DIKEMASKINI%')->get();
+        // Get a single collection of all papers associated with this project
+        $allPapers = $project->allPapersMerged();
+
+        // Filter the merged collection to get the data for the summary cards
+        $ksLewat24Jam = $allPapers->filter(function ($paper) {
+            return isset($paper->edar_lebih_24_jam_status) && Str::contains($paper->edar_lebih_24_jam_status, 'LEWAT');
+        });
+
+        $ksTerbengkalai = $allPapers->filter(function ($paper) {
+            return isset($paper->terbengkalai_3_bulan_status) && Str::contains($paper->terbengkalai_3_bulan_status, 'TERBENGKALAI');
+        });
+
+        $ksBaruKemaskini = $allPapers->filter(function ($paper) {
+            return isset($paper->baru_kemaskini_status) && Str::contains($paper->baru_kemaskini_status, 'BARU DIKEMASKINI');
+        });
         
         // Pass all three variables to the view
         return view('projects.show', compact(
