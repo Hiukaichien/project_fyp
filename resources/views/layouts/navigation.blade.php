@@ -6,14 +6,15 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
+                <!--        <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" /> -->
+                <b class="text-3xl font-bold text-gray-700"> Kawal Selia </b>
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('projects.index')" :active="request()->routeIs('dashboard') || request()->routeIs('projects.*')">
-                        {{ __('Dashboard') }}
+                        {{ __('Projects') }}
                     </x-nav-link>
                  
                     {{-- The "Projects" link is now redundant as "Dashboard" leads to the project list --}}
