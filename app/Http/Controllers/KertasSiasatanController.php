@@ -27,10 +27,11 @@ class KertasSiasatanController extends Controller
         $modelClass = $this->getModelClass($paperType);
         $paper = $modelClass::findOrFail($id);
         
-        // Dynamically determine the view path (e.g., 'kertas_siasatan.show', 'jenayah_papers.show')
-        $viewName = Str::snake($paperType, '_') . 's.show';
+        // OLD LOGIC: $viewName = Str::snake($paperType, '_') . 's.show';
+        // NEW LOGIC: Prepend the parent directory and use a cleaner name.
+        $viewFolderName = Str::snake(str_replace('Paper', '', $paperType));
+        $viewName = 'kertas_siasatan.' . $viewFolderName . '.show';
         
-        // Pass a generic 'paper' variable and the type for the title
         return view($viewName, [
             'paper' => $paper,
             'paperType' => Str::headline(str_replace('Paper', '', $paperType))
@@ -45,7 +46,8 @@ class KertasSiasatanController extends Controller
         $modelClass = $this->getModelClass($paperType);
         $paper = $modelClass::findOrFail($id);
 
-        $viewName = Str::snake($paperType, '_') . 's.edit';
+        $viewFolderName = Str::snake(str_replace('Paper', '', $paperType));
+        $viewName = 'kertas_siasatan.' . $viewFolderName . '.edit';
 
         return view($viewName, [
             'paper' => $paper,

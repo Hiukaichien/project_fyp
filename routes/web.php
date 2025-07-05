@@ -24,7 +24,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/projects/{project}/disassociate-paper/{paperType}/{paperId}', [ProjectController::class, 'disassociatePaper'])->name('projects.disassociate_paper');
     
     Route::get('/projects/{project}/export', [ProjectController::class, 'exportPapers'])->name('projects.export_papers');
-     Route::get('/projects/{project}/download-csv', [ProjectController::class, 'downloadAssociatedPapersCsv'])->name('projects.download_csv');
 
     // DataTables routes
     Route::post('/projects/{project}/jenayah-papers-data', [ProjectController::class, 'getJenayahPapersData'])->name('projects.jenayah_papers_data');

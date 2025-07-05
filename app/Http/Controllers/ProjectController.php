@@ -138,50 +138,6 @@ class ProjectController extends Controller
         return redirect()->route('projects.show', $project)->with('success', $friendlyName . ' successfully removed from the project.');
     }
 
-    public function downloadAssociatedPapersCsv(Project $project)
-    {
-        $fileName = Str::slug($project->name) . '-all-papers.csv';
-        $headers = ["Content-type" => "text/csv", "Content-Disposition" => "attachment; filename=$fileName", "Pragma" => "no-cache", "Cache-Control" => "must-revalidate, post-check=0, pre-check=0", "Expires" => "0"];
-        
-        $columns = ['Jenis Kertas', 'No. Rujukan Unik', 'IO/AIO', 'Seksyen', 'Status', 'Tarikh'];
-
-        $callback = function() use ($project, $columns) {
-            $file = fopen('php://output', 'w');
-            fputcsv($file, $columns);
-
-            foreach ($project->allAssociatedPapers() as $type => $papers) {
-                foreach ($papers as $paper) {
-                    $paperData = $this->mapPaperDataForCsv($paper);
-                    fputcsv($file, $paperData);
-                }
-            }
-            fclose($file);
-        };
-
-        return new StreamedResponse($callback, 200, $headers);
-    }
-    
-    private function mapPaperDataForCsv($paper): array
-    {
-        $modelName = class_basename($paper);
-        $paperType = Str::of($modelName)->replace('Paper', ' Paper')->headline();
-        
-        $identifier = $paper->no_ks ?? $paper->no_kst ?? $paper->no_lmm ?? $paper->no_ks_oh ?? 'N/A';
-        $io = $paper->io_aio ?? $paper->pegawai_penyiasat ?? 'N/A';
-        $seksyen = $paper->seksyen ?? $paper->seksyen_dibuka ?? 'N/A';
-        $status = $paper->status_kes ?? $paper->status_ks ?? $paper->status_oh ?? $paper->status_lmm ?? 'N/A';
-        $date = $paper->tarikh_ks ?? $paper->tarikh_ks_dibuka ?? $paper->tarikh_laporan_polis ?? $paper->tarikh_daftar ?? 'N/A';
-
-        return [
-            $paperType,
-            $identifier,
-            $io,
-            $seksyen,
-            $status,
-            $date ? Carbon::parse($date)->format('d/m/Y') : 'N/A',
-        ];
-    }
-
         public function exportPapers(Request $request, Project $project)
     {
         $validated = $request->validate([
@@ -245,11 +201,7 @@ class ProjectController extends Controller
 
 
     // --- DATATABLES SERVER-SIDE METHODS ---
-    // --- FIX: Added ->addIndexColumn() to every method ---
-    public function getKertasSiasatanData(Project $project) {
-        $query = KertasSiasatan::where('project_id', $project->id);
-        return DataTables::of($query)->addIndexColumn()->addColumn('action', fn($row) => $this->buildActionButtons($row, 'KertasSiasatan'))->rawColumns(['action'])->make(true);
-    }
+    // --- Added ->addIndexColumn() to every method ---
     public function getJenayahPapersData(Project $project) {
         $query = JenayahPaper::where('project_id', $project->id);
         return DataTables::of($query)->addIndexColumn()->addColumn('action', fn($row) => $this->buildActionButtons($row, 'JenayahPaper'))->rawColumns(['action'])->make(true);

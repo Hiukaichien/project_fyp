@@ -56,9 +56,6 @@
 
                                     {{-- Bottom section for icons --}}
                                     <div class="mt-4 pt-3 border-t border-gray-200 dark:border-gray-600 flex justify-end items-center space-x-4">
-                                        <div onclick="event.stopPropagation(); window.location.href='{{ route('projects.download_csv', $project) }}';" class="z-10 text-green-600 dark:text-green-400 hover:text-green-500 cursor-pointer" title="{{ __('Download Associated Papers CSV') }}">
-                                            <i class="fas fa-file-csv fa-lg"></i>
-                                        </div>
                                         <div onclick="event.stopPropagation(); window.location.href='{{ route('projects.edit', $project) }}';" class="z-10 text-yellow-600 dark:text-yellow-400 hover:text-yellow-500 cursor-pointer" title="{{ __('Edit Project') }}">
                                             <i class="fas fa-edit fa-lg"></i>
                                         </div>
