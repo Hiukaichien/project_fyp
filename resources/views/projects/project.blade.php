@@ -32,11 +32,17 @@
                     @else
                         <div class="space-y-4">
                             @foreach ($projects as $project)
-                                <a href="{{ route('projects.show', $project) }}" class="flex flex-col p-4 border border-gray-200 dark:border-gray-700 rounded-md shadow-sm hover:shadow-lg transition-shadow duration-150 ease-in-out group">
-                                    {{-- Top section for project info --}}
-                                    <div class="flex-grow">
+                                {{-- Main container is now a non-clickable DIV --}}
+                                <div class="flex flex-col border border-gray-200 dark:border-gray-700 rounded-md shadow-sm">
+                                    
+                                    {{-- The top segment is now a clickable link to the project dashboard --}}
+                                    <a href="{{ route('projects.show', $project) }}" class="flex-grow p-4 group rounded-t-md transition-colors duration-300 ease-in-out hover:bg-gray-50 dark:hover:bg-gray-700/50">
                                         <div class="flex justify-between items-start">
-                                            <span class="text-xl font-semibold text-blue-600 dark:text-blue-400 group-hover:underline">{{ $project->name }}</span>
+                                            {{-- Project Name --}}
+                                            <span class="text-xl font-semibold text-blue-600 dark:text-blue-400 group-hover:underline">
+                                                {{ $project->name }}
+                                            </span>
+                                            {{-- Project Dates --}}
                                             <div class="text-right flex-shrink-0 ml-4">
                                                 <p class="text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap">
                                                     {{ \Carbon\Carbon::parse($project->project_date)->format('d M Y') }}
@@ -47,19 +53,22 @@
                                             </div>
                                         </div>
                                         @if($project->description)
-                                        <p class="text-sm text-gray-500 dark:text-gray-300 mt-2">{{ Str::limit($project->description, 150) }}</p>
+                                            <p class="text-sm text-gray-500 dark:text-gray-300 mt-2">
+                                                {{ Str::limit($project->description, 150) }}
+                                            </p>
                                         @endif
-                                    </div>
+                                    </a>
 
-                                    {{-- Spacer to push icons to the bottom --}}
-                                    <div class="flex-grow"></div>
-
-                                    {{-- Bottom section for icons --}}
-                                    <div class="mt-4 pt-3 border-t border-gray-200 dark:border-gray-600 flex justify-end items-center space-x-4">
-                                        <div onclick="event.stopPropagation(); window.location.href='{{ route('projects.edit', $project) }}';" class="z-10 text-yellow-600 dark:text-yellow-400 hover:text-yellow-500 cursor-pointer" title="{{ __('Edit Project') }}">
+                                    {{-- The icon bar is now a separate DIV outside of the <a> tag --}}
+                                    <div class="p-4 pt-3 border-t border-gray-200 dark:border-gray-600 flex justify-end items-center space-x-4 bg-gray-50 dark:bg-gray-800 rounded-b-md">
+                                        
+                                        {{-- Edit Project Icon (independent link) --}}
+                                        <a href="{{ route('projects.edit', $project) }}" class="text-yellow-600 dark:text-yellow-400 hover:text-yellow-500" title="{{ __('Edit Project') }}">
                                             <i class="fas fa-edit fa-lg"></i>
-                                        </div>
-                                        <form action="{{ route('projects.destroy', $project) }}" method="POST" onsubmit="event.stopPropagation(); return confirm('{{ __('Are you sure you want to delete this project? This action cannot be undone.') }}');" class="inline z-10">
+                                        </a>
+
+                                        {{-- Delete Project Icon (independent form) --}}
+                                        <form action="{{ route('projects.destroy', $project) }}" method="POST" onsubmit="return confirm('{{ __('Are you sure you want to delete this project? This action cannot be undone.') }}');" class="inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="text-red-600 dark:text-red-400 hover:text-red-500" title="{{ __('Delete Project') }}">
@@ -67,7 +76,7 @@
                                             </button>
                                         </form>
                                     </div>
-                                </a>
+                                </div>
                             @endforeach
                         </div>
                     @endif
