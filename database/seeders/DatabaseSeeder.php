@@ -35,7 +35,7 @@ class DatabaseSeeder extends Seeder
 
         // 2. Create a default project to associate papers with
         $project = Project::updateOrCreate(
-            ['name' => 'Projek Siasatan PDRM 2024'],
+            ['name' => 'Projek 1'],
             [
                 'project_date' => '2024-07-01',
                 'description' => 'Projek rintis untuk pengauditan dan kawal selia kertas siasatan.',
