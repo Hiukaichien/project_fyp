@@ -10,7 +10,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\Auth; // <-- Import Auth facade
+use Illuminate\Support\Facades\Auth; 
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -127,26 +127,43 @@ class ProjectController extends Controller
         return Redirect::route('projects.index')->with('success', 'Project and all associated papers have been deleted.');
     }
 
-    public function importPapers(Request $request, Project $project)
-    {
-        // **IDOR FIX**: Authorize that the user can modify this project.
-        Gate::authorize('access-project', $project);
-        
-        $validated = $request->validate([
-            'excel_file' => 'required|mimes:xlsx,xls,csv|max:20480',
-            'paper_type' => ['required', 'string', Rule::in(['Jenayah', 'Narkotik', 'Komersil', 'Trafik', 'OrangHilang', 'LaporanMatiMengejut'])],
-        ]);
+public function importPapers(Request $request, Project $project)
+{
+    Gate::authorize('access-project', $project);
+    
+    $validated = $request->validate([
+        'excel_file' => 'required|mimes:xlsx,xls,csv|max:20480',
+        'paper_type' => ['required', 'string', Rule::in(['Jenayah', 'Narkotik', 'Komersil', 'Trafik', 'OrangHilang', 'LaporanMatiMengejut'])],
+    ]);
 
-        try {
-            Excel::import(new PaperImport($project->id, $validated['paper_type']), $request->file('excel_file'));
-            $friendlyName = Str::headline($validated['paper_type']);
-            return back()->with('success', $friendlyName . ' berjaya diimport ke projek ini.');
-        } catch (ValidationException $e) {
-            return back()->withErrors($e->errors())->withInput();
-        } catch (\Exception $e) {
-            return back()->with('error', 'Ralat semasa memproses fail: ' . $e->getMessage())->withInput();
+    $import = new PaperImport($project->id, Auth::id(), $validated['paper_type']);
+
+    try {
+        Excel::import($import, $request->file('excel_file'));
+
+        $successCount = $import->getSuccessCount();
+        $skippedRows = $import->getSkippedRows();
+        $friendlyName = Str::headline($validated['paper_type']);
+        
+        $feedback = "Import Selesai. {$successCount} rekod {$friendlyName} baharu berjaya diimport.";
+        
+        if (!empty($skippedRows)) {
+            return back()
+                ->with('success', $feedback)
+                ->withErrors([
+                    'excel_file' => 'Beberapa rekod telah dilangkau:',
+                    'excel_errors' => $skippedRows
+                ]);
         }
+
+        return back()->with('success', $feedback);
+
+    } catch (ValidationException $e) {
+        return back()->withErrors($e->errors())->withInput();
+    } catch (\Exception $e) {
+        return back()->with('error', 'Ralat tidak dijangka semasa memproses fail: ' . $e->getMessage())->withInput();
     }
+}
     
     public function destroyPaper(Request $request, Project $project, $paperType, $paperId)
     {
