@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 
-class TrafikRulePaper extends Model
+class Trafik extends Model
 {
     use HasFactory;
 
-    protected $table = 'trafik_rule_papers';
+    protected $table = 'trafik';
 
     /**
      * All attributes are mass assignable.
@@ -19,13 +19,12 @@ class TrafikRulePaper extends Model
 
     /**
      * The attributes that should be cast to native types.
-     * This is based on the final, corrected migration for the trafik.csv file.
      */
     protected $casts = [
         'project_id' => 'integer',
         'tarikh_daftar' => 'date:Y-m-d', // From CSV: TARIKH DAFTAR
         'tarikh_minit_pertama' => 'date:Y-m-d',
-        'tarikh_minit_akhir' => 'date:Y-m-d',
+        'tarikh_minit_pertamakhir' => 'date:Y-m-d',
         'tarikh_hantar_puspakom' => 'date:Y-m-d',
         'tarikh_hantar_patalogi' => 'date:Y-m-d',
         'tarikh_hantar_kimia' => 'date:Y-m-d',
@@ -33,7 +32,7 @@ class TrafikRulePaper extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
-
+    
     /**
      * Get the project that this paper belongs to.
      */
@@ -68,9 +67,9 @@ class TrafikRulePaper extends Model
      */
     public function calculateEdaranLebih48Jam()
     {
-        if ($this->tarikh_daftar && $this->tarikh_minit_a) {
+        if ($this->tarikh_daftar && $this->tarikh_minit_pertama) {
             $tarikhBuka = Carbon::parse($this->tarikh_daftar)->startOfDay();
-            $tarikhA = Carbon::parse($this->tarikh_minit_a)->startOfDay();
+            $tarikhA = Carbon::parse($this->tarikh_minit_pertama)->startOfDay();
             
             if ($tarikhA->isAfter($tarikhBuka) && $tarikhA->diffInHours($tarikhBuka) > 48) {
                 $this->edar_lebih_24_jam_status = 'YA, EDARAN LEWAT 48 JAM';
@@ -87,9 +86,9 @@ class TrafikRulePaper extends Model
      */
     public function calculateTerbengkalai3Bulan()
     {
-        if ($this->tarikh_minit_a && $this->tarikh_minit_d) {
-            $tarikhA = Carbon::parse($this->tarikh_minit_a);
-            $tarikhD = Carbon::parse($this->tarikh_minit_d);
+        if ($this->tarikh_minit_pertama && $this->tarikh_minit_akhir) {
+            $tarikhA = Carbon::parse($this->tarikh_minit_pertama);
+            $tarikhD = Carbon::parse($this->tarikh_minit_akhir);
 
             if ($tarikhD->isAfter($tarikhA) && $tarikhA->diffInMonths($tarikhD) >= 3) {
                 $this->terbengkalai_3_bulan_status = 'YA, TERBENGKALAI LEBIH 3 BULAN';
@@ -107,7 +106,7 @@ class TrafikRulePaper extends Model
     public function calculateBaruKemaskini()
     {
         $this->baru_kemaskini_status = 'TIADA PERGERAKAN BARU';
-        if ($this->tarikh_minit_d && $this->updated_at) {
+        if ($this->tarikh_minit_akhir && $this->updated_at) {
             if (Carbon::parse($this->updated_at)->isAfter(Carbon::now()->subDays(7))) {
                 $this->baru_kemaskini_status = 'YA, BARU DIKEMASKINI';
             }

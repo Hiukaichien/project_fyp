@@ -6,14 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 
-class KomersilPaper extends Model
+class LaporanMatiMengejut extends Model
 {
     use HasFactory;
 
-    protected $table = 'komersil_papers';
+    protected $table = 'laporan_mati_mengejut';
 
     /**
-     * An empty guarded array allows for mass assignment on all attributes.
+     * All attributes are mass assignable.
      */
     protected $guarded = [];
 
@@ -22,14 +22,16 @@ class KomersilPaper extends Model
      */
     protected $casts = [
         'project_id' => 'integer',
-        'tarikh_ks_dibuka' => 'date:Y-m-d',
+        'tarikh_laporan_polis' => 'date:Y-m-d',
         'tarikh_minit_pertama' => 'date:Y-m-d',
         'tarikh_minit_pertamakhir' => 'date:Y-m-d',
-        'tarikh_permohonan_telco' => 'date:Y-m-d', // Added from CSV analysis
+        'tarikh_permohonan_pm_dipohon' => 'date:Y-m-d',
+        'tarikh_rujuk_tpr' => 'date:Y-m-d',
+        'tarikh_rujuk_koroner' => 'date:Y-m-d',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
-
+    
     /**
      * Get the project that this paper belongs to.
      */
@@ -61,15 +63,14 @@ class KomersilPaper extends Model
 
     /**
      * Calculates if the first minute distribution was late.
-     * Uses the 'paper opening date' vs the 'first minute date'.
      */
     public function calculateEdaranLebih48Jam()
     {
-        if ($this->tarikh_ks_dibuka && $this->tarikh_minit_pertama) {
-            $tarikhBuka = Carbon::parse($this->tarikh_ks_dibuka)->startOfDay();
+        if ($this->tarikh_laporan_polis && $this->tarikh_minit_pertama) {
+            $tarikhLaporan = Carbon::parse($this->tarikh_laporan_polis)->startOfDay();
             $tarikhA = Carbon::parse($this->tarikh_minit_pertama)->startOfDay();
             
-            if ($tarikhA->isAfter($tarikhBuka) && $tarikhA->diffInHours($tarikhBuka) > 48) {
+            if ($tarikhA->isAfter($tarikhLaporan) && $tarikhA->diffInHours($tarikhLaporan) > 48) {
                 $this->edar_lebih_24_jam_status = 'YA, EDARAN LEWAT 48 JAM';
             } else {
                 $this->edar_lebih_24_jam_status = 'EDARAN DALAM TEMPOH 48 JAM';

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('trafik_seksyen_papers', function (Blueprint $table) {
+        Schema::create('trafik', function (Blueprint $table) {
             $table->id();
             $table->foreignId('project_id')->nullable()->constrained('projects')->onDelete('set null');
 
@@ -54,6 +54,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('trafik_seksyen_papers');
+        Schema::dropIfExists('trafik');
     }
 };

@@ -4,12 +4,12 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use App\Models\Project;
-use App\Models\JenayahPaper;
-use App\Models\NarkotikPaper;
-use App\Models\TrafikSeksyenPaper;
-use App\Models\OrangHilangPaper;
-use App\Models\LaporanMatiMengejutPaper;
-use App\Models\KomersilPaper;
+use App\Models\Jenayah;
+use App\Models\Narkotik;
+use App\Models\Trafik;
+use App\Models\OrangHilang;
+use App\Models\LaporanMatiMengejut;
+use App\Models\Komersil;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
@@ -34,7 +34,7 @@ class DatabaseSeeder extends Seeder
 
         // 2. Create a default project to associate papers with
         $project = Project::updateOrCreate(
-            ['name' => 'Projek Siasatan PDRM 2024'],
+            ['name' => 'Projek Siasatan 1'],
             [
                 'project_date' => '2024-07-01',
                 'description' => 'Projek rintis untuk pengauditan dan kawal selia kertas siasatan.',
@@ -44,7 +44,7 @@ class DatabaseSeeder extends Seeder
         // 3. Seed Jenayah Papers (20 records)
         // Note: Using 'pegawai_penyiasat' as per your migration file.
         for ($i = 1; $i <= 20; $i++) {
-            JenayahPaper::updateOrCreate(
+            Jenayah::updateOrCreate(
                 ['no_ks' => 'JNY/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '/24'],
                 [
                     'pegawai_penyiasat' => ['INSP ALI', 'SGT AHMAD', 'INSP FATIMAH'][array_rand(['INSP ALI', 'SGT AHMAD', 'INSP FATIMAH'])],
@@ -58,7 +58,7 @@ class DatabaseSeeder extends Seeder
         // 4. Seed Narkotik Papers (20 records)
         // Note: Using 'pegawai_penyiasat' as per your migration file.
         for ($i = 1; $i <= 20; $i++) {
-            NarkotikPaper::updateOrCreate(
+            Narkotik::updateOrCreate(
                 ['no_ks' => 'NRK/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '/24'],
                 [
                     'pegawai_penyiasat' => ['INSP WONG', 'SGT RAZALI', 'INSP CHUA'][array_rand(['INSP WONG', 'SGT RAZALI', 'INSP CHUA'])],
@@ -72,7 +72,7 @@ class DatabaseSeeder extends Seeder
         // 5. Seed Komersil Papers (20 records)
         // Note: Using 'pengawai_siasatan' as per your migration file.
         for ($i = 1; $i <= 20; $i++) {
-            KomersilPaper::updateOrCreate(
+            Komersil::updateOrCreate(
                 ['no_ks' => 'KML/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '/24'],
                 [
                     'pegawai_siasatan' => ['ASP KUMAR', 'INSP ZAINAB', 'SGT LEE'][array_rand(['ASP KUMAR', 'INSP ZAINAB', 'SGT LEE'])],
@@ -86,7 +86,7 @@ class DatabaseSeeder extends Seeder
         // 6. Seed Trafik Seksyen Papers (20 records)
         // Note: Using 'pegawai_penyiasat' as per your migration file.
         for ($i = 1; $i <= 20; $i++) {
-            TrafikSeksyenPaper::updateOrCreate(
+            Trafik::updateOrCreate(
                 ['no_ks' => 'TRF-S/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '/24'],
                 [
                     'pegawai_penyiasat' => ['SGT MAJID', 'INSP TAN', 'SGT AMIN'][array_rand(['SGT MAJID', 'INSP TAN', 'SGT AMIN'])],
@@ -100,7 +100,7 @@ class DatabaseSeeder extends Seeder
         // 7. Seed Orang Hilang Papers (20 records)
         // Note: Using 'pegawai_penyiasat' as per your migration file.
         for ($i = 1; $i <= 20; $i++) {
-            OrangHilangPaper::updateOrCreate(
+            OrangHilang::updateOrCreate(
                 ['no_ks' => 'OH/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '/24'],
                 [
                     'pegawai_penyiasat' => ['SGT RINA', 'INSP LIM', 'SGT NORA'][array_rand(['SGT RINA', 'INSP LIM', 'SGT NORA'])],
@@ -113,7 +113,7 @@ class DatabaseSeeder extends Seeder
 
         // 8. Seed Laporan Mati Mengejut Papers (20 records)
         for ($i = 1; $i <= 20; $i++) {
-            LaporanMatiMengejutPaper::updateOrCreate(
+            LaporanMatiMengejut::updateOrCreate(
                 ['no_sdr_lmm' => 'LMM/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '/24'],
                 [
                     'pegawai_penyiasat' => ['INSP AZMAN', 'SGT YUSOF', 'INSP SARAH'][array_rand(['INSP AZMAN', 'SGT YUSOF', 'INSP SARAH'])],

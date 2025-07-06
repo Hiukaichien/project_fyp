@@ -7,7 +7,7 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <form method="POST" action="{{ route('kertas_siasatan.update', ['paperType' => 'LaporanMatiMengejutPaper', 'id' => $paper->id]) }}" class="space-y-6 bg-white p-6 shadow rounded">
+            <form method="POST" action="{{ route('kertas_siasatan.update', ['paperType' => 'LaporanMatiMengejut', 'id' => $paper->id]) }}" class="space-y-6 bg-white p-6 shadow rounded">
                 @csrf
                 @method('PUT')
 

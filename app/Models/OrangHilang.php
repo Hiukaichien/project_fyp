@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 
-class OrangHilangPaper extends Model
+class OrangHilang extends Model
 {
     use HasFactory;
 
-    protected $table = 'orang_hilang_papers';
+    protected $table = 'orang_hilang';
 
     /**
      * All attributes are mass assignable.

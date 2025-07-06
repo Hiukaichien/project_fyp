@@ -1,25 +1,22 @@
 @php
     // --- DYNAMIC CONFIGURATION SETUP ---
-    // This PHP block prepares all configurations at the top of the file for clarity.
-    use App\Models\JenayahPaper;
-    use App\Models\NarkotikPaper;
-    use App\Models\KomersilPaper;
-    use App\Models\TrafikSeksyenPaper;
-    use App\Models\TrafikRulePaper;
-    use App\Models\OrangHilangPaper;
-    use App\Models\LaporanMatiMengejutPaper;
+    use App\Models\Jenayah;
+    use App\Models\Narkotik;
+    use App\Models\Komersil;
+    use App\Models\Trafik;
+    use App\Models\OrangHilang;
+    use App\Models\LaporanMatiMengejut;
     use Illuminate\Support\Facades\Schema;
     use Illuminate\Support\Str;
 
-    // A single source of truth for all table configurations
+    // A single source of truth for all table configurations, now with 6 types
     $paperTypes = [
-        'jenayah' => ['model' => new JenayahPaper(), 'route' => 'projects.jenayah_papers_data', 'title' => 'Jenayah'],
-        'narkotik' => ['model' => new NarkotikPaper(), 'route' => 'projects.narkotik_papers_data', 'title' => 'Narkotik'],
-        'komersil' => ['model' => new KomersilPaper(), 'route' => 'projects.komersil_papers_data', 'title' => 'Komersil'],
-        'trafikSeksyen' => ['model' => new TrafikSeksyenPaper(), 'route' => 'projects.trafik_seksyen_papers_data', 'title' => 'Trafik (Seksyen)'],
-        'trafikRule' => ['model' => new TrafikRulePaper(), 'route' => 'projects.trafik_rule_papers_data', 'title' => 'Trafik (Rule)'],
-        'orangHilang' => ['model' => new OrangHilangPaper(), 'route' => 'projects.orang_hilang_papers_data', 'title' => 'Orang Hilang'],
-        'lmm' => ['model' => new LaporanMatiMengejutPaper(), 'route' => 'projects.laporan_mati_mengejut_papers_data', 'title' => 'LMM'],
+        'jenayah' => ['model' => new Jenayah(), 'route' => 'projects.jenayah_data', 'title' => 'Jenayah'],
+        'narkotik' => ['model' => new Narkotik(), 'route' => 'projects.narkotik_data', 'title' => 'Narkotik'],
+        'komersil' => ['model' => new Komersil(), 'route' => 'projects.komersil_data', 'title' => 'Komersil'],
+        'trafik' => ['model' => new Trafik(), 'route' => 'projects.trafik_data', 'title' => 'Trafik'],
+        'orangHilang' => ['model' => new OrangHilang(), 'route' => 'projects.orang_hilang_data', 'title' => 'Orang Hilang'],
+        'lmm' => ['model' => new LaporanMatiMengejut(), 'route' => 'projects.laporan_mati_mengejut_data', 'title' => 'LMM'],
     ];
 
     // Columns to ignore when dynamically generating the table from the schema
@@ -70,7 +67,6 @@
                     </div>
                     <div class="flex-shrink-0 flex items-center space-x-4">
                         <x-primary-button x-data="" x-on:click.prevent="$dispatch('open-modal', 'import-papers-modal')"><i class="fas fa-file-upload mr-2"></i> {{ __('Import') }}</x-primary-button>
-                        <!-- FIX: Added Export Button -->
                         <button x-data="" x-on:click.prevent="$dispatch('open-modal', 'export-papers-modal')" class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-500 active:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150">
                             <i class="fas fa-file-download mr-2"></i> {{ __('Export') }}
                         </button>
@@ -81,9 +77,24 @@
             </div>
 
             {{-- Collapsible Summary Tables --}}
-            <x-collapsible-table title="KS Lewat Edar (> 24 Jam)" :collection="$ksLewat24Jam" bgColor="bg-red-50 dark:bg-red-900/20" />
-            <x-collapsible-table title="KS Terbengkalai (> 3 Bulan)" :collection="$ksTerbengkalai" bgColor="bg-yellow-50 dark:bg-yellow-900/20" />
-            <x-collapsible-table title="KS Baru Dikemaskini" :collection="$ksBaruKemaskini" bgColor="bg-green-50 dark:bg-green-900/20" />
+            <x-collapsible-table 
+                title="KS Lewat Edar (> 48 Jam)" 
+                :collection="$ksLewat24Jam" 
+                bgColor="bg-red-50 dark:bg-red-900/20" 
+                pageName="lewat_page" 
+            />
+            <x-collapsible-table 
+                title="KS Terbengkalai (> 3 Bulan)" 
+                :collection="$ksTerbengkalai" 
+                bgColor="bg-yellow-50 dark:bg-yellow-900/20" 
+                pageName="terbengkalai_page" 
+            />
+            <x-collapsible-table 
+                title="KS Baru Dikemaskini" 
+                :collection="$ksBaruKemaskini" 
+                bgColor="bg-green-50 dark:bg-green-900/20" 
+                pageName="kemaskini_page" 
+            />
             
             <hr class="my-6 border-gray-300 dark:border-gray-700">
 
@@ -130,7 +141,19 @@
             @csrf
             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Import Papers to: {{ $project->name }}</h2>
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Sila pilih kategori kertas dan muat naik fail Excel yang sepadan.</p>
-            <div class="mt-6"><label for="paper_type_modal" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Kategori Kertas</label><select name="paper_type" id="paper_type_modal" required class="mt-1 block w-full form-select rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"><option value="" disabled selected>-- Sila Pilih Kategori --</option><option value="JenayahPaper">Jenayah</option><option value="NarkotikPaper">Narkotik</option><option value="KomersilPaper">Komersil</option><option value="TrafikSeksyenPaper">Trafik (Seksyen)</option><option value="TrafikRulePaper">Trafik (Rule)</option><option value="OrangHilangPaper">Orang Hilang</option><option value="LaporanMatiMengejutPaper">Laporan Mati Mengejut</option></select></div>
+            <div class="mt-6">
+                <label for="paper_type_modal" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Kategori Kertas</label>
+                {{-- *** STEP 1: Update the options in the Import Modal *** --}}
+                <select name="paper_type" id="paper_type_modal" required class="mt-1 block w-full form-select rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                    <option value="" disabled selected>-- Sila Pilih Kategori --</option>
+                    <option value="Jenayah">Jenayah</option>
+                    <option value="Narkotik">Narkotik</option>
+                    <option value="Komersil">Komersil</option>
+                    <option value="Trafik">Trafik</option>
+                    <option value="OrangHilang">Orang Hilang</option>
+                    <option value="LaporanMatiMengejut">Laporan Mati Mengejut</option>
+                </select>
+            </div>
             <div class="mt-6"><label for="excel_file_modal" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilih Fail Excel</label><input type="file" name="excel_file" id="excel_file_modal" required accept=".xlsx,.xls,.csv" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"></div>
             <div class="mt-6 flex justify-end"><x-secondary-button x-on:click="$dispatch('close')">{{ __('Cancel') }}</x-secondary-button><x-primary-button class="ms-3">{{ __('Import File') }}</x-primary-button></div>
         </form>
@@ -143,15 +166,15 @@
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Sila pilih kategori kertas yang ingin dieksport ke fail CSV.</p>
             <div class="mt-6">
                 <label for="paper_type_export" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Kategori Kertas</label>
+                 {{-- *** STEP 2: Update the options in the Export Modal *** --}}
                 <select name="paper_type" id="paper_type_export" required class="mt-1 block w-full form-select rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                     <option value="" disabled selected>-- Sila Pilih Kategori --</option>
-                    <option value="JenayahPaper">Jenayah</option>
-                    <option value="NarkotikPaper">Narkotik</option>
-                    <option value="KomersilPaper">Komersil</option>
-                    <option value="TrafikSeksyenPaper">Trafik (Seksyen)</option>
-                    <option value="TrafikRulePaper">Trafik (Rule)</option>
-                    <option value="OrangHilangPaper">Orang Hilang</option>
-                    <option value="LaporanMatiMengejutPaper">Laporan Mati Mengejut</option>
+                    <option value="Jenayah">Jenayah</option>
+                    <option value="Narkotik">Narkotik</option>
+                    <option value="Komersil">Komersil</option>
+                    <option value="Trafik">Trafik</option>
+                    <option value="OrangHilang">Orang Hilang</option>
+                    <option value="LaporanMatiMengejut">Laporan Mati Mengejut</option>
                 </select>
             </div>
             <div class="mt-6 flex justify-end">
@@ -174,7 +197,6 @@
 
         function initDataTable(tabName) {
             if (initializedTables[tabName]) {
-                // If already initialized, just redraw to fix column alignment
                 $('#' + tabName + '-datatable').DataTable().columns.adjust().draw();
                 return;
             }
@@ -183,9 +205,7 @@
             @foreach($paperTypes as $key => $config)
                 if (tabName === '{{ $key }}') {
                     @php
-                        // Get the database columns for the current model
                         $columnsForJs = array_diff(Schema::getColumnListing($config['model']->getTable()), $ignoreColumns);
-                        // Prepare the columns array for DataTables
                         $dtColumns = [['data' => 'action', 'name' => 'action', 'orderable' => false, 'searchable' => false], ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false]];
                         foreach($columnsForJs as $col) {
                             $dtColumns[] = ['data' => $col, 'name' => $col, 'defaultContent' => '-'];
@@ -201,11 +221,10 @@
                             data: { _token: '{{ csrf_token() }}' }
                         },
                         columns: @json($dtColumns),
-                        order: [[2, 'desc']], // Default order by the second data column
-                    //  scrollX: true,
+                        order: [[2, 'desc']],
                         columnDefs: [
                             {
-                                targets: 0, // Target the first column (Tindakan)
+                                targets: 0,
                                 className: "sticky left-0 bg-gray-50 dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600"
                             }
                         ],
@@ -218,26 +237,59 @@
             @endforeach
         }
 
-            // Initialize the first table on page load
-            initDataTable('jenayah');
+        // Initialize the first table on page load
+        initDataTable('jenayah');
 
         // Handle tab clicks
         $('.tab-link').on('click', function(e) {
             e.preventDefault();
             const tabName = $(this).data('tab');
-
-            // Update tab styles
             $('.tab-link').removeClass('border-indigo-500 text-indigo-600').addClass('border-transparent text-gray-500');
             $(this).removeClass('border-transparent text-gray-500').addClass('border-indigo-500 text-indigo-600');
-
-            // Show the correct panel
             $('.tab-panel').hide();
             $('#panel-' + tabName).show();
-            
-            // Initialize or redraw the table
             initDataTable(tabName);
         });
     });
+
+
+    (function() {
+        // --- Part 1: HIDE the page and scrollbar immediately ---
+        if (sessionStorage.getItem('scrollPosition')) {
+            document.body.classList.add('is-restoring-scroll');
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            // --- Part 2: Event Listeners to SAVE scroll position ---
+            const paginationContainers = document.querySelectorAll('.pagination-links');
+            function handlePaginationClick(event) {
+                const link = event.target.closest('a');
+                if (link && link.href) {
+                    sessionStorage.setItem('scrollPosition', window.scrollY);
+                }
+            }
+            paginationContainers.forEach(container => {
+                container.addEventListener('click', handlePaginationClick);
+            });
+
+            // --- Part 3: Logic to RESTORE scroll and REVEAL the page ---
+            const scrollPosition = sessionStorage.getItem('scrollPosition');
+            
+            if (scrollPosition) {
+                // First, remove the class to restore the scrollbar and page layout
+                document.body.classList.remove('is-restoring-scroll');
+                
+                // Then, immediately scroll to the saved position.
+                // This happens in the same "tick" of the browser, so it's seamless.
+                window.scrollTo(0, parseInt(scrollPosition, 10));
+                
+                // Finally, clear the item from storage.
+                sessionStorage.removeItem('scrollPosition');
+            }
+        });
+    })();
+
     </script>
     @endpush
 </x-app-layout>

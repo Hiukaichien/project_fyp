@@ -8,7 +8,7 @@
                 <a href="{{ route('projects.show', $paper->project_id) }}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-sm mr-2">
                     ← Kembali ke Projek
                 </a>
-                <a href="{{ route('kertas_siasatan.edit', ['paperType' => 'NarkotikPaper', 'id' => $paper->id]) }}" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded text-sm">
+                <a href="{{ route('kertas_siasatan.edit', ['paperType' => 'Narkotik', 'id' => $paper->id]) }}" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded text-sm">
                     Audit / Kemaskini
                 </a>
             </div>

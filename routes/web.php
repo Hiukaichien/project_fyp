@@ -21,18 +21,16 @@ Route::middleware('auth')->group(function () {
 
     // Project-specific routes
     Route::post('/projects/{project}/import', [ProjectController::class, 'importPapers'])->name('projects.import');
-    Route::post('/projects/{project}/disassociate-paper/{paperType}/{paperId}', [ProjectController::class, 'disassociatePaper'])->name('projects.disassociate_paper');
-    
+    Route::delete('/projects/{project}/destroy-paper/{paperType}/{paperId}', [ProjectController::class, 'destroyPaper'])->name('projects.destroy_paper');
     Route::get('/projects/{project}/export', [ProjectController::class, 'exportPapers'])->name('projects.export_papers');
 
-    // DataTables routes
-    Route::post('/projects/{project}/jenayah-papers-data', [ProjectController::class, 'getJenayahPapersData'])->name('projects.jenayah_papers_data');
-    Route::post('/projects/{project}/narkotik-papers-data', [ProjectController::class, 'getNarkotikPapersData'])->name('projects.narkotik_papers_data');
-    Route::post('/projects/{project}/komersil-papers-data', [ProjectController::class, 'getKomersilPapersData'])->name('projects.komersil_papers_data');
-    Route::post('/projects/{project}/trafik-seksyen-papers-data', [ProjectController::class, 'getTrafikSeksyenPapersData'])->name('projects.trafik_seksyen_papers_data');
-    Route::post('/projects/{project}/trafik-rule-papers-data', [ProjectController::class, 'getTrafikRulePapersData'])->name('projects.trafik_rule_papers_data');
-    Route::post('/projects/{project}/orang-hilang-papers-data', [ProjectController::class, 'getOrangHilangPapersData'])->name('projects.orang_hilang_papers_data');
-    Route::post('/projects/{project}/laporan-mati-mengejut-papers-data', [ProjectController::class, 'getLaporanMatiMengejutPapersData'])->name('projects.laporan_mati_mengejut_papers_data');
+    // --- STEP 1: Update all DataTables routes ---
+    Route::post('/projects/{project}/jenayah-data', [ProjectController::class, 'getJenayahData'])->name('projects.jenayah_data');
+    Route::post('/projects/{project}/narkotik-data', [ProjectController::class, 'getNarkotikData'])->name('projects.narkotik_data');
+    Route::post('/projects/{project}/komersil-data', [ProjectController::class, 'getKomersilData'])->name('projects.komersil_data');
+    Route::post('/projects/{project}/trafik-data', [ProjectController::class, 'getTrafikData'])->name('projects.trafik_data'); // Consolidated Trafik route
+    Route::post('/projects/{project}/orang-hilang-data', [ProjectController::class, 'getOrangHilangData'])->name('projects.orang_hilang_data');
+    Route::post('/projects/{project}/laporan-mati-mengejut-data', [ProjectController::class, 'getLaporanMatiMengejutData'])->name('projects.laporan_mati_mengejut_data');
 
     // Resourceful routes for Projects
     Route::resource('projects', ProjectController::class);

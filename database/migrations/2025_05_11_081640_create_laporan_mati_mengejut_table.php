@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('laporan_mati_mengejut_papers', function (Blueprint $table) {
+        Schema::create('laporan_mati_mengejut', function (Blueprint $table) {
             $table->id();
             $table->foreignId('project_id')->nullable()->constrained('projects')->onDelete('set null');
 
@@ -52,6 +52,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('laporan_mati_mengejut_papers');
+        Schema::dropIfExists('laporan_mati_mengejut');
     }
 };

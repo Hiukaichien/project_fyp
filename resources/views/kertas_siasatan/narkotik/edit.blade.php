@@ -18,7 +18,7 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('kertas_siasatan.update', ['paperType' => 'NarkotikPaper', 'id' => $paper->id]) }}"
+            <form method="POST" action="{{ route('kertas_siasatan.update', ['paperType' => 'Narkotik', 'id' => $paper->id]) }}"
                   class="space-y-6 bg-white p-6 shadow rounded" novalidate>
                 @csrf
                 @method('PUT')
