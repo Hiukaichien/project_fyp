@@ -20,7 +20,7 @@
     ];
 
     // Columns to ignore when dynamically generating the table from the schema
-    $ignoreColumns = ['id', 'project_id', 'created_at', 'updated_at'];
+    $ignoreColumns = ['id', 'user_id', 'project_id', 'created_at', 'updated_at'];
 @endphp
 
 <x-app-layout>
@@ -31,6 +31,12 @@
         table.dataTable th.dt-ordering-asc::after, table.dataTable th.dt-ordering-desc::after { font-family: "Font Awesome 5 Free"; font-weight: 900; margin-left: 0.5em; }
         table.dataTable th.dt-ordering-asc::after { content: "\f0de"; }
         table.dataTable th.dt-ordering-desc::after { content: "\f0dd"; }
+        .is-restoring-scroll { visibility: hidden; }
+
+
+        .datatable-container-loading {
+            min-height: 400px; /* Adjust this value as needed */
+        }
     </style>
     @endpush
 
@@ -44,14 +50,12 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             
-            {{-- Session Success Message (stays at the top) --}}
             @if (session('success')) 
                 <div class="mb-4 p-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800" role="alert">
                     {{ session('success') }}
                 </div> 
             @endif
 
-            {{-- General Error Message (stays at the top, but import errors are now in the modal) --}}
             @if (session('error'))
                  <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
                     <strong class="font-bold">Ralat!</strong>
@@ -105,8 +109,12 @@
                 <!-- Tab Headers -->
                 <div class="border-b border-gray-200 dark:border-gray-700">
                     <nav class="-mb-px flex space-x-4 overflow-x-auto" aria-label="Tabs">
+                        @php
+                            $activeClasses = 'border-indigo-500 text-indigo-600';
+                            $inactiveClasses = 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300';
+                        @endphp
                         @foreach($paperTypes as $key => $config)
-                            <a href="#" data-tab="{{ $key }}" class="tab-link whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm @if($loop->first) border-indigo-500 text-indigo-600 @else border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 @endif">
+                            <a href="#" data-tab="{{ $key }}" class="tab-link whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
                                 {{ $config['title'] }}
                             </a>
                         @endforeach
@@ -116,7 +124,7 @@
                 <!-- Tab Content Panels -->
                 <div class="mt-6">
                     @foreach($paperTypes as $key => $config)
-                        <div id="panel-{{ $key }}" class="tab-panel overflow-auto" @if(!$loop->first) style="display: none;" @endif>
+                        <div id="panel-{{ $key }}" class="tab-panel overflow-auto" style="display: none;">
                             <table id="{{ $key }}-datatable" class="w-full text-sm text-left" style="width:100%">
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 sticky top-0 z-20">
                                     <tr>
@@ -144,7 +152,6 @@
             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Import Papers to: {{ $project->name }}</h2>
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Sila pilih kategori kertas dan muat naik fail Excel yang sepadan.</p>
 
-            {{-- Error Display Block - Now inside the modal --}}
             @if ($errors->has('excel_file') || $errors->has('excel_errors'))
                 <div class="mt-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" role="alert">
                     <p class="font-bold">{{ $errors->first('excel_file') }}</p>
@@ -215,6 +222,17 @@
     <script>
     $(document).ready(function() {
         const initializedTables = {};
+        const activeClasses = 'border-indigo-500 text-indigo-600';
+        const inactiveClasses = 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300';
+
+        function activateTab(tabName) {
+            $('.tab-link').removeClass(activeClasses).addClass(inactiveClasses);
+            $('.tab-panel').hide();
+            $(`.tab-link[data-tab="${tabName}"]`).removeClass(inactiveClasses).addClass(activeClasses);
+            $(`#panel-${tabName}`).show();
+            initDataTable(tabName);
+            sessionStorage.setItem('activeProjectTab', tabName);
+        }
 
         function initDataTable(tabName) {
             if (initializedTables[tabName]) {
@@ -222,7 +240,9 @@
                 return;
             }
 
-            // --- DYNAMICALLY CONFIGURE AND INITIALIZE DATATABLE ---
+            const panel = $('#panel-' + tabName);
+            panel.addClass('datatable-container-loading');
+
             @foreach($paperTypes as $key => $config)
                 if (tabName === '{{ $key }}') {
                     @php
@@ -251,6 +271,9 @@
                         ],
                         fixedColumns: {
                             left: 1
+                        },
+                        "drawCallback": function( settings ) {
+                            panel.removeClass('datatable-container-loading');
                         }
                     });
                     initializedTables[tabName] = true;
@@ -258,31 +281,25 @@
             @endforeach
         }
 
-        // Initialize the first table on page load
-        initDataTable('jenayah');
-
-        // Handle tab clicks
         $('.tab-link').on('click', function(e) {
             e.preventDefault();
             const tabName = $(this).data('tab');
-            $('.tab-link').removeClass('border-indigo-500 text-indigo-600').addClass('border-transparent text-gray-500');
-            $(this).removeClass('border-transparent text-gray-500').addClass('border-indigo-500 text-indigo-600');
-            $('.tab-panel').hide();
-            $('#panel-' + tabName).show();
-            initDataTable(tabName);
+            activateTab(tabName);
         });
+
+        const savedTab = sessionStorage.getItem('activeProjectTab');
+        if (savedTab && $(`.tab-link[data-tab="${savedTab}"]`).length) {
+            activateTab(savedTab);
+        } else {
+            activateTab('jenayah');
+        }
     });
 
-
     (function() {
-        // --- Part 1: HIDE the page and scrollbar immediately ---
         if (sessionStorage.getItem('scrollPosition')) {
             document.body.classList.add('is-restoring-scroll');
         }
-
         document.addEventListener('DOMContentLoaded', function () {
-            
-            // --- Part 2: Event Listeners to SAVE scroll position ---
             const paginationContainers = document.querySelectorAll('.pagination-links');
             function handlePaginationClick(event) {
                 const link = event.target.closest('a');
@@ -293,24 +310,14 @@
             paginationContainers.forEach(container => {
                 container.addEventListener('click', handlePaginationClick);
             });
-
-            // --- Part 3: Logic to RESTORE scroll and REVEAL the page ---
             const scrollPosition = sessionStorage.getItem('scrollPosition');
-            
             if (scrollPosition) {
-                // First, remove the class to restore the scrollbar and page layout
                 document.body.classList.remove('is-restoring-scroll');
-                
-                // Then, immediately scroll to the saved position.
-                // This happens in the same "tick" of the browser, so it's seamless.
                 window.scrollTo(0, parseInt(scrollPosition, 10));
-                
-                // Finally, clear the item from storage.
                 sessionStorage.removeItem('scrollPosition');
             }
         });
     })();
-
     </script>
     @endpush
 </x-app-layout>
