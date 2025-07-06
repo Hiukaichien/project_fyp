@@ -5,7 +5,6 @@ namespace App\Imports;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Collection;
 use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Events\BeforeImport;
 use Maatwebsite\Excel\Validators\Failure;
@@ -25,16 +24,14 @@ class PaperImport implements ToModel, WithHeadingRow, WithUpserts, SkipsOnFailur
 
     /**
      * Centralized configuration for all paper types.
-     * This is the single source of truth for the import logic.
-     * 'unique_by' is the database column.
-     * 'column_map' is [ 'excel_header_snake_case' => 'database_column_name' ].
+     * The keys of 'column_map' MUST be the snake_case version of the Excel header.
      */
     private static $paperConfig = [
         'Jenayah' => [
             'model'       => \App\Models\Jenayah::class,
             'unique_by'   => 'no_ks',
             'column_map'  => [
-                'no_kertas_siasatan' => 'no_ks',
+                'no_ks' => 'no_ks', // CSV header is 'no_ks'
                 'pegawai_penyiasat' => 'pegawai_penyiasat',
                 'seksyen' => 'seksyen',
                 'tarikh_laporan_polis' => 'tarikh_laporan_polis',
@@ -44,8 +41,8 @@ class PaperImport implements ToModel, WithHeadingRow, WithUpserts, SkipsOnFailur
             'model'       => \App\Models\Narkotik::class,
             'unique_by'   => 'no_ks',
             'column_map'  => [
-                'no_ksiasatan' => 'no_ks', // Note the header is 'NO K/SIASATAN'
-                'peg_penyiasat' => 'pegawai_penyiasat',
+                'no_ks' => 'no_ks', // CSV header is 'no_ks'
+                'pegawai_penyiasat' => 'pegawai_penyiasat',
                 'seksyen' => 'seksyen',
                 'tarikh_laporan_polis' => 'tarikh_laporan_polis',
             ],
@@ -54,17 +51,17 @@ class PaperImport implements ToModel, WithHeadingRow, WithUpserts, SkipsOnFailur
             'model'       => \App\Models\Komersil::class,
             'unique_by'   => 'no_ks',
             'column_map'  => [
-                'no_kertas_siasatan' => 'no_ks',
+                'no_ks' => 'no_ks', // CSV header is 'no_ks'
                 'pegawai_siasatan' => 'pegawai_siasatan',
                 'seksyen' => 'seksyen',
-                'tarikh_kertas_siasatan_dibuka' => 'tarikh_ks_dibuka',
+                'tarikh_ks_dibuka' => 'tarikh_ks_dibuka',
             ],
         ],
         'Trafik' => [
             'model'       => \App\Models\Trafik::class,
             'unique_by'   => 'no_ks',
             'column_map'  => [
-                'no_kertas_siasatan' => 'no_ks',
+                'no_ks' => 'no_ks', // CSV header is 'no_ks'
                 'pegawai_penyiasat' => 'pegawai_penyiasat',
                 'seksyen' => 'seksyen',
                 'tarikh_daftar' => 'tarikh_daftar',
@@ -74,21 +71,20 @@ class PaperImport implements ToModel, WithHeadingRow, WithUpserts, SkipsOnFailur
             'model'       => \App\Models\OrangHilang::class,
             'unique_by'   => 'no_ks',
             'column_map'  => [
-                'no_kertas_siasatan' => 'no_ks',
+                'no_ks' => 'no_ks', // CSV header is 'no_ks'
                 'pegawai_penyiasat' => 'pegawai_penyiasat',
-                'tarikh_kertas_siasatan' => 'tarikh_ks',
-                'tarikh_laporan_polis' => 'tarikh_laporan_polis_sistem',
+                'tarikh_laporan_polis_sistem' => 'tarikh_laporan_polis_sistem',
+                'tarikh_ks' => 'tarikh_ks',
             ],
         ],
         'LaporanMatiMengejut' => [
             'model'       => \App\Models\LaporanMatiMengejut::class,
             'unique_by'   => 'no_sdr_lmm',
             'column_map'  => [
-                'no_sdrllm' => 'no_sdr_lmm',
+                'no_sdr_lmm' => 'no_sdr_lmm', // CSV header is 'no_sdr_lmm'
                 'pegawai_penyiasat' => 'pegawai_penyiasat',
                 'no_laporan_polis' => 'no_laporan_polis',
-                'tarkh_laporan_polis' => 'tarikh_laporan_polis', // Corrected common typo
-                'tarikh_laporan_polis' => 'tarikh_laporan_polis', // Allow both
+                'tarikh_laporan_polis' => 'tarikh_laporan_polis',
             ],
         ],
     ];
@@ -109,12 +105,9 @@ class PaperImport implements ToModel, WithHeadingRow, WithUpserts, SkipsOnFailur
     {
         return [
             BeforeImport::class => function (BeforeImport $event) {
-                // Expected headers are the keys of the column map (the Excel headers)
                 $expectedHeaders = array_keys($this->config['column_map']);
-                $actualHeaders = array_map(fn($h) => Str::snake(trim(strtolower($h))), $event->getReader()->getActiveSheet()->toArray()[0]);
+                $actualHeaders = array_map(fn($h) => Str::snake(trim($h)), $event->getReader()->getActiveSheet()->toArray()[0]);
                 
-                // We only check if at least one of the expected headers is present to allow flexibility.
-                // A more robust check might be needed depending on requirements.
                 $foundHeaders = array_intersect($expectedHeaders, $actualHeaders);
 
                 if (empty($foundHeaders)) {
@@ -131,10 +124,10 @@ class PaperImport implements ToModel, WithHeadingRow, WithUpserts, SkipsOnFailur
         $uniqueDbColumn = $this->config['unique_by'];
         $uniqueValue = null;
 
-        foreach ($this->config['column_map'] as $excelHeader => $dbColumn) {
-            if (!isset($row[$excelHeader])) continue; // Skip if header doesn't exist in the row
+        foreach ($this->config['column_map'] as $excelHeaderSnake => $dbColumn) {
+            if (!isset($row[$excelHeaderSnake])) continue; 
 
-            $value = $row[$excelHeader];
+            $value = $row[$excelHeaderSnake];
             $isDateColumn = str_contains($dbColumn, 'tarikh') || str_contains($dbColumn, '_at');
             $data[$dbColumn] = $isDateColumn ? $this->transformDate($value) : (is_string($value) ? trim($value) : $value);
             
@@ -143,9 +136,8 @@ class PaperImport implements ToModel, WithHeadingRow, WithUpserts, SkipsOnFailur
             }
         }
         
-        // Ensure the unique key has a value before trying to update/create
         if (empty($uniqueValue)) {
-            return null; // Skip this row if the unique identifier is missing
+            return null; 
         }
 
         return $this->modelClass::updateOrCreate(
@@ -156,20 +148,14 @@ class PaperImport implements ToModel, WithHeadingRow, WithUpserts, SkipsOnFailur
 
     public function rules(): array
     {
-        // Dynamically create validation rules based on the configuration.
-        // This ensures that at least the unique identifier's column is required.
         $rules = [];
         $uniqueDbColumn = $this->config['unique_by'];
         
-        // Find the Excel header that maps to the unique DB column
-        $uniqueExcelHeader = array_search($uniqueDbColumn, $this->config['column_map']);
+        $uniqueExcelHeaderSnake = array_search($uniqueDbColumn, $this->config['column_map']);
 
-        if ($uniqueExcelHeader) {
-            $rules[$uniqueExcelHeader] = 'required|string|max:255';
+        if ($uniqueExcelHeaderSnake) {
+            $rules[$uniqueExcelHeaderSnake] = 'required|string|max:255';
         }
-        
-        // You can add more general validation rules here if needed
-        // e.g., 'seksyen' => 'nullable|string'
 
         return $rules;
     }
@@ -178,19 +164,15 @@ class PaperImport implements ToModel, WithHeadingRow, WithUpserts, SkipsOnFailur
     {
         $messages = [];
         $uniqueDbColumn = $this->config['unique_by'];
-        $uniqueExcelHeader = array_search($uniqueDbColumn, $this->config['column_map']);
+        $uniqueExcelHeaderSnake = array_search($uniqueDbColumn, $this->config['column_map']);
 
-        if ($uniqueExcelHeader) {
-             $messages["{$uniqueExcelHeader}.required"] = "Lajur pengenalan unik '{$uniqueExcelHeader}' diperlukan untuk setiap baris.";
+        if ($uniqueExcelHeaderSnake) {
+             $messages["{$uniqueExcelHeaderSnake}.required"] = "The unique identifier column '{$uniqueExcelHeaderSnake}' is required for every row.";
         }
        
         return $messages;
     }
     
-    /**
-     * This method is required by the WithUpserts interface.
-     * It tells the package which column to use to find an existing record.
-     */
     public function uniqueBy(): string
     {
         return $this->config['unique_by'];
@@ -211,13 +193,11 @@ class PaperImport implements ToModel, WithHeadingRow, WithUpserts, SkipsOnFailur
     
     public function onFailure(Failure ...$failures)
     {
-        // You can log these failures or pass them back to the controller
         Log::error("Excel Import Validation Failures for type: {$this->paperType}", ['failures' => $failures]);
 
-        // To stop the import and show errors to the user, re-throw a ValidationException
         $errorMessages = [];
         foreach ($failures as $failure) {
-            $errorMessages[] = "Baris {$failure->row()}: " . implode(', ', $failure->errors());
+            $errorMessages[] = "Row {$failure->row()}: " . implode(', ', $failure->errors());
         }
         
         throw ValidationException::withMessages([

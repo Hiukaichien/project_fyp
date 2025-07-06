@@ -43,20 +43,22 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            {{-- Session Messages etc. --}}
-            @if (session('success')) <div class="mb-4 p-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800" role="alert">{{ session('success') }}</div> @endif
-            @if (session('error') || $errors->any())
-                <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-                    <strong class="font-bold">Ralat Import!</strong>
-                    @if (session('error'))<span class="block sm:inline">{{ session('error') }}</span>@endif
-                    @error('excel_file')<span class="block sm:inline">{{ $message }}</span>@enderror
-                    @if ($errors->has('excel_errors'))
-                        <ul class="mt-2 list-disc list-inside text-sm">
-                            @foreach ($errors->get('excel_errors') as $failure)<li>Baris {{ $failure->row() }}: {{ implode(', ', $failure->errors()) }} (Nilai: {{ implode(', ', $failure->values()) }})</li>@endforeach
-                        </ul>
-                    @endif
+            
+            {{-- Session Success Message (stays at the top) --}}
+            @if (session('success')) 
+                <div class="mb-4 p-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800" role="alert">
+                    {{ session('success') }}
+                </div> 
+            @endif
+
+            {{-- General Error Message (stays at the top, but import errors are now in the modal) --}}
+            @if (session('error'))
+                 <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                    <strong class="font-bold">Ralat!</strong>
+                    <span class="block sm:inline">{{ session('error') }}</span>
                 </div>
             @endif
+
 
             {{-- Project Details Card --}}
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
@@ -136,26 +138,46 @@
     </div>
 
     {{-- Import Modal --}}
-    <x-modal name="import-papers-modal" :show="$errors->any()" focusable>
+    <x-modal name="import-papers-modal" :show="$errors->has('excel_file') || $errors->has('excel_errors')" focusable>
         <form action="{{ route('projects.import', $project) }}" method="POST" enctype="multipart/form-data" class="p-6">
             @csrf
             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Import Papers to: {{ $project->name }}</h2>
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Sila pilih kategori kertas dan muat naik fail Excel yang sepadan.</p>
+
+            {{-- Error Display Block - Now inside the modal --}}
+            @if ($errors->has('excel_file') || $errors->has('excel_errors'))
+                <div class="mt-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" role="alert">
+                    <p class="font-bold">{{ $errors->first('excel_file') }}</p>
+                    @if ($errors->has('excel_errors'))
+                        <ul class="mt-2 list-disc list-inside text-sm">
+                            @foreach ($errors->get('excel_errors') as $errorMessage)
+                                <li>{{ $errorMessage }}</li>
+                            @endforeach
+                        </ul>
+                    @endif
+                </div>
+            @endif
+
             <div class="mt-6">
                 <label for="paper_type_modal" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Kategori Kertas</label>
-                {{-- *** STEP 1: Update the options in the Import Modal *** --}}
                 <select name="paper_type" id="paper_type_modal" required class="mt-1 block w-full form-select rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                     <option value="" disabled selected>-- Sila Pilih Kategori --</option>
-                    <option value="Jenayah">Jenayah</option>
-                    <option value="Narkotik">Narkotik</option>
-                    <option value="Komersil">Komersil</option>
-                    <option value="Trafik">Trafik</option>
-                    <option value="OrangHilang">Orang Hilang</option>
-                    <option value="LaporanMatiMengejut">Laporan Mati Mengejut</option>
+                    <option value="Jenayah" @if(old('paper_type') == 'Jenayah') selected @endif>Jenayah</option>
+                    <option value="Narkotik" @if(old('paper_type') == 'Narkotik') selected @endif>Narkotik</option>
+                    <option value="Komersil" @if(old('paper_type') == 'Komersil') selected @endif>Komersil</option>
+                    <option value="Trafik" @if(old('paper_type') == 'Trafik') selected @endif>Trafik</option>
+                    <option value="OrangHilang" @if(old('paper_type') == 'OrangHilang') selected @endif>Orang Hilang</option>
+                    <option value="LaporanMatiMengejut" @if(old('paper_type') == 'LaporanMatiMengejut') selected @endif>Laporan Mati Mengejut</option>
                 </select>
             </div>
-            <div class="mt-6"><label for="excel_file_modal" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilih Fail Excel</label><input type="file" name="excel_file" id="excel_file_modal" required accept=".xlsx,.xls,.csv" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"></div>
-            <div class="mt-6 flex justify-end"><x-secondary-button x-on:click="$dispatch('close')">{{ __('Cancel') }}</x-secondary-button><x-primary-button class="ms-3">{{ __('Import File') }}</x-primary-button></div>
+            <div class="mt-6">
+                <label for="excel_file_modal" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilih Fail Excel</label>
+                <input type="file" name="excel_file" id="excel_file_modal" required accept=".xlsx,.xls,.csv" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+            </div>
+            <div class="mt-6 flex justify-end">
+                <x-secondary-button x-on:click="$dispatch('close')">{{ __('Cancel') }}</x-secondary-button>
+                <x-primary-button class="ms-3">{{ __('Import File') }}</x-primary-button>
+            </div>
         </form>
     </x-modal>
 
@@ -166,7 +188,6 @@
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Sila pilih kategori kertas yang ingin dieksport ke fail CSV.</p>
             <div class="mt-6">
                 <label for="paper_type_export" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Kategori Kertas</label>
-                 {{-- *** STEP 2: Update the options in the Export Modal *** --}}
                 <select name="paper_type" id="paper_type_export" required class="mt-1 block w-full form-select rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                     <option value="" disabled selected>-- Sila Pilih Kategori --</option>
                     <option value="Jenayah">Jenayah</option>
