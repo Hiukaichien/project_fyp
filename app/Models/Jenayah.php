@@ -87,18 +87,12 @@ class Jenayah extends Model
         $this->calculateBaruKemaskini();
     }
 
-    /**
-     * Logic based on the 'jenayah.csv' which has 'TARIKH EDARAN PERTAMA' (minit_a)
-     * and 'TARIKH EDARAN AKHIR' (minit_d).
-     * The concept of "Minit Kedua (B)" does not exist in the new data.
-     */
     public function calculateEdaranLebih48Jam()
     {
-        // This logic might need adjustment. A common check is the time between
-        // the report date and the first minute date.
+
         if ($this->tarikh_laporan_polis && $this->tarikh_minit_pertama) {
-            $tarikhLaporan = Carbon::parse($this->tarikh_laporan_polis)->startOfDay();
-            $tarikhA = Carbon::parse($this->tarikh_minit_pertama)->startOfDay();
+           $tarikhLaporan = $this->tarikh_laporan_polis->copy()->startOfDay();
+            $tarikhA = $this->tarikh_minit_pertama->copy()->startOfDay();
             
             if ($tarikhA->isAfter($tarikhLaporan) && $tarikhA->diffInHours($tarikhLaporan) > 48) {
                 $this->edar_lebih_24_jam_status = 'YA, EDARAN LEWAT 48 JAM';
@@ -113,8 +107,8 @@ class Jenayah extends Model
     public function calculateTerbengkalai3Bulan()
     {
         if ($this->tarikh_minit_pertama && $this->tarikh_minit_akhir) {
-            $tarikhA = Carbon::parse($this->tarikh_minit_pertama);
-            $tarikhD = Carbon::parse($this->tarikh_minit_akhir);
+            $tarikhA = $this->tarikh_minit_pertama->copy();
+            $tarikhD = $this->tarikh_minit_akhir->copy();
 
             if ($tarikhD->isAfter($tarikhA) && $tarikhA->diffInMonths($tarikhD) >= 3) {
                 $this->terbengkalai_3_bulan_status = 'YA, TERBENGKALAI LEBIH 3 BULAN';

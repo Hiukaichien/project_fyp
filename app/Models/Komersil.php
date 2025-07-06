@@ -66,8 +66,8 @@ class Komersil extends Model
     public function calculateEdaranLebih48Jam()
     {
         if ($this->tarikh_ks_dibuka && $this->tarikh_minit_pertama) {
-            $tarikhBuka = Carbon::parse($this->tarikh_ks_dibuka)->startOfDay();
-            $tarikhA = Carbon::parse($this->tarikh_minit_pertama)->startOfDay();
+            $tarikhBuka = $this->tarikh_ks_dibuka->startOfDay();
+            $tarikhA = $this->tarikh_minit_pertama->startOfDay();
             
             if ($tarikhA->isAfter($tarikhBuka) && $tarikhA->diffInHours($tarikhBuka) > 48) {
                 $this->edar_lebih_24_jam_status = 'YA, EDARAN LEWAT 48 JAM';
@@ -85,8 +85,8 @@ class Komersil extends Model
     public function calculateTerbengkalai3Bulan()
     {
         if ($this->tarikh_minit_pertama && $this->tarikh_minit_akhir) {
-            $tarikhA = Carbon::parse($this->tarikh_minit_pertama);
-            $tarikhD = Carbon::parse($this->tarikh_minit_akhir);
+            $tarikhA = $this->tarikh_minit_pertama;
+            $tarikhD = $this->tarikh_minit_akhir;
 
             if ($tarikhD->isAfter($tarikhA) && $tarikhA->diffInMonths($tarikhD) >= 3) {
                 $this->terbengkalai_3_bulan_status = 'YA, TERBENGKALAI LEBIH 3 BULAN';
