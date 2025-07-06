@@ -4,29 +4,49 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 use App\Models\Jenayah;
 use App\Models\Narkotik;
 use App\Models\Trafik;
 use App\Models\Komersil;
-use App\Models\LaporanMatiMengejut; 
+use App\Models\LaporanMatiMengejut;
 use App\Models\OrangHilang;
 
 class Project extends Model
 {
     use HasFactory;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
+        'user_id', // <-- ADD THIS LINE
         'name',
         'project_date',
         'description',
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
     protected $casts = [
         'project_date' => 'date:Y-m-d',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    /**
+     * Get the user that owns the project.
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     /**
      * Define relationships to each paper type.
@@ -67,8 +87,8 @@ class Project extends Model
     public function allAssociatedPapers()
     {
         $this->loadMissing([
-            'jenayah', 
-            'narkotik', 
+            'jenayah',
+            'narkotik',
             'komersil',
             'trafik',
             'orangHilang',

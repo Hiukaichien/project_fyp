@@ -21,8 +21,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Create a default user
-        User::updateOrCreate(
+        // 1. Create a default user and get the user object
+        $user = User::updateOrCreate(
             ['email' => 'test@example.com'],
             [
                 'name' => 'Test User',
@@ -32,10 +32,11 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // 2. Create a default project to associate papers with
+        // 2. Create a default project and associate it with the new user
         $project = Project::updateOrCreate(
             ['name' => 'Projek Siasatan 1'],
             [
+                'user_id' => $user->id, // <-- THE FIX: Add the user's ID
                 'project_date' => '2024-07-01',
                 'description' => 'Projek rintis untuk pengauditan dan kawal selia kertas siasatan.',
             ]
@@ -70,7 +71,7 @@ class DatabaseSeeder extends Seeder
         }
 
         // 5. Seed Komersil Papers (20 records)
-        // Note: Using 'pengawai_siasatan' as per your migration file.
+        // Note: Using 'pegawai_siasatan' as per your migration file.
         for ($i = 1; $i <= 20; $i++) {
             Komersil::updateOrCreate(
                 ['no_ks' => 'KML/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '/24'],

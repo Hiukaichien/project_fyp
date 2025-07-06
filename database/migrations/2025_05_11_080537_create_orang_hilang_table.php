@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('orang_hilang', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('project_id')->nullable()->constrained('projects')->onDelete('set null');
+            $table->foreignId('project_id')->nullable()->constrained('projects')->onDelete('cascade');;
 
             // == Core Fields from CSV ==
             $table->string('no_ks')->unique(); // From: NO KERTAS SIASATAN
@@ -21,8 +21,8 @@ return new class extends Migration
             $table->string('tarikh_laporan_polis_sistem')->nullable(); // From: the first 'TARIKH LAPORAN POLIS' which is a string
             $table->date('tarikh_ks')->nullable(); // From: TARIKH KERTAS SIASATAN
             $table->date('tarikh_laporan_polis')->nullable(); // From: the second 'TARIKH LAPORAN POLIS' which is a date
-            $table->date('tarikh_minit_a')->nullable(); // From: TARIKH EDARAN PERTAMA
-            $table->date('tarikh_minit_d')->nullable(); // From: TARIKH EDARAN AKHIR
+            $table->date('tarikh_minit_pertama')->nullable(); // From: TARIKH EDARAN PERTAMA
+            $table->date('tarikh_minit_akhir')->nullable(); // From: TARIKH EDARAN AKHIR
             $table->string('terbengkalai_tb')->nullable(); // From: TERBENGKALAI (TB)
             $table->string('mps1_butiran_oh')->nullable(); // From: MPS 1 (BUTIRAN OH)
             $table->string('mps2_oh_dijumpai')->nullable(); // From: MPS 2 (OH DIJUMPAI)

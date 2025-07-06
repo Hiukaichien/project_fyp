@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 
 use App\Models\Jenayah;
@@ -15,7 +16,6 @@ use App\Models\LaporanMatiMengejut;
 
 class KertasSiasatanController extends Controller
 {
-
     protected $validPaperTypes = [
         'Jenayah' => Jenayah::class,
         'Narkotik' => Narkotik::class,
@@ -25,11 +25,13 @@ class KertasSiasatanController extends Controller
         'LaporanMatiMengejut' => LaporanMatiMengejut::class,
     ];
 
-
     public function show($paperType, $id)
     {
         $modelClass = $this->getModelClass($paperType);
-        $paper = $modelClass::findOrFail($id);
+        // Eager load the project relationship for the authorization check
+        $paper = $modelClass::with('project')->findOrFail($id);
+
+        Gate::authorize('access-project', $paper->project);
 
         $viewFolderName = Str::snake($paperType); 
         $viewName = 'kertas_siasatan.' . $viewFolderName . '.show';
@@ -43,7 +45,9 @@ class KertasSiasatanController extends Controller
     public function edit($paperType, $id)
     {
         $modelClass = $this->getModelClass($paperType);
-        $paper = $modelClass::findOrFail($id);
+        $paper = $modelClass::with('project')->findOrFail($id);
+
+        Gate::authorize('access-project', $paper->project);
 
         $viewFolderName = Str::snake($paperType);
         $viewName = 'kertas_siasatan.' . $viewFolderName . '.edit';
@@ -54,11 +58,12 @@ class KertasSiasatanController extends Controller
         ]);
     }
 
-
     public function update(Request $request, $paperType, $id)
     {
         $modelClass = $this->getModelClass($paperType);
-        $paper = $modelClass::findOrFail($id);
+        $paper = $modelClass::with('project')->findOrFail($id);
+
+        Gate::authorize('access-project', $paper->project);
 
         $paper->update($request->all());
 

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('jenayah', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('project_id')->nullable()->constrained('projects')->onDelete('set null');
+            $table->foreignId('project_id')->nullable()->constrained('projects')->onDelete('cascade');;
 
             // == Core Fields from CSV ==
             $table->string('no_ks')->unique(); // From: NO KERTAS SIASATAN

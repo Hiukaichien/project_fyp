@@ -2,14 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Project;
+// Laravel Core and Helpers
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\Rule;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Imports\PaperImport;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Auth; // <-- Import Auth facade
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
+// App-specific Models
+use App\Models\Project;
 use App\Models\Jenayah;
 use App\Models\Narkotik;
 use App\Models\Trafik;
@@ -17,19 +23,21 @@ use App\Models\Komersil;
 use App\Models\LaporanMatiMengejut;
 use App\Models\OrangHilang;
 
-use Illuminate\Support\Str;
-use Symfony\Component\HttpFoundation\StreamedResponse;
-use Yajra\DataTables\DataTables;
-use Illuminate\Validation\ValidationException;
-use Illuminate\Support\Facades\Schema;
+// App-specific Imports
+use App\Imports\PaperImport;
 
+// Third-party Packages
+use Maatwebsite\Excel\Facades\Excel;
+use Yajra\DataTables\DataTables;
 
 class ProjectController extends Controller
 {
-    // --- (index, create, store methods are fine, no changes needed) ---
     public function index()
     {
-        $projects = Project::orderBy('project_date', 'desc')->paginate(10);
+        // Show only projects belonging to the authenticated user.
+        $projects = Project::where('user_id', Auth::id())
+                           ->orderBy('project_date', 'desc')
+                           ->paginate(10);
         return view('projects.project', compact('projects'));
     }
 
@@ -45,69 +53,57 @@ class ProjectController extends Controller
             'project_date' => 'required|date',
             'description' => 'nullable|string',
         ]);
+        
+        // **FIX APPLIED**: Using Auth::id() for clarity and to satisfy linters.
+        $validatedData['user_id'] = Auth::id();
+
         Project::create($validatedData);
         return Redirect::route('projects.index')->with('success', 'Project created successfully.');
     }
 
-    public function show(Project $project, Request $request) // <-- ADD Request $request HERE
+    public function show(Project $project, Request $request)
     {
-        // Get a single collection of all papers associated with this project
+        // **IDOR FIX**: Authorize that the user can access this project.
+        Gate::authorize('access-project', $project);
+
         $allPapers = $project->allPapersMerged();
 
-        // --- PAGINATION LOGIC ---
-        $perPage = 10; // Set how many items you want per page for the summary tables
-
-        // Filter ALL items first for each category
+        $perPage = 10;
         $lewatItems = $allPapers->filter(fn ($paper) => isset($paper->edar_lebih_24_jam_status) && Str::contains($paper->edar_lebih_24_jam_status, 'LEWAT'));
         $terbengkalaiItems = $allPapers->filter(fn ($paper) => isset($paper->terbengkalai_3_bulan_status) && Str::contains($paper->terbengkalai_3_bulan_status, 'TERBENGKALAI'));
         $kemaskiniItems = $allPapers->filter(fn ($paper) => isset($paper->baru_kemaskini_status) && Str::contains($paper->baru_kemaskini_status, 'BARU DIKEMASKINI'));
 
-        // Manually create a paginator for "Lewat Edar"
-        $lewatPage = $request->get('lewat_page', 1); // <-- Use $request->get()
+        $lewatPage = $request->get('lewat_page', 1);
         $ksLewat24Jam = new LengthAwarePaginator(
-            $lewatItems->forPage($lewatPage, $perPage),
-            $lewatItems->count(),
-            $perPage,
-            $lewatPage,
-            ['path' => $request->url(), 'pageName' => 'lewat_page'] // <-- Use $request->url()
+            $lewatItems->forPage($lewatPage, $perPage), $lewatItems->count(), $perPage, $lewatPage,
+            ['path' => $request->url(), 'pageName' => 'lewat_page']
         );
 
-        // Manually create a paginator for "Terbengkalai"
-        $terbengkalaiPage = $request->get('terbengkalai_page', 1); // <-- Use $request->get()
+        $terbengkalaiPage = $request->get('terbengkalai_page', 1);
         $ksTerbengkalai = new LengthAwarePaginator(
-            $terbengkalaiItems->forPage($terbengkalaiPage, $perPage),
-            $terbengkalaiItems->count(),
-            $perPage,
-            $terbengkalaiPage,
-            ['path' => $request->url(), 'pageName' => 'terbengkalai_page'] // <-- Use $request->url()
+            $terbengkalaiItems->forPage($terbengkalaiPage, $perPage), $terbengkalaiItems->count(), $perPage, $terbengkalaiPage,
+            ['path' => $request->url(), 'pageName' => 'terbengkalai_page']
         );
 
-        // Manually create a paginator for "Baru Kemaskini"
-        $kemaskiniPage = $request->get('kemaskini_page', 1); // <-- Use $request->get()
+        $kemaskiniPage = $request->get('kemaskini_page', 1);
         $ksBaruKemaskini = new LengthAwarePaginator(
-            $kemaskiniItems->forPage($kemaskiniPage, $perPage),
-            $kemaskiniItems->count(),
-            $perPage,
-            $kemaskiniPage,
-            ['path' => $request->url(), 'pageName' => 'kemaskini_page'] // <-- Use $request->url()
+            $kemaskiniItems->forPage($kemaskiniPage, $perPage), $kemaskiniItems->count(), $perPage, $kemaskiniPage,
+            ['path' => $request->url(), 'pageName' => 'kemaskini_page']
         );
         
-        // Pass the new paginator objects to the view
-        return view('projects.show', compact(
-            'project',
-            'ksLewat24Jam',
-            'ksTerbengkalai',
-            'ksBaruKemaskini' 
-        ));
+        return view('projects.show', compact('project', 'ksLewat24Jam', 'ksTerbengkalai', 'ksBaruKemaskini'));
     }
 
     public function edit(Project $project)
     {
+        Gate::authorize('access-project', $project);
         return view('projects.edit', compact('project'));
     }
 
     public function update(Request $request, Project $project)
     {
+        Gate::authorize('access-project', $project);
+
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'project_date' => 'required|date',
@@ -119,18 +115,23 @@ class ProjectController extends Controller
 
     public function destroy(Project $project)
     {
-        foreach ($project->allAssociatedPapers() as $papersCollection) {
-            foreach ($papersCollection as $paper) {
-                $paper->project_id = null;
-                $paper->save();
-            }
-        }
+        // 1. Authorize that the current user can delete this project.
+        Gate::authorize('access-project', $project);
+
+        // 2. Delete the project. 
+        // The database will automatically handle deleting all associated papers
+        // because of the onDelete('cascade') constraint on your paper migrations.
         $project->delete();
-        return Redirect::route('projects.index')->with('success', 'Project and all paper associations have been deleted.');
+        
+        // 3. Redirect with a success message.
+        return Redirect::route('projects.index')->with('success', 'Project and all associated papers have been deleted.');
     }
 
     public function importPapers(Request $request, Project $project)
     {
+        // **IDOR FIX**: Authorize that the user can modify this project.
+        Gate::authorize('access-project', $project);
+        
         $validated = $request->validate([
             'excel_file' => 'required|mimes:xlsx,xls,csv|max:20480',
             'paper_type' => ['required', 'string', Rule::in(['Jenayah', 'Narkotik', 'Komersil', 'Trafik', 'OrangHilang', 'LaporanMatiMengejut'])],
@@ -149,7 +150,9 @@ class ProjectController extends Controller
     
     public function destroyPaper(Request $request, Project $project, $paperType, $paperId)
     {
-        // Use the same validation logic to find the correct model
+        // **IDOR FIX**: Authorize that the user can access the parent project.
+        Gate::authorize('access-project', $project);
+        
         $validPaperTypes = ['Jenayah', 'Narkotik', 'Trafik', 'Komersil', 'LaporanMatiMengejut', 'OrangHilang'];
         if (!in_array($paperType, $validPaperTypes)) {
             return redirect()->route('projects.show', $project)->with('error', 'Invalid paper type specified.');
@@ -166,6 +169,9 @@ class ProjectController extends Controller
 
     public function exportPapers(Request $request, Project $project)
     {
+        // **IDOR FIX**: Authorize that the user can access this project.
+        Gate::authorize('access-project', $project);
+
         $validated = $request->validate([
             'paper_type' => ['required', 'string', Rule::in(['Jenayah', 'Narkotik', 'Komersil', 'Trafik', 'OrangHilang', 'LaporanMatiMengejut'])],
         ]);
@@ -208,15 +214,12 @@ class ProjectController extends Controller
 
     private function buildActionButtons($row, $paperType)
     {
-        // The new route for deleting the paper
         $destroyUrl = route('projects.destroy_paper', ['project' => $row->project_id, 'paperType' => $paperType, 'paperId' => $row->id]);
-        
         $showUrl = route('kertas_siasatan.show', ['paperType' => $paperType, 'id' => $row->id]);
         $editUrl = route('kertas_siasatan.edit', ['paperType' => $paperType, 'id' => $row->id]);
 
         $actions = '<a href="'.$showUrl.'" class="text-indigo-600 hover:text-indigo-900" title="Lihat"><i class="fas fa-eye"></i></a>';
         $actions .= '<a href="'.$editUrl.'" class="text-green-600 hover:text-green-900" title="Audit/Kemaskini"><i class="fas fa-edit"></i></a>';
-
         $actions .= '<form action="'.$destroyUrl.'" method="POST" class="inline" onsubmit="return confirm(\'Anda pasti ingin memadam kertas ini secara kekal?\')">' .
                     csrf_field() .
                     method_field('DELETE') . 
@@ -225,29 +228,34 @@ class ProjectController extends Controller
         return '<div class="flex items-center space-x-2">' . $actions . '</div>';
     }
 
-
-    // --- DATATABLES SERVER-SIDE METHODS ---
+    // --- DATATABLES SERVER-SIDE METHODS - AUTHORIZATION ADDED ---
     public function getJenayahData(Project $project) {
+        Gate::authorize('access-project', $project);
         $query = Jenayah::where('project_id', $project->id);
         return DataTables::of($query)->addIndexColumn()->addColumn('action', fn($row) => $this->buildActionButtons($row, 'Jenayah'))->rawColumns(['action'])->make(true);
     }
     public function getNarkotikData(Project $project) {
+        Gate::authorize('access-project', $project);
         $query = Narkotik::where('project_id', $project->id);
         return DataTables::of($query)->addIndexColumn()->addColumn('action', fn($row) => $this->buildActionButtons($row, 'Narkotik'))->rawColumns(['action'])->make(true);
     }
     public function getKomersilData(Project $project) {
+        Gate::authorize('access-project', $project);
         $query = Komersil::where('project_id', $project->id);
         return DataTables::of($query)->addIndexColumn()->addColumn('action', fn($row) => $this->buildActionButtons($row, 'Komersil'))->rawColumns(['action'])->make(true);
     }
-    public function getTrafikData(Project $project) { // Consolidated method
+    public function getTrafikData(Project $project) {
+        Gate::authorize('access-project', $project);
         $query = Trafik::where('project_id', $project->id);
         return DataTables::of($query)->addIndexColumn()->addColumn('action', fn($row) => $this->buildActionButtons($row, 'Trafik'))->rawColumns(['action'])->make(true);
     }
     public function getOrangHilangData(Project $project) {
+        Gate::authorize('access-project', $project);
         $query = OrangHilang::where('project_id', $project->id);
         return DataTables::of($query)->addIndexColumn()->addColumn('action', fn($row) => $this->buildActionButtons($row, 'OrangHilang'))->rawColumns(['action'])->make(true);
     }
     public function getLaporanMatiMengejutData(Project $project) {
+        Gate::authorize('access-project', $project);
         $query = LaporanMatiMengejut::where('project_id', $project->id);
         return DataTables::of($query)->addIndexColumn()->addColumn('action', fn($row) => $this->buildActionButtons($row, 'LaporanMatiMengejut'))->rawColumns(['action'])->make(true);
     }

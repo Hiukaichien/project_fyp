@@ -24,6 +24,11 @@
                 <h2 class="text-lg font-semibold border-b pb-1">Maklumat Utama & Status</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-2">
                     <div>
+                        <label for="tarikh_laporan_polis" class="block text-sm font-medium text-gray-700">Tarikh Laporan Polis</label>
+                        <input type="date" name="tarikh_laporan_polis" id="tarikh_laporan_polis" value="{{ old('tarikh_laporan_polis', optional($paper->tarikh_minit_pertama)->format('Y-m-d')) }}" class="mt-1 block w-full form-input">
+                    </div>
+
+                    <div>
                         <label for="tarikh_minit_pertama" class="block text-sm font-medium text-gray-700">Tarikh Edaran Pertama</label>
                         <input type="date" name="tarikh_minit_pertama" id="tarikh_minit_pertama" value="{{ old('tarikh_minit_pertama', optional($paper->tarikh_minit_pertama)->format('Y-m-d')) }}" class="mt-1 block w-full form-input">
                     </div>

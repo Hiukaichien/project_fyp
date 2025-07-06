@@ -2,49 +2,123 @@
 
 namespace App\Imports;
 
+use Carbon\Carbon;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Collection;
+use Illuminate\Validation\ValidationException;
+use Maatwebsite\Excel\Events\BeforeImport;
+use Maatwebsite\Excel\Validators\Failure;
 use Maatwebsite\Excel\Concerns\ToModel;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithUpserts;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
-use Maatwebsite\Excel\Validators\Failure;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
-use Maatwebsite\Excel\Concerns\WithEvents;
-use Maatwebsite\Excel\Events\BeforeImport;
-use Illuminate\Support\Str;
-use Illuminate\Validation\ValidationException;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
-
 
 class PaperImport implements ToModel, WithHeadingRow, WithUpserts, SkipsOnFailure, WithEvents, WithValidation
 {
     protected $projectId;
     protected $paperType;
     protected $modelClass;
+    private $config;
+
+    /**
+     * Centralized configuration for all paper types.
+     * This is the single source of truth for the import logic.
+     * 'unique_by' is the database column.
+     * 'column_map' is [ 'excel_header_snake_case' => 'database_column_name' ].
+     */
+    private static $paperConfig = [
+        'Jenayah' => [
+            'model'       => \App\Models\Jenayah::class,
+            'unique_by'   => 'no_ks',
+            'column_map'  => [
+                'no_kertas_siasatan' => 'no_ks',
+                'pegawai_penyiasat' => 'pegawai_penyiasat',
+                'seksyen' => 'seksyen',
+                'tarikh_laporan_polis' => 'tarikh_laporan_polis',
+            ],
+        ],
+        'Narkotik' => [
+            'model'       => \App\Models\Narkotik::class,
+            'unique_by'   => 'no_ks',
+            'column_map'  => [
+                'no_ksiasatan' => 'no_ks', // Note the header is 'NO K/SIASATAN'
+                'peg_penyiasat' => 'pegawai_penyiasat',
+                'seksyen' => 'seksyen',
+                'tarikh_laporan_polis' => 'tarikh_laporan_polis',
+            ],
+        ],
+        'Komersil' => [
+            'model'       => \App\Models\Komersil::class,
+            'unique_by'   => 'no_ks',
+            'column_map'  => [
+                'no_kertas_siasatan' => 'no_ks',
+                'pegawai_siasatan' => 'pegawai_siasatan',
+                'seksyen' => 'seksyen',
+                'tarikh_kertas_siasatan_dibuka' => 'tarikh_ks_dibuka',
+            ],
+        ],
+        'Trafik' => [
+            'model'       => \App\Models\Trafik::class,
+            'unique_by'   => 'no_ks',
+            'column_map'  => [
+                'no_kertas_siasatan' => 'no_ks',
+                'pegawai_penyiasat' => 'pegawai_penyiasat',
+                'seksyen' => 'seksyen',
+                'tarikh_daftar' => 'tarikh_daftar',
+            ],
+        ],
+        'OrangHilang' => [
+            'model'       => \App\Models\OrangHilang::class,
+            'unique_by'   => 'no_ks',
+            'column_map'  => [
+                'no_kertas_siasatan' => 'no_ks',
+                'pegawai_penyiasat' => 'pegawai_penyiasat',
+                'tarikh_kertas_siasatan' => 'tarikh_ks',
+                'tarikh_laporan_polis' => 'tarikh_laporan_polis_sistem',
+            ],
+        ],
+        'LaporanMatiMengejut' => [
+            'model'       => \App\Models\LaporanMatiMengejut::class,
+            'unique_by'   => 'no_sdr_lmm',
+            'column_map'  => [
+                'no_sdrllm' => 'no_sdr_lmm',
+                'pegawai_penyiasat' => 'pegawai_penyiasat',
+                'no_laporan_polis' => 'no_laporan_polis',
+                'tarkh_laporan_polis' => 'tarikh_laporan_polis', // Corrected common typo
+                'tarikh_laporan_polis' => 'tarikh_laporan_polis', // Allow both
+            ],
+        ],
+    ];
 
     public function __construct(int $projectId, string $paperType)
     {
+        if (!isset(self::$paperConfig[$paperType])) {
+            throw new \InvalidArgumentException("Invalid paper type specified: {$paperType}");
+        }
+
         $this->projectId = $projectId;
         $this->paperType = $paperType;
-        $this->modelClass = 'App\\Models\\' . $paperType;
-
-        if (!class_exists($this->modelClass)) {
-            throw new \InvalidArgumentException("Model class not found for paper type: {$paperType}");
-        }
+        $this->config = self::$paperConfig[$paperType];
+        $this->modelClass = $this->config['model'];
     }
 
     public function registerEvents(): array
     {
         return [
             BeforeImport::class => function (BeforeImport $event) {
-                $expectedHeaders = array_values($this->getColumnMapping());
-                $actualHeaders = $event->getReader()->getActiveSheet()->toArray()[0];
-                $cleanedActualHeaders = array_map(fn($h) => Str::snake(trim(strtolower($h))), $actualHeaders);
-                $missingHeaders = array_diff($expectedHeaders, $cleanedActualHeaders);
+                // Expected headers are the keys of the column map (the Excel headers)
+                $expectedHeaders = array_keys($this->config['column_map']);
+                $actualHeaders = array_map(fn($h) => Str::snake(trim(strtolower($h))), $event->getReader()->getActiveSheet()->toArray()[0]);
+                
+                // We only check if at least one of the expected headers is present to allow flexibility.
+                // A more robust check might be needed depending on requirements.
+                $foundHeaders = array_intersect($expectedHeaders, $actualHeaders);
 
-                if (!empty($missingHeaders)) {
-                    $message = 'Fail tidak dapat diimport. Lajur berikut tiada atau salah eja: ' . implode(', ', $missingHeaders);
+                if (empty($foundHeaders)) {
+                    $message = 'Fail tidak dapat diimport. Pastikan fail Excel mempunyai sekurang-kurangnya satu lajur yang sepadan: ' . implode(', ', $expectedHeaders);
                     throw ValidationException::withMessages(['excel_file' => $message]);
                 }
             },
@@ -53,131 +127,73 @@ class PaperImport implements ToModel, WithHeadingRow, WithUpserts, SkipsOnFailur
 
     public function model(array $row)
     {
-        $columnMap = $this->getColumnMapping();
-        $uniqueDbColumn = $this->uniqueBy();
-        $uniqueExcelHeader = array_search($uniqueDbColumn, $columnMap);
-
         $data = ['project_id' => $this->projectId];
+        $uniqueDbColumn = $this->config['unique_by'];
+        $uniqueValue = null;
 
-        foreach ($columnMap as $dbColumn => $excelHeader) {
-            $value = $row[$excelHeader] ?? null;
+        foreach ($this->config['column_map'] as $excelHeader => $dbColumn) {
+            if (!isset($row[$excelHeader])) continue; // Skip if header doesn't exist in the row
+
+            $value = $row[$excelHeader];
             $isDateColumn = str_contains($dbColumn, 'tarikh') || str_contains($dbColumn, '_at');
             $data[$dbColumn] = $isDateColumn ? $this->transformDate($value) : (is_string($value) ? trim($value) : $value);
+            
+            if ($dbColumn === $uniqueDbColumn) {
+                $uniqueValue = $data[$dbColumn];
+            }
+        }
+        
+        // Ensure the unique key has a value before trying to update/create
+        if (empty($uniqueValue)) {
+            return null; // Skip this row if the unique identifier is missing
         }
 
         return $this->modelClass::updateOrCreate(
-            [$uniqueDbColumn => $data[$uniqueDbColumn]],
+            [$uniqueDbColumn => $uniqueValue],
             $data
         );
     }
-    
-    /**
-     * --- FIX: Reverting to the explicit, hardcoded validation logic from your original file ---
-     * This is the most reliable way and directly mirrors the code that worked.
-     */
+
     public function rules(): array
     {
-        switch ($this->paperType) {
-            case 'JenayahPaper':
-                return ['no_kertas_siasatan' => 'required|string|max:255'];
-            case 'NarkotikPaper':
-                return ['no_k_siasatan' => 'required|string|max:255'];
-            case 'KomersilPaper':
-                return ['no_kertas_siasatan' => 'required|string|max:255'];
-            case 'TrafikSeksyenPaper':
-            case 'TrafikRulePaper':
-                return ['no_kertas_siasatan' => 'required|string|max:255'];
-            case 'OrangHilangPaper':
-                return ['no_kertas_siasatan' => 'required|string|max:255'];
-            case 'LaporanMatiMengejutPaper':
-                return ['no_sdrllm' => 'required|string|max:255'];
-            case 'KertasSiasatan':
-            default:
-                return ['no_kertas_siasatan' => 'required|string|max:255'];
+        // Dynamically create validation rules based on the configuration.
+        // This ensures that at least the unique identifier's column is required.
+        $rules = [];
+        $uniqueDbColumn = $this->config['unique_by'];
+        
+        // Find the Excel header that maps to the unique DB column
+        $uniqueExcelHeader = array_search($uniqueDbColumn, $this->config['column_map']);
+
+        if ($uniqueExcelHeader) {
+            $rules[$uniqueExcelHeader] = 'required|string|max:255';
         }
+        
+        // You can add more general validation rules here if needed
+        // e.g., 'seksyen' => 'nullable|string'
+
+        return $rules;
     }
 
     public function customValidationMessages()
     {
-        switch ($this->paperType) {
-            case 'JenayahPaper':
-                return ['no_kertas_siasatan.required' => 'Lajur "no_kertas_siasatan" diperlukan.'];
-            case 'NarkotikPaper':
-                return ['no_k_siasatan.required' => 'Lajur "no_k_siasatan" diperlukan.'];
-            case 'KomersilPaper':
-                return ['no_kertas_siasatan.required' => 'Lajur "no_kertas_siasatan" diperlukan.'];
-            case 'TrafikSeksyenPaper':
-            case 'TrafikRulePaper':
-                return ['no_kertas_siasatan.required' => 'Lajur "no_kertas_siasatan" diperlukan.'];
-            case 'OrangHilangPaper':
-                return ['no_kertas_siasatan.required' => 'Lajur "no_kertas_siasatan" diperlukan.'];
-            case 'LaporanMatiMengejutPaper':
-                return ['no_sdrllm.required' => 'Lajur "no_sdrllm" diperlukan.'];
-            case 'KertasSiasatan':
-            default:
-                return ['no_kertas_siasatan.required' => 'Lajur "no_kertas_siasatan" diperlukan.'];
-        }
-    }
+        $messages = [];
+        $uniqueDbColumn = $this->config['unique_by'];
+        $uniqueExcelHeader = array_search($uniqueDbColumn, $this->config['column_map']);
 
+        if ($uniqueExcelHeader) {
+             $messages["{$uniqueExcelHeader}.required"] = "Lajur pengenalan unik '{$uniqueExcelHeader}' diperlukan untuk setiap baris.";
+        }
+       
+        return $messages;
+    }
+    
+    /**
+     * This method is required by the WithUpserts interface.
+     * It tells the package which column to use to find an existing record.
+     */
     public function uniqueBy(): string
     {
-        switch ($this->paperType) {
-            case 'TrafikRulePaper':
-            case 'TrafikSeksyenPaper':
-                return 'no_kst';
-            case 'LaporanMatiMengejutPaper':
-                return 'no_lmm';
-            case 'OrangHilangPaper':
-                return 'no_ks_oh';
-            default:
-                return 'no_ks';
-        }
-    }
-
-    private function getColumnMapping(): array
-    {
-        // The list of columns to import. 
-        // The database column and Excel header are the SAME for each.
-        $columns = [
-            'no_ks',
-            'pegawai_penyiasat',
-            'seksyen',
-            'tarikh_laporan_polis', // This will be the primary date column for most
-        ];
-
-        // Add specific columns for each paper type if they exist in their respective Excel files
-        switch ($this->paperType) {
-            case 'KomersilPaper':
-                // If Komersil Excel has 'tarikh_ks_dibuka' instead of 'tarikh_laporan_polis'
-                $columns = array_diff($columns, ['tarikh_laporan_polis']); // Remove the default date
-                $columns[] = 'tarikh_ks_dibuka'; // Add the specific one
-                break;
-
-            case 'TrafikSeksyenPaper':
-                $columns = array_diff($columns, ['tarikh_laporan_polis']);
-                $columns[] = 'tarikh_daftar';
-                break;
-
-            case 'OrangHilangPaper':
-                $columns = array_diff($columns, ['tarikh_laporan_polis_sistem']);
-                $columns[] = 'tarikh_ks';
-                $columns[] = 'tarikh_laporan_polis_sistem'; 
-                break;
-                
-            case 'LaporanMatiMengejutPaper':
-                // LMM is completely different
-                $columns = [
-                    'no_sdr_lmm',
-                    'pegawai_penyiasat',
-                    'no_repot_polis',
-                    'tarikh_laporan_polis',
-                ];
-                break;
-        }
-
-        // The array_flip() trick creates the mapping where key equals value.
-        // E.g., ['no_ks', 'seksyen'] becomes ['no_ks' => 'no_ks', 'seksyen' => 'seksyen']
-        return array_flip($columns);
+        return $this->config['unique_by'];
     }
 
     private function transformDate($value, $format = 'Y-m-d')
@@ -195,13 +211,18 @@ class PaperImport implements ToModel, WithHeadingRow, WithUpserts, SkipsOnFailur
     
     public function onFailure(Failure ...$failures)
     {
-        foreach ($failures as $failure) { 
-            Log::error("Excel Import Validation Failure", [
-                'row' => $failure->row(), 
-                'attribute' => $failure->attribute(), 
-                'errors' => $failure->errors(), 
-                'values' => $failure->values()
-            ]); 
+        // You can log these failures or pass them back to the controller
+        Log::error("Excel Import Validation Failures for type: {$this->paperType}", ['failures' => $failures]);
+
+        // To stop the import and show errors to the user, re-throw a ValidationException
+        $errorMessages = [];
+        foreach ($failures as $failure) {
+            $errorMessages[] = "Baris {$failure->row()}: " . implode(', ', $failure->errors());
         }
+        
+        throw ValidationException::withMessages([
+            'excel_file' => 'Terdapat ralat pada baris berikut dalam fail anda:',
+            'excel_errors' => $errorMessages
+        ]);
     }
 }
