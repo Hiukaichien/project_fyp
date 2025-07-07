@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Kemaskini Kertas Siasatan: Laporan Mati Mengejut ({{ $paper->no_lmm }})
+            Kemaskini Kertas Siasatan: Laporan Mati Mengejut ({{ $paper->no_sdr_lmm }})
         </h2>
     </x-slot>
 
