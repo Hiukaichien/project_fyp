@@ -58,7 +58,7 @@ class ProjectController extends Controller
         $validatedData['user_id'] = Auth::id();
 
         Project::create($validatedData);
-        return Redirect::route('projects.index')->with('success', 'Project created successfully.');
+        return Redirect::route('projects.index')->with('success', 'Projek berjaya dicipta.');
     }
 
     public function show(Project $project, Request $request)
@@ -110,7 +110,7 @@ class ProjectController extends Controller
             'description' => 'nullable|string',
         ]);
         $project->update($validatedData);
-        return Redirect::route('projects.show', $project)->with('success', 'Project updated successfully.');
+        return Redirect::route('projects.show', $project)->with('success', 'Projek berjaya dikemaskini.');
     }
 
     public function destroy(Project $project)
@@ -124,7 +124,7 @@ class ProjectController extends Controller
         $project->delete();
         
         // 3. Redirect with a success message.
-        return Redirect::route('projects.index')->with('success', 'Project and all associated papers have been deleted.');
+        return Redirect::route('projects.index')->with('success', 'Projek dan semua kertas yang berkaitan telah berjaya dipadam.');
     }
 
 public function importPapers(Request $request, Project $project)
@@ -172,7 +172,7 @@ public function importPapers(Request $request, Project $project)
         
         $validPaperTypes = ['Jenayah', 'Narkotik', 'Trafik', 'Komersil', 'LaporanMatiMengejut', 'OrangHilang'];
         if (!in_array($paperType, $validPaperTypes)) {
-            return redirect()->route('projects.show', $project)->with('error', 'Invalid paper type specified.');
+            return redirect()->route('projects.show', $project)->with('error', 'Jenis kertas yang dinyatakan tidak sah.');
         }
 
         $paperModelClass = 'App\\Models\\' . $paperType;
@@ -181,7 +181,7 @@ public function importPapers(Request $request, Project $project)
         $paper->delete();
 
         $friendlyName = Str::headline($paperType);
-        return redirect()->route('projects.show', $project)->with('success', $friendlyName . ' paper has been permanently deleted.');
+        return redirect()->route('projects.show', $project)->with('success', $friendlyName . ' telah berjaya dipadam secara kekal.');
     }
 
     public function exportPapers(Request $request, Project $project)

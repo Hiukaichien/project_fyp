@@ -1,5 +1,5 @@
 @props([
-    'title' => 'Table',
+    'title' => 'Jadual',
     'collection' => collect(),
     'bgColor' => 'bg-gray-50',
     'pageName' => 'page' // This prop is now our unique identifier

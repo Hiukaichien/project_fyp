@@ -42,8 +42,8 @@
 
     <x-slot name="header">
         <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">{{ __('Project Dashboard: ') }} {{ $project->name }}</h2>
-            <a href="{{ route('projects.index') }}" class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 underline">← {{ __('Back to Projects List') }}</a>
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">{{ __('Dashboard Projek: ') }} {{ $project->name }}</h2>
+            <a href="{{ route('projects.index') }}" class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 underline">← {{ __('Kembali ke Senarai Projek') }}</a>
         </div>
     </x-slot>
 
@@ -69,14 +69,25 @@
                 <div class="flex justify-between items-start mb-1">
                     <div>
                         <h3 class="text-2xl font-semibold">{{ $project->name }}</h3>
-                        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{ \Carbon\Carbon::parse($project->project_date)->format('F d, Y') }}</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                            @php
+                                $date = \Carbon\Carbon::parse($project->project_date);
+                                $months = [
+                                    1 => 'Januari', 2 => 'Februari', 3 => 'Mac', 4 => 'April',
+                                    5 => 'Mei', 6 => 'Jun', 7 => 'Julai', 8 => 'Ogos',
+                                    9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Disember'
+                                ];
+                                $malayMonth = $months[$date->month];
+                            @endphp
+                            {{ $date->day }} {{ $malayMonth }} {{ $date->year }}
+                        </p>
                     </div>
                     <div class="flex-shrink-0 flex items-center space-x-4">
-                        <x-primary-button x-data="" x-on:click.prevent="$dispatch('open-modal', 'import-papers-modal')"><i class="fas fa-file-upload mr-2"></i> {{ __('Import') }}</x-primary-button>
+                        <x-primary-button x-data="" x-on:click.prevent="$dispatch('open-modal', 'import-papers-modal')"><i class="fas fa-file-upload mr-2"></i> {{ __('muat naik') }}</x-primary-button>
                         <button x-data="" x-on:click.prevent="$dispatch('open-modal', 'export-papers-modal')" class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-500 active:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                            <i class="fas fa-file-download mr-2"></i> {{ __('Export') }}
+                            <i class="fas fa-file-download mr-2"></i> {{ __('Eksport') }}
                         </button>
-                        <a href="{{ route('projects.edit', $project) }}" class="text-yellow-600 dark:text-yellow-400 hover:text-yellow-500" title="{{ __('Edit Project') }}"><i class="fas fa-edit fa-lg"></i></a>
+                        <a href="{{ route('projects.edit', $project) }}" class="text-yellow-600 dark:text-yellow-400 hover:text-yellow-500" title="{{ __('Edit Projek') }}"><i class="fas fa-edit fa-lg"></i></a>
                     </div>
                 </div>
                 @if($project->description)<p class="text-gray-700 dark:text-gray-300 whitespace-pre-wrap mt-4 border-t pt-4">{{ $project->description }}</p>@endif
@@ -108,7 +119,7 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
                 <!-- Tab Headers -->
                 <div class="border-b border-gray-200 dark:border-gray-700">
-                    <nav class="-mb-px flex space-x-4 overflow-x-auto" aria-label="Tabs">
+                    <nav class="-mb-px flex space-x-4 overflow-x-auto" aria-label="Tab">
                         @php
                             $activeClasses = 'border-indigo-500 text-indigo-600';
                             $inactiveClasses = 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300';
@@ -149,7 +160,7 @@
     <x-modal name="import-papers-modal" :show="$errors->has('excel_file') || $errors->has('excel_errors')" focusable>
         <form action="{{ route('projects.import', $project) }}" method="POST" enctype="multipart/form-data" class="p-6">
             @csrf
-            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Import Papers to: {{ $project->name }}</h2>
+            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Muat Naik Kertas Siasatan ke: {{ $project->name }}</h2>
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Sila pilih kategori kertas dan muat naik fail Excel yang sepadan.</p>
 
             @if ($errors->has('excel_file') || $errors->has('excel_errors'))
@@ -179,11 +190,23 @@
             </div>
             <div class="mt-6">
                 <label for="excel_file_modal" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilih Fail Excel</label>
-                <input type="file" name="excel_file" id="excel_file_modal" required accept=".xlsx,.xls,.csv" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                <div class="mt-1 flex items-center">
+                    <input type="file" name="excel_file" id="excel_file_modal" required accept=".xlsx,.xls,.csv" class="hidden">
+                    <button type="button" onclick="document.getElementById('excel_file_modal').click()" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-500 active:bg-blue-700 focus:outline-none focus:border-blue-700 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
+                        <i class="fas fa-file-upload mr-2"></i>Pilih Fail
+                    </button>
+                    <span id="file-name" class="ml-3 text-sm text-gray-500">Tiada fail dipilih</span>
+                </div>
+                <script>
+                    document.getElementById('excel_file_modal').addEventListener('change', function(e) {
+                        const fileName = e.target.files[0] ? e.target.files[0].name : 'Tiada fail dipilih';
+                        document.getElementById('file-name').textContent = fileName;
+                    });
+                </script>
             </div>
             <div class="mt-6 flex justify-end">
-                <x-secondary-button x-on:click="$dispatch('close')">{{ __('Cancel') }}</x-secondary-button>
-                <x-primary-button class="ms-3">{{ __('Import File') }}</x-primary-button>
+                <x-secondary-button x-on:click="$dispatch('close')">{{ __('Batal') }}</x-secondary-button>
+                <x-primary-button class="ms-3">{{ __('Muat Naik Fail') }}</x-primary-button>
             </div>
         </form>
     </x-modal>
@@ -191,7 +214,7 @@
     <!-- Export Modal -->
     <x-modal name="export-papers-modal" focusable>
         <form action="{{ route('projects.export_papers', $project) }}" method="GET" class="p-6">
-            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Export Papers from: {{ $project->name }}</h2>
+            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Eksport Kertas Siasatan dari: {{ $project->name }}</h2>
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Sila pilih kategori kertas yang ingin dieksport ke fail CSV.</p>
             <div class="mt-6">
                 <label for="paper_type_export" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Kategori Kertas</label>
@@ -206,9 +229,9 @@
                 </select>
             </div>
             <div class="mt-6 flex justify-end">
-                <x-secondary-button x-on:click="$dispatch('close')">{{ __('Cancel') }}</x-secondary-button>
+                <x-secondary-button x-on:click="$dispatch('close')">{{ __('Batal') }}</x-secondary-button>
                 <button type="submit" class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-500 active:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150 ms-3">
-                    Export to CSV
+                    Eksport ke CSV
                 </button>
             </div>
         </form>
@@ -271,6 +294,13 @@
                         ],
                         fixedColumns: {
                             left: 1
+                        },
+                        language: {
+                            search: "Cari:",
+                            lengthMenu: "Tunjukkan _MENU_ entri",
+                            info: "Menunjukkan _START_ hingga _END_ daripada _TOTAL_ entri",
+                            infoEmpty: "Menunjukkan 0 hingga 0 daripada 0 entri",
+                            emptyTable: "Tiada data tersedia dalam jadual"
                         },
                         "drawCallback": function( settings ) {
                             panel.removeClass('datatable-container-loading');

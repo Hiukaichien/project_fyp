@@ -68,7 +68,7 @@ class KertasSiasatanController extends Controller
         $paper->update($request->all());
 
         return Redirect::route('projects.show', $paper->project_id)
-                       ->with('success', Str::headline($paperType) . ' paper updated successfully.');
+                       ->with('success', Str::headline($paperType) . ' berjaya dikemaskini.');
     }
 
     /**
@@ -77,7 +77,7 @@ class KertasSiasatanController extends Controller
     private function getModelClass($paperType)
     {
         if (!array_key_exists($paperType, $this->validPaperTypes)) {
-            abort(404, 'Invalid paper type specified.');
+            abort(404, 'Jenis kertas yang dinyatakan tidak sah.');
         }
         return $this->validPaperTypes[$paperType];
     }

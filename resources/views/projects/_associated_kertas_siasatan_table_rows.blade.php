@@ -31,9 +31,9 @@
         <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{{ optional($ks->tarikh_minit_b)->format('d/m/Y') ?? '-' }}</td>
         <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{{ optional($ks->tarikh_minit_c)->format('d/m/Y') ?? '-' }}</td>
         <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{{ optional($ks->tarikh_minit_d)->format('d/m/Y') ?? '-' }}</td>
-        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{{ $ks->edar_lebih_24_jam_status ?? 'N/A' }}</td>
-        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{{ $ks->terbengkalai_3_bulan_status ?? 'N/A' }}</td>
-        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{{ $ks->baru_kemaskini_status ?? 'N/A' }}</td>
+        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{{ $ks->edar_lebih_24_jam_status ?? 'Tiada' }}</td>
+        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{{ $ks->terbengkalai_3_bulan_status ?? 'Tiada' }}</td>
+        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{{ $ks->baru_kemaskini_status ?? 'Tiada' }}</td>
 
         {{-- Status Semasa Diperiksa --}}
         <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{{ $ks->status_ks_semasa_diperiksa ?? '-' }}</td>

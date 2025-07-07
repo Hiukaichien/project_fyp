@@ -3,10 +3,10 @@
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                {{ __('Projects') }}
+                Projek
             </h2>
             <a href="{{ route('projects.create') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-500 active:bg-blue-700 focus:outline-none focus:border-blue-700 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
-                {{ __('Create New Project') }}
+                Cipta Projek Baru
             </a>
         </div>
     </x-slot>
@@ -26,9 +26,9 @@
                         </div>
                     @endif
 
-                    <h3 class="text-lg font-semibold mb-4">{{ __('Existing Projects') }}</h3>
+                    <h3 class="text-lg font-semibold mb-4">Senarai Projek</h3>
                     @if($projects->isEmpty())
-                        <p>{{ __('No projects found.') }} <a href="{{ route('projects.create') }}" class="text-blue-600 dark:text-blue-400 hover:underline">{{ __('Create one now!') }}</a></p>
+                        <p>Tiada projek dijumpai. <a href="{{ route('projects.create') }}" class="text-blue-600 dark:text-blue-400 hover:underline">Cipta satu sekarang!</a></p>
                     @else
                         <div class="space-y-4">
                             @foreach ($projects as $project)
@@ -45,10 +45,21 @@
                                             {{-- Project Dates --}}
                                             <div class="text-right flex-shrink-0 ml-4">
                                                 <p class="text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap">
-                                                    {{ \Carbon\Carbon::parse($project->project_date)->format('d M Y') }}
+                                                    @php
+                                                        $projectDate = \Carbon\Carbon::parse($project->project_date);
+                                                        $months = [
+                                                            1 => 'Jan', 2 => 'Feb', 3 => 'Mac', 4 => 'Apr',
+                                                            5 => 'Mei', 6 => 'Jun', 7 => 'Jul', 8 => 'Ogs',
+                                                            9 => 'Sep', 10 => 'Okt', 11 => 'Nov', 12 => 'Dis'
+                                                        ];
+                                                    @endphp
+                                                    {{ $projectDate->day }} {{ $months[$projectDate->month] }} {{ $projectDate->year }}
                                                 </p>
-                                                <p class="text-xs text-gray-400 dark:text-gray-500 whitespace-nowrap" title="Last Updated">
-                                                    {{ __('Updated:') }} {{ $project->updated_at->format('d M Y, H:i') }}
+                                                <p class="text-xs text-gray-400 dark:text-gray-500 whitespace-nowrap" title="Kemaskini Terakhir">
+                                                    @php
+                                                        $updatedDate = $project->updated_at;
+                                                    @endphp
+                                                    Kemaskini: {{ $updatedDate->day }} {{ $months[$updatedDate->month] }} {{ $updatedDate->year }}, {{ $updatedDate->format('H:i') }}
                                                 </p>
                                             </div>
                                         </div>
@@ -63,15 +74,15 @@
                                     <div class="p-4 pt-3 border-t border-gray-200 dark:border-gray-600 flex justify-end items-center space-x-4 bg-gray-50 dark:bg-gray-800 rounded-b-md">
                                         
                                         {{-- Edit Project Icon (independent link) --}}
-                                        <a href="{{ route('projects.edit', $project) }}" class="text-yellow-600 dark:text-yellow-400 hover:text-yellow-500" title="{{ __('Edit Project') }}">
+                                        <a href="{{ route('projects.edit', $project) }}" class="text-yellow-600 dark:text-yellow-400 hover:text-yellow-500" title="Edit Projek">
                                             <i class="fas fa-edit fa-lg"></i>
                                         </a>
 
                                         {{-- Delete Project Icon (independent form) --}}
-                                        <form action="{{ route('projects.destroy', $project) }}" method="POST" onsubmit="return confirm('{{ __('Are you sure you want to delete this project? This action cannot be undone.') }}');" class="inline">
+                                        <form action="{{ route('projects.destroy', $project) }}" method="POST" onsubmit="return confirm('Adakah anda pasti ingin memadam projek ini? Tindakan ini tidak boleh dibatalkan.');" class="inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="text-red-600 dark:text-red-400 hover:text-red-500" title="{{ __('Delete Project') }}">
+                                            <button type="submit" class="text-red-600 dark:text-red-400 hover:text-red-500" title="Padam Projek">
                                                 <i class="fas fa-trash-alt fa-lg"></i>
                                             </button>
                                         </form>

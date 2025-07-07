@@ -46,11 +46,11 @@
                 <h2 class="text-lg font-semibold border-b pb-1">Barang Kes</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-2">
                     <div>
-                        <label for="no_ext_brg_kes" class="block text-sm font-medium text-gray-700">No Ext Brg Kes</label>
+                        <label for="no_ext_brg_kes" class="block text-sm font-medium text-gray-700">No. Ext Brg Kes</label>
                         <input type="text" name="no_ext_brg_kes" id="no_ext_brg_kes" value="{{ old('no_ext_brg_kes', $paper->no_ext_brg_kes) }}" class="mt-1 block w-full form-input">
                     </div>
                     <div>
-                        <label for="brg_kes_tak_daftar" class="block text-sm font-medium text-gray-700">Brg Kes Tak Daftar</label>
+                        <label for="brg_kes_tak_daftar" class="block text-sm font-medium text-gray-700">Brg Kes Tidak Berdaftar</label>
                         <input type="text" name="brg_kes_tak_daftar" id="brg_kes_tak_daftar" value="{{ old('brg_kes_tak_daftar', $paper->brg_kes_tak_daftar) }}" class="mt-1 block w-full form-input">
                     </div>
                     <div>
@@ -58,7 +58,7 @@
                         <input type="text" name="gambar_brg_kes" id="gambar_brg_kes" value="{{ old('gambar_brg_kes', $paper->gambar_brg_kes) }}" class="mt-1 block w-full form-input">
                     </div>
                     <div>
-                        <label for="wang_tunai_lucut_hak_judi" class="block text-sm font-medium text-gray-700">Wang Tunai Lucut Hak Judi (RM)</label>
+                        <label for="wang_tunai_lucut_hak_judi" class="block text-sm font-medium text-gray-700">Wang Tunai Lucut Hak (RM)</label>
                         <input type="number" step="0.01" name="wang_tunai_lucut_hak_judi" id="wang_tunai_lucut_hak_judi" value="{{ old('wang_tunai_lucut_hak_judi', $paper->wang_tunai_lucut_hak_judi) }}" class="mt-1 block w-full form-input">
                     </div>
                     <div class="col-span-full">
