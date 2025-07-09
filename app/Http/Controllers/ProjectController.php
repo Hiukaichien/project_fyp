@@ -91,7 +91,14 @@ class ProjectController extends Controller
             ['path' => $request->url(), 'pageName' => 'kemaskini_page']
         );
         
-        return view('projects.show', compact('project', 'ksLewat24Jam', 'ksTerbengkalai', 'ksBaruKemaskini'));
+          $lewatCount = $ksLewat24Jam->total();
+        $terbengkalaiCount = $ksTerbengkalai->total();
+        $kemaskiniCount = $ksBaruKemaskini->total();
+
+        return view('projects.show', compact('project', 'ksLewat24Jam', 'ksTerbengkalai',  'ksBaruKemaskini',
+    'lewatCount',
+    'terbengkalaiCount',
+    'kemaskiniCount'));
     }
 
     public function edit(Project $project)

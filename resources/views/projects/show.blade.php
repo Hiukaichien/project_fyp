@@ -93,25 +93,101 @@
                 @if($project->description)<p class="text-gray-700 dark:text-gray-300 whitespace-pre-wrap mt-4 border-t pt-4">{{ $project->description }}</p>@endif
             </div>
 
-            {{-- Collapsible Summary Tables --}}
-            <x-collapsible-table 
-                title="KS Lewat Edar (> 48 Jam)" 
-                :collection="$ksLewat24Jam" 
-                bgColor="bg-red-50 dark:bg-red-900/20" 
-                pageName="lewat_page" 
-            />
-            <x-collapsible-table 
-                title="KS Terbengkalai (> 3 Bulan)" 
-                :collection="$ksTerbengkalai" 
-                bgColor="bg-yellow-50 dark:bg-yellow-900/20" 
-                pageName="terbengkalai_page" 
-            />
-            <x-collapsible-table 
-                title="KS Baru Dikemaskini" 
-                :collection="$ksBaruKemaskini" 
-                bgColor="bg-green-50 dark:bg-green-900/20" 
-                pageName="kemaskini_page" 
-            />
+{{-- Pie Chart and Tables --}}
+@php
+    $hasPieData = ($lewtaCount ?? 0) > 0 || ($terbengkalaiCount ?? 0) > 0 || ($kemaskiniCount ?? 0) > 0;
+@endphp
+
+<div class="flex flex-col md:flex-row gap-8 my-8">
+    @if($hasPieData)
+        <!-- Pie Chart (Left) -->
+         <div class="flex justify-center my-8">
+            <div style="width:100%; max-width:400px; margin-bottom:2rem;">
+                <canvas id="statusPieChart" width="400" height="400"></canvas>
+            </div>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const ctx = document.getElementById('statusPieChart').getContext('2d');
+                
+                const lewta = {{ $lewtaCount ?? 0 }};
+                const terbengkalai = {{ $terbengkalaiCount ?? 0 }};
+                const kemaskini = {{ $kemaskiniCount ?? 0 }};
+                const total = lewta + terbengkalai + kemaskini;
+                
+                const data = {
+                    labels: ['Lewat 24 Jam', 'Terbengkalai 3 Bulan', 'Baru Dikemaskini'],
+                    datasets: [{
+                        data: [
+                            {{ $lewtaCount ?? 0 }},
+                            {{ $terbengkalaiCount ?? 0 }},
+                            {{ $kemaskiniCount ?? 0 }}
+                        ],
+                        backgroundColor: [
+                            '#FF6384', '#36A2EB', '#FFCE56'
+                        ],
+                    }]
+                };
+
+                    const config = {
+                        type: 'pie',
+                        data: data,
+                        options: {
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    labels: {
+                                        generateLabels: function (chart) {
+                                            const data = chart.data;
+                                            if (data.labels.length && data.datasets.length) {
+                                                return data.labels.map(function (label, i) {
+                                                    const value = data.datasets[0].data[i];
+                                                    const percentage = total > 0 ? ((value / total) * 100).toFixed(1) + '%' : '0%';
+                                                    return {
+                                                        text: `${label} (${percentage})`,
+                                                        fillStyle: data.datasets[0].backgroundColor[i],
+                                                        strokeStyle: '#fff',
+                                                        lineWidth: 1,
+                                                        hidden: isNaN(data.datasets[0].data[i]) || chart.getDatasetMeta(0).data[i].hidden,
+                                                        index: i
+                                                    };
+                                                });
+                                            }
+                                            return [];
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    };
+                new Chart(ctx, config);
+            });
+            </script>
+        </div>
+    @endif
+
+    <!-- Collapsible Tables (Right) -->
+    <div class="w-24 md:w-2/3 flex flex-col gap-4">
+        <x-collapsible-table 
+            title="KS Lewat Edar (> 48 Jam)" 
+            :collection="$ksLewat24Jam" 
+            bgColor="bg-red-50 dark:bg-red-900/20" 
+            pageName="lewat_page" 
+        />
+        <x-collapsible-table 
+            title="KS Terbengkalai (> 3 Bulan)" 
+            :collection="$ksTerbengkalai" 
+            bgColor="bg-yellow-50 dark:bg-yellow-900/20" 
+            pageName="terbengkalai_page" 
+        />
+        <x-collapsible-table 
+            title="KS Baru Dikemaskini" 
+            :collection="$ksBaruKemaskini" 
+            bgColor="bg-green-50 dark:bg-green-900/20" 
+            pageName="kemaskini_page" 
+        />
+    </div>
+</div>
             
             <hr class="my-6 border-gray-300 dark:border-gray-700">
 
