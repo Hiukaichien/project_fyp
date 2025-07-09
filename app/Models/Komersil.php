@@ -24,7 +24,7 @@ class Komersil extends Model
         'project_id' => 'integer',
         'tarikh_ks_dibuka' => 'date:Y-m-d',
         'tarikh_minit_pertama' => 'date:Y-m-d',
-        'tarikh_minit_pertamakhir' => 'date:Y-m-d',
+        'tarikh_minit_akhir' => 'date:Y-m-d',
         'tarikh_permohonan_telco' => 'date:Y-m-d', // Added from CSV analysis
         'created_at' => 'datetime',
         'updated_at' => 'datetime',

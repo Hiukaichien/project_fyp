@@ -25,7 +25,7 @@ class OrangHilang extends Model
         'tarikh_ks' => 'date:Y-m-d',
         'tarikh_laporan_polis_sistem' => 'date:Y-m-d',
         'tarikh_minit_pertama' => 'date:Y-m-d',
-        'tarikh_minit_pertamakhir' => 'date:Y-m-d',
+        'tarikh_minit_akhir' => 'date:Y-m-d',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];

@@ -24,7 +24,7 @@ class LaporanMatiMengejut extends Model
         'project_id' => 'integer',
         'tarikh_laporan_polis' => 'date:Y-m-d',
         'tarikh_minit_pertama' => 'date:Y-m-d',
-        'tarikh_minit_pertamakhir' => 'date:Y-m-d',
+        'tarikh_minit_akhir' => 'date:Y-m-d',
         'tarikh_permohonan_pm_dipohon' => 'date:Y-m-d',
         'tarikh_rujuk_tpr' => 'date:Y-m-d',
         'tarikh_rujuk_koroner' => 'date:Y-m-d',
