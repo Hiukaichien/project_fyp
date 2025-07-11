@@ -61,16 +61,20 @@ class LaporanMatiMengejut extends Model
         $this->calculateBaruKemaskini();
     }
 
-    /**
-     * Calculates if the first minute distribution was late.
-     */
+ 
     public function calculateEdaranLebih48Jam()
     {
-        if ($this->tarikh_laporan_polis && $this->tarikh_minit_pertama) {
-            $tarikhLaporan = Carbon::parse($this->tarikh_laporan_polis)->startOfDay();
-            $tarikhA = Carbon::parse($this->tarikh_minit_pertama)->startOfDay();
+        // If tarikh_minit_akhir is filled, the case is not considered late.
+        if ($this->tarikh_minit_akhir) {
+            $this->edar_lebih_24_jam_status = 'EDARAN DALAM TEMPOH';
+            return;
+        }
+
+        // If tarikh_minit_akhir is not filled, check against tarikh_minit_pertama.
+        if ($this->tarikh_minit_pertama) {
+            $tarikhPertama = $this->tarikh_minit_pertama;
             
-            if ($tarikhA->isAfter($tarikhLaporan) && $tarikhA->diffInHours($tarikhLaporan) > 48) {
+            if ($tarikhPertama->diffInHours(Carbon::now()) > 48) {
                 $this->edar_lebih_24_jam_status = 'YA, EDARAN LEWAT 48 JAM';
             } else {
                 $this->edar_lebih_24_jam_status = 'EDARAN DALAM TEMPOH 48 JAM';
@@ -85,17 +89,19 @@ class LaporanMatiMengejut extends Model
      */
     public function calculateTerbengkalai3Bulan()
     {
-        if ($this->tarikh_minit_pertama && $this->tarikh_minit_akhir) {
-            $tarikhA = Carbon::parse($this->tarikh_minit_pertama);
-            $tarikhD = Carbon::parse($this->tarikh_minit_akhir);
+        // Check if both minute dates are empty and there is an opening date.
+        if (is_null($this->tarikh_minit_pertama) && is_null($this->tarikh_minit_akhir) && $this->tarikh_daftar) {
+            $openingDate = $this->tarikh_daftar; 
 
-            if ($tarikhD->isAfter($tarikhA) && $tarikhA->diffInMonths($tarikhD) >= 3) {
+            // Check if 3 months have passed since the opening date.
+            if ($openingDate->diffInMonths(Carbon::now()) >= 3) {
                 $this->terbengkalai_3_bulan_status = 'YA, TERBENGKALAI LEBIH 3 BULAN';
             } else {
                 $this->terbengkalai_3_bulan_status = 'TIDAK TERBENGKALAI';
             }
         } else {
-            $this->terbengkalai_3_bulan_status = 'TIDAK TERBENGKALAI (TIADA DATA)';
+            // If any minute date is filled, or no opening date, it's not considered abandoned by this rule.
+            $this->terbengkalai_3_bulan_status = 'TIDAK TERBENGKALAI';
         }
     }
 
