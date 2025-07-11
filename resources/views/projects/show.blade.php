@@ -42,8 +42,8 @@
 
     <x-slot name="header">
         <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">{{ __('Dashboard Projek: ') }} {{ $project->name }}</h2>
-            <a href="{{ route('projects.index') }}" class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 underline">← {{ __('Kembali ke Senarai Projek') }}</a>
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-black-200 leading-tight">{{ __('Dashboard Projek: ') }} {{ $project->name }}</h2>
+            <a href="{{ route('projects.index') }}" class="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-blue-100 underline">← {{ __('Kembali ke Senarai Projek') }}</a>
         </div>
     </x-slot>
 
@@ -68,7 +68,7 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
                 <div class="flex justify-between items-start mb-1">
                     <div>
-                        <h3 class="text-2xl font-semibold">{{ $project->name }}</h3>
+                        <h3 class="text-2xl dark:text-white font-semibold">{{ $project->name }}</h3>
                         <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
                             @php
                                 $date = \Carbon\Carbon::parse($project->project_date);
@@ -236,8 +236,8 @@
     <x-modal name="import-papers-modal" :show="$errors->has('excel_file') || $errors->has('excel_errors')" focusable>
         <form action="{{ route('projects.import', $project) }}" method="POST" enctype="multipart/form-data" class="p-6">
             @csrf
-            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Muat Naik Kertas Siasatan ke: {{ $project->name }}</h2>
-            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Sila pilih kategori kertas dan muat naik fail Excel yang sepadan.</p>
+            <h2 class="text-lg font-medium text-gray-900 dark:text-black-100">Muat Naik Kertas Siasatan ke: {{ $project->name }}</h2>
+            <p class="mt-1 text-sm text-gray-600 dark:text-grey-600">Sila pilih kategori kertas dan muat naik fail Excel yang sepadan.</p>
 
             @if ($errors->has('excel_file') || $errors->has('excel_errors'))
                 <div class="mt-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" role="alert">
@@ -253,7 +253,7 @@
             @endif
 
             <div class="mt-6">
-                <label for="paper_type_modal" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Kategori Kertas</label>
+                <label for="paper_type_modal" class="block text-sm font-medium text-gray-700 dark:text-black-200">Kategori Kertas</label>
                 <select name="paper_type" id="paper_type_modal" required class="mt-1 block w-full form-select rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                     <option value="" disabled selected>-- Sila Pilih Kategori --</option>
                     <option value="Jenayah" @if(old('paper_type') == 'Jenayah') selected @endif>Jenayah</option>
@@ -265,7 +265,7 @@
                 </select>
             </div>
             <div class="mt-6">
-                <label for="excel_file_modal" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Pilih Fail Excel</label>
+                <label for="excel_file_modal" class="block text-sm font-medium text-gray-700 dark:text-black-300">Pilih Fail Excel</label>
                 <div class="mt-1 flex items-center">
                     <input type="file" name="excel_file" id="excel_file_modal" required accept=".xlsx,.xls,.csv" class="hidden">
                     <button type="button" onclick="document.getElementById('excel_file_modal').click()" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-500 active:bg-blue-700 focus:outline-none focus:border-blue-700 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
@@ -290,10 +290,10 @@
     <!-- Export Modal -->
     <x-modal name="export-papers-modal" focusable>
         <form action="{{ route('projects.export_papers', $project) }}" method="GET" class="p-6">
-            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Eksport Kertas Siasatan dari: {{ $project->name }}</h2>
+            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-900">Eksport Kertas Siasatan dari: {{ $project->name }}</h2>
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Sila pilih kategori kertas yang ingin dieksport ke fail CSV.</p>
             <div class="mt-6">
-                <label for="paper_type_export" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Kategori Kertas</label>
+                <label for="paper_type_export" class="block text-sm font-medium text-gray-700 dark:text-gray-700">Kategori Kertas</label>
                 <select name="paper_type" id="paper_type_export" required class="mt-1 block w-full form-select rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                     <option value="" disabled selected>-- Sila Pilih Kategori --</option>
                     <option value="Jenayah">Jenayah</option>
@@ -322,7 +322,7 @@
     $(document).ready(function() {
         const initializedTables = {};
         const activeClasses = 'border-indigo-500 text-indigo-600';
-        const inactiveClasses = 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300';
+        const inactiveClasses = 'border-transparent text-gray-500 hover:text-gray-700 dark:text-white hover:border-gray-300';
 
         function activateTab(tabName) {
             $('.tab-link').removeClass(activeClasses).addClass(inactiveClasses);
@@ -340,7 +340,7 @@
             }
 
             const panel = $('#panel-' + tabName);
-            panel.addClass('datatable-container-loading');
+            panel.addClass('datatable-container-loading dark:text-white');
 
             @foreach($paperTypes as $key => $config)
                 if (tabName === '{{ $key }}') {
@@ -365,7 +365,7 @@
                         columnDefs: [
                             {
                                 targets: 0,
-                                className: "sticky left-0 bg-gray-50 dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600"
+                                className: "sticky left-0 bg-gray-50 dark:text-white dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600"
                             }
                         ],
                         fixedColumns: {
