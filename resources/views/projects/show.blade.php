@@ -11,12 +11,12 @@
 
     // A single source of truth for all table configurations, now with 6 types
     $paperTypes = [
-        'jenayah' => ['model' => new Jenayah(), 'route' => 'projects.jenayah_data', 'title' => 'Jenayah'],
-        'narkotik' => ['model' => new Narkotik(), 'route' => 'projects.narkotik_data', 'title' => 'Narkotik'],
-        'komersil' => ['model' => new Komersil(), 'route' => 'projects.komersil_data', 'title' => 'Komersil'],
         'trafik' => ['model' => new Trafik(), 'route' => 'projects.trafik_data', 'title' => 'Trafik'],
+        'komersil' => ['model' => new Komersil(), 'route' => 'projects.komersil_data', 'title' => 'Komersil'],
+        'narkotik' => ['model' => new Narkotik(), 'route' => 'projects.narkotik_data', 'title' => 'Narkotik'],
         'orangHilang' => ['model' => new OrangHilang(), 'route' => 'projects.orang_hilang_data', 'title' => 'Orang Hilang'],
         'lmm' => ['model' => new LaporanMatiMengejut(), 'route' => 'projects.laporan_mati_mengejut_data', 'title' => 'LMM'],
+        'jenayah' => ['model' => new Jenayah(), 'route' => 'projects.jenayah_data', 'title' => 'Jenayah'],
     ];
 
     // Columns to ignore when dynamically generating the table from the schema
@@ -92,131 +92,132 @@
                 </div>
                 @if($project->description)<p class="text-gray-700 dark:text-gray-300 whitespace-pre-wrap mt-4 border-t pt-4">{{ $project->description }}</p>@endif
             </div>
-
-{{-- Pie Chart and Tables --}}
-@php
-    $hasPieData = ($lewatCount ?? 0) > 0 || ($terbengkalaiCount ?? 0) > 0 || ($kemaskiniCount ?? 0) > 0;
-@endphp
-
-<div class="flex flex-col md:flex-row gap-8 my-8">
-    @if($hasPieData)
-        <!-- Pie Chart (Left) -->
-        <div class="w-full md:w-1/3 flex justify-center items-center">
-            <div style="position: relative; height:400px; width:100%; max-width:400px;">
-                <canvas id="statusPieChart"></canvas>
-            </div>
-            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-            <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const ctx = document.getElementById('statusPieChart').getContext('2d');
-                
-                const lewat = {{ $lewatCount ?? 0 }};
-                const terbengkalai = {{ $terbengkalaiCount ?? 0 }};
-                const kemaskini = {{ $kemaskiniCount ?? 0 }};
-                
-                const data = {
-                    labels: ['Lewat > 48 Jam', 'Terbengkalai > 3 Bulan', 'Baru Dikemaskini'],
-                    datasets: [{
-                        data: [lewat, terbengkalai, kemaskini],
-                        backgroundColor: [
-                            '#F87171', // Tailwind's red-400
-                            '#FBBF24', // Tailwind's amber-400
-                            '#34D399'  // Tailwind's emerald-400
-                        ],
-                        borderColor: '#FFFFFF',
-                        borderWidth: 2,
-                    }]
-                };
-
-                const config = {
-                    type: 'pie',
-                    data: data,
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'bottom',
-                                labels: {
-                                    padding: 20,
-                                    boxWidth: 12,
-                                    font: { size: 12 },
-                                    generateLabels: function (chart) {
-                                        const data = chart.data;
-                                        if (data.labels.length && data.datasets.length) {
-                                            const total = data.datasets[0].data.reduce((sum, value) => sum + value, 0);
-                                            return data.labels.map(function (label, i) {
-                                                const value = data.datasets[0].data[i];
-                                                if (value === 0) return null; // Hide legend if count is 0
-                                                const percentage = total > 0 ? ((value / total) * 100).toFixed(1) + '%' : '0%';
-                                                return {
-                                                    text: `${label}: ${value} (${percentage})`,
-                                                    fillStyle: data.datasets[0].backgroundColor[i],
-                                                    strokeStyle: data.datasets[0].borderColor,
-                                                    lineWidth: data.datasets[0].borderWidth,
-                                                    hidden: isNaN(value),
-                                                    index: i
-                                                };
-                                            }).filter(item => item !== null);
-                                        }
-                                        return [];
-                                    }
-                                }
-                            },
-                            title: {
-                                display: true,
-                                text: 'Ringkasan Status Kertas Siasatan',
-                                font: { size: 16 },
-                                padding: { top: 10, bottom: 20 }
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        let label = context.label || '';
-                                        if (label) {
-                                            label += ': ';
-                                        }
-                                        const value = context.parsed;
-                                        const total = context.chart.data.datasets[0].data.reduce((sum, val) => sum + val, 0);
-                                        const percentage = total > 0 ? ((value / total) * 100).toFixed(1) + '%' : '0%';
-                                        label += `${value} (${percentage})`;
-                                        return label;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                };
-                new Chart(ctx, config);
-            });
-            </script>
-        </div>
-    @endif
-
-    <!-- Collapsible Tables (Right) -->
-    <div class="w-full {{ $hasPieData ? 'md:w-2/3' : 'md:w-full' }} flex flex-col gap-4">
-        <x-collapsible-table 
-            title="KS Lewat Edar (> 48 Jam)" 
-            :collection="$ksLewat24Jam" 
-            bgColor="bg-red-50 dark:bg-red-900/20" 
-            pageName="lewat_page" 
-        />
-        <x-collapsible-table 
-            title="KS Terbengkalai (> 3 Bulan)" 
-            :collection="$ksTerbengkalai" 
-            bgColor="bg-yellow-50 dark:bg-yellow-900/20" 
-            pageName="terbengkalai_page" 
-        />
-        <x-collapsible-table 
-            title="KS Baru Dikemaskini" 
-            :collection="$ksBaruKemaskini" 
-            bgColor="bg-green-50 dark:bg-green-900/20" 
-            pageName="kemaskini_page" 
-        />
-    </div>
-</div>
             
-            <hr class="my-6 border-gray-300 dark:border-gray-700">
+
+            {{-- Pie Chart and Tables --}}
+            @php
+                $hasPieData = ($lewatCount ?? 0) > 0 || ($terbengkalaiCount ?? 0) > 0 || ($kemaskiniCount ?? 0) > 0;
+            @endphp
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
+                <div class="flex flex-col md:flex-row gap-8 my-8">
+                    @if($hasPieData)
+                        <!-- Pie Chart (Left) -->
+                        <div class="w-full md:w-1/3 flex justify-center items-center">
+                            <div style="position: relative; height:400px; width:100%; max-width:400px;">
+                                <canvas id="statusPieChart"></canvas>
+                            </div>
+                            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                            <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                const ctx = document.getElementById('statusPieChart').getContext('2d');
+                                
+                                const lewat = {{ $lewatCount ?? 0 }};
+                                const terbengkalai = {{ $terbengkalaiCount ?? 0 }};
+                                const kemaskini = {{ $kemaskiniCount ?? 0 }};
+                                
+                                const data = {
+                                    labels: ['Lewat > 48 Jam', 'Terbengkalai > 3 Bulan', 'Baru Dikemaskini'],
+                                    datasets: [{
+                                        data: [lewat, terbengkalai, kemaskini],
+                                        backgroundColor: [
+                                            '#F87171', // Tailwind's red-400
+                                            '#FBBF24', // Tailwind's amber-400
+                                            '#34D399'  // Tailwind's emerald-400
+                                        ],
+                                        borderColor: '#FFFFFF',
+                                        borderWidth: 2,
+                                    }]
+                                };
+
+                                const config = {
+                                    type: 'pie',
+                                    data: data,
+                                    options: {
+                                        responsive: true,
+                                        maintainAspectRatio: false,
+                                        plugins: {
+                                            legend: {
+                                                position: 'bottom',
+                                                labels: {
+                                                    padding: 20,
+                                                    boxWidth: 12,
+                                                    font: { size: 12 },
+                                                    generateLabels: function (chart) {
+                                                        const data = chart.data;
+                                                        if (data.labels.length && data.datasets.length) {
+                                                            const total = data.datasets[0].data.reduce((sum, value) => sum + value, 0);
+                                                            return data.labels.map(function (label, i) {
+                                                                const value = data.datasets[0].data[i];
+                                                                if (value === 0) return null; // Hide legend if count is 0
+                                                                const percentage = total > 0 ? ((value / total) * 100).toFixed(1) + '%' : '0%';
+                                                                return {
+                                                                    text: `${label}: ${value} (${percentage})`,
+                                                                    fillStyle: data.datasets[0].backgroundColor[i],
+                                                                    strokeStyle: data.datasets[0].borderColor,
+                                                                    lineWidth: data.datasets[0].borderWidth,
+                                                                    hidden: isNaN(value),
+                                                                    index: i
+                                                                };
+                                                            }).filter(item => item !== null);
+                                                        }
+                                                        return [];
+                                                    }
+                                                }
+                                            },
+                                            title: {
+                                                display: true,
+                                                text: 'Ringkasan Status Kertas Siasatan',
+                                                font: { size: 16 },
+                                                padding: { top: 10, bottom: 20 }
+                                            },
+                                            tooltip: {
+                                                callbacks: {
+                                                    label: function(context) {
+                                                        let label = context.label || '';
+                                                        if (label) {
+                                                            label += ': ';
+                                                        }
+                                                        const value = context.parsed;
+                                                        const total = context.chart.data.datasets[0].data.reduce((sum, val) => sum + val, 0);
+                                                        const percentage = total > 0 ? ((value / total) * 100).toFixed(1) + '%' : '0%';
+                                                        label += `${value} (${percentage})`;
+                                                        return label;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                };
+                                new Chart(ctx, config);
+                            });
+                            </script>
+                        </div>
+                    @endif
+
+                    <!-- Collapsible Tables (Right) -->
+                    <div class="w-full {{ $hasPieData ? 'md:w-2/3' : 'md:w-full' }} flex flex-col gap-4">
+                        <x-collapsible-table 
+                            title="KS Lewat Edar (> 48 Jam)" 
+                            :collection="$ksLewat24Jam" 
+                            bgColor="bg-red-50 dark:bg-red-900/20" 
+                            pageName="lewat_page" 
+                        />
+                        <x-collapsible-table 
+                            title="KS Terbengkalai (> 3 Bulan)" 
+                            :collection="$ksTerbengkalai" 
+                            bgColor="bg-yellow-50 dark:bg-yellow-900/20" 
+                            pageName="terbengkalai_page" 
+                        />
+                        <x-collapsible-table 
+                            title="KS Baru Dikemaskini" 
+                            :collection="$ksBaruKemaskini" 
+                            bgColor="bg-green-50 dark:bg-green-900/20" 
+                            pageName="kemaskini_page" 
+                        />
+                    </div>
+                </div>
+            </div>
+            
 
             <!-- Main container for the tabbed interface -->
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
