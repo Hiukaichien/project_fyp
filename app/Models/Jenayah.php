@@ -111,18 +111,25 @@ class Jenayah extends Model
     
     public function calculateTerbengkalai3Bulan()
     {
-        // Check if both minute dates are empty and there is an opening date.
-        if (is_null($this->tarikh_minit_pertama) && is_null($this->tarikh_minit_akhir) && $this->tarikh_daftar) {
-            $openingDate = $this->tarikh_daftar; 
+        // If 'tarikh_minit_pertama' is not set, we cannot determine the status.
+        if (is_null($this->tarikh_minit_pertama)) {
+            $this->terbengkalai_3_bulan_status = null;
+            return;
+        }
 
-            // Check if 3 months have passed since the opening date.
-            if ($openingDate->diffInMonths(Carbon::now()) >= 3) {
+        // A case is considered abandoned if it has a 'tarikh_minit_pertama' but no 'tarikh_minit_akhir',
+        // and more than 3 months have passed since 'tarikh_minit_pertama'.
+        if (is_null($this->tarikh_minit_akhir)) {
+            $openingDate = $this->tarikh_minit_pertama;
+
+            // Check if more than 3 months have passed since the first minute date.
+            if ($openingDate->diffInMonths(Carbon::now()) > 3) {
                 $this->terbengkalai_3_bulan_status = 'YA, TERBENGKALAI LEBIH 3 BULAN';
             } else {
                 $this->terbengkalai_3_bulan_status = 'TIDAK TERBENGKALAI';
             }
         } else {
-            // If any minute date is filled, or no opening date, it's not considered abandoned by this rule.
+            // If 'tarikh_minit_akhir' is set, the case is not considered abandoned by this rule.
             $this->terbengkalai_3_bulan_status = 'TIDAK TERBENGKALAI';
         }
     }

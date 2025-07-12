@@ -88,20 +88,22 @@ class Narkotik extends Model
     /**
      * Calculates if the case is abandoned based on the first and last minute dates.
      */
-     public function calculateTerbengkalai3Bulan()
+    public function calculateTerbengkalai3Bulan()
     {
-        // Check if both minute dates are empty and there is an opening date.
-        if (is_null($this->tarikh_minit_pertama) && is_null($this->tarikh_minit_akhir) && $this->tarikh_daftar) {
-            $openingDate = $this->tarikh_daftar; 
+        // A case is considered abandoned if it has a 'tarikh_minit_pertama' but no 'tarikh_minit_akhir',
+        // and more than 3 months have passed since 'tarikh_minit_pertama'.
+        if ($this->tarikh_minit_pertama && is_null($this->tarikh_minit_akhir)) {
+            $openingDate = $this->tarikh_minit_pertama;
 
-            // Check if 3 months have passed since the opening date.
-            if ($openingDate->diffInMonths(Carbon::now()) >= 3) {
+            // Check if more than 3 months have passed since the first minute date.
+            if ($openingDate->diffInMonths(Carbon::now()) > 3) {
                 $this->terbengkalai_3_bulan_status = 'YA, TERBENGKALAI LEBIH 3 BULAN';
             } else {
                 $this->terbengkalai_3_bulan_status = 'TIDAK TERBENGKALAI';
             }
         } else {
-            // If any minute date is filled, or no opening date, it's not considered abandoned by this rule.
+            // If 'tarikh_minit_pertama' is not set, or if 'tarikh_minit_akhir' is set,
+            // the case is not considered abandoned by this rule.
             $this->terbengkalai_3_bulan_status = 'TIDAK TERBENGKALAI';
         }
     }
