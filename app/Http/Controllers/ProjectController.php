@@ -69,9 +69,9 @@ class ProjectController extends Controller
         $allPapers = $project->allPapersMerged();
 
         $perPage = 10;
-        $lewatItems = $allPapers->filter(fn ($paper) => isset($paper->edar_lebih_24_jam_status) && Str::contains($paper->edar_lebih_24_jam_status, 'LEWAT'));
-        $terbengkalaiItems = $allPapers->filter(fn ($paper) => isset($paper->terbengkalai_3_bulan_status) && Str::contains($paper->terbengkalai_3_bulan_status, 'TERBENGKALAI'));
-        $kemaskiniItems = $allPapers->filter(fn ($paper) => isset($paper->baru_kemaskini_status) && Str::contains($paper->baru_kemaskini_status, 'BARU DIKEMASKINI'));
+        $lewatItems = $allPapers->filter(fn ($paper) => !empty($paper->tarikh_minit_pertama) && isset($paper->edar_lebih_24_jam_status) && Str::contains($paper->edar_lebih_24_jam_status, 'LEWAT'));
+        $terbengkalaiItems = $allPapers->filter(fn ($paper) => !empty($paper->tarikh_minit_pertama) && isset($paper->terbengkalai_3_bulan_status) && Str::contains($paper->terbengkalai_3_bulan_status, 'TERBENGKALAI'));
+        $kemaskiniItems = $allPapers->filter(fn ($paper) => !empty($paper->tarikh_minit_pertama) && isset($paper->baru_kemaskini_status) && Str::contains($paper->baru_kemaskini_status, 'BARU DIKEMASKINI'));
 
         $lewatPage = $request->get('lewat_page', 1);
         $ksLewat24Jam = new LengthAwarePaginator(

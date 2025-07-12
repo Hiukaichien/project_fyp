@@ -95,71 +95,98 @@
 
 {{-- Pie Chart and Tables --}}
 @php
-    $hasPieData = ($lewtaCount ?? 0) > 0 || ($terbengkalaiCount ?? 0) > 0 || ($kemaskiniCount ?? 0) > 0;
+    $hasPieData = ($lewatCount ?? 0) > 0 || ($terbengkalaiCount ?? 0) > 0 || ($kemaskiniCount ?? 0) > 0;
 @endphp
 
 <div class="flex flex-col md:flex-row gap-8 my-8">
     @if($hasPieData)
         <!-- Pie Chart (Left) -->
-         <div class="flex justify-center my-8">
-            <div style="width:100%; max-width:400px; margin-bottom:2rem;">
-                <canvas id="statusPieChart" width="400" height="400"></canvas>
+        <div class="w-full md:w-1/3 flex justify-center items-center">
+            <div style="position: relative; height:400px; width:100%; max-width:400px;">
+                <canvas id="statusPieChart"></canvas>
             </div>
             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
             <script>
             document.addEventListener('DOMContentLoaded', function() {
                 const ctx = document.getElementById('statusPieChart').getContext('2d');
                 
-                const lewta = {{ $lewtaCount ?? 0 }};
+                const lewat = {{ $lewatCount ?? 0 }};
                 const terbengkalai = {{ $terbengkalaiCount ?? 0 }};
                 const kemaskini = {{ $kemaskiniCount ?? 0 }};
-                const total = lewta + terbengkalai + kemaskini;
                 
                 const data = {
-                    labels: ['Lewat 24 Jam', 'Terbengkalai 3 Bulan', 'Baru Dikemaskini'],
+                    labels: ['Lewat > 48 Jam', 'Terbengkalai > 3 Bulan', 'Baru Dikemaskini'],
                     datasets: [{
-                        data: [
-                            {{ $lewtaCount ?? 0 }},
-                            {{ $terbengkalaiCount ?? 0 }},
-                            {{ $kemaskiniCount ?? 0 }}
-                        ],
+                        data: [lewat, terbengkalai, kemaskini],
                         backgroundColor: [
-                            '#FF6384', '#36A2EB', '#FFCE56'
+                            '#F87171', // Tailwind's red-400
+                            '#FBBF24', // Tailwind's amber-400
+                            '#34D399'  // Tailwind's emerald-400
                         ],
+                        borderColor: '#FFFFFF',
+                        borderWidth: 2,
                     }]
                 };
 
-                    const config = {
-                        type: 'pie',
-                        data: data,
-                        options: {
-                            plugins: {
-                                legend: {
-                                    position: 'bottom',
-                                    labels: {
-                                        generateLabels: function (chart) {
-                                            const data = chart.data;
-                                            if (data.labels.length && data.datasets.length) {
-                                                return data.labels.map(function (label, i) {
-                                                    const value = data.datasets[0].data[i];
-                                                    const percentage = total > 0 ? ((value / total) * 100).toFixed(1) + '%' : '0%';
-                                                    return {
-                                                        text: `${label} (${percentage})`,
-                                                        fillStyle: data.datasets[0].backgroundColor[i],
-                                                        strokeStyle: '#fff',
-                                                        lineWidth: 1,
-                                                        hidden: isNaN(data.datasets[0].data[i]) || chart.getDatasetMeta(0).data[i].hidden,
-                                                        index: i
-                                                    };
-                                                });
-                                            }
-                                            return [];
+                const config = {
+                    type: 'pie',
+                    data: data,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    padding: 20,
+                                    boxWidth: 12,
+                                    font: { size: 12 },
+                                    generateLabels: function (chart) {
+                                        const data = chart.data;
+                                        if (data.labels.length && data.datasets.length) {
+                                            const total = data.datasets[0].data.reduce((sum, value) => sum + value, 0);
+                                            return data.labels.map(function (label, i) {
+                                                const value = data.datasets[0].data[i];
+                                                if (value === 0) return null; // Hide legend if count is 0
+                                                const percentage = total > 0 ? ((value / total) * 100).toFixed(1) + '%' : '0%';
+                                                return {
+                                                    text: `${label}: ${value} (${percentage})`,
+                                                    fillStyle: data.datasets[0].backgroundColor[i],
+                                                    strokeStyle: data.datasets[0].borderColor,
+                                                    lineWidth: data.datasets[0].borderWidth,
+                                                    hidden: isNaN(value),
+                                                    index: i
+                                                };
+                                            }).filter(item => item !== null);
                                         }
+                                        return [];
+                                    }
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Ringkasan Status Kertas Siasatan',
+                                font: { size: 16 },
+                                padding: { top: 10, bottom: 20 }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        const value = context.parsed;
+                                        const total = context.chart.data.datasets[0].data.reduce((sum, val) => sum + val, 0);
+                                        const percentage = total > 0 ? ((value / total) * 100).toFixed(1) + '%' : '0%';
+                                        label += `${value} (${percentage})`;
+                                        return label;
                                     }
                                 }
                             }
                         }
-                    };
+                    }
+                };
                 new Chart(ctx, config);
             });
             </script>
@@ -167,7 +194,7 @@
     @endif
 
     <!-- Collapsible Tables (Right) -->
-    <div class="w-24 md:w-2/3 flex flex-col gap-4">
+    <div class="w-full {{ $hasPieData ? 'md:w-2/3' : 'md:w-full' }} flex flex-col gap-4">
         <x-collapsible-table 
             title="KS Lewat Edar (> 48 Jam)" 
             :collection="$ksLewat24Jam" 
