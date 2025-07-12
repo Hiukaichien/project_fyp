@@ -38,7 +38,7 @@
                     <tr>
                         <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bil</th>
                         <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No. Rujukan</th>
-                        <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tarikh</th>
+                        <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tarikh Edaran P</th>
                         <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pegawai</th>
                         <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tindakan</th>
                     </tr>
@@ -50,7 +50,7 @@
                             <td class="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900">{{ $item->no_sdr_lmm ?? $item->no_ks ?? 'N/A' }}</td>
                             <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">
                                 @php
-                                    $dateValue = $item->tarikh_laporan_polis ?? $item->tarikh_ks_dibuka ?? $item->tarikh_daftar ?? $item->tarikh_ks ?? null;
+                                    $dateValue = $item->tarikh_minit_pertama ?? null;
                                 @endphp
                                 {{ $dateValue ? \Carbon\Carbon::parse($dateValue)->format('d/m/Y') : '-' }}
                             </td>
