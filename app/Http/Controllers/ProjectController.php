@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use App\Models\Project;
 use App\Models\Jenayah;
 use App\Models\Narkotik;
-use App\Models\Trafik;
+use App\Models\Trafik_Seksyen;
 use App\Models\Komersil;
 use App\Models\LaporanMatiMengejut;
 use App\Models\OrangHilang;
@@ -140,7 +140,7 @@ public function importPapers(Request $request, Project $project)
     
     $validated = $request->validate([
         'excel_file' => 'required|mimes:xlsx,xls,csv|max:20480',
-        'paper_type' => ['required', 'string', Rule::in(['Jenayah', 'Narkotik', 'Komersil', 'Trafik', 'OrangHilang', 'LaporanMatiMengejut'])],
+        'paper_type' => ['required', 'string', Rule::in(['Jenayah', 'Narkotik', 'Komersil', 'Trafik_Seksyen', 'OrangHilang', 'LaporanMatiMengejut'])],
     ]);
 
     $import = new PaperImport($project->id, Auth::id(), $validated['paper_type']);
@@ -177,7 +177,7 @@ public function importPapers(Request $request, Project $project)
         // **IDOR FIX**: Authorize that the user can access the parent project.
         Gate::authorize('access-project', $project);
         
-        $validPaperTypes = ['Jenayah', 'Narkotik', 'Trafik', 'Komersil', 'LaporanMatiMengejut', 'OrangHilang'];
+        $validPaperTypes = ['Jenayah', 'Narkotik', 'Trafik_Seksyen', 'Komersil', 'LaporanMatiMengejut', 'OrangHilang'];
         if (!in_array($paperType, $validPaperTypes)) {
             return redirect()->route('projects.show', $project)->with('error', 'Jenis kertas yang dinyatakan tidak sah.');
         }
@@ -197,7 +197,7 @@ public function importPapers(Request $request, Project $project)
         Gate::authorize('access-project', $project);
 
         $validated = $request->validate([
-            'paper_type' => ['required', 'string', Rule::in(['Jenayah', 'Narkotik', 'Komersil', 'Trafik', 'OrangHilang', 'LaporanMatiMengejut'])],
+            'paper_type' => ['required', 'string', Rule::in(['Jenayah', 'Narkotik', 'Komersil', 'Trafik_Seksyen', 'OrangHilang', 'LaporanMatiMengejut'])],
         ]);
 
         $paperType = $validated['paper_type'];
@@ -268,10 +268,10 @@ public function importPapers(Request $request, Project $project)
         $query = Komersil::where('project_id', $project->id);
         return DataTables::of($query)->addIndexColumn()->addColumn('action', fn($row) => $this->buildActionButtons($row, 'Komersil'))->rawColumns(['action'])->make(true);
     }
-    public function getTrafikData(Project $project) {
+    public function getTrafikSeksyenData(Project $project) {
         Gate::authorize('access-project', $project);
-        $query = Trafik::where('project_id', $project->id);
-        return DataTables::of($query)->addIndexColumn()->addColumn('action', fn($row) => $this->buildActionButtons($row, 'Trafik'))->rawColumns(['action'])->make(true);
+        $query = Trafik_Seksyen::where('project_id', $project->id);
+        return DataTables::of($query)->addIndexColumn()->addColumn('action', fn($row) => $this->buildActionButtons($row, 'Trafik_Seksyen'))->rawColumns(['action'])->make(true);
     }
     public function getOrangHilangData(Project $project) {
         Gate::authorize('access-project', $project);

@@ -28,7 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/projects/{project}/jenayah-data', [ProjectController::class, 'getJenayahData'])->name('projects.jenayah_data');
     Route::post('/projects/{project}/narkotik-data', [ProjectController::class, 'getNarkotikData'])->name('projects.narkotik_data');
     Route::post('/projects/{project}/komersil-data', [ProjectController::class, 'getKomersilData'])->name('projects.komersil_data');
-    Route::post('/projects/{project}/trafik-data', [ProjectController::class, 'getTrafikData'])->name('projects.trafik_data'); // Consolidated Trafik route
+    Route::post('/projects/{project}/trafik-data', [ProjectController::class, 'getTrafikSeksyenData'])->name('projects.trafik_seksyen_data'); // Consolidated Trafik route
     Route::post('/projects/{project}/orang-hilang-data', [ProjectController::class, 'getOrangHilangData'])->name('projects.orang_hilang_data');
     Route::post('/projects/{project}/laporan-mati-mengejut-data', [ProjectController::class, 'getLaporanMatiMengejutData'])->name('projects.laporan_mati_mengejut_data');
 

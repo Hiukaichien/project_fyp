@@ -3,7 +3,7 @@
     use App\Models\Jenayah;
     use App\Models\Narkotik;
     use App\Models\Komersil;
-    use App\Models\Trafik;
+    use App\Models\Trafik_Seksyen;
     use App\Models\OrangHilang;
     use App\Models\LaporanMatiMengejut;
     use Illuminate\Support\Facades\Schema;
@@ -11,7 +11,7 @@
 
     // A single source of truth for all table configurations, now with 6 types
     $paperTypes = [
-        'trafik' => ['model' => new Trafik(), 'route' => 'projects.trafik_data', 'title' => 'Trafik'],
+        'trafik_seksyen' => ['model' => new Trafik_Seksyen(), 'route' => 'projects.trafik_seksyen_data', 'title' => 'Trafik Seksyen'],
         'komersil' => ['model' => new Komersil(), 'route' => 'projects.komersil_data', 'title' => 'Komersil'],
         'narkotik' => ['model' => new Narkotik(), 'route' => 'projects.narkotik_data', 'title' => 'Narkotik'],
         'orangHilang' => ['model' => new OrangHilang(), 'route' => 'projects.orang_hilang_data', 'title' => 'Orang Hilang'],

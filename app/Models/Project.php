@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 use App\Models\Jenayah;
 use App\Models\Narkotik;
-use App\Models\Trafik;
+use App\Models\Trafik_Seksyen;
 use App\Models\Komersil;
 use App\Models\LaporanMatiMengejut;
 use App\Models\OrangHilang;
@@ -66,9 +66,9 @@ class Project extends Model
         return $this->hasMany(Komersil::class, 'project_id');
     }
     
-    public function trafik()
+    public function trafik_seksyen()
     {
-        return $this->hasMany(Trafik::class, 'project_id');
+        return $this->hasMany(Trafik_Seksyen::class, 'project_id');
     }
 
     public function orangHilang()
@@ -90,7 +90,7 @@ class Project extends Model
             'jenayah',
             'narkotik',
             'komersil',
-            'trafik',
+            'trafik_seksyen',
             'orangHilang',
             'laporanMatiMengejut',
         ]);
@@ -99,7 +99,7 @@ class Project extends Model
             'jenayah' => $this->jenayah,
             'narkotik' => $this->narkotik,
             'komersil' => $this->komersil,
-            'trafik' => $this->trafik,
+            'trafik_seksyen' => $this->trafik_seksyen,
             'orang_hilang' => $this->orangHilang,
             'laporan_mati_mengejut' => $this->laporanMatiMengejut,
         ];
@@ -114,7 +114,7 @@ class Project extends Model
             $this->jenayah()->get(),
             $this->narkotik()->get(),
             $this->komersil()->get(),
-            $this->trafik()->get(),
+            $this->trafik_seksyen()->get(),
             $this->orangHilang()->get(),
             $this->laporanMatiMengejut()->get(),
         ];

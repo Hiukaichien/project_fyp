@@ -55,8 +55,8 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
                 'tarikh_ks_dibuka' => 'tarikh_ks_dibuka',
             ],
         ],
-        'Trafik' => [
-            'model'       => \App\Models\Trafik::class,
+        'Trafik_Seksyen' => [
+            'model'       => \App\Models\Trafik_Seksyen::class,
             'unique_by'   => 'no_ks',
             'column_map'  => [
                 'no_ks' => 'no_ks',
