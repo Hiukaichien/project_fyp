@@ -7,7 +7,7 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <form method="POST" action="{{ route('kertas_siasatan.update', ['paperType' => 'Trafik_Seksyen', 'id' => $paper->id]) }}" class="space-y-10 bg-white p-8 shadow-lg rounded-lg">
+            <form method="POST" action="{{ route('kertas_siasatan.update', ['paperType' => 'TrafikSeksyen', 'id' => $paper->id]) }}" class="space-y-10 bg-white p-8 shadow-lg rounded-lg">
                 @csrf
                 @method('PUT')
 
@@ -480,6 +480,14 @@
                         </div>
                     </div>
                 </div>
+
+                                {{-- Submit Button --}}
+                <div class="flex justify-end pt-4 mt-6 border-t">
+                    <a href="{{ route('projects.show', $paper->project_id) }}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg mr-3">Batal</a>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Kemaskini</button>
+                </div>
+
+                
             </form>
         </div>
     </div>

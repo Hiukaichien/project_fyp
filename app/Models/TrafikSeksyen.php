@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 
-class Trafik_Seksyen extends Model
+class TrafikSeksyen extends Model
 {
     use HasFactory;
 
@@ -101,92 +101,53 @@ class Trafik_Seksyen extends Model
         'keputusan_akhir_mahkamah' => 'array',
     ];
     
-    /**
-     * Get the project that this paper belongs to.
-     */
+   // The $appends array for the new accessors
+    protected $appends = [
+        'lewat_edaran_48_jam_status',
+        'terbengkalai_status',
+        'baru_dikemaskini_status',
+    ];
+
     public function project()
     {
         return $this->belongsTo(Project::class);
     }
 
-    /**
-     * The "booted" method of the model.
-     */
-    protected static function boot()
-    {
-        parent::boot();
-        static::saving(function ($model) {
-            $model->applyClientSpecificCalculations();
-        });
-    }
-
-    /**
-     * Apply all business logic calculations before saving.
-     */
-    public function applyClientSpecificCalculations()
-    {
-        $this->calculateEdaranLebih48Jam();
-        $this->calculateTerbengkalai3Bulan();
-        $this->calculateBaruKemaskini();
-    }
-
-    public function calculateEdaranLebih48Jam()
-    {
-        // If tarikh_minit_akhir is filled, the case is not considered late.
-        if ($this->tarikh_minit_akhir) {
-            $this->edar_lebih_24_jam_status = 'EDARAN DALAM TEMPOH';
-            return;
-        }
-
-        // If tarikh_minit_akhir is not filled, check against tarikh_minit_pertama.
-        if ($this->tarikh_minit_pertama) {
-            $tarikhPertama = $this->tarikh_minit_pertama;
-            
-            if ($tarikhPertama->diffInHours(Carbon::now()) > 48) {
-                $this->edar_lebih_24_jam_status = 'YA, EDARAN LEWAT 48 JAM';
-            } else {
-                $this->edar_lebih_24_jam_status = 'EDARAN DALAM TEMPOH 48 JAM';
-            }
-        } else {
-            $this->edar_lebih_24_jam_status = null; // Cannot calculate
-        }
-    }
+    // --- ACCESSORS FOR DYNAMIC CALCULATION ---
     
-    /**
-     * Calculates if the case is abandoned.
-     * A case is abandoned if both first and last minute dates are empty,
-     * and it has been over 3 months since the case was opened.
-     */
-    public function calculateTerbengkalai3Bulan()
+    public function getLewatEdaran48JamStatusAttribute(): ?string
     {
-        // A case is considered abandoned if it has a 'tarikh_minit_pertama' but no 'tarikh_minit_akhir',
-        // and more than 3 months have passed since 'tarikh_minit_pertama'.
-        if ($this->tarikh_minit_pertama && is_null($this->tarikh_minit_akhir)) {
-            $openingDate = $this->tarikh_minit_pertama;
-
-            // Check if more than 3 months have passed since the first minute date.
-            if ($openingDate->diffInMonths(Carbon::now()) > 3) {
-                $this->terbengkalai_3_bulan_status = 'YA, TERBENGKALAI LEBIH 3 BULAN';
-            } else {
-                $this->terbengkalai_3_bulan_status = 'TIDAK TERBENGKALAI';
-            }
-        } else {
-            // If 'tarikh_minit_pertama' is not set, or if 'tarikh_minit_akhir' is set,
-            // the case is not considered abandoned by this rule.
-            $this->terbengkalai_3_bulan_status = 'TIDAK TERBENGKALAI';
-        }
+        $tarikhA = $this->tarikh_edaran_minit_ks_pertama;
+        $tarikhB = $this->tarikh_edaran_minit_ks_kedua;
+        if (!$tarikhA || !$tarikhB) return 'Tidak Lengkap';
+        return $tarikhA->diffInHours($tarikhB) > 48 ? 'YA, LEWAT' : 'DALAM TEMPOH';
     }
 
-    /**
-     * A simple logic to check if the record was recently updated.
-     */
-    public function calculateBaruKemaskini()
+    public function getTerbengkalaiStatusAttribute(): ?string
     {
-        $this->baru_kemaskini_status = 'TIADA PERGERAKAN BARU';
-        if ($this->tarikh_minit_akhir && $this->updated_at) {
-            if (Carbon::parse($this->updated_at)->isAfter(Carbon::now()->subDays(7))) {
-                $this->baru_kemaskini_status = 'YA, BARU DIKEMASKINI';
-            }
+        $tarikhA = $this->tarikh_edaran_minit_ks_pertama;
+        $tarikhD = $this->tarikh_edaran_minit_ks_akhir;
+        if ($tarikhA && !$tarikhD) {
+            return $tarikhA->diffInMonths(Carbon::now()) > 3 ? 'YA, TERBENGKALAI' : 'TIDAK TERBENGKALAI';
         }
+        return 'TIDAK BERKENAAN';
+    }
+
+    public function getBaruDikemaskiniStatusAttribute(): string
+    {
+        $tarikhD = $this->tarikh_edaran_minit_ks_akhir;
+        $tarikhE = $this->tarikh_semboyan_pemeriksaan_jips_ke_daerah;
+
+        // Prioritize the specific business rule from the client (E - D)
+        if ($tarikhE && $tarikhD && $tarikhE->isAfter($tarikhD)) {
+            return 'BARU DIKEMASKINI (JIPS)';
+        }
+        
+        // Fallback to the general "updated in the last 7 days" rule
+        if ($this->updated_at && $this->updated_at->isAfter(Carbon::now()->subDays(7))) {
+            return 'YA, BARU DIKEMASKINI';
+        }
+
+        return 'TIADA PERGERAKAN BARU';
     }
 }

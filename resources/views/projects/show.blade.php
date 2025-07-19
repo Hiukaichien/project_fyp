@@ -3,7 +3,7 @@
     use App\Models\Jenayah;
     use App\Models\Narkotik;
     use App\Models\Komersil;
-    use App\Models\Trafik_Seksyen;
+    use App\Models\TrafikSeksyen;
     use App\Models\OrangHilang;
     use App\Models\LaporanMatiMengejut;
     use Illuminate\Support\Facades\Schema;
@@ -11,7 +11,7 @@
 
     // A single source of truth for all table configurations, now with 6 types
     $paperTypes = [
-        'trafik_seksyen' => ['model' => new Trafik_Seksyen(), 'route' => 'projects.trafik_seksyen_data', 'title' => 'Trafik Seksyen'],
+        'trafik_seksyen' => ['model' => new TrafikSeksyen(), 'route' => 'projects.trafik_seksyen_data', 'title' => 'Trafik Seksyen'],
         'komersil' => ['model' => new Komersil(), 'route' => 'projects.komersil_data', 'title' => 'Komersil'],
         'narkotik' => ['model' => new Narkotik(), 'route' => 'projects.narkotik_data', 'title' => 'Narkotik'],
         'orangHilang' => ['model' => new OrangHilang(), 'route' => 'projects.orang_hilang_data', 'title' => 'Orang Hilang'],
@@ -287,7 +287,7 @@
                     <option value="Jenayah" @if(old('paper_type') == 'Jenayah') selected @endif>Jenayah</option>
                     <option value="Narkotik" @if(old('paper_type') == 'Narkotik') selected @endif>Narkotik</option>
                     <option value="Komersil" @if(old('paper_type') == 'Komersil') selected @endif>Komersil</option>
-                    <option value="Trafik" @if(old('paper_type') == 'Trafik') selected @endif>Trafik</option>
+                    <option value="TrafikSeksyen" @if(old('paper_type') == 'TrafikSeksyen') selected @endif>Trafik Seksyen</option>
                     <option value="OrangHilang" @if(old('paper_type') == 'OrangHilang') selected @endif>Orang Hilang</option>
                     <option value="LaporanMatiMengejut" @if(old('paper_type') == 'LaporanMatiMengejut') selected @endif>Laporan Mati Mengejut</option>
                 </select>
@@ -327,7 +327,7 @@
                     <option value="Jenayah">Jenayah</option>
                     <option value="Narkotik">Narkotik</option>
                     <option value="Komersil">Komersil</option>
-                    <option value="Trafik">Trafik</option>
+                    <option value="TrafikSeksyen">Trafik Seksyen</option>
                     <option value="OrangHilang">Orang Hilang</option>
                     <option value="LaporanMatiMengejut">Laporan Mati Mengejut</option>
                 </select>

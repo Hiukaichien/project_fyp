@@ -55,14 +55,14 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
                 'tarikh_ks_dibuka' => 'tarikh_ks_dibuka',
             ],
         ],
-        'Trafik_Seksyen' => [
-            'model'       => \App\Models\Trafik_Seksyen::class,
-            'unique_by'   => 'no_ks',
+        'TrafikSeksyen' => [ 
+            'model'       => \App\Models\TrafikSeksyen::class,
+            'unique_by'   => 'no_kertas_siasatan',
             'column_map'  => [
-                'no_ks' => 'no_ks',
+                'no_kertas_siasatan' => 'no_kertas_siasatan',
                 'pegawai_penyiasat' => 'pegawai_penyiasat',
                 'seksyen' => 'seksyen',
-                'tarikh_daftar' => 'tarikh_daftar',
+                'tarikh_laporan_polis_dibuka' => 'tarikh_laporan_polis_dibuka',
             ],
         ],
         'OrangHilang' => [
