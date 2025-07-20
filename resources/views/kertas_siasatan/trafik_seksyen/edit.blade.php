@@ -13,8 +13,8 @@
 
                 @php
                 // Helper function for simple boolean choices (e.g., Ada/Tiada, Ya/Tidak)
-                function render_boolean_select($name, $currentValue, $trueLabel = 'Ada / Ya', $falseLabel = 'Tiada / Tidak') {
-                    $options = ['' => '-- Sila Pilih --', '1' => $trueLabel, '0' => $falseLabel];
+                function render_boolean_select($name, $currentValue, $YaLabel = 'Ada / Ya', $TidakLabel = 'Tiada / Tidak') {
+                    $options = ['' => '-- Sila Pilih --', '1' => $YaLabel, '0' => $TidakLabel];
                     $html = "<select name='{$name}' id='{$name}' class='mt-1 block w-full form-select'>";
                     foreach ($options as $value => $label) {
                         $selected = (string)old($name, $currentValue) === (string)$value && old($name, $currentValue) !== null ? 'selected' : '';
@@ -26,7 +26,7 @@
 
                 // Helper for status choices that reveal a date input
                 function render_status_with_date($id, $statusName, $dateName, $currentStatus, $currentDate) {
-                    $html = "<div x-data='{ status: " . (old($statusName, $currentStatus) ? 'true' : 'false') . " }'>";
+                    $html = "<div x-data='{ status: " . (old($statusName, $currentStatus) ? 'Ya' : 'Tidak') . " }'>";
                     $html .= "<select name='{$statusName}' x-model='status' class='mt-1 block w-full form-select'>";
                     $html .= "<option value='0'>Tiada / Tidak Cipta</option>";
                     $html .= "<option value='1'>Ada / Cipta</option>";
@@ -352,7 +352,7 @@
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div x-data="{ status: {{ old('status_saman_pdrm_s_257', $paper->status_saman_pdrm_s_257) ? 'true' : 'false' }} }">
+                            <div x-data="{ status: {{ old('status_saman_pdrm_s_257', $paper->status_saman_pdrm_s_257) ? 'Ya' : 'Tidak' }} }">
                                 <label for="status_saman_pdrm_s_257" class="block text-sm font-medium text-gray-700">Saman PDRM (S) 257 Adakah Dicipta</label>
                                 <select name="status_saman_pdrm_s_257" x-model="status" class="mt-1 block w-full form-select">
                                     <option value="0">Tidak Dicipta</option>
@@ -363,7 +363,7 @@
                                     <input type="text" name="no_saman_pdrm_s_257" id="no_saman_pdrm_s_257" value="{{ old('no_saman_pdrm_s_257', $paper->no_saman_pdrm_s_257) }}" class="mt-1 block w-full form-input">
                                 </div>
                             </div>
-                            <div x-data="{ status: {{ old('status_saman_pdrm_s_167', $paper->status_saman_pdrm_s_167) ? 'true' : 'false' }} }">
+                            <div x-data="{ status: {{ old('status_saman_pdrm_s_167', $paper->status_saman_pdrm_s_167) ? 'Ya' : 'Tidak' }} }">
                                 <label for="status_saman_pdrm_s_167" class="block text-sm font-medium text-gray-700">Saman PDRM (S) 167 Adakah Dicipta</label>
                                 <select name="status_saman_pdrm_s_167" x-model="status" class="mt-1 block w-full form-select">
                                     <option value="0">Tidak Dicipta</option>

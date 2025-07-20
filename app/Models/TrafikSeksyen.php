@@ -101,11 +101,16 @@ class TrafikSeksyen extends Model
         'keputusan_akhir_mahkamah' => 'array',
     ];
     
-   // The $appends array for the new accessors
+     /**
+     * The accessors to append to the model's array form.
+     * This makes the calculated values available in DataTables.
+     */
     protected $appends = [
         'lewat_edaran_48_jam_status',
         'terbengkalai_status',
         'baru_dikemaskini_status',
+        'tempoh_lewat_edaran_dikesan', // ADDED
+        'tempoh_dikemaskini',        // ADDED
     ];
 
     public function project()
@@ -115,39 +120,143 @@ class TrafikSeksyen extends Model
 
     // --- ACCESSORS FOR DYNAMIC CALCULATION ---
     
+    /**
+     * Logic based on "Contoh 2 - LEWAT 48 JAM"
+     */
     public function getLewatEdaran48JamStatusAttribute(): ?string
     {
         $tarikhA = $this->tarikh_edaran_minit_ks_pertama;
         $tarikhB = $this->tarikh_edaran_minit_ks_kedua;
-        if (!$tarikhA || !$tarikhB) return 'Tidak Lengkap';
+
+        if (!$tarikhA || !$tarikhB) {
+            return null; // Cannot calculate if dates are missing
+        }
+
         return $tarikhA->diffInHours($tarikhB) > 48 ? 'YA, LEWAT' : 'DALAM TEMPOH';
     }
 
+    /**
+     * NEW Accessor based on "Contoh 2 - TEMPOH LEWAT EDARAN DIKESAN"
+     */
+    public function getTempohLewatEdaranDikesanAttribute(): ?string
+    {
+        $tarikhA = $this->tarikh_edaran_minit_ks_pertama;
+        $tarikhB = $this->tarikh_edaran_minit_ks_kedua;
+
+        if ($tarikhA && $tarikhB) {
+            $days = $tarikhA->diffInDays($tarikhB);
+            return "{$days} HARI";
+        }
+
+        return null;
+    }
+
+    /**
+     * Logic based on "Contoh 3 - TERBENGKALAI MELEBIHI 3 BULAN"
+     */
     public function getTerbengkalaiStatusAttribute(): ?string
     {
         $tarikhA = $this->tarikh_edaran_minit_ks_pertama;
         $tarikhD = $this->tarikh_edaran_minit_ks_akhir;
+
         if ($tarikhA && !$tarikhD) {
             return $tarikhA->diffInMonths(Carbon::now()) > 3 ? 'YA, TERBENGKALAI' : 'TIDAK TERBENGKALAI';
         }
-        return 'TIDAK BERKENAAN';
+        
+        return 'TIDAK BERKENAAN'; // Not considered abandoned if it has an end date or never started
     }
 
+    /**
+     * Logic based on "Contoh 4 - BARU DIKEMASKINI"
+     */
     public function getBaruDikemaskiniStatusAttribute(): string
     {
         $tarikhD = $this->tarikh_edaran_minit_ks_akhir;
         $tarikhE = $this->tarikh_semboyan_pemeriksaan_jips_ke_daerah;
 
-        // Prioritize the specific business rule from the client (E - D)
         if ($tarikhE && $tarikhD && $tarikhE->isAfter($tarikhD)) {
-            return 'BARU DIKEMASKINI (JIPS)';
+            return 'TERBENGKALAI / KS BARU DIKEMASKINI';
         }
         
-        // Fallback to the general "updated in the last 7 days" rule
+        // Fallback for general updates not related to JIPS
         if ($this->updated_at && $this->updated_at->isAfter(Carbon::now()->subDays(7))) {
-            return 'YA, BARU DIKEMASKINI';
+            return 'BARU DIKEMASKINI';
         }
 
         return 'TIADA PERGERAKAN BARU';
     }
+
+    /**
+     * NEW Accessor based on "Contoh 4 - TEMPOH DIKEMASKINI"
+     */
+    public function getTempohDikemaskiniAttribute(): ?string
+    {
+        $tarikhD = $this->tarikh_edaran_minit_ks_akhir;
+        $tarikhE = $this->tarikh_semboyan_pemeriksaan_jips_ke_daerah;
+
+        if ($tarikhD && $tarikhE) {
+            $days = $tarikhD->diffInDays($tarikhE);
+            return "{$days} HARI";
+        }
+
+        return null;
+    }
+
+        private function formatBooleanToMalay($value, $trueText = 'Ya', $falseText = 'Tidak')
+    {
+        if (is_null($value)) {
+            return null; // Return null if the value is not set
+        }
+        return $value ? $trueText : $falseText;
+    }
+
+    // B3
+    public function getArahanMinitOlehSioStatusAttribute($value) { return $this->formatBooleanToMalay($value); }
+    public function getArahanMinitKetuaBahagianStatusAttribute($value) { return $this->formatBooleanToMalay($value); }
+    public function getArahanMinitKetuaJabatanStatusAttribute($value) { return $this->formatBooleanToMalay($value); }
+    public function getArahanMinitOlehYaTprStatusAttribute($value) { return $this->formatBooleanToMalay($value); }
+
+    // B4
+    public function getAdakahBarangKesDidaftarkanAttribute($value) { return $this->formatBooleanToMalay($value); }
+    public function getAdakahSijilSuratKebenaranIpoAttribute($value) { return $this->formatBooleanToMalay($value); }
+
+    // B5
+    public function getStatusIdSiasatanDikemaskiniAttribute($value) { return $this->formatBooleanToMalay($value, 'Dikemaskini', 'Tidak Dikemaskini'); }
+    public function getStatusRajahKasarTempatKejadianAttribute($value) { return $this->formatBooleanToMalay($value); }
+    public function getStatusGambarTempatKejadianAttribute($value) { return $this->formatBooleanToMalay($value); }
+    public function getStatusGambarPostMortemMayatDiHospitalAttribute($value) { return $this->formatBooleanToMalay($value); }
+    public function getStatusGambarBarangKesAmAttribute($value) { return $this->formatBooleanToMalay($value); }
+    public function getStatusGambarBarangKesKenderaanAttribute($value) { return $this->formatBooleanToMalay($value); }
+    public function getStatusGambarBarangKesDarahAttribute($value) { return $this->formatBooleanToMalay($value); }
+    public function getStatusGambarBarangKesKontrabanAttribute($value) { return $this->formatBooleanToMalay($value); }
+
+    // B6
+    public function getStatusRj2Attribute($value) { return $this->formatBooleanToMalay($value, 'Cipta', 'Tidak Cipta'); }
+    public function getStatusRj2bAttribute($value) { return $this->formatBooleanToMalay($value, 'Cipta', 'Tidak Cipta'); }
+    public function getStatusRj9Attribute($value) { return $this->formatBooleanToMalay($value, 'Cipta', 'Tidak Cipta'); }
+    public function getStatusRj99Attribute($value) { return $this->formatBooleanToMalay($value, 'Cipta', 'Tidak Cipta'); }
+    public function getStatusRj10aAttribute($value) { return $this->formatBooleanToMalay($value, 'Cipta', 'Tidak Cipta'); }
+    public function getStatusRj10bAttribute($value) { return $this->formatBooleanToMalay($value, 'Cipta', 'Tidak Cipta'); }
+    public function getStatusSamanPdrmS257Attribute($value) { return $this->formatBooleanToMalay($value); }
+    public function getStatusSamanPdrmS167Attribute($value) { return $this->formatBooleanToMalay($value); }
+    public function getStatusSemboyanPertamaWantedPersonAttribute($value) { return $this->formatBooleanToMalay($value); }
+    public function getStatusSemboyanKeduaWantedPersonAttribute($value) { return $this->formatBooleanToMalay($value); }
+    public function getStatusSemboyanKetigaWantedPersonAttribute($value) { return $this->formatBooleanToMalay($value); }
+    public function getStatusPenandaanKelasWarnaAttribute($value) { return $this->formatBooleanToMalay($value); }
+    
+    // B7
+    public function getStatusPermohonanLaporanPuspakomAttribute($value) { return $this->formatBooleanToMalay($value); }
+    public function getStatusLaporanPenuhPuspakomAttribute($value) { return $this->formatBooleanToMalay($value, 'Dilampirkan', 'Tidak'); }
+    public function getStatusPermohonanLaporanJkrAttribute($value) { return $this->formatBooleanToMalay($value); }
+    public function getStatusLaporanPenuhJkrAttribute($value) { return $this->formatBooleanToMalay($value, 'Dilampirkan', 'Tidak'); }
+    public function getStatusPermohonanLaporanJpjAttribute($value) { return $this->formatBooleanToMalay($value); }
+    public function getStatusLaporanPenuhJpjAttribute($value) { return $this->formatBooleanToMalay($value, 'Dilampirkan', 'Tidak'); }
+    public function getStatusPermohonanLaporanImigresenAttribute($value) { return $this->formatBooleanToMalay($value); }
+    public function getStatusLaporanPenuhImigresenAttribute($value) { return $this->formatBooleanToMalay($value, 'Dilampirkan', 'Tidak'); }
+
+    // B8
+    public function getMukaSurat4BarangKesDitulisAttribute($value) { return $this->formatBooleanToMalay($value); }
+    public function getMukaSurat4DenganArahanTprAttribute($value) { return $this->formatBooleanToMalay($value); }
+    public function getMukaSurat4KeputusanKesDicatatAttribute($value) { return $this->formatBooleanToMalay($value); }
+    public function getFailLmmAdaKeputusanKoronerAttribute($value) { return $this->formatBooleanToMalay($value); }
 }

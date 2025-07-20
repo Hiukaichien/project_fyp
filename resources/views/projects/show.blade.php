@@ -94,130 +94,129 @@
             </div>
             
 
+            
             {{-- Pie Chart and Tables --}}
-            @php
-                $hasPieData = ($lewatCount ?? 0) > 0 || ($terbengkalaiCount ?? 0) > 0 || ($kemaskiniCount ?? 0) > 0;
-            @endphp
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
-                <div class="flex flex-col md:flex-row gap-8 my-8">
-                    @if($hasPieData)
-                        <!-- Pie Chart (Left) -->
-                        <div class="w-full md:w-1/3 flex justify-center items-center">
-                            <div style="position: relative; height:400px; width:100%; max-width:400px;">
-                                <canvas id="statusPieChart"></canvas>
+            <div x-data="{ activeTab: sessionStorage.getItem('activeDashboardTab') || 'Jenayah' }" 
+                 x-init="$watch('activeTab', value => sessionStorage.setItem('activeDashboardTab', value))"
+                 class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
+                
+                <!-- Tab Headers -->
+                <div class="border-b border-gray-200">
+                    <nav class="-mb-px flex space-x-4 overflow-x-auto" aria-label="Dashboard Tabs">
+                        @foreach($dashboardData as $key => $data)
+                            <a href="#" @click.prevent="activeTab = '{{ $key }}'"
+                               :class="{ 'border-indigo-500 text-indigo-600': activeTab === '{{ $key }}', 'border-transparent text-gray-500 hover:text-gray-700': activeTab !== '{{ $key }}' }"
+                               class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                                {{ Str::headline($key) }}
+                            </a>
+                        @endforeach
+                    </nav>
+                </div>
+
+                <!-- Tab Content Panels -->
+                <div class="mt-6">
+                    @foreach($dashboardData as $key => $data)
+                        @php
+                            $hasIssueData = ($data['lewatCount'] ?? 0) > 0 || ($data['terbengkalaiCount'] ?? 0) > 0 || ($data['kemaskiniCount'] ?? 0) > 0;
+                            $hasAuditData = ($data['jumlahKeseluruhan'] ?? 0) > 0;
+                        @endphp
+                        <div x-show="activeTab === '{{ $key }}'" x-cloak>
+                            
+                            <!-- ROW 1: PIE CHARTS for {{ $key }} -->
+                            <div class="flex flex-col md:flex-row gap-8 my-8">
+                                @if($hasAuditData)
+                                    <div class="w-full md:w-1/2 flex justify-center items-center">
+                                        <div style="position: relative; height:400px; width:100%; max-width:400px;">
+                                            <canvas id="auditPieChart-{{ $key }}"></canvas>
+                                        </div>
+                                    </div>
+                                @endif
+                                @if($hasIssueData)
+                                    <div class="w-full md:w-1/2 flex justify-center items-center">
+                                        <div style="position: relative; height:400px; width:100%; max-width:400px;">
+                                            <canvas id="statusPieChart-{{ $key }}"></canvas>
+                                        </div>
+                                    </div>
+                                @endif
+                                @if(!$hasAuditData && !$hasIssueData)
+                                    <div class="w-full text-center py-16 text-gray-500">
+                                        <p>Tiada data untuk dipaparkan bagi jabatan ini.</p>
+                                    </div>
+                                @endif
                             </div>
-                            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-                            <script>
-                            document.addEventListener('DOMContentLoaded', function() {
-                                const ctx = document.getElementById('statusPieChart').getContext('2d');
-                                
-                                const lewat = {{ $lewatCount ?? 0 }};
-                                const terbengkalai = {{ $terbengkalaiCount ?? 0 }};
-                                const kemaskini = {{ $kemaskiniCount ?? 0 }};
-                                
-                                const data = {
-                                    labels: ['Lewat > 48 Jam', 'Terbengkalai > 3 Bulan', 'Baru Dikemaskini'],
-                                    datasets: [{
-                                        data: [lewat, terbengkalai, kemaskini],
-                                        backgroundColor: [
-                                            '#F87171', // Tailwind's red-400
-                                            '#FBBF24', // Tailwind's amber-400
-                                            '#34D399'  // Tailwind's emerald-400
-                                        ],
-                                        borderColor: '#FFFFFF',
-                                        borderWidth: 2,
-                                    }]
-                                };
 
-                                const config = {
-                                    type: 'pie',
-                                    data: data,
-                                    options: {
-                                        responsive: true,
-                                        maintainAspectRatio: false,
-                                        plugins: {
-                                            legend: {
-                                                position: 'bottom',
-                                                labels: {
-                                                    padding: 20,
-                                                    boxWidth: 12,
-                                                    font: { size: 12 },
-                                                    generateLabels: function (chart) {
-                                                        const data = chart.data;
-                                                        if (data.labels.length && data.datasets.length) {
-                                                            const total = data.datasets[0].data.reduce((sum, value) => sum + value, 0);
-                                                            return data.labels.map(function (label, i) {
-                                                                const value = data.datasets[0].data[i];
-                                                                if (value === 0) return null; // Hide legend if count is 0
-                                                                const percentage = total > 0 ? ((value / total) * 100).toFixed(1) + '%' : '0%';
-                                                                return {
-                                                                    text: `${label}: ${value} (${percentage})`,
-                                                                    fillStyle: data.datasets[0].backgroundColor[i],
-                                                                    strokeStyle: data.datasets[0].borderColor,
-                                                                    lineWidth: data.datasets[0].borderWidth,
-                                                                    hidden: isNaN(value),
-                                                                    index: i
-                                                                };
-                                                            }).filter(item => item !== null);
-                                                        }
-                                                        return [];
-                                                    }
-                                                }
-                                            },
-                                            title: {
-                                                display: true,
-                                                text: 'Ringkasan Status Kertas Siasatan',
-                                                font: { size: 16 },
-                                                padding: { top: 10, bottom: 20 }
-                                            },
-                                            tooltip: {
-                                                callbacks: {
-                                                    label: function(context) {
-                                                        let label = context.label || '';
-                                                        if (label) {
-                                                            label += ': ';
-                                                        }
-                                                        const value = context.parsed;
-                                                        const total = context.chart.data.datasets[0].data.reduce((sum, val) => sum + val, 0);
-                                                        const percentage = total > 0 ? ((value / total) * 100).toFixed(1) + '%' : '0%';
-                                                        label += `${value} (${percentage})`;
-                                                        return label;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                };
-                                new Chart(ctx, config);
-                            });
-                            </script>
+                                                       <!-- ROW 2: COLLAPSIBLE TABLES for {{ $key }} -->
+                            <div class="mt-12">
+                                <div class="w-full flex flex-col gap-4">
+                                    <x-collapsible-table 
+                                        title="Edaran Kertas Siasatan Lewat 48 Jam" 
+                                        :collection="$data['ksLewat']" 
+                                        bgColor="bg-red-50 dark:bg-red-900/20" 
+                                        :pageName="$key.'_lewat_page'"
+                                        issueType="lewat"
+                                    />
+                                    <x-collapsible-table 
+                                        title="Kertas Siasatan Terbengkalai Melebihi 3 Bulan" 
+                                        :collection="$data['ksTerbengkalai']" 
+                                        bgColor="bg-yellow-50 dark:bg-yellow-900/20" 
+                                        :pageName="$key.'_terbengkalai_page'"
+                                        issueType="terbengkalai"
+                                    />
+                                    <x-collapsible-table 
+                                        title="KS Terbengkalai / Baru Dikemaskini Selepas Semboyan" 
+                                        :collection="$data['ksBaruKemaskini']" 
+                                        bgColor="bg-green-50 dark:bg-green-900/20" 
+                                        :pageName="$key.'_kemaskini_page'"
+                                        issueType="kemaskini"
+                                    />
+                                </div>
+                            </div>
+
                         </div>
-                    @endif
-
-                    <!-- Collapsible Tables (Right) -->
-                    <div class="w-full {{ $hasPieData ? 'md:w-2/3' : 'md:w-full' }} flex flex-col gap-4">
-                        <x-collapsible-table 
-                            title="KS Lewat Edar (> 48 Jam)" 
-                            :collection="$ksLewat24Jam" 
-                            bgColor="bg-red-50 dark:bg-red-900/20" 
-                            pageName="lewat_page" 
-                        />
-                        <x-collapsible-table 
-                            title="KS Terbengkalai (> 3 Bulan)" 
-                            :collection="$ksTerbengkalai" 
-                            bgColor="bg-yellow-50 dark:bg-yellow-900/20" 
-                            pageName="terbengkalai_page" 
-                        />
-                        <x-collapsible-table 
-                            title="KS Baru Dikemaskini" 
-                            :collection="$ksBaruKemaskini" 
-                            bgColor="bg-green-50 dark:bg-green-900/20" 
-                            pageName="kemaskini_page" 
-                        />
-                    </div>
+                    @endforeach
                 </div>
             </div>
-            
+
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // --- INITIALIZE ALL CHARTS ---
+                @foreach($dashboardData as $key => $data)
+                    @php
+                        $hasIssueData = ($data['lewatCount'] ?? 0) > 0 || ($data['terbengkalaiCount'] ?? 0) > 0 || ($data['kemaskiniCount'] ?? 0) > 0;
+                        $hasAuditData = ($data['jumlahKeseluruhan'] ?? 0) > 0;
+                    @endphp
+
+                    @if($hasAuditData)
+                        const auditCtx_{{ $key }} = document.getElementById('auditPieChart-{{ $key }}')?.getContext('2d');
+                        if (auditCtx_{{ $key }}) {
+                            new Chart(auditCtx_{{ $key }}, {
+                                type: 'pie',
+                                data: {
+                                    labels: ['Jumlah Diperiksa (KS)', 'Jumlah Belum Diperiksa (KS)'],
+                                    datasets: [{ data: [{{ $data['jumlahDiperiksa'] }}, {{ $data['jumlahBelumDiperiksa'] }}], backgroundColor: ['#0ea5e9', '#cbd5e1'], borderWidth: 2, borderColor: '#FFFFFF' }]
+                                },
+                                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Status Pemeriksaan ({{ $data["jumlahKeseluruhan"] }} Keseluruhan)' } } }
+                            });
+                        }
+                    @endif
+
+                    @if($hasIssueData)
+                        const statusCtx_{{ $key }} = document.getElementById('statusPieChart-{{ $key }}')?.getContext('2d');
+                        if (statusCtx_{{ $key }}) {
+                            new Chart(statusCtx_{{ $key }}, {
+                                type: 'pie',
+                                data: {
+                                    labels: ['KS Lewat Edar (> 48 Jam)', 'KS Terbengkalai (> 3 Bulan)', 'KS Baru Dikemaskini'],
+                                    datasets: [{ data: [{{ $data['lewatCount'] }}, {{ $data['terbengkalaiCount'] }}, {{ $data['kemaskiniCount'] }}], backgroundColor: ['#F87171', '#FBBF24', '#34D399'], borderWidth: 2, borderColor: '#FFFFFF' }]
+                                },
+                                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Ringkasan Status Isu Siasatan' } } }
+                            });
+                        }
+                    @endif
+                @endforeach
+            });
+            </script>
 
             <!-- Main container for the tabbed interface -->
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
@@ -257,8 +256,6 @@
                     @endforeach
                 </div>
             </div>
-        </div>
-    </div>
 
     {{-- Import Modal --}}
     <x-modal name="import-papers-modal" :show="$errors->has('excel_file') || $errors->has('excel_errors')" focusable>
