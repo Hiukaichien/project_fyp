@@ -65,6 +65,16 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
                 'tarikh_laporan_polis_dibuka' => 'tarikh_laporan_polis_dibuka',
             ],
         ],
+            'TrafikRule' => [ 
+            'model'       => \App\Models\TrafikRule::class,
+            'unique_by'   => 'no_kertas_siasatan',
+            'column_map'  => [
+                'no_kertas_siasatan' => 'no_kertas_siasatan',
+                'pegawai_penyiasat' => 'pegawai_penyiasat',
+                'seksyen' => 'seksyen',
+                'tarikh_laporan_polis_dibuka' => 'tarikh_laporan_polis_dibuka',
+            ],
+        ],
         'OrangHilang' => [
             'model'       => \App\Models\OrangHilang::class,
             'unique_by'   => 'no_ks',

@@ -10,7 +10,8 @@ use Illuminate\Support\Str;
 use App\Models\Jenayah;
 use App\Models\Narkotik;
 use App\Models\Komersil;
-use App\Models\TrafikSeksyen; 
+use App\Models\TrafikSeksyen;
+use App\Models\TrafikRule; 
 use App\Models\OrangHilang;
 use App\Models\LaporanMatiMengejut;
 
@@ -21,6 +22,7 @@ class KertasSiasatanController extends Controller
         'Narkotik' => Narkotik::class,
         'Komersil' => Komersil::class,
         'TrafikSeksyen' => TrafikSeksyen::class,
+        'TrafikRule' => TrafikRule::class,
         'OrangHilang' => OrangHilang::class,
         'LaporanMatiMengejut' => LaporanMatiMengejut::class,
     ];

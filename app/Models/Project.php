@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Jenayah;
 use App\Models\Narkotik;
 use App\Models\TrafikSeksyen;
+use App\Models\TrafikRule;
 use App\Models\Komersil;
 use App\Models\LaporanMatiMengejut;
 use App\Models\OrangHilang;
@@ -66,9 +67,14 @@ class Project extends Model
         return $this->hasMany(Komersil::class, 'project_id');
     }
     
-    public function TrafikSeksyen()
+    public function trafikSeksyen()
     {
         return $this->hasMany(TrafikSeksyen::class, 'project_id');
+    }
+
+    public function trafikRule()
+    {
+        return $this->hasMany(TrafikRule::class, 'project_id');
     }
 
     public function orangHilang()
@@ -91,6 +97,7 @@ class Project extends Model
             'narkotik',
             'komersil',
             'TrafikSeksyen',
+            'TrafikRule',
             'orangHilang',
             'laporanMatiMengejut',
         ]);
@@ -100,6 +107,7 @@ class Project extends Model
             'narkotik' => $this->narkotik,
             'komersil' => $this->komersil,
             'TrafikSeksyen' => $this->TrafikSeksyen,
+            'TrafikRule' => $this->TrafikRule,
             'orang_hilang' => $this->orangHilang,
             'laporan_mati_mengejut' => $this->laporanMatiMengejut,
         ];
@@ -114,7 +122,8 @@ class Project extends Model
             $this->jenayah()->get(),
             $this->narkotik()->get(),
             $this->komersil()->get(),
-            $this->TrafikSeksyen()->get(),
+            $this->trafikSeksyen()->get(),
+            $this->trafikRule()->get(),
             $this->orangHilang()->get(),
             $this->laporanMatiMengejut()->get(),
         ];

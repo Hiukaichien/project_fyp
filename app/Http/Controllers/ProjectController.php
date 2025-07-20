@@ -19,6 +19,7 @@ use App\Models\Project;
 use App\Models\Jenayah;
 use App\Models\Narkotik;
 use App\Models\TrafikSeksyen;
+use App\Models\TrafikRule;
 use App\Models\Komersil;
 use App\Models\LaporanMatiMengejut;
 use App\Models\OrangHilang;
@@ -69,6 +70,7 @@ class ProjectController extends Controller
             'Narkotik' => $project->narkotik(),
             'Komersil' => $project->komersil(),
             'TrafikSeksyen' => $project->trafikSeksyen(),
+            'TrafikRule' => $project->trafikRule(),
             'OrangHilang' => $project->orangHilang(),
             'LaporanMatiMengejut' => $project->laporanMatiMengejut(),
         ];
@@ -148,7 +150,7 @@ class ProjectController extends Controller
         
         $validated = $request->validate([
             'excel_file' => 'required|mimes:xlsx,xls,csv|max:20480',
-            'paper_type' => ['required', 'string', Rule::in(['Jenayah', 'Narkotik', 'Komersil', 'TrafikSeksyen', 'OrangHilang', 'LaporanMatiMengejut'])],
+            'paper_type' => ['required', 'string', Rule::in(['Jenayah', 'Narkotik', 'Komersil', 'TrafikSeksyen', 'TrafikRule', 'OrangHilang', 'LaporanMatiMengejut'])],
         ]);
 
         $import = new PaperImport($project->id, Auth::id(), $validated['paper_type']);
@@ -203,7 +205,7 @@ public function exportPapers(Request $request, Project $project)
         Gate::authorize('access-project', $project);
 
         $validated = $request->validate([
-            'paper_type' => ['required', 'string', Rule::in(['Jenayah', 'Narkotik', 'Komersil', 'TrafikSeksyen', 'OrangHilang', 'LaporanMatiMengejut'])],
+            'paper_type' => ['required', 'string', Rule::in(['Jenayah', 'Narkotik', 'Komersil', 'TrafikSeksyen', 'TrafikSeksyen', 'OrangHilang', 'LaporanMatiMengejut'])],
         ]);
 
         $paperType = $validated['paper_type'];
@@ -280,17 +282,39 @@ public function exportPapers(Request $request, Project $project)
         return '<div class="flex items-center space-x-2">' . $actions . '</div>';
     }
 
-    // --- DATATABLES SERVER-SIDE METHODS ---
-    public function getJenayahData(Project $project) { /* ... unchanged ... */ }
-    public function getNarkotikData(Project $project) { /* ... unchanged ... */ }
-    public function getKomersilData(Project $project) { /* ... unchanged ... */ }
-
+public function getJenayahData(Project $project) {
+        Gate::authorize('access-project', $project);
+        $query = Jenayah::where('project_id', $project->id);
+        return DataTables::of($query)->addIndexColumn()->addColumn('action', fn($row) => $this->buildActionButtons($row, 'Jenayah'))->rawColumns(['action'])->make(true);
+    }
+    public function getNarkotikData(Project $project) {
+        Gate::authorize('access-project', $project);
+        $query = Narkotik::where('project_id', $project->id);
+        return DataTables::of($query)->addIndexColumn()->addColumn('action', fn($row) => $this->buildActionButtons($row, 'Narkotik'))->rawColumns(['action'])->make(true);
+    }
+    public function getKomersilData(Project $project) {
+        Gate::authorize('access-project', $project);
+        $query = Komersil::where('project_id', $project->id);
+        return DataTables::of($query)->addIndexColumn()->addColumn('action', fn($row) => $this->buildActionButtons($row, 'Komersil'))->rawColumns(['action'])->make(true);
+    }
     public function getTrafikSeksyenData(Project $project) {
         Gate::authorize('access-project', $project);
         $query = TrafikSeksyen::where('project_id', $project->id);
         return DataTables::of($query)->addIndexColumn()->addColumn('action', fn($row) => $this->buildActionButtons($row, 'TrafikSeksyen'))->rawColumns(['action'])->make(true);
     }
-
-    public function getOrangHilangData(Project $project) { /* ... unchanged ... */ }
-    public function getLaporanMatiMengejutData(Project $project) { /* ... unchanged ... */ }
+    public function getTrafikRuleData(Project $project) {
+        Gate::authorize('access-project', $project);
+        $query = TrafikRule::where('project_id', $project->id);
+        return DataTables::of($query)->addIndexColumn()->addColumn('action', fn($row) => $this->buildActionButtons($row, 'TrafikRule'))->rawColumns(['action'])->make(true);
+    }
+    public function getOrangHilangData(Project $project) {
+        Gate::authorize('access-project', $project);
+        $query = OrangHilang::where('project_id', $project->id);
+        return DataTables::of($query)->addIndexColumn()->addColumn('action', fn($row) => $this->buildActionButtons($row, 'OrangHilang'))->rawColumns(['action'])->make(true);
+    }
+    public function getLaporanMatiMengejutData(Project $project) {
+        Gate::authorize('access-project', $project);
+        $query = LaporanMatiMengejut::where('project_id', $project->id);
+        return DataTables::of($query)->addIndexColumn()->addColumn('action', fn($row) => $this->buildActionButtons($row, 'LaporanMatiMengejut'))->rawColumns(['action'])->make(true);
+    }
 }

@@ -7,6 +7,7 @@ use App\Models\Project;
 use App\Models\Jenayah;
 use App\Models\Narkotik;
 use App\Models\TrafikSeksyen;
+use App\Models\TrafikRule;
 use App\Models\OrangHilang;
 use App\Models\LaporanMatiMengejut;
 use App\Models\Komersil;
@@ -87,6 +88,19 @@ class DatabaseSeeder extends Seeder
         // 6. Seed Trafik Seksyen Papers (20 records)
         for ($i = 1; $i <= 20; $i++) {
             TrafikSeksyen::updateOrCreate(
+                ['no_kertas_siasatan' => 'TRFS/KS/' . str_pad($i, 4, '0', STR_PAD_LEFT) . '/24'],
+                [
+                    'project_id' => $project->id,
+                    'pegawai_penyiasat' => ['SGT MAJID', 'INSP TAN', 'SGT AMIN'][array_rand(['SGT MAJID', 'INSP TAN', 'SGT AMIN'])],
+                    'seksyen' => ['41(1) APJ 1987', '42(1) APJ 1987', '43(1) APJ 1987'][array_rand(['41(1) APJ 1987', '42(1) APJ 1987', '43(1) APJ 1987'])],
+                    'tarikh_laporan_polis_dibuka' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30))->format('Y-m-d'),
+                ]
+            );
+        }
+
+        // 6. Seed Trafik Rule Papers (20 records)
+        for ($i = 1; $i <= 20; $i++) {
+            TrafikRule::updateOrCreate(
                 ['no_kertas_siasatan' => 'TRFS/KS/' . str_pad($i, 4, '0', STR_PAD_LEFT) . '/24'],
                 [
                     'project_id' => $project->id,
