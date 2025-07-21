@@ -47,6 +47,7 @@ class TrafikSeksyen extends Model
         'status_gambar_tempat_kejadian' => 'boolean',
         'status_gambar_post_mortem_mayat_di_hospital' => 'boolean',
         'status_gambar_barang_kes_am' => 'boolean',
+        'status_gambar_barang_kes_berharga' => 'boolean',
         'status_gambar_barang_kes_kenderaan' => 'boolean',
         'status_gambar_barang_kes_darah' => 'boolean',
         'status_gambar_barang_kes_kontraban' => 'boolean',
@@ -142,6 +143,7 @@ class TrafikSeksyen extends Model
         'status_gambar_tempat_kejadian_text',
         'status_gambar_post_mortem_mayat_di_hospital_text',
         'status_gambar_barang_kes_am_text',
+        'status_gambar_barang_kes_berharga_text',
         'status_gambar_barang_kes_kenderaan_text',
         'status_gambar_barang_kes_darah_text',
         'status_gambar_barang_kes_kontraban_text',
@@ -308,8 +310,9 @@ class TrafikSeksyen extends Model
     public function getStatusGambarBarangKesAmTextAttribute(): string {
         return $this->formatBooleanToMalay($this->status_gambar_barang_kes_am, 'Ada', 'Tiada');
     }
-    public function getStatusGambarBarangKesBerharga(): string {
-        return $this->formatBooleanToMalay($this->status_gambar_barang_kes_am, 'Ada', 'Tiada');
+    public function getStatusGambarBarangKesBerhargaTextAttribute(): string {
+      
+        return $this->formatBooleanToMalay($this->status_gambar_barang_kes_berharga, 'Ada', 'Tiada');
     }
     public function getStatusGambarBarangKesKenderaanTextAttribute(): string {
         return $this->formatBooleanToMalay($this->status_gambar_barang_kes_kenderaan, 'Ada', 'Tiada');

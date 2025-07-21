@@ -246,7 +246,6 @@
             </div>
         </form>
     </x-modal>
-
 {{-- FILE: resources/views/projects/show.blade.php (Part 5 of 5) --}}
     @push('scripts')
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -285,147 +284,94 @@
                     $rawDbColumns = Schema::getColumnListing($modelInstance->getTable());
                     $appendedAccessors = $modelInstance->getAppends();
 
-                    // THIS IS THE CRITICAL LIST FOR DATATABLES:
-                    // Define which original database boolean columns should be displayed using their
-                    // corresponding `_text` accessor in DataTables.
-                    // This list MUST contain ALL relevant boolean column names from ALL your models
-                    // (Jenayah, Narkotik, Komersil, TrafikSeksyen, TrafikRule, OrangHilang, LaporanMatiMengejut)
-                    // FOR WHICH YOU HAVE CREATED A `_TEXT` ACCESSOR IN THEIR RESPECTIVE MODELS.
                     $booleanDbColumnsWithTextAccessors = [
-                        // TrafikSeksyen / TrafikRule specific booleans
-                        'arahan_minit_oleh_sio_status',
-                        'arahan_minit_ketua_bahagian_status',
-                        'arahan_minit_ketua_jabatan_status',
-                        'arahan_minit_oleh_ya_tpr_status',
-                        'adakah_barang_kes_didaftarkan',
-                        'adakah_sijil_surat_kebenaran_ipo',
-                        'status_id_siasatan_dikemaskini',
-                        'status_rajah_kasar_tempat_kejadian',
-                        'status_gambar_tempat_kejadian',
-                        'status_gambar_post_mortem_mayat_di_hospital',
-                        'status_gambar_barang_kes_am',
-                        'status_gambar_barang_kes_kenderaan',
-                        'status_gambar_barang_kes_darah',
-                        'status_gambar_barang_kes_kontraban',
-                        'status_rj2',
-                        'status_rj2b',
-                        'status_rj9',
-                        'status_rj99',
-                        'status_rj10a',
-                        'status_rj10b',
-                        'status_saman_pdrm_s_257',
-                        'status_saman_pdrm_s_167',
-                        'status_semboyan_pertama_wanted_person',
-                        'status_semboyan_kedua_wanted_person',
-                        'status_semboyan_ketiga_wanted_person',
-                        'status_penandaan_kelas_warna',
-                        'status_permohonan_laporan_post_mortem_mayat',
-                        'status_laporan_penuh_bedah_siasat',
-                        'status_permohonan_laporan_jabatan_kimia',
-                        'status_laporan_penuh_jabatan_kimia',
-                        'status_permohonan_laporan_jabatan_patalogi',
-                        'status_laporan_penuh_jabatan_patalogi',
-                        'status_permohonan_laporan_puspakom',
-                        'status_laporan_penuh_puspakom',
-                        'status_permohonan_laporan_jkr',
-                        'status_laporan_penuh_jkr',
-                        'status_permohonan_laporan_jpj',
-                        'status_laporan_penuh_jpj',
-                        'status_permohonan_laporan_imigresen',
-                        'status_laporan_penuh_imigresen',
-                        'muka_surat_4_barang_kes_ditulis',
-                        'muka_surat_4_dengan_arahan_tpr',
-                        'muka_surat_4_keputusan_kes_dicatat',
-                        'fail_lmm_ada_keputusan_koroner',
-
-                        // Add boolean fields from Jenayah, Narkotik, Komersil, OrangHilang, LaporanMatiMengejut
-                        // if you have created `_text` accessors for them in their respective models.
+                        'arahan_minit_oleh_sio_status', 'arahan_minit_ketua_bahagian_status', 'arahan_minit_ketua_jabatan_status',
+                        'arahan_minit_oleh_ya_tpr_status', 'adakah_barang_kes_didaftarkan', 'adakah_sijil_surat_kebenaran_ipo',
+                        'status_id_siasatan_dikemaskini', 'status_rajah_kasar_tempat_kejadian', 'status_gambar_tempat_kejadian',
+                        'status_gambar_post_mortem_mayat_di_hospital', 'status_gambar_barang_kes_am', 'status_gambar_barang_kes_berharga', 'status_gambar_barang_kes_kenderaan',
+                        'status_gambar_barang_kes_darah', 'status_gambar_barang_kes_kontraban', 'status_rj2', 'status_rj2b',
+                        'status_rj9', 'status_rj99', 'status_rj10a', 'status_rj10b', 'status_saman_pdrm_s_257', 'status_saman_pdrm_s_167',
+                        'status_semboyan_pertama_wanted_person', 'status_semboyan_kedua_wanted_person', 'status_semboyan_ketiga_wanted_person',
+                        'status_penandaan_kelas_warna', 'status_permohonan_laporan_post_mortem_mayat', 'status_laporan_penuh_bedah_siasat',
+                        'status_permohonan_laporan_jabatan_kimia', 'status_laporan_penuh_jabatan_kimia', 'status_permohonan_laporan_jabatan_patalogi',
+                        'status_laporan_penuh_jabatan_patalogi', 'status_permohonan_laporan_puspakom', 'status_laporan_penuh_puspakom',
+                        'status_permohonan_laporan_jkr', 'status_laporan_penuh_jkr', 'status_permohonan_laporan_jpj', 'status_laporan_penuh_jpj',
+                        'status_permohonan_laporan_imigresen', 'status_laporan_penuh_imigresen', 'muka_surat_4_barang_kes_ditulis',
+                        'muka_surat_4_dengan_arahan_tpr', 'muka_surat_4_keputusan_kes_dicatat', 'fail_lmm_ada_keputusan_koroner'
                     ];
 
-                    // Prepare the dtColumns array for DataTables
+                    $jsonArrayColumns = [
+                        'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan', 'status_pem', 'status_pergerakan_barang_kes',
+                        'status_barang_kes_selesai_siasatan', 'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan',
+                        'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan', 'resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan',
+                        'adakah_borang_serah_terima_pegawai_tangkapan', 'adakah_borang_serah_terima_pemilik_saksi', 'keputusan_akhir_mahkamah'
+                    ];
+
                     $dtColumns = [
-                        // Action column (fixed left)
                         ['data' => 'action', 'name' => 'action', 'orderable' => false, 'searchable' => false, 'title' => 'Tindakan', 'width' => '100px'],
-                        // Index column
-                        ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'title' => 'No.'],
+                        ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'title' => 'No.']
                     ];
 
-                    // Dynamically build the rest of the columns
                     foreach($rawDbColumns as $column) {
-                        // Skip common Laravel timestamps/FKs that aren't usually needed in DataTables
-                        if (in_array($column, ['id', 'project_id', 'created_at', 'updated_at'])) {
-                            continue;
-                        }
+                        if (in_array($column, ['id', 'project_id', 'created_at', 'updated_at'])) continue;
 
-                        $columnConfig = [
-                            'name' => $column, // Original column name for server-side processing (sorting/searching)
-                            'defaultContent' => '-', // Default content if data is null
-                            'orderable' => true,
-                            'searchable' => true,
-                        ];
+                        $columnConfig = ['name' => $column, 'defaultContent' => '-', 'orderable' => true, 'searchable' => true];
 
-                        // Check if this is a boolean column that should use its _text accessor
                         if (in_array($column, $booleanDbColumnsWithTextAccessors)) {
                             $accessorName = $column . '_text';
-                            // Verify that the accessor is actually appended in the model
                             if (in_array($accessorName, $appendedAccessors)) {
-                                $columnConfig['data'] = $accessorName; // Use the accessor name here for DISPLAY
-                                // Special handling for 'status_gambar_barang_kes_am' to display as 'Status Gambar Barang Kes Berharga'
-                                if ($column === 'status_gambar_barang_kes_am' && in_array('status_gambar_barang_kes_berharga_text', $appendedAccessors)) {
-                                    $columnConfig['data'] = 'status_gambar_barang_kes_berharga_text'; // Use the more specific accessor
-                                    $columnConfig['title'] = 'Status Gambar Barang Kes Berharga'; // Custom title
-                                } else {
-                                    $columnConfig['title'] = Str::of($column)->replace('_', ' ')->title() . ' (Status)'; // More descriptive header
-                                }
+                                $columnConfig['data'] = $accessorName;
+                                $columnConfig['title'] = Str::of($column)->replace('_', ' ')->title() . ' (Status)';
                             } else {
-                                // Fallback: if listed in $booleanDbColumnsWithTextAccessors but accessor not found, use raw DB column
                                 $columnConfig['data'] = $column;
                                 $columnConfig['title'] = Str::of($column)->replace('_', ' ')->title();
                             }
-                        }
-                        // Handle other specific status columns that are already string outputs from accessors
-                        else if (in_array($column, ['lewat_edaran_48_jam_status', 'terbengkalai_status', 'baru_dikemaskini_status'])) {
-                             $columnConfig['data'] = $column;
-                             $columnConfig['title'] = Str::of($column)->replace('_', ' ')->title();
-                        }
-                        // Handle JSON fields that need imploding for display in DataTables
-                        // This render function happens client-side after data is received.
-                        else if (in_array($column, [
-                            'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan',
-                            'status_pem',
-                            'status_pergerakan_barang_kes',
-                            'status_barang_kes_selesai_siasatan',
-                            'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan',
-                            'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan',
-                            'resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan',
-                            'adakah_borang_serah_terima_pegawai_tangkapan',
-                            'adakah_borang_serah_terima_pemilik_saksi', // ADDED THIS ONE
-                            'keputusan_akhir_mahkamah'
-                            // Add any other JSON columns from other models here
-                        ])) {
+                        } else if (in_array($column, $jsonArrayColumns)) {
                             $columnConfig['data'] = $column;
                             $columnConfig['title'] = Str::of($column)->replace('_', ' ')->title();
-                            // Client-side rendering for array/JSON data
-                            $columnConfig['render'] = 'function(data, type, row) {
-                                if (Array.isArray(data)) {
-                                    return data.join(", ") || "-"; // Join array elements, return "-" if empty array
-                                }
-                                return data || "-"; // Return data or a dash if null/empty
-                            }';
-                            $columnConfig['orderable'] = false; // JSON data is not easily sortable/searchable directly
-                            $columnConfig['searchable'] = false; // Disable search for complex JSON data
-                        }
-                        // For all other regular database columns
-                        else {
+                            $columnConfig['orderable'] = false;
+                            $columnConfig['searchable'] = false;
+                            // Use a placeholder string for the render function
+                            $columnConfig['render'] = '%%JSON_RENDER%%';
+                        } else {
                             $columnConfig['data'] = $column;
                             $columnConfig['title'] = Str::of($column)->replace('_', ' ')->title();
                         }
-
                         $dtColumns[] = $columnConfig;
                     }
                 @endphp
 
-                // Initialize the DataTable instance
+                // Step 1: Get the column configuration from PHP
+                let dtColumnsConfig = @json($dtColumns);
+
+                // Step 2: Define the actual render function in JavaScript
+                const jsonRenderFunction = function(data, type, row) {
+                    if (data === null || data === undefined) return "-";
+                    let parsedData = data;
+                    // Check if data is a string that looks like a JSON array
+                    if (typeof data === "string" && data.startsWith('[') && data.endsWith(']')) {
+                        try {
+                            parsedData = JSON.parse(data);
+                        } catch (e) {
+                            return data; // Return original string if it's not valid JSON
+                        }
+                    }
+                    // Check if we now have a valid array
+                    if (Array.isArray(parsedData)) {
+                        return parsedData.length > 0 ? parsedData.join(", ") : "-";
+                    }
+                    // If not an array or parsable string, return it as is
+                    return parsedData;
+                };
+
+                // Step 3: Loop through the config and replace the placeholder
+                dtColumnsConfig.forEach(function(column) {
+                    if (column.render === '%%JSON_RENDER%%') {
+                        column.render = jsonRenderFunction;
+                    }
+                });
+
+                // Step 4: Initialize the DataTable with the corrected configuration
                 $(tableId).DataTable({
                     processing: true,
                     serverSide: true,
@@ -434,17 +380,13 @@
                         type: "POST",
                         data: { _token: '{{ csrf_token() }}' }
                     },
-                    columns: @json($dtColumns), // This uses the dynamically built array
-                    order: [[2, 'desc']], // Default order by the 3rd column (e.g., 'No. Kertas Siasatan')
-                    columnDefs: [
-                        {
-                            targets: 0, // Action column
-                            className: "sticky left-0 bg-gray-50 dark:text-white dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600"
-                        }
-                    ],
-                    fixedColumns: {
-                        left: 1 // Keep action column fixed
-                    },
+                    columns: dtColumnsConfig, // Use the processed JavaScript variable
+                    order: [[2, 'desc']],
+                    columnDefs: [{
+                        targets: 0,
+                        className: "sticky left-0 bg-gray-50 dark:text-white dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600"
+                    }],
+                    fixedColumns: { left: 1 },
                     language: {
                         search: "Cari:",
                         lengthMenu: "Tunjukkan _MENU_ entri",
@@ -453,7 +395,6 @@
                         emptyTable: "Tiada data tersedia dalam jadual"
                     },
                     "drawCallback": function( settings ) {
-                        // Remove loading class once data is drawn
                         if (panel.length) {
                             panel.removeClass('datatable-container-loading');
                         }
