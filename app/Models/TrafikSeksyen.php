@@ -73,7 +73,21 @@ class TrafikSeksyen extends Model
         'status_semboyan_ketiga_wanted_person' => 'boolean',
         'tarikh_semboyan_ketiga_wanted_person' => 'date:Y-m-d',
         'status_penandaan_kelas_warna' => 'boolean',
-        // B7 - ENSURE THESE ARE 'boolean'
+        // B7 - Permohonan Laporan Agensi Luar (Updated and new fields)
+        'status_permohonan_laporan_post_mortem_mayat' => 'boolean',
+        'tarikh_permohonan_laporan_post_mortem_mayat' => 'date:Y-m-d',
+        'status_laporan_penuh_bedah_siasat' => 'boolean',
+        'tarikh_laporan_penuh_bedah_siasat' => 'date:Y-m-d',
+        'status_permohonan_laporan_jabatan_kimia' => 'boolean',
+        'tarikh_permohonan_laporan_jabatan_kimia' => 'date:Y-m-d',
+        'status_laporan_penuh_jabatan_kimia' => 'boolean',
+        'tarikh_laporan_penuh_jabatan_kimia' => 'date:Y-m-d',
+        // 'keputusan_laporan_jabatan_kimia' => 'string', // String types don't strictly need casting unless specific formatting is required
+        'status_permohonan_laporan_jabatan_patalogi' => 'boolean',
+        'tarikh_permohonan_laporan_jabatan_patalogi' => 'date:Y-m-d',
+        'status_laporan_penuh_jabatan_patalogi' => 'boolean',
+        'tarikh_laporan_penuh_jabatan_patalogi' => 'date:Y-m-d',
+        // 'keputusan_laporan_jabatan_patalogi' => 'string', // String types don't strictly need casting unless specific formatting is required
         'status_permohonan_laporan_puspakom' => 'boolean',
         'tarikh_permohonan_laporan_puspakom' => 'date:Y-m-d',
         'status_laporan_penuh_puspakom' => 'boolean',
@@ -90,6 +104,7 @@ class TrafikSeksyen extends Model
         'tarikh_permohonan_laporan_imigresen' => 'date:Y-m-d',
         'status_laporan_penuh_imigresen' => 'boolean',
         'tarikh_laporan_penuh_imigresen' => 'date:Y-m-d',
+        // 'lain_lain_permohonan_laporan' => 'string', // String types don't strictly need casting unless specific formatting is required
         // B8 - ENSURE THESE ARE 'boolean' or 'array' for JSON
         'muka_surat_4_barang_kes_ditulis' => 'boolean',
         'muka_surat_4_dengan_arahan_tpr' => 'boolean',
@@ -142,6 +157,13 @@ class TrafikSeksyen extends Model
         'status_semboyan_kedua_wanted_person_text',
         'status_semboyan_ketiga_wanted_person_text',
         'status_penandaan_kelas_warna_text',
+        // B7 - New and existing boolean accessors
+        'status_permohonan_laporan_post_mortem_mayat_text',
+        'status_laporan_penuh_bedah_siasat_text',
+        'status_permohonan_laporan_jabatan_kimia_text',
+        'status_laporan_penuh_jabatan_kimia_text',
+        'status_permohonan_laporan_jabatan_patalogi_text',
+        'status_laporan_penuh_jabatan_patalogi_text',
         'status_permohonan_laporan_puspakom_text',
         'status_laporan_penuh_puspakom_text',
         'status_permohonan_laporan_jkr_text',
@@ -150,6 +172,7 @@ class TrafikSeksyen extends Model
         'status_laporan_penuh_jpj_text',
         'status_permohonan_laporan_imigresen_text',
         'status_laporan_penuh_imigresen_text',
+        // B8 Accessors
         'muka_surat_4_barang_kes_ditulis_text',
         'muka_surat_4_dengan_arahan_tpr_text',
         'muka_surat_4_keputusan_kes_dicatat_text',
@@ -285,6 +308,9 @@ class TrafikSeksyen extends Model
     public function getStatusGambarBarangKesAmTextAttribute(): string {
         return $this->formatBooleanToMalay($this->status_gambar_barang_kes_am, 'Ada', 'Tiada');
     }
+    public function getStatusGambarBarangKesBerharga(): string {
+        return $this->formatBooleanToMalay($this->status_gambar_barang_kes_am, 'Ada', 'Tiada');
+    }
     public function getStatusGambarBarangKesKenderaanTextAttribute(): string {
         return $this->formatBooleanToMalay($this->status_gambar_barang_kes_kenderaan, 'Ada', 'Tiada');
     }
@@ -333,30 +359,48 @@ class TrafikSeksyen extends Model
         return $this->formatBooleanToMalay($this->status_penandaan_kelas_warna);
     }
 
-    // B7 Accessors
+    // B7 Accessors (New and existing)
+    public function getStatusPermohonanLaporanPostMortemMayatTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->status_permohonan_laporan_post_mortem_mayat, 'Permohonan Dibuat', 'Tiada Permohonan');
+    }
+    public function getStatusLaporanPenuhBedahSiasatTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->status_laporan_penuh_bedah_siasat, 'Dilampirkan', 'Tidak Dilampirkan');
+    }
+    public function getStatusPermohonanLaporanJabatanKimiaTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->status_permohonan_laporan_jabatan_kimia, 'Permohonan Dibuat', 'Tiada Permohonan');
+    }
+    public function getStatusLaporanPenuhJabatanKimiaTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->status_laporan_penuh_jabatan_kimia, 'Dilampirkan', 'Tidak Dilampirkan');
+    }
+    public function getStatusPermohonanLaporanJabatanPatalogiTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->status_permohonan_laporan_jabatan_patalogi, 'Permohonan Dibuat', 'Tiada Permohonan');
+    }
+    public function getStatusLaporanPenuhJabatanPatalogiTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->status_laporan_penuh_jabatan_patalogi, 'Dilampirkan', 'Tidak Dilampirkan');
+    }
     public function getStatusPermohonanLaporanPuspakomTextAttribute(): string {
-        return $this->formatBooleanToMalay($this->status_permohonan_laporan_puspakom);
+        return $this->formatBooleanToMalay($this->status_permohonan_laporan_puspakom, 'Permohonan Dibuat', 'Tiada Permohonan');
     }
     public function getStatusLaporanPenuhPuspakomTextAttribute(): string {
-        return $this->formatBooleanToMalay($this->status_laporan_penuh_puspakom, 'Dilampirkan', 'Tidak');
+        return $this->formatBooleanToMalay($this->status_laporan_penuh_puspakom, 'Dilampirkan', 'Tidak Dilampirkan');
     }
     public function getStatusPermohonanLaporanJkrTextAttribute(): string {
-        return $this->formatBooleanToMalay($this->status_permohonan_laporan_jkr);
+        return $this->formatBooleanToMalay($this->status_permohonan_laporan_jkr, 'Permohonan Dibuat', 'Tiada Permohonan');
     }
     public function getStatusLaporanPenuhJkrTextAttribute(): string {
-        return $this->formatBooleanToMalay($this->status_laporan_penuh_jkr, 'Dilampirkan', 'Tidak');
+        return $this->formatBooleanToMalay($this->status_laporan_penuh_jkr, 'Dilampirkan', 'Tidak Dilampirkan');
     }
     public function getStatusPermohonanLaporanJpjTextAttribute(): string {
-        return $this->formatBooleanToMalay($this->status_permohonan_laporan_jpj);
+        return $this->formatBooleanToMalay($this->status_permohonan_laporan_jpj, 'Permohonan Dibuat', 'Tiada Permohonan');
     }
     public function getStatusLaporanPenuhJpjTextAttribute(): string {
-        return $this->formatBooleanToMalay($this->status_laporan_penuh_jpj, 'Dilampirkan', 'Tidak');
+        return $this->formatBooleanToMalay($this->status_laporan_penuh_jpj, 'Dilampirkan', 'Tidak Dilampirkan');
     }
     public function getStatusPermohonanLaporanImigresenTextAttribute(): string {
-        return $this->formatBooleanToMalay($this->status_permohonan_laporan_imigresen);
+        return $this->formatBooleanToMalay($this->status_permohonan_laporan_imigresen, 'Permohonan Dibuat', 'Tiada Permohonan');
     }
     public function getStatusLaporanPenuhImigresenTextAttribute(): string {
-        return $this->formatBooleanToMalay($this->status_laporan_penuh_imigresen, 'Dilampirkan', 'Tidak');
+        return $this->formatBooleanToMalay($this->status_laporan_penuh_imigresen, 'Dilampirkan', 'Tidak Dilampirkan');
     }
 
     // B8 Accessors

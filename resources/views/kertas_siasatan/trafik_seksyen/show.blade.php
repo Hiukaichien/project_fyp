@@ -277,6 +277,10 @@
                                 <dd class="mt-1 text-sm text-gray-900">{!! show_boolean_badge($paper->status_gambar_barang_kes_am) !!}</dd>
                             </div>
                             <div>
+                                <dt class="text-sm font-medium text-gray-500">Gambar Barang Kes Berharga</dt>
+                                <dd class="mt-1 text-sm text-gray-900">{!! show_boolean_badge($paper->status_gambar_barang_kes_berharga) !!}</dd>
+                            </div>
+                            <div>
                                 <dt class="text-sm font-medium text-gray-500">Gambar Barang Kes Kenderaan</dt>
                                 <dd class="mt-1 text-sm text-gray-900">{!! show_boolean_badge($paper->status_gambar_barang_kes_kenderaan) !!}</dd>
                             </div>
@@ -382,44 +386,82 @@
                                 <dd class="mt-1 text-sm text-gray-900">{!! show_boolean_badge($paper->status_penandaan_kelas_warna) !!}</dd>
                             </div>
                         </div>
-                    <!-- BAHAGIAN 7: Permohonan Laporan Agensi Luar -->
-                        <div class="bg-gray-50 px-4 py-5">
-                            <h4 class="text-md font-semibold text-gray-700">BAHAGIAN 7: Permohonan Laporan Agensi Luar</h4>
-                        </div>
-                        <div class="bg-white px-4 py-5 space-y-8">
-                            <!-- PUSPAKOM -->
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6 p-4 border rounded-md">
-                                <div class="md:col-span-2"><h5 class="font-semibold text-gray-800">PUSPAKOM</h5></div>
-                                {!! show_status_and_date('Permohonan Laporan', $paper->status_permohonan_laporan_puspakom, $paper->tarikh_permohonan_laporan_puspakom) !!}
-                                {!! show_status_and_date('Laporan Penuh', $paper->status_laporan_penuh_puspakom, $paper->tarikh_laporan_penuh_puspakom) !!}
+                            <!-- BAHAGIAN 7: Permohonan Laporan Agensi Luar -->
+                            <div class="bg-gray-50 px-4 py-5">
+                                <h4 class="text-md font-semibold text-gray-700">BAHAGIAN 7: Permohonan Laporan Agensi Luar</h4>
                             </div>
+                            <div class="bg-white px-4 py-5 space-y-8">
+                                <!-- Permohonan Laporan Post Mortem Mayat -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6 p-4 border rounded-md">
+                                    <div class="md:col-span-2"><h5 class="font-semibold text-gray-800">Permohonan Laporan Post Mortem Mayat</h5></div>
+                                    {!! show_status_and_date('Status Permohonan', $paper->status_permohonan_laporan_post_mortem_mayat, $paper->tarikh_permohonan_laporan_post_mortem_mayat) !!}
+                                </div>
 
-                            <!-- JKR -->
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6 p-4 border rounded-md">
-                                <div class="md:col-span-2"><h5 class="font-semibold text-gray-800">JKR</h5></div>
-                                {!! show_status_and_date('Permohonan Laporan', $paper->status_permohonan_laporan_jkr, $paper->tarikh_permohonan_laporan_jkr) !!}
-                                {!! show_status_and_date('Laporan Penuh', $paper->status_laporan_penuh_jkr, $paper->tarikh_laporan_penuh_jkr) !!}
-                            </div>
+                                <!-- Bedah Siasat -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6 p-4 border rounded-md">
+                                    <div class="md:col-span-2"><h5 class="font-semibold text-gray-800">Bedah Siasat</h5></div>
+                                    {!! show_status_and_date('Laporan Penuh', $paper->status_laporan_penuh_bedah_siasat, $paper->tarikh_laporan_penuh_bedah_siasat) !!}
+                                </div>
 
-                            <!-- JPJ -->
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6 p-4 border rounded-md">
-                                <div class="md:col-span-2"><h5 class="font-semibold text-gray-800">JPJ</h5></div>
-                                {!! show_status_and_date('Permohonan Laporan', $paper->status_permohonan_laporan_jpj, $paper->tarikh_permohonan_laporan_jpj) !!}
-                                {!! show_status_and_date('Laporan Penuh', $paper->status_laporan_penuh_jpj, $paper->tarikh_laporan_penuh_jpj) !!}
-                            </div>
+                                <!-- Jabatan Kimia -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6 p-4 border rounded-md">
+                                    <div class="md:col-span-2"><h5 class="font-semibold text-gray-800">Jabatan Kimia</h5></div>
+                                    {!! show_status_and_date('Permohonan Laporan', $paper->status_permohonan_laporan_jabatan_kimia, $paper->tarikh_permohonan_laporan_jabatan_kimia) !!}
+                                    {!! show_status_and_date('Laporan Penuh', $paper->status_laporan_penuh_jabatan_kimia, $paper->tarikh_laporan_penuh_jabatan_kimia) !!}
+                                    <div class="md:col-span-2">
+                                        <dt class="text-sm font-medium text-gray-500">Keputusan Laporan</dt>
+                                        <dd class="mt-1 text-sm text-gray-900">{{ $paper->keputusan_laporan_jabatan_kimia ?? '-' }}</dd>
+                                    </div>
+                                </div>
 
-                            <!-- Imigresen -->
-                             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6 p-4 border rounded-md">
-                                <div class="md:col-span-2"><h5 class="font-semibold text-gray-800">Imigresen</h5></div>
-                                {!! show_status_and_date('Permohonan Laporan', $paper->status_permohonan_laporan_imigresen, $paper->tarikh_permohonan_laporan_imigresen) !!}
-                                {!! show_status_and_date('Laporan Penuh', $paper->status_laporan_penuh_imigresen, $paper->tarikh_laporan_penuh_imigresen) !!}
-                            </div>
+                                <!-- Jabatan Patalogi -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6 p-4 border rounded-md">
+                                    <div class="md:col-span-2"><h5 class="font-semibold text-gray-800">Jabatan Patalogi</h5></div>
+                                    {!! show_status_and_date('Permohonan Laporan', $paper->status_permohonan_laporan_jabatan_patalogi, $paper->tarikh_permohonan_laporan_jabatan_patalogi) !!}
+                                    {!! show_status_and_date('Laporan Penuh', $paper->status_laporan_penuh_jabatan_patalogi, $paper->tarikh_laporan_penuh_jabatan_patalogi) !!}
+                                    <div class="md:col-span-2">
+                                        <dt class="text-sm font-medium text-gray-500">Keputusan Laporan</dt>
+                                        <dd class="mt-1 text-sm text-gray-900">{{ $paper->keputusan_laporan_jabatan_patalogi ?? '-' }}</dd>
+                                    </div>
+                                </div>
 
-                            <div>
-                                <dt class="text-sm font-medium text-gray-500">Lain-lain Permohonan Laporan</dt>
-                                <dd class="mt-1 text-sm text-gray-900">{{ $paper->lain_lain_permohonan_laporan ?? '-' }}</dd>
+                                <!-- PUSPAKOM -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6 p-4 border rounded-md">
+                                    <div class="md:col-span-2"><h5 class="font-semibold text-gray-800">PUSPAKOM</h5></div>
+                                    {!! show_status_and_date('Permohonan Laporan', $paper->status_permohonan_laporan_puspakom, $paper->tarikh_permohonan_laporan_puspakom) !!}
+                                    {!! show_status_and_date('Laporan Penuh', $paper->status_laporan_penuh_puspakom, $paper->tarikh_laporan_penuh_puspakom) !!}
+                                </div>
+
+                                <!-- JKR -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6 p-4 border rounded-md">
+                                    <div class="md:col-span-2"><h5 class="font-semibold text-gray-800">JKR</h5></div>
+                                    {!! show_status_and_date('Permohonan Laporan', $paper->status_permohonan_laporan_jkr, $paper->tarikh_permohonan_laporan_jkr) !!}
+                                    {!! show_status_and_date('Laporan Penuh', $paper->status_laporan_penuh_jkr, $paper->tarikh_laporan_penuh_jkr) !!}
+                                </div>
+
+                                <!-- JPJ -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6 p-4 border rounded-md">
+                                    <div class="md:col-span-2"><h5 class="font-semibold text-gray-800">JPJ</h5></div>
+                                    {!! show_status_and_date('Permohonan Laporan', $paper->status_permohonan_laporan_jpj, $paper->tarikh_permohonan_laporan_jpj) !!}
+                                    {!! show_status_and_date('Laporan Penuh', $paper->status_laporan_penuh_jpj, $paper->tarikh_laporan_penuh_jpj) !!}
+                                </div>
+
+                                <!-- Imigresen -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6 p-4 border rounded-md">
+                                    <div class="md:col-span-2"><h5 class="font-semibold text-gray-800">Imigresen</h5></div>
+                                    {!! show_status_and_date('Permohonan Laporan', $paper->status_permohonan_laporan_imigresen, $paper->tarikh_permohonan_laporan_imigresen) !!}
+                                    {!! show_status_and_date('Laporan Penuh', $paper->status_laporan_penuh_imigresen, $paper->tarikh_laporan_penuh_imigresen) !!}
+                                </div>
+
+                                <!-- Lain-lain Permohonan Laporan -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6 p-4 border rounded-md">
+                                    <div class="md:col-span-2"><h5 class="font-semibold text-gray-800">Lain-lain Permohonan Laporan</h5></div>
+                                    <div class="md:col-span-2">
+                                        <dt class="text-sm font-medium text-gray-500">Catatan</dt>
+                                        <dd class="mt-1 text-sm text-gray-900">{{ $paper->lain_lain_permohonan_laporan ?? '-' }}</dd>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
                                             <!-- BAHAGIAN 8: Status Fail -->
                         <div class="bg-gray-50 px-4 py-5">
                             <h4 class="text-md font-semibold text-gray-700">BAHAGIAN 8: Status Fail</h4>

@@ -356,6 +356,10 @@
                             <label class="block text-sm font-medium text-gray-700">Gambar Barang Kes Am</label>
                             {!! render_boolean_radio('status_gambar_barang_kes_am', $paper->status_gambar_barang_kes_am, 'Ada', 'Tiada') !!}
                         </div>
+                                                <div>
+                            <label class="block text-sm font-medium text-gray-700">Gambar Barang Kes Berharga</label>
+                            {!! render_boolean_radio('status_gambar_barang_kes_am', $paper->status_gambar_barang_kes_berharga, 'Ada', 'Tiada') !!}
+                        </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Gambar Barang Kes Kenderaan</label>
                             {!! render_boolean_radio('status_gambar_barang_kes_kenderaan', $paper->status_gambar_barang_kes_kenderaan, 'Ada', 'Tiada') !!}
@@ -449,9 +453,70 @@
                     </div>
                 </div>
                                 <!-- BAHAGIAN 7: Permohonan Laporan Agensi Luar -->
+                                <!-- BAHAGIAN 7: Permohonan Laporan Agensi Luar -->
                 <div>
                     <h3 class="text-lg mt-5 font-bold mb-4 text-gray-800 border-b pb-2">BAHAGIAN 7: Permohonan Laporan Agensi Luar</h3>
                     <div class="space-y-8">
+
+                    <!-- Permohonan Laporan Post Mortem Mayat -->
+                    <div class="p-4 border rounded-md">
+                        <h4 class="font-semibold text-md text-gray-700">Permohonan Laporan Post Mortem Mayat</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Status Permohonan</label>
+                                {!! render_status_with_date_radio('post_mortem_mayat_permohonan', 'status_permohonan_laporan_post_mortem_mayat', 'tarikh_permohonan_laporan_post_mortem_mayat', $paper->status_permohonan_laporan_post_mortem_mayat, $paper->tarikh_permohonan_laporan_post_mortem_mayat) !!}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bedah Siasat -->
+                    <div class="p-4 border rounded-md">
+                        <h4 class="font-semibold text-md text-gray-700">Bedah Siasat</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Laporan Penuh</label>
+                                {!! render_status_with_date_radio('bedah_siasat_penuh', 'status_laporan_penuh_bedah_siasat', 'tarikh_laporan_penuh_bedah_siasat', $paper->status_laporan_penuh_bedah_siasat, $paper->tarikh_laporan_penuh_bedah_siasat) !!}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Jabatan Kimia -->
+                    <div class="p-4 border rounded-md">
+                        <h4 class="font-semibold text-md text-gray-700">Jabatan Kimia</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Permohonan Laporan</label>
+                                {!! render_status_with_date_radio('jabatan_kimia_permohonan', 'status_permohonan_laporan_jabatan_kimia', 'tarikh_permohonan_laporan_jabatan_kimia', $paper->status_permohonan_laporan_jabatan_kimia, $paper->tarikh_permohonan_laporan_jabatan_kimia) !!}
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Laporan Penuh</label>
+                                {!! render_status_with_date_radio('jabatan_kimia_penuh', 'status_laporan_penuh_jabatan_kimia', 'tarikh_laporan_penuh_jabatan_kimia', $paper->status_laporan_penuh_jabatan_kimia, $paper->tarikh_laporan_penuh_jabatan_kimia) !!}
+                            </div>
+                            <div class="col-span-full">
+                                <label for="keputusan_laporan_jabatan_kimia" class="block text-sm font-medium text-gray-700">Keputusan Laporan</label>
+                                <input type="text" name="keputusan_laporan_jabatan_kimia" id="keputusan_laporan_jabatan_kimia" value="{{ old('keputusan_laporan_jabatan_kimia', $paper->keputusan_laporan_jabatan_kimia) }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Jabatan Patalogi -->
+                    <div class="p-4 border rounded-md">
+                        <h4 class="font-semibold text-md text-gray-700">Jabatan Patalogi</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Permohonan Laporan</label>
+                                {!! render_status_with_date_radio('jabatan_patalogi_permohonan', 'status_permohonan_laporan_jabatan_patalogi', 'tarikh_permohonan_laporan_jabatan_patalogi', $paper->status_permohonan_laporan_jabatan_patalogi, $paper->tarikh_permohonan_laporan_jabatan_patalogi) !!}
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Laporan Penuh</label>
+                                {!! render_status_with_date_radio('jabatan_patalogi_penuh', 'status_laporan_penuh_jabatan_patalogi', 'tarikh_laporan_penuh_jabatan_patalogi', $paper->status_laporan_penuh_jabatan_patalogi, $paper->tarikh_laporan_penuh_jabatan_patalogi) !!}
+                            </div>
+                            <div class="col-span-full">
+                                <label for="keputusan_laporan_jabatan_patalogi" class="block text-sm font-medium text-gray-700">Keputusan Laporan</label>
+                                <input type="text" name="keputusan_laporan_jabatan_patalogi" id="keputusan_laporan_jabatan_patalogi" value="{{ old('keputusan_laporan_jabatan_patalogi', $paper->keputusan_laporan_jabatan_patalogi) }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- PUSPAKOM -->
                     <div class="p-4 border rounded-md">
@@ -496,6 +561,35 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Imigresen -->
+                    <div class="p-4 border rounded-md">
+                        <h4 class="font-semibold text-md text-gray-700">Imigresen</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Permohonan Laporan</label>
+                                {!! render_status_with_date_radio('imigresen_permohonan', 'status_permohonan_laporan_imigresen', 'tarikh_permohonan_laporan_imigresen', $paper->status_permohonan_laporan_imigresen, $paper->tarikh_permohonan_laporan_imigresen) !!}
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Laporan Penuh</label>
+                                {!! render_status_with_date_radio('imigresen_penuh', 'status_laporan_penuh_imigresen', 'tarikh_laporan_penuh_imigresen', $paper->status_laporan_penuh_imigresen, $paper->tarikh_laporan_penuh_imigresen) !!}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lain-lain Permohonan Laporan -->
+                    <div class="p-4 border rounded-md">
+                        <h4 class="font-semibold text-md text-gray-700">Lain-lain Permohonan Laporan</h4>
+                        <div class="grid grid-cols-1 gap-6 mt-4">
+                            <div>
+                                <label for="lain_lain_permohonan_laporan" class="block text-sm font-medium text-gray-700">Catatan</label>
+                                <textarea name="lain_lain_permohonan_laporan" id="lain_lain_permohonan_laporan" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">{{ old('lain_lain_permohonan_laporan', $paper->lain_lain_permohonan_laporan) }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    </div> 
+                </div> 
                 <!-- BAHAGIAN 8: Status Fail -->
                 <div>
                     <h3 class="text-lg font-bold mb-4 text-gray-800 border-b pb-2">BAHAGIAN 8: Status Fail</h3>
