@@ -319,6 +319,12 @@
                         'status_semboyan_kedua_wanted_person',
                         'status_semboyan_ketiga_wanted_person',
                         'status_penandaan_kelas_warna',
+                        'status_permohonan_laporan_post_mortem_mayat',
+                        'status_laporan_penuh_bedah_siasat',
+                        'status_permohonan_laporan_jabatan_kimia',
+                        'status_laporan_penuh_jabatan_kimia',
+                        'status_permohonan_laporan_jabatan_patalogi',
+                        'status_laporan_penuh_jabatan_patalogi',
                         'status_permohonan_laporan_puspakom',
                         'status_laporan_penuh_puspakom',
                         'status_permohonan_laporan_jkr',
@@ -334,10 +340,6 @@
 
                         // Add boolean fields from Jenayah, Narkotik, Komersil, OrangHilang, LaporanMatiMengejut
                         // if you have created `_text` accessors for them in their respective models.
-                        // Example (if Jenayah had 'some_boolean_flag' and you made a 'some_boolean_flag_text' accessor):
-                        // 'some_boolean_flag',
-                        // Note: 'edar_lebih_24_jam_status', 'terbengkalai_status', 'baru_dikemaskini_status'
-                        // are already strings from their own accessors, so they don't need to be in this list.
                     ];
 
                     // Prepare the dtColumns array for DataTables
@@ -368,7 +370,13 @@
                             // Verify that the accessor is actually appended in the model
                             if (in_array($accessorName, $appendedAccessors)) {
                                 $columnConfig['data'] = $accessorName; // Use the accessor name here for DISPLAY
-                                $columnConfig['title'] = Str::of($column)->replace('_', ' ')->title() . ' (Status)'; // More descriptive header
+                                // Special handling for 'status_gambar_barang_kes_am' to display as 'Status Gambar Barang Kes Berharga'
+                                if ($column === 'status_gambar_barang_kes_am' && in_array('status_gambar_barang_kes_berharga_text', $appendedAccessors)) {
+                                    $columnConfig['data'] = 'status_gambar_barang_kes_berharga_text'; // Use the more specific accessor
+                                    $columnConfig['title'] = 'Status Gambar Barang Kes Berharga'; // Custom title
+                                } else {
+                                    $columnConfig['title'] = Str::of($column)->replace('_', ' ')->title() . ' (Status)'; // More descriptive header
+                                }
                             } else {
                                 // Fallback: if listed in $booleanDbColumnsWithTextAccessors but accessor not found, use raw DB column
                                 $columnConfig['data'] = $column;
@@ -376,7 +384,6 @@
                             }
                         }
                         // Handle other specific status columns that are already string outputs from accessors
-                        // These are typically dynamic statuses like 'lewat_edaran_48_jam_status', 'terbengkalai_status', 'baru_dikemaskini_status'
                         else if (in_array($column, ['lewat_edaran_48_jam_status', 'terbengkalai_status', 'baru_dikemaskini_status'])) {
                              $columnConfig['data'] = $column;
                              $columnConfig['title'] = Str::of($column)->replace('_', ' ')->title();
@@ -392,6 +399,7 @@
                             'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan',
                             'resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan',
                             'adakah_borang_serah_terima_pegawai_tangkapan',
+                            'adakah_borang_serah_terima_pemilik_saksi', // ADDED THIS ONE
                             'keputusan_akhir_mahkamah'
                             // Add any other JSON columns from other models here
                         ])) {
@@ -400,7 +408,7 @@
                             // Client-side rendering for array/JSON data
                             $columnConfig['render'] = 'function(data, type, row) {
                                 if (Array.isArray(data)) {
-                                    return data.join(", "); // Join array elements with a comma and space
+                                    return data.join(", ") || "-"; // Join array elements, return "-" if empty array
                                 }
                                 return data || "-"; // Return data or a dash if null/empty
                             }';
