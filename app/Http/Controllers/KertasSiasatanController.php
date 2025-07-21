@@ -63,11 +63,33 @@ class KertasSiasatanController extends Controller
     public function update(Request $request, $paperType, $id)
     {
         $modelClass = $this->getModelClass($paperType);
-        $paper = $modelClass::with('project')->findOrFail($id);
+        $paper = $modelClass::findOrFail($id); // No need for with('project') here
 
         Gate::authorize('access-project', $paper->project);
 
-        $paper->update($request->all());
+        // Get all the data from the form.
+        $data = $request->all();
+
+        // --- START: DEFINITIVE FIX ---
+        // Manually process all boolean fields to remove any ambiguity.
+        foreach ($paper->getCasts() as $field => $type) {
+            if ($type === 'boolean') {
+                // If the field exists in the request (i.e., a radio button was selected
+                // or a checkbox was checked), explicitly cast its value to a boolean.
+                // This correctly handles both "1" (true) and "0" (false).
+                if ($request->has($field)) {
+                    $data[$field] = (bool)$request->input($field);
+                } else {
+                    // If the field is NOT in the request (i.e., an unchecked checkbox),
+                    // we force it to be 'false'. This makes the code robust for all cases.
+                    $data[$field] = false;
+                }
+            }
+        }
+        // --- END: DEFINITIVE FIX ---
+
+        // Now, update the model with the clean and explicit data.
+        $paper->update($data);
 
         return Redirect::route('projects.show', $paper->project_id)
                        ->with('success', Str::headline($paperType) . ' berjaya dikemaskini.');
