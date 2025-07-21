@@ -93,14 +93,21 @@
 
 {{-- FILE: resources/views/projects/show.blade.php (Part 3 of 5) --}}
             {{-- Unified Tabbed Interface --}}
-            <div x-data="{ activeTab: sessionStorage.getItem('activeProjectTab') || 'Jenayah' }" 
-                 x-init="
-                    // Initialize DataTable for the initial tab when the Alpine component is ready
-                    initDataTable(activeTab); 
-                    // Watch for changes in activeTab and re-initialize/redraw DataTable
-                    $watch('activeTab', value => initDataTable(value));
-                 "
-                 class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
+<div x-data="{ activeTab: sessionStorage.getItem('activeProjectTab') || 'Jenayah' }" 
+     x-init="
+        // Initialize the DataTable for the starting tab (either from memory or the default).
+        initDataTable(activeTab); 
+        
+        // Watch for when the activeTab changes.
+        $watch('activeTab', value => {
+            // 1. **Save the new tab's name to session storage.** This is the crucial fix.
+            sessionStorage.setItem('activeProjectTab', value);
+
+            // 2. Initialize the DataTable for the newly selected tab.
+            initDataTable(value);
+        });
+     "
+     class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
                 
                 {{-- SINGLE Tab Header Navigation --}}
                 <div class="border-b border-gray-200 dark:border-gray-700">
