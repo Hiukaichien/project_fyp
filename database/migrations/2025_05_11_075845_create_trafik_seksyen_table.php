@@ -72,6 +72,7 @@ return new class extends Migration
             $table->boolean('status_gambar_tempat_kejadian')->nullable()->comment('status_gambar_tempat_kejadian: BOOLEAN');
             $table->boolean('status_gambar_post_mortem_mayat_di_hospital')->nullable()->comment('status_gambar_post_mortem_mayat_di_hospital: BOOLEAN');
             $table->boolean('status_gambar_barang_kes_am')->nullable()->comment('status_gambar_barang_kes_am: BOOLEAN');
+            $table->boolean('status_gambar_barang_kes_berharga')->nullable()->comment('status_gambar_barang_kes_berharga: BOOLEAN');
             $table->boolean('status_gambar_barang_kes_kenderaan')->nullable()->comment('status_gambar_barang_kes_kenderaan: BOOLEAN');
             $table->boolean('status_gambar_barang_kes_darah')->nullable()->comment('status_gambar_barang_kes_darah: BOOLEAN');
             $table->boolean('status_gambar_barang_kes_kontraban')->nullable()->comment('status_gambar_barang_kes_kontraban: BOOLEAN');
@@ -104,6 +105,27 @@ return new class extends Migration
             $table->boolean('status_penandaan_kelas_warna')->nullable()->comment('status_penandaan_kelas_warna: BOOLEAN');
             
             // BAHAGIAN 7: Permohonan Laporan Agensi Luar (B7)
+            $table->boolean('status_permohonan_laporan_post_mortem_mayat')->nullable()->comment('B7: status_permohonan_laporan_post_mortem_mayat');
+            $table->date('tarikh_permohonan_laporan_post_mortem_mayat')->nullable()->comment('B7: tarikh_permohonan_laporan_post_mortem_mayat');
+
+            // Bedah Siasat
+            $table->boolean('status_laporan_penuh_bedah_siasat')->nullable()->comment('B7: status_laporan_penuh_bedah_siasat');
+            $table->date('tarikh_laporan_penuh_bedah_siasat')->nullable()->comment('B7: tarikh_laporan_penuh_bedah_siasat');
+
+            // Jabatan Kimia
+            $table->boolean('status_permohonan_laporan_jabatan_kimia')->nullable()->comment('B7: status_permohonan_laporan_jabatan_kimia');
+            $table->date('tarikh_permohonan_laporan_jabatan_kimia')->nullable()->comment('B7: tarikh_permohonan_laporan_jabatan_kimia');
+            $table->boolean('status_laporan_penuh_jabatan_kimia')->nullable()->comment('B7: status_laporan_penuh_jabatan_kimia');
+            $table->date('tarikh_laporan_penuh_jabatan_kimia')->nullable()->comment('B7: tarikh_laporan_penuh_jabatan_kimia');
+            $table->string('keputusan_laporan_jabatan_kimia')->nullable()->comment('B7: keputusan_laporan_jabatan_kimia');
+
+            // Jabatan Patalogi
+            $table->boolean('status_permohonan_laporan_jabatan_patalogi')->nullable()->comment('B7: status_permohonan_laporan_jabatan_patalogi');
+            $table->date('tarikh_permohonan_laporan_jabatan_patalogi')->nullable()->comment('B7: tarikh_permohonan_laporan_jabatan_patalogi');
+            $table->boolean('status_laporan_penuh_jabatan_patalogi')->nullable()->comment('B7: status_laporan_penuh_jabatan_patalogi');
+            $table->date('tarikh_laporan_penuh_jabatan_patalogi')->nullable()->comment('B7: tarikh_laporan_penuh_jabatan_patalogi');
+            $table->string('keputusan_laporan_jabatan_patalogi')->nullable()->comment('B7: keputusan_laporan_jabatan_patalogi');
+            
             $table->boolean('status_permohonan_laporan_puspakom')->nullable()->comment('status_permohonan_laporan_puspakom: BOOLEAN');
             $table->date('tarikh_permohonan_laporan_puspakom')->nullable()->comment('tarikh_permohonan_laporan_puspakom: DATE');
             $table->boolean('status_laporan_penuh_puspakom')->nullable()->comment('status_laporan_penuh_puspakom: BOOLEAN');
