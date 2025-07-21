@@ -186,7 +186,7 @@
                             </div>
                             <div>
                                 <dt class="text-sm font-medium text-gray-500">No. Daftar Barang Kes Berharga</dt>
-                                <dd class="mt-1 text-sm text-gray-900">{{ $paper->no_daftar_barang_kes_berharga ?? '-' }}</dd>
+                                <dd class="mt-1 text-sm text-gray-900">{{ $paper->status_gambar_barang_kes_berharga_text }}</dd>
                             </div>
                             <div>
                                 <dt class="text-sm font-medium text-gray-500">No. Daftar Barang Kes Kenderaan</dt>

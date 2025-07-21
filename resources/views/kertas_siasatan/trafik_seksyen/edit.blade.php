@@ -356,9 +356,9 @@
                             <label class="block text-sm font-medium text-gray-700">Gambar Barang Kes Am</label>
                             {!! render_boolean_radio('status_gambar_barang_kes_am', $paper->status_gambar_barang_kes_am, 'Ada', 'Tiada') !!}
                         </div>
-                                                <div>
+                        <div>
                             <label class="block text-sm font-medium text-gray-700">Gambar Barang Kes Berharga</label>
-                            {!! render_boolean_radio('status_gambar_barang_kes_am', $paper->status_gambar_barang_kes_berharga, 'Ada', 'Tiada') !!}
+                            {!! render_boolean_radio('status_gambar_barang_kes_berharga', $paper->status_gambar_barang_kes_berharga, 'Ada', 'Tiada') !!}
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Gambar Barang Kes Kenderaan</label>
