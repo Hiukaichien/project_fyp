@@ -1,3 +1,4 @@
+{{-- FILE: resources/views/projects/show.blade.php (Part 1 of 5) --}}
 @php
     // --- DYNAMIC CONFIGURATION SETUP ---
     use App\Models\Jenayah;
@@ -10,18 +11,18 @@
     use Illuminate\Support\Facades\Schema;
     use Illuminate\Support\Str;
 
-    // A single source of truth for all table configurations, now with 6 types
+    // A single source of truth for all table configurations.
+    // Keys are PascalCase to match the $dashboardData array from the controller.
     $paperTypes = [
-        'trafik_seksyen' => ['model' => new TrafikSeksyen(), 'route' => 'projects.trafik_seksyen_data', 'title' => 'Trafik Seksyen'],
-        'trafik_rule' => ['model' => new TrafikRule(), 'route' => 'projects.trafik_rule_data', 'title' => 'Trafik Rule'],
-        'komersil' => ['model' => new Komersil(), 'route' => 'projects.komersil_data', 'title' => 'Komersil'],
-        'narkotik' => ['model' => new Narkotik(), 'route' => 'projects.narkotik_data', 'title' => 'Narkotik'],
-        'orangHilang' => ['model' => new OrangHilang(), 'route' => 'projects.orang_hilang_data', 'title' => 'Orang Hilang'],
-        'lmm' => ['model' => new LaporanMatiMengejut(), 'route' => 'projects.laporan_mati_mengejut_data', 'title' => 'LMM'],
-        'jenayah' => ['model' => new Jenayah(), 'route' => 'projects.jenayah_data', 'title' => 'Jenayah'],
+        'Jenayah' => ['model' => new Jenayah(), 'route' => 'projects.jenayah_data', 'title' => 'Jenayah'],
+        'Narkotik' => ['model' => new Narkotik(), 'route' => 'projects.narkotik_data', 'title' => 'Narkotik'],
+        'Komersil' => ['model' => new Komersil(), 'route' => 'projects.komersil_data', 'title' => 'Komersil'],
+        'TrafikSeksyen' => ['model' => new TrafikSeksyen(), 'route' => 'projects.trafik_seksyen_data', 'title' => 'Trafik Seksyen'],
+        'TrafikRule' => ['model' => new TrafikRule(), 'route' => 'projects.trafik_rule_data', 'title' => 'Trafik Rule'],
+        'OrangHilang' => ['model' => new OrangHilang(), 'route' => 'projects.orang_hilang_data', 'title' => 'Orang Hilang'],
+        'LaporanMatiMengejut' => ['model' => new LaporanMatiMengejut(), 'route' => 'projects.laporan_mati_mengejut_data', 'title' => 'LMM'],
     ];
 
-    // Columns to ignore when dynamically generating the table from the schema
     $ignoreColumns = ['id', 'user_id', 'project_id', 'created_at', 'updated_at'];
 @endphp
 
@@ -34,11 +35,7 @@
         table.dataTable th.dt-ordering-asc::after { content: "\f0de"; }
         table.dataTable th.dt-ordering-desc::after { content: "\f0dd"; }
         .is-restoring-scroll { visibility: hidden; }
-
-
-        .datatable-container-loading {
-            min-height: 400px; /* Adjust this value as needed */
-        }
+        .datatable-container-loading { min-height: 400px; }
     </style>
     @endpush
 
@@ -64,7 +61,6 @@
                     <span class="block sm:inline">{{ session('error') }}</span>
                 </div>
             @endif
-
 
             {{-- Project Details Card --}}
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
@@ -94,171 +90,73 @@
                 </div>
                 @if($project->description)<p class="text-gray-700 dark:text-gray-300 whitespace-pre-wrap mt-4 border-t pt-4">{{ $project->description }}</p>@endif
             </div>
-            
 
-            
-            {{-- Pie Chart and Tables --}}
-            <div x-data="{ activeTab: sessionStorage.getItem('activeDashboardTab') || 'Jenayah' }" 
-                 x-init="$watch('activeTab', value => sessionStorage.setItem('activeDashboardTab', value))"
+{{-- FILE: resources/views/projects/show.blade.php (Part 3 of 5) --}}
+            {{-- Unified Tabbed Interface --}}
+            <div x-data="{ activeTab: sessionStorage.getItem('activeProjectTab') || 'Jenayah' }" 
+                 x-init="
+                    // Initialize DataTable for the initial tab when the Alpine component is ready
+                    initDataTable(activeTab); 
+                    // Watch for changes in activeTab and re-initialize/redraw DataTable
+                    $watch('activeTab', value => initDataTable(value));
+                 "
                  class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
                 
-                <!-- Tab Headers -->
-                <div class="border-b border-gray-200">
-                    <nav class="-mb-px flex space-x-4 overflow-x-auto" aria-label="Dashboard Tabs">
-                        @foreach($dashboardData as $key => $data)
+                {{-- SINGLE Tab Header Navigation --}}
+                <div class="border-b border-gray-200 dark:border-gray-700">
+                    <nav class="-mb-px flex space-x-4 overflow-x-auto" aria-label="Tabs">
+                        @foreach($paperTypes as $key => $config)
                             <a href="#" @click.prevent="activeTab = '{{ $key }}'"
                                :class="{ 'border-indigo-500 text-indigo-600': activeTab === '{{ $key }}', 'border-transparent text-gray-500 hover:text-gray-700': activeTab !== '{{ $key }}' }"
                                class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
-                                {{ Str::headline($key) }}
-                            </a>
-                        @endforeach
-                    </nav>
-                </div>
-
-                <!-- Tab Content Panels -->
-                <div class="mt-6">
-                    @foreach($dashboardData as $key => $data)
-                        @php
-                            $hasIssueData = ($data['lewatCount'] ?? 0) > 0 || ($data['terbengkalaiCount'] ?? 0) > 0 || ($data['kemaskiniCount'] ?? 0) > 0;
-                            $hasAuditData = ($data['jumlahKeseluruhan'] ?? 0) > 0;
-                        @endphp
-                        <div x-show="activeTab === '{{ $key }}'" x-cloak>
-                            
-                            <!-- ROW 1: PIE CHARTS for {{ $key }} -->
-                            <div class="flex flex-col md:flex-row gap-8 my-8">
-                                @if($hasAuditData)
-                                    <div class="w-full md:w-1/2 flex justify-center items-center">
-                                        <div style="position: relative; height:400px; width:100%; max-width:400px;">
-                                            <canvas id="auditPieChart-{{ $key }}"></canvas>
-                                        </div>
-                                    </div>
-                                @endif
-                                @if($hasIssueData)
-                                    <div class="w-full md:w-1/2 flex justify-center items-center">
-                                        <div style="position: relative; height:400px; width:100%; max-width:400px;">
-                                            <canvas id="statusPieChart-{{ $key }}"></canvas>
-                                        </div>
-                                    </div>
-                                @endif
-                                @if(!$hasAuditData && !$hasIssueData)
-                                    <div class="w-full text-center py-16 text-gray-500">
-                                        <p>Tiada data untuk dipaparkan bagi jabatan ini.</p>
-                                    </div>
-                                @endif
-                            </div>
-
-                                                       <!-- ROW 2: COLLAPSIBLE TABLES for {{ $key }} -->
-                            <div class="mt-12">
-                                <div class="w-full flex flex-col gap-4">
-                                    <x-collapsible-table 
-                                        title="Edaran Kertas Siasatan Lewat 48 Jam" 
-                                        :collection="$data['ksLewat']" 
-                                        bgColor="bg-red-50 dark:bg-red-900/20" 
-                                        :pageName="$key.'_lewat_page'"
-                                        issueType="lewat"
-                                    />
-                                    <x-collapsible-table 
-                                        title="Kertas Siasatan Terbengkalai Melebihi 3 Bulan" 
-                                        :collection="$data['ksTerbengkalai']" 
-                                        bgColor="bg-yellow-50 dark:bg-yellow-900/20" 
-                                        :pageName="$key.'_terbengkalai_page'"
-                                        issueType="terbengkalai"
-                                    />
-                                    <x-collapsible-table 
-                                        title="KS Terbengkalai / Baru Dikemaskini Selepas Semboyan" 
-                                        :collection="$data['ksBaruKemaskini']" 
-                                        bgColor="bg-green-50 dark:bg-green-900/20" 
-                                        :pageName="$key.'_kemaskini_page'"
-                                        issueType="kemaskini"
-                                    />
-                                </div>
-                            </div>
-
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-
-            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-            <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                // --- INITIALIZE ALL CHARTS ---
-                @foreach($dashboardData as $key => $data)
-                    @php
-                        $hasIssueData = ($data['lewatCount'] ?? 0) > 0 || ($data['terbengkalaiCount'] ?? 0) > 0 || ($data['kemaskiniCount'] ?? 0) > 0;
-                        $hasAuditData = ($data['jumlahKeseluruhan'] ?? 0) > 0;
-                    @endphp
-
-                    @if($hasAuditData)
-                        const auditCtx_{{ $key }} = document.getElementById('auditPieChart-{{ $key }}')?.getContext('2d');
-                        if (auditCtx_{{ $key }}) {
-                            new Chart(auditCtx_{{ $key }}, {
-                                type: 'pie',
-                                data: {
-                                    labels: ['Jumlah Diperiksa (KS)', 'Jumlah Belum Diperiksa (KS)'],
-                                    datasets: [{ data: [{{ $data['jumlahDiperiksa'] }}, {{ $data['jumlahBelumDiperiksa'] }}], backgroundColor: ['#0ea5e9', '#cbd5e1'], borderWidth: 2, borderColor: '#FFFFFF' }]
-                                },
-                                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Status Pemeriksaan ({{ $data["jumlahKeseluruhan"] }} Keseluruhan)' } } }
-                            });
-                        }
-                    @endif
-
-                    @if($hasIssueData)
-                        const statusCtx_{{ $key }} = document.getElementById('statusPieChart-{{ $key }}')?.getContext('2d');
-                        if (statusCtx_{{ $key }}) {
-                            new Chart(statusCtx_{{ $key }}, {
-                                type: 'pie',
-                                data: {
-                                    labels: ['KS Lewat Edar (> 48 Jam)', 'KS Terbengkalai (> 3 Bulan)', 'KS Baru Dikemaskini'],
-                                    datasets: [{ data: [{{ $data['lewatCount'] }}, {{ $data['terbengkalaiCount'] }}, {{ $data['kemaskiniCount'] }}], backgroundColor: ['#F87171', '#FBBF24', '#34D399'], borderWidth: 2, borderColor: '#FFFFFF' }]
-                                },
-                                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' }, title: { display: true, text: 'Ringkasan Status Isu Siasatan' } } }
-                            });
-                        }
-                    @endif
-                @endforeach
-            });
-            </script>
-
-            <!-- Main container for the tabbed interface -->
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
-                <!-- Tab Headers -->
-                <div class="border-b border-gray-200 dark:border-gray-700">
-                    <nav class="-mb-px flex space-x-4 overflow-x-auto" aria-label="Tab">
-                        @php
-                            $activeClasses = 'border-indigo-500 text-indigo-600';
-                            $inactiveClasses = 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300';
-                        @endphp
-                        @foreach($paperTypes as $key => $config)
-                            <a href="#" data-tab="{{ $key }}" class="tab-link whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
                                 {{ $config['title'] }}
                             </a>
                         @endforeach
                     </nav>
                 </div>
 
-                <!-- Tab Content Panels -->
+                {{-- Tab Content Panels --}}
                 <div class="mt-6">
                     @foreach($paperTypes as $key => $config)
-                        <div id="panel-{{ $key }}" class="tab-panel overflow-auto" style="display: none;">
-                            <table id="{{ $key }}-datatable" class="w-full text-sm text-left" style="width:100%">
-                                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 sticky top-0 z-20">
-                                    <tr>
-                                        @php $columns = array_diff(Schema::getColumnListing($config['model']->getTable()), $ignoreColumns); @endphp
-                                        <th class="px-4 py-3 sticky left-0 bg-gray-50 dark:bg-gray-700 z-30 border-r border-gray-200 dark:border-gray-600">Tindakan</th>
-                                        <th class="px-4 py-3">No.</th>
-                                        @foreach($columns as $column)
-                                            <th scope="col" class="px-4 py-3">{{ Str::of($column)->replace('_', ' ')->title() }}</th>
-                                        @endforeach
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
+                        @php 
+                            // Get the dashboard data for the current tab. This now works because keys match.
+                            $data = $dashboardData[$key] ?? null;
+                        @endphp
+                        <div x-show="activeTab === '{{ $key }}'" x-cloak>
+                            @if($data)
+                                {{-- Dashboard Section (Charts & Summaries) is now INSIDE each tab --}}
+                                <div class="mb-12">
+                                    <x-dashboard-section :key="$key" :data="$data" />
+                                </div>
+                                
+                                <div class="my-8 border-t border-gray-200 dark:border-gray-700"></div>
+                                <h4 class="text-lg font-bold mb-4 text-gray-800 dark:text-gray-200">Butiran Terperinci: {{ $config['title'] }}</h4>
+                            @endif
+
+                            {{-- DataTable Section --}}
+                            <div class="overflow-auto">
+                                <table id="{{ $key }}-datatable" class="w-full text-sm text-left" style="width:100%">
+                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 sticky top-0 z-20">
+                                        <tr>
+                                            {{-- Use the table's actual columns for DataTables --}}
+                                            @php $columns = array_diff(Schema::getColumnListing($config['model']->getTable()), $ignoreColumns); @endphp
+                                            <th class="px-4 py-3 sticky left-0 bg-gray-50 dark:bg-gray-700 z-30 border-r border-gray-200 dark:border-gray-600">Tindakan</th>
+                                            <th class="px-4 py-3">No.</th>
+                                            @foreach($columns as $column)
+                                                <th scope="col" class="px-4 py-3">{{ Str::of($column)->replace('_', ' ')->title() }}</th>
+                                            @endforeach
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
                         </div>
                     @endforeach
                 </div>
             </div>
 
+
+{{-- FILE: resources/views/projects/show.blade.php (Part 4 of 5) --}}
     {{-- Import Modal --}}
     <x-modal name="import-papers-modal" :show="$errors->has('excel_file') || $errors->has('excel_errors')" focusable>
         <form action="{{ route('projects.import', $project) }}" method="POST" enctype="multipart/form-data" class="p-6">
@@ -342,94 +240,227 @@
         </form>
     </x-modal>
 
+{{-- FILE: resources/views/projects/show.blade.php (Part 5 of 5) --}}
     @push('scripts')
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.0.8/js/dataTables.tailwindcss.js"></script>
     <script src="https://cdn.datatables.net/fixedcolumns/5.0.1/js/dataTables.fixedColumns.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-    $(document).ready(function() {
-        const initializedTables = {};
-        const activeClasses = 'border-indigo-500 text-indigo-600';
-        const inactiveClasses = 'border-transparent text-gray-500 hover:text-gray-700 dark:text-white hover:border-gray-300';
+    // Global variable to keep track of initialized DataTables
+    const initializedTables = {};
 
-        function activateTab(tabName) {
-            $('.tab-link').removeClass(activeClasses).addClass(inactiveClasses);
-            $('.tab-panel').hide();
-            $(`.tab-link[data-tab="${tabName}"]`).removeClass(inactiveClasses).addClass(activeClasses);
-            $(`#panel-${tabName}`).show();
-            initDataTable(tabName);
-            sessionStorage.setItem('activeProjectTab', tabName);
+    // Function to initialize a DataTable for a given tabName (e.g., 'Jenayah')
+    function initDataTable(tabName) {
+        // If the DataTable for this tab is already initialized, simply return.
+        if (initializedTables[tabName]) {
+            return;
+        }
+        
+        const tableId = `#${tabName}-datatable`;
+        
+        if (!$(tableId).length) {
+            console.warn(`DataTable element not found for tab: ${tabName} with ID: ${tableId}`);
+            return; 
         }
 
-        function initDataTable(tabName) {
-            if (initializedTables[tabName]) {
-                $('#' + tabName + '-datatable').DataTable().columns.adjust().draw();
-                return;
-            }
-
-            const panel = $('#panel-' + tabName);
+        const panel = $(tableId).closest('.overflow-auto'); 
+        if (panel.length) {
             panel.addClass('datatable-container-loading dark:text-white');
+        }
 
-            @foreach($paperTypes as $key => $config)
-                if (tabName === '{{ $key }}') {
-                    @php
-                        $columnsForJs = array_diff(Schema::getColumnListing($config['model']->getTable()), $ignoreColumns);
-                        $dtColumns = [['data' => 'action', 'name' => 'action', 'orderable' => false, 'searchable' => false], ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false]];
-                        foreach($columnsForJs as $col) {
-                            $dtColumns[] = ['data' => $col, 'name' => $col, 'defaultContent' => '-'];
+        @foreach($paperTypes as $key => $config)
+            if (tabName === '{{ $key }}') {
+                @php
+                    $columnsForJs = array_diff(Schema::getColumnListing($config['model']->getTable()), $ignoreColumns);
+                    
+                    $dtColumns = [
+                        ['data' => 'action', 'name' => 'action', 'orderable' => false, 'searchable' => false], 
+                        ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false]
+                    ];
+                    foreach($columnsForJs as $column) {
+                        $dtColumns[] = ['data' => $column, 'name' => $column, 'defaultContent' => '-'];
+                    }
+                @endphp
+                
+                $(tableId).DataTable({
+                    processing: true,
+                    serverSide: true,
+                    ajax: { 
+                        url: "{{ route($config['route'], $project->id) }}",
+                        type: "POST",
+                        data: { _token: '{{ csrf_token() }}' }
+                    },
+                    columns: @json($dtColumns),
+                    order: [[2, 'desc']],
+                    columnDefs: [
+                        {
+                            targets: 0,
+                            className: "sticky left-0 bg-gray-50 dark:text-white dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600"
                         }
-                    @endphp
-
-                    $('#{{ $key }}-datatable').DataTable({
-                        processing: true,
-                        serverSide: true,
-                        ajax: {
-                            url: "{{ route($config['route'], $project->id) }}",
-                            type: "POST",
-                            data: { _token: '{{ csrf_token() }}' }
-                        },
-                        columns: @json($dtColumns),
-                        order: [[2, 'desc']],
-                        columnDefs: [
-                            {
-                                targets: 0,
-                                className: "sticky left-0 bg-gray-50 dark:text-white dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600"
-                            }
-                        ],
-                        fixedColumns: {
-                            left: 1
-                        },
-                        language: {
-                            search: "Cari:",
-                            lengthMenu: "Tunjukkan _MENU_ entri",
-                            info: "Menunjukkan _START_ hingga _END_ daripada _TOTAL_ entri",
-                            infoEmpty: "Menunjukkan 0 hingga 0 daripada 0 entri",
-                            emptyTable: "Tiada data tersedia dalam jadual"
-                        },
-                        "drawCallback": function( settings ) {
+                    ],
+                    fixedColumns: {
+                        left: 1
+                    },
+                    language: {
+                        search: "Cari:",
+                        lengthMenu: "Tunjukkan _MENU_ entri",
+                        info: "Menunjukkan _START_ hingga _END_ daripada _TOTAL_ entri",
+                        infoEmpty: "Menunjukkan 0 hingga 0 daripada 0 entri",
+                        emptyTable: "Tiada data tersedia dalam jadual"
+                    },
+                    "drawCallback": function( settings ) {
+                        if (panel.length) {
                             panel.removeClass('datatable-container-loading');
                         }
+                    }
+                });
+                initializedTables[tabName] = true;
+            }
+        @endforeach
+    }
+
+    // Initialize all Chart.js charts on initial page load.
+    document.addEventListener('DOMContentLoaded', function() {
+        @foreach($dashboardData as $key => $data)
+            @php
+                $hasIssueData = ($data['lewatCount'] ?? 0) > 0 || ($data['terbengkalaiCount'] ?? 0) > 0 || ($data['kemaskiniCount'] ?? 0) > 0;
+                $hasAuditData = ($data['jumlahKeseluruhan'] ?? 0) > 0;
+                $jumlahDiperiksa = $data['jumlahDiperiksa'] ?? 0;
+                $jumlahBelumDiperiksa = $data['jumlahBelumDiperiksa'] ?? 0;
+                $jumlahKeseluruhan = $data['jumlahKeseluruhan'] ?? 0;
+            @endphp
+
+            @if($hasAuditData)
+                const auditCtx_{{ $key }} = document.getElementById('auditPieChart-{{ $key }}')?.getContext('2d');
+                if (auditCtx_{{ $key }}) {
+                    new Chart(auditCtx_{{ $key }}, {
+                        type: 'pie',
+                        data: {
+                            labels: ['Jumlah Diperiksa (KS)', 'Jumlah Belum Diperiksa (KS)'],
+                            datasets: [{ 
+                                data: [{{ $jumlahDiperiksa }}, {{ $jumlahBelumDiperiksa }}], 
+                                backgroundColor: ['#0ea5e9', '#cbd5e1'], 
+                                borderWidth: 0, 
+                                borderColor: '#FFFFFF' 
+                            }]
+                        },
+                        options: { 
+                            responsive: true, 
+                            maintainAspectRatio: false, 
+                            plugins: { 
+                                legend: { 
+                                    position: 'bottom',
+                                    labels: {
+                                        generateLabels: function(chart) {
+                                            const data = chart.data;
+                                            if (data.labels.length && data.datasets.length) {
+                                                const total = data.datasets[0].data.reduce((sum, value) => sum + value, 0);
+                                                return data.labels.map(function(label, i) {
+                                                    const value = data.datasets[0].data[i];
+                                                    const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                                    return {
+                                                        text: `${label} (${percentage}%) (${value})`,
+                                                        fillStyle: data.datasets[0].backgroundColor[i],
+                                                        strokeStyle: data.datasets[0].borderColor[i],
+                                                        lineWidth: data.datasets[0].borderWidth,
+                                                        hidden: chart.getDatasetMeta(0).data[i].hidden,
+                                                        index: i
+                                                    };
+                                                });
+                                            }
+                                            return [];
+                                        }
+                                    }
+                                }, 
+                                title: { 
+                                    display: true, 
+                                    text: 'Peratusan Status Pemeriksaan (Keseluruhan)'
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            const label = context.label || '';
+                                            const value = context.raw;
+                                            const total = context.chart.data.datasets[0].data.reduce((sum, val) => sum + val, 0);
+                                            const percentage = total > 0 ? ((value / total) * 100).toFixed(1) + '%' : '0%';
+                                            return `${value} (${percentage})`;
+                                        }
+                                    }
+                                }
+                            } 
+                        }
                     });
-                    initializedTables[tabName] = true;
                 }
-            @endforeach
-        }
+            @endif
 
-        $('.tab-link').on('click', function(e) {
-            e.preventDefault();
-            const tabName = $(this).data('tab');
-            activateTab(tabName);
-        });
-
-        const savedTab = sessionStorage.getItem('activeProjectTab');
-        if (savedTab && $(`.tab-link[data-tab="${savedTab}"]`).length) {
-            activateTab(savedTab);
-        } else {
-            activateTab('jenayah');
-        }
+            @if($hasIssueData)
+                const statusCtx_{{ $key }} = document.getElementById('statusPieChart-{{ $key }}')?.getContext('2d');
+                if (statusCtx_{{ $key }}) {
+                    new Chart(statusCtx_{{ $key }}, {
+                        type: 'pie',
+                        data: {
+                            labels: ['KS Lewat Edar (> 48 Jam)', 'KS Terbengkalai (> 3 Bulan)', 'KS Baru Dikemaskini'],
+                            datasets: [{ 
+                                data: [{{ $data['lewatCount'] }}, {{ $data['terbengkalaiCount'] }}, {{ $data['kemaskiniCount'] }}], 
+                                backgroundColor: ['#F87171', '#FBBF24', '#34D399'], 
+                                borderWidth: 0, 
+                                borderColor: '#FFFFFF' 
+                            }]
+                        },
+                        options: { 
+                            responsive: true, 
+                            maintainAspectRatio: false, 
+                            plugins: { 
+                                legend: { 
+                                    position: 'bottom',
+                                    labels: {
+                                        generateLabels: function(chart) {
+                                            const data = chart.data;
+                                            if (data.labels.length && data.datasets.length) {
+                                                const total = data.datasets[0].data.reduce((sum, value) => sum + value, 0);
+                                                return data.labels.map(function(label, i) {
+                                                    const value = data.datasets[0].data[i];
+                                                    const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                                    return {
+                                                        text: `${label} (${percentage}%) (${value})`,
+                                                        fillStyle: data.datasets[0].backgroundColor[i],
+                                                        strokeStyle: data.datasets[0].borderColor[i],
+                                                        lineWidth: data.datasets[0].borderWidth,
+                                                        hidden: chart.getDatasetMeta(0).data[i].hidden,
+                                                        index: i
+                                                    };
+                                                });
+                                            }
+                                            return [];
+                                        }
+                                    }
+                                }, 
+                                title: { 
+                                    display: true, 
+                                    text: 'Ringkasan Status Isu Siasatan'
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            const label = context.label || '';
+                                            const value = context.raw;
+                                            const total = context.chart.data.datasets[0].data.reduce((sum, val) => sum + val, 0);
+                                            const percentage = total > 0 ? ((value / total) * 100).toFixed(1) + '%' : '0%';
+                                            return `${value} (${percentage})`;
+                                        }
+                                    }
+                                }
+                            } 
+                        }
+                    });
+                }
+            @endif
+        @endforeach
     });
 
+    // Handle scroll position restoration
     (function() {
         if (sessionStorage.getItem('scrollPosition')) {
             document.body.classList.add('is-restoring-scroll');
