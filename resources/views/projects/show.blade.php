@@ -264,15 +264,15 @@
         if (initializedTables[tabName]) {
             return;
         }
-        
+
         const tableId = `#${tabName}-datatable`;
-        
+
         if (!$(tableId).length) {
             console.warn(`DataTable element not found for tab: ${tabName} with ID: ${tableId}`);
-            return; 
+            return;
         }
 
-        const panel = $(tableId).closest('.overflow-auto'); 
+        const panel = $(tableId).closest('.overflow-auto');
         if (panel.length) {
             panel.addClass('datatable-container-loading dark:text-white');
         }
@@ -280,35 +280,162 @@
         @foreach($paperTypes as $key => $config)
             if (tabName === '{{ $key }}') {
                 @php
-                    $columnsForJs = array_diff(Schema::getColumnListing($config['model']->getTable()), $ignoreColumns);
-                    
-                    $dtColumns = [
-                        ['data' => 'action', 'name' => 'action', 'orderable' => false, 'searchable' => false], 
-                        ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false]
+                    // Get the model instance, raw DB columns, and appended accessors for the current model.
+                    $modelInstance = new $config['model'];
+                    $rawDbColumns = Schema::getColumnListing($modelInstance->getTable());
+                    $appendedAccessors = $modelInstance->getAppends();
+
+                    // THIS IS THE CRITICAL LIST FOR DATATABLES:
+                    // Define which original database boolean columns should be displayed using their
+                    // corresponding `_text` accessor in DataTables.
+                    // This list MUST contain ALL relevant boolean column names from ALL your models
+                    // (Jenayah, Narkotik, Komersil, TrafikSeksyen, TrafikRule, OrangHilang, LaporanMatiMengejut)
+                    // FOR WHICH YOU HAVE CREATED A `_TEXT` ACCESSOR IN THEIR RESPECTIVE MODELS.
+                    $booleanDbColumnsWithTextAccessors = [
+                        // TrafikSeksyen / TrafikRule specific booleans
+                        'arahan_minit_oleh_sio_status',
+                        'arahan_minit_ketua_bahagian_status',
+                        'arahan_minit_ketua_jabatan_status',
+                        'arahan_minit_oleh_ya_tpr_status',
+                        'adakah_barang_kes_didaftarkan',
+                        'adakah_sijil_surat_kebenaran_ipo',
+                        'status_id_siasatan_dikemaskini',
+                        'status_rajah_kasar_tempat_kejadian',
+                        'status_gambar_tempat_kejadian',
+                        'status_gambar_post_mortem_mayat_di_hospital',
+                        'status_gambar_barang_kes_am',
+                        'status_gambar_barang_kes_kenderaan',
+                        'status_gambar_barang_kes_darah',
+                        'status_gambar_barang_kes_kontraban',
+                        'status_rj2',
+                        'status_rj2b',
+                        'status_rj9',
+                        'status_rj99',
+                        'status_rj10a',
+                        'status_rj10b',
+                        'status_saman_pdrm_s_257',
+                        'status_saman_pdrm_s_167',
+                        'status_semboyan_pertama_wanted_person',
+                        'status_semboyan_kedua_wanted_person',
+                        'status_semboyan_ketiga_wanted_person',
+                        'status_penandaan_kelas_warna',
+                        'status_permohonan_laporan_puspakom',
+                        'status_laporan_penuh_puspakom',
+                        'status_permohonan_laporan_jkr',
+                        'status_laporan_penuh_jkr',
+                        'status_permohonan_laporan_jpj',
+                        'status_laporan_penuh_jpj',
+                        'status_permohonan_laporan_imigresen',
+                        'status_laporan_penuh_imigresen',
+                        'muka_surat_4_barang_kes_ditulis',
+                        'muka_surat_4_dengan_arahan_tpr',
+                        'muka_surat_4_keputusan_kes_dicatat',
+                        'fail_lmm_ada_keputusan_koroner',
+
+                        // Add boolean fields from Jenayah, Narkotik, Komersil, OrangHilang, LaporanMatiMengejut
+                        // if you have created `_text` accessors for them in their respective models.
+                        // Example (if Jenayah had 'some_boolean_flag' and you made a 'some_boolean_flag_text' accessor):
+                        // 'some_boolean_flag',
+                        // Note: 'edar_lebih_24_jam_status', 'terbengkalai_status', 'baru_dikemaskini_status'
+                        // are already strings from their own accessors, so they don't need to be in this list.
                     ];
-                    foreach($columnsForJs as $column) {
-                        $dtColumns[] = ['data' => $column, 'name' => $column, 'defaultContent' => '-'];
+
+                    // Prepare the dtColumns array for DataTables
+                    $dtColumns = [
+                        // Action column (fixed left)
+                        ['data' => 'action', 'name' => 'action', 'orderable' => false, 'searchable' => false, 'title' => 'Tindakan', 'width' => '100px'],
+                        // Index column
+                        ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'title' => 'No.'],
+                    ];
+
+                    // Dynamically build the rest of the columns
+                    foreach($rawDbColumns as $column) {
+                        // Skip common Laravel timestamps/FKs that aren't usually needed in DataTables
+                        if (in_array($column, ['id', 'project_id', 'created_at', 'updated_at'])) {
+                            continue;
+                        }
+
+                        $columnConfig = [
+                            'name' => $column, // Original column name for server-side processing (sorting/searching)
+                            'defaultContent' => '-', // Default content if data is null
+                            'orderable' => true,
+                            'searchable' => true,
+                        ];
+
+                        // Check if this is a boolean column that should use its _text accessor
+                        if (in_array($column, $booleanDbColumnsWithTextAccessors)) {
+                            $accessorName = $column . '_text';
+                            // Verify that the accessor is actually appended in the model
+                            if (in_array($accessorName, $appendedAccessors)) {
+                                $columnConfig['data'] = $accessorName; // Use the accessor name here for DISPLAY
+                                $columnConfig['title'] = Str::of($column)->replace('_', ' ')->title() . ' (Status)'; // More descriptive header
+                            } else {
+                                // Fallback: if listed in $booleanDbColumnsWithTextAccessors but accessor not found, use raw DB column
+                                $columnConfig['data'] = $column;
+                                $columnConfig['title'] = Str::of($column)->replace('_', ' ')->title();
+                            }
+                        }
+                        // Handle other specific status columns that are already string outputs from accessors
+                        // These are typically dynamic statuses like 'lewat_edaran_48_jam_status', 'terbengkalai_status', 'baru_dikemaskini_status'
+                        else if (in_array($column, ['lewat_edaran_48_jam_status', 'terbengkalai_status', 'baru_dikemaskini_status'])) {
+                             $columnConfig['data'] = $column;
+                             $columnConfig['title'] = Str::of($column)->replace('_', ' ')->title();
+                        }
+                        // Handle JSON fields that need imploding for display in DataTables
+                        // This render function happens client-side after data is received.
+                        else if (in_array($column, [
+                            'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan',
+                            'status_pem',
+                            'status_pergerakan_barang_kes',
+                            'status_barang_kes_selesai_siasatan',
+                            'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan',
+                            'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan',
+                            'resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan',
+                            'adakah_borang_serah_terima_pegawai_tangkapan',
+                            'keputusan_akhir_mahkamah'
+                            // Add any other JSON columns from other models here
+                        ])) {
+                            $columnConfig['data'] = $column;
+                            $columnConfig['title'] = Str::of($column)->replace('_', ' ')->title();
+                            // Client-side rendering for array/JSON data
+                            $columnConfig['render'] = 'function(data, type, row) {
+                                if (Array.isArray(data)) {
+                                    return data.join(", "); // Join array elements with a comma and space
+                                }
+                                return data || "-"; // Return data or a dash if null/empty
+                            }';
+                            $columnConfig['orderable'] = false; // JSON data is not easily sortable/searchable directly
+                            $columnConfig['searchable'] = false; // Disable search for complex JSON data
+                        }
+                        // For all other regular database columns
+                        else {
+                            $columnConfig['data'] = $column;
+                            $columnConfig['title'] = Str::of($column)->replace('_', ' ')->title();
+                        }
+
+                        $dtColumns[] = $columnConfig;
                     }
                 @endphp
-                
+
+                // Initialize the DataTable instance
                 $(tableId).DataTable({
                     processing: true,
                     serverSide: true,
-                    ajax: { 
+                    ajax: {
                         url: "{{ route($config['route'], $project->id) }}",
                         type: "POST",
                         data: { _token: '{{ csrf_token() }}' }
                     },
-                    columns: @json($dtColumns),
-                    order: [[2, 'desc']],
+                    columns: @json($dtColumns), // This uses the dynamically built array
+                    order: [[2, 'desc']], // Default order by the 3rd column (e.g., 'No. Kertas Siasatan')
                     columnDefs: [
                         {
-                            targets: 0,
+                            targets: 0, // Action column
                             className: "sticky left-0 bg-gray-50 dark:text-white dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600"
                         }
                     ],
                     fixedColumns: {
-                        left: 1
+                        left: 1 // Keep action column fixed
                     },
                     language: {
                         search: "Cari:",
@@ -318,6 +445,7 @@
                         emptyTable: "Tiada data tersedia dalam jadual"
                     },
                     "drawCallback": function( settings ) {
+                        // Remove loading class once data is drawn
                         if (panel.length) {
                             panel.removeClass('datatable-container-loading');
                         }
@@ -346,18 +474,18 @@
                         type: 'pie',
                         data: {
                             labels: ['Jumlah Diperiksa (KS)', 'Jumlah Belum Diperiksa (KS)'],
-                            datasets: [{ 
-                                data: [{{ $jumlahDiperiksa }}, {{ $jumlahBelumDiperiksa }}], 
-                                backgroundColor: ['#0ea5e9', '#cbd5e1'], 
-                                borderWidth: 0, 
-                                borderColor: '#FFFFFF' 
+                            datasets: [{
+                                data: [{{ $jumlahDiperiksa }}, {{ $jumlahBelumDiperiksa }}],
+                                backgroundColor: ['#0ea5e9', '#cbd5e1'],
+                                borderWidth: 0,
+                                borderColor: '#FFFFFF'
                             }]
                         },
-                        options: { 
-                            responsive: true, 
-                            maintainAspectRatio: false, 
-                            plugins: { 
-                                legend: { 
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
                                     position: 'bottom',
                                     labels: {
                                         generateLabels: function(chart) {
@@ -380,9 +508,9 @@
                                             return [];
                                         }
                                     }
-                                }, 
-                                title: { 
-                                    display: true, 
+                                },
+                                title: {
+                                    display: true,
                                     text: 'Peratusan Status Pemeriksaan (Keseluruhan)'
                                 },
                                 tooltip: {
@@ -396,7 +524,7 @@
                                         }
                                     }
                                 }
-                            } 
+                            }
                         }
                     });
                 }
@@ -409,18 +537,18 @@
                         type: 'pie',
                         data: {
                             labels: ['KS Lewat Edar (> 48 Jam)', 'KS Terbengkalai (> 3 Bulan)', 'KS Baru Dikemaskini'],
-                            datasets: [{ 
-                                data: [{{ $data['lewatCount'] }}, {{ $data['terbengkalaiCount'] }}, {{ $data['kemaskiniCount'] }}], 
-                                backgroundColor: ['#F87171', '#FBBF24', '#34D399'], 
-                                borderWidth: 0, 
-                                borderColor: '#FFFFFF' 
+                            datasets: [{
+                                data: [{{ $data['lewatCount'] }}, {{ $data['terbengkalaiCount'] }}, {{ $data['kemaskiniCount'] }}],
+                                backgroundColor: ['#F87171', '#FBBF24', '#34D399'],
+                                borderWidth: 0,
+                                borderColor: '#FFFFFF'
                             }]
                         },
-                        options: { 
-                            responsive: true, 
-                            maintainAspectRatio: false, 
-                            plugins: { 
-                                legend: { 
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
                                     position: 'bottom',
                                     labels: {
                                         generateLabels: function(chart) {
@@ -443,9 +571,9 @@
                                             return [];
                                         }
                                     }
-                                }, 
-                                title: { 
-                                    display: true, 
+                                },
+                                title: {
+                                    display: true,
                                     text: 'Ringkasan Status Isu Siasatan'
                                 },
                                 tooltip: {
@@ -459,7 +587,7 @@
                                         }
                                     }
                                 }
-                            } 
+                            }
                         }
                     });
                 }

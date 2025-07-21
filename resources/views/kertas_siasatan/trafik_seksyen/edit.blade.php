@@ -54,24 +54,38 @@
 
 
                 // NEW HELPER: Renders radio buttons for simple boolean choices
+                // Helper function for simple boolean choices (e.g., Ada/Tiada, Ya/Tidak)
+                // REVISED: To correctly set 'checked' attribute for boolean 'true' or 'false' values.
                 function render_boolean_radio($name, $currentValue, $YaLabel = 'Ada / Ya', $TidakLabel = 'Tiada / Tidak') {
+                    // Determine the effective value to check against, prioritizing old input over current model value.
+                    // This handles cases where old() might return '1', '0', true, false, or null.
+                    $effectiveValue = old($name, $currentValue);
+
                     $html = "<div class='mt-2 flex items-center space-x-6'>";
-                    // Option 1: Ya/Ada
-                    $checkedYa = (string)old($name, $currentValue) === '1' ? 'checked' : '';
+                    
+                    // Option 1: Ya/Ada (value='1')
+                    // Check if the effectiveValue is logically true.
+                    $checkedYa = (($effectiveValue === true || $effectiveValue === 1 || $effectiveValue === '1') ? 'checked' : '');
                     $html .= "<label class='flex items-center cursor-pointer'><input type='radio' name='{$name}' value='1' class='form-radio h-4 w-4 text-indigo-600' {$checkedYa}><span class='ml-2 text-gray-700'>{$YaLabel}</span></label>";
-                    // Option 2: Tidak/Tiada
-                    $checkedTidak = (string)old($name, $currentValue) === '0' && old($name, $currentValue) !== null ? 'checked' : '';
+
+                    // Option 2: Tidak/Tiada (value='0')
+                    // Check if the effectiveValue is logically false AND it's not null (meaning a choice was previously made or defaulted to false).
+                    $checkedTidak = (($effectiveValue === false || $effectiveValue === 0 || $effectiveValue === '0') && $effectiveValue !== null ? 'checked' : '');
                     $html .= "<label class='flex items-center cursor-pointer'><input type='radio' name='{$name}' value='0' class='form-radio h-4 w-4 text-indigo-600' {$checkedTidak}><span class='ml-2 text-gray-700'>{$TidakLabel}</span></label>";
                     $html .= "</div>";
                     return $html;
                 }
 
-                // NEW HELPER: Renders status radio buttons that reveal a date input
+                // REVISED: To correctly initialize Alpine.js 'status' variable with '0' or '1' string.
                 function render_status_with_date_radio($id, $statusName, $dateName, $currentStatus, $currentDate) {
-                    // Note: The x-data Alpine component is now on the parent div
-                    $statusValue = old($statusName, $currentStatus) ?? '0';
-                    $html = "<div x-data='{ status: \"{$statusValue}\" }'>";
-                    // Radio buttons
+                    // Determine the effective status value (prioritizing old input over current model value).
+                    $effectiveStatus = old($statusName, $currentStatus);
+                    
+                    // Ensure the initial Alpine 'status' variable is explicitly '1' (for true) or '0' (for false/null).
+                    $initialStatusForAlpine = (($effectiveStatus === true || $effectiveStatus === 1 || $effectiveStatus === '1') ? '1' : '0');
+
+                    $html = "<div x-data='{ status: \"{$initialStatusForAlpine}\" }'>";
+                    // Radio buttons (x-model handles 'checked' state based on 'status' variable)
                     $html .= "<div class='mt-2 flex items-center space-x-6'>";
                     $html .= "<label class='flex items-center cursor-pointer'><input type='radio' name='{$statusName}' value='1' x-model='status' class='form-radio h-4 w-4 text-indigo-600'><span class='ml-2 text-gray-700'>Ada / Cipta</span></label>";
                     $html .= "<label class='flex items-center cursor-pointer'><input type='radio' name='{$statusName}' value='0' x-model='status' class='form-radio h-4 w-4 text-indigo-600'><span class='ml-2 text-gray-700'>Tiada / Tidak Cipta</span></label>";
