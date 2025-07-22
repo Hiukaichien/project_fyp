@@ -14,13 +14,13 @@
     // A single source of truth for all table configurations.
     // Keys are PascalCase to match the $dashboardData array from the controller.
     $paperTypes = [
-        'Jenayah' => ['model' => new Jenayah(), 'route' => 'projects.jenayah_data', 'title' => 'Jenayah'],
-        'Narkotik' => ['model' => new Narkotik(), 'route' => 'projects.narkotik_data', 'title' => 'Narkotik'],
-        'Komersil' => ['model' => new Komersil(), 'route' => 'projects.komersil_data', 'title' => 'Komersil'],
-        'TrafikSeksyen' => ['model' => new TrafikSeksyen(), 'route' => 'projects.trafik_seksyen_data', 'title' => 'Trafik Seksyen'],
-        'TrafikRule' => ['model' => new TrafikRule(), 'route' => 'projects.trafik_rule_data', 'title' => 'Trafik Rule'],
-        'OrangHilang' => ['model' => new OrangHilang(), 'route' => 'projects.orang_hilang_data', 'title' => 'Orang Hilang'],
-        'LaporanMatiMengejut' => ['model' => new LaporanMatiMengejut(), 'route' => 'projects.laporan_mati_mengejut_data', 'title' => 'LMM'],
+        'Jenayah' => ['model' => new Jenayah(), 'route' => 'projects.jenayah_data', 'title' => 'JSJ(Jenayah)'],
+        'Narkotik' => ['model' => new Narkotik(), 'route' => 'projects.narkotik_data', 'title' => 'JSJN(Narkotik)'],
+        'Komersil' => ['model' => new Komersil(), 'route' => 'projects.komersil_data', 'title' => 'JSJK(Komersil)'],
+        'TrafikSeksyen' => ['model' => new TrafikSeksyen(), 'route' => 'projects.trafik_seksyen_data', 'title' => 'JSPT(Seksyen) '],
+        'TrafikRule' => ['model' => new TrafikRule(), 'route' => 'projects.trafik_rule_data', 'title' => 'JSPT(Rule)'],
+        'OrangHilang' => ['model' => new OrangHilang(), 'route' => 'projects.orang_hilang_data', 'title' => 'JP(Orang Hilang)'],
+        'LaporanMatiMengejut' => ['model' => new LaporanMatiMengejut(), 'route' => 'projects.laporan_mati_mengejut_data', 'title' => 'JP(LMM)'],
     ];
 
     $ignoreColumns = ['id', 'user_id', 'project_id', 'created_at', 'updated_at'];
