@@ -369,33 +369,15 @@
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-500">Status Semboyan Pertama Wanted Person</label>
-                            <div class="mt-1 p-2 bg-gray-100 rounded-md font-mono">
-                                {{ $paper->status_semboyan_pertama_wanted_person ? 'Ya' : 'Tidak' }}
-                            </div>
-                        </div>
-                        <div>
-                            <label for="tarikh_semboyan_pertama_wanted_person" class="block text-sm font-medium text-gray-700">Tarikh Semboyan Pertama Wanted Person</label>
-                            <input type="date" name="tarikh_semboyan_pertama_wanted_person" id="tarikh_semboyan_pertama_wanted_person" value="{{ old('tarikh_semboyan_pertama_wanted_person', optional($paper->tarikh_semboyan_pertama_wanted_person)->format('Y-m-d')) }}" class="mt-1 block w-full form-input">
+                            {!! render_boolean_select('status_semboyan_pertama_wanted_person', $paper->status_semboyan_pertama_wanted_person) !!}
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-500">Status Semboyan Kedua Wanted Person</label>
-                            <div class="mt-1 p-2 bg-gray-100 rounded-md font-mono">
-                                {{ $paper->status_semboyan_kedua_wanted_person ? 'Ya' : 'Tidak' }}
-                            </div>
-                        </div>
-                        <div>
-                            <label for="tarikh_semboyan_kedua_wanted_person" class="block text-sm font-medium text-gray-700">Tarikh Semboyan Kedua Wanted Person</label>
-                            <input type="date" name="tarikh_semboyan_kedua_wanted_person" id="tarikh_semboyan_kedua_wanted_person" value="{{ old('tarikh_semboyan_kedua_wanted_person', optional($paper->tarikh_semboyan_kedua_wanted_person)->format('Y-m-d')) }}" class="mt-1 block w-full form-input">
+                            {!! render_boolean_select('status_semboyan_kedua_wanted_person', $paper->status_semboyan_kedua_wanted_person) !!}
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-500">Status Semboyan Ketiga Wanted Person</label>
-                            <div class="mt-1 p-2 bg-gray-100 rounded-md font-mono">
-                                {{ $paper->status_semboyan_ketiga_wanted_person ? 'Ya' : 'Tidak' }}
-                            </div>
-                        </div>
-                        <div>
-                            <label for="tarikh_semboyan_ketiga_wanted_person" class="block text-sm font-medium text-gray-700">Tarikh Semboyan Ketiga Wanted Person</label>
-                            <input type="date" name="tarikh_semboyan_ketiga_wanted_person" id="tarikh_semboyan_ketiga_wanted_person" value="{{ old('tarikh_semboyan_ketiga_wanted_person', optional($paper->tarikh_semboyan_ketiga_wanted_person)->format('Y-m-d')) }}" class="mt-1 block w-full form-input">
+                            {!! render_boolean_select('status_semboyan_ketiga_wanted_person', $paper->status_semboyan_ketiga_wanted_person) !!}
                         </div>
                         <div class="col-span-full">
                             <label for="ulasan_keseluruhan_pegawai_pemeriksa_borang" class="block text-sm font-medium text-gray-700">Ulasan Keseluruhan Pegawai Pemeriksa Borang</label>
@@ -429,84 +411,28 @@
                         {{-- E-FSA (TELCO) --}}
                         <div>
                             <label class="block text-sm font-medium text-gray-500">Status Laporan Penuh E-FSA-1 Telco oleh IO/AIO</label>
-                            <div class="mt-1 p-2 bg-gray-100 rounded-md font-mono">
-                                {{ $paper->{'status_laporan_penuh_E-FSA-1_telco_oleh_IO/AIO'} ? 'Ya' : 'Tidak' }}
-                            </div>
+                            {!! render_boolean_select('status_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO', $paper->status_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO) !!}
                         </div>
-                        <div>
-                            <label for="nama_telco_laporan_E_FSA_1_oleh_IO_AIO" class="block text-sm font-medium text-gray-700">Nama Telco Laporan E-FSA-1 oleh IO/AIO</label>
-                            <input type="text" name="nama_telco_laporan_E_FSA_1_oleh_IO_AIO" id="nama_telco_laporan_E_FSA_1_oleh_IO_AIO" value="{{ old('nama_telco_laporan_E_FSA_1_oleh_IO_AIO', $paper->nama_telco_laporan_E_FSA_1_oleh_IO_AIO) }}" class="mt-1 block w-full form-input">
-                        </div>
-                        <div>
-                            <label for="tarikh_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO" class="block text-sm font-medium text-gray-700">Tarikh Laporan Penuh E-FSA-1 Telco oleh IO/AIO</label>
-                            <input type="date" name="tarikh_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO" id="tarikh_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO" value="{{ old('tarikh_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO', optional($paper->tarikh_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO)->format('Y-m-d')) }}" class="mt-1 block w-full form-input">
-                        </div>
-                        {{-- E-FSA (IMIGRESEN) --}}
                         <div>
                             <label class="block text-sm font-medium text-gray-500">Status Permohonan E-FSA-2 oleh IO/AIO</label>
-                            <div class="mt-1 p-2 bg-gray-100 rounded-md font-mono">
-                                {{ $paper->{'status_permohonan_E-FSA-2_oleh_IO/AIO'} ? 'Ya' : 'Tidak' }}
-                            </div>
+                            {!! render_boolean_select('status_permohonan_E_FSA_2_oleh_IO_AIO', $paper->status_permohonan_E_FSA_2_oleh_IO_AIO) !!}
                         </div>
-                        <div>
-                            <label for="nama_imigresen_permohonan_E_FSA_2" class="block text-sm font-medium text-gray-700">Nama Imigresen Permohonan E-FSA-2</label>
-                            <input type="text" name="nama_imigresen_permohonan_E_FSA_2" id="nama_imigresen_permohonan_E_FSA_2" value="{{ old('nama_imigresen_permohonan_E_FSA_2', $paper->nama_imigresen_permohonan_E_FSA_2) }}" class="mt-1 block w-full form-input">
-                        </div>
-                        <div>
-                            <label for="tarikh_laporan_penuh_E_FSA_2_oleh_IO_AIO" class="block text-sm font-medium text-gray-700">Tarikh Laporan Penuh E-FSA-2 oleh IO/AIO</label>
-                            <input type="date" name="tarikh_laporan_penuh_E_FSA_2_oleh_IO_AIO" id="tarikh_laporan_penuh_E_FSA_2_oleh_IO_AIO" value="{{ old('tarikh_laporan_penuh_E_FSA_2_oleh_IO_AIO', optional($paper->tarikh_laporan_penuh_E_FSA_2_oleh_IO_AIO)->format('Y-m-d')) }}" class="mt-1 block w-full form-input">
-                        </div>
-                        {{-- E-FSA (PUSPAKOM) --}}
                         <div>
                             <label class="block text-sm font-medium text-gray-500">Status Permohonan E-FSA-3 oleh IO/AIO</label>
-                            <div class="mt-1 p-2 bg-gray-100 rounded-md font-mono">
-                                {{ $paper->{'status_permohonan_E-FSA-3_oleh_IO/AIO'} ? 'Ya' : 'Tidak' }}
-                            </div>
+                            {!! render_boolean_select('status_permohonan_E_FSA_3_oleh_IO_AIO', $paper->status_permohonan_E_FSA_3_oleh_IO_AIO) !!}
                         </div>
-                        <div>
-                            <label for="nama_puspakom_permohonan_E_FSA_3" class="block text-sm font-medium text-gray-700">Nama Puspakom Permohonan E-FSA-3</label>
-                            <input type="text" name="nama_puspakom_permohonan_E_FSA_3" id="nama_puspakom_permohonan_E_FSA_3" value="{{ old('nama_puspakom_permohonan_E_FSA_3', $paper->nama_puspakom_permohonan_E_FSA_3) }}" class="mt-1 block w-full form-input">
-                        </div>
-                        <div>
-                            <label for="tarikh_laporan_penuh_E_FSA_3_oleh_IO_AIO" class="block text-sm font-medium text-gray-700">Tarikh Laporan Penuh E-FSA-3 oleh IO/AIO</label>
-                            <input type="date" name="tarikh_laporan_penuh_E_FSA_3_oleh_IO_AIO" id="tarikh_laporan_penuh_E_FSA_3_oleh_IO_AIO" value="{{ old('tarikh_laporan_penuh_E_FSA_3_oleh_IO_AIO', optional($paper->tarikh_laporan_penuh_E_FSA_3_oleh_IO_AIO)->format('Y-m-d')) }}" class="mt-1 block w-full form-input">
-                        </div>
-                        {{-- E-FSA (KASTAM) --}}
                         <div>
                             <label class="block text-sm font-medium text-gray-500">Status Permohonan E-FSA-4 oleh IO/AIO</label>
-                            <div class="mt-1 p-2 bg-gray-100 rounded-md font-mono">
-                                {{ $paper->{'status_permohonan_E-FSA-4_oleh_IO/AIO'} ? 'Ya' : 'Tidak' }}
-                            </div>
+                            {!! render_boolean_select('status_permohonan_E_FSA_4_oleh_IO_AIO', $paper->status_permohonan_E_FSA_4_oleh_IO_AIO) !!}
                         </div>
-                        <div>
-                            <label for="nama_kastam_permohonan_E_FSA_4" class="block text-sm font-medium text-gray-700">Nama Kastam Permohonan E-FSA-4</label>
-                            <input type="text" name="nama_kastam_permohonan_E_FSA_4" id="nama_kastam_permohonan_E_FSA_4" value="{{ old('nama_kastam_permohonan_E_FSA_4', $paper->nama_kastam_permohonan_E_FSA_4) }}" class="mt-1 block w-full form-input">
-                        </div>
-                        <div>
-                            <label for="tarikh_laporan_penuh_E_FSA_4_oleh_IO_AIO" class="block text-sm font-medium text-gray-700">Tarikh Laporan Penuh E-FSA-4 oleh IO/AIO</label>
-                            <input type="date" name="tarikh_laporan_penuh_E_FSA_4_oleh_IO_AIO" id="tarikh_laporan_penuh_E_FSA_4_oleh_IO_AIO" value="{{ old('tarikh_laporan_penuh_E_FSA_4_oleh_IO_AIO', optional($paper->tarikh_laporan_penuh_E_FSA_4_oleh_IO_AIO)->format('Y-m-d')) }}" class="mt-1 block w-full form-input">
-                        </div>
-                        {{-- E-FSA (FORENSIK) --}}
                         <div>
                             <label class="block text-sm font-medium text-gray-500">Status Permohonan E-FSA-5 oleh IO/AIO</label>
-                            <div class="mt-1 p-2 bg-gray-100 rounded-md font-mono">
-                                {{ $paper->{'status_permohonan_E-FSA-5_oleh_IO/AIO'} ? 'Ya' : 'Tidak' }}
-                            </div>
-                        </div>
-                        <div>
-                            <label for="nama_forensik_permohonan_E_FSA_5" class="block text-sm font-medium text-gray-700">Nama Forensik Permohonan E-FSA-5</label>
-                            <input type="text" name="nama_forensik_permohonan_E_FSA_5" id="nama_forensik_permohonan_E_FSA_5" value="{{ old('nama_forensik_permohonan_E_FSA_5', $paper->nama_forensik_permohonan_E_FSA_5) }}" class="mt-1 block w-full form-input">
-                        </div>
-                        <div>
-                            <label for="tarikh_laporan_penuh_E_FSA_5_oleh_IO_AIO" class="block text-sm font-medium text-gray-700">Tarikh Laporan Penuh E-FSA-5 oleh IO/AIO</label>
-                            <input type="date" name="tarikh_laporan_penuh_E_FSA_5_oleh_IO_AIO" id="tarikh_laporan_penuh_E_FSA_5_oleh_IO_AIO" value="{{ old('tarikh_laporan_penuh_E_FSA_5_oleh_IO_AIO', optional($paper->tarikh_laporan_penuh_E_FSA_5_oleh_IO_AIO)->format('Y-m-d')) }}" class="mt-1 block w-full form-input">
+                            {!! render_boolean_select('status_permohonan_E_FSA_5_oleh_IO_AIO', $paper->status_permohonan_E_FSA_5_oleh_IO_AIO) !!}
                         </div>
                         {{-- Lain-lain --}}
                         <div>
                             <label class="block text-sm font-medium text-gray-500">Status Permohonan Lain-lain oleh IO/AIO</label>
-                            <div class="mt-1 p-2 bg-gray-100 rounded-md font-mono">
-                                {{ $paper->{'status_permohonan_lain_lain_oleh_IO/AIO'} ? 'Ya' : 'Tidak' }}
-                            </div>
+                            {!! render_boolean_select('status_permohonan_lain_lain_oleh_IO_AIO', $paper->status_permohonan_lain_lain_oleh_IO_AIO) !!}
                         </div>
                         <div>
                             <label for="nama_agensi_lain_lain" class="block text-sm font-medium text-gray-700">Nama Agensi Lain-lain</label>
@@ -536,21 +462,15 @@
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-500">Adakah Muka Surat 4 Keputusan Kes Dicatat</label>
-                            <div class="mt-1 p-2 bg-gray-100 rounded-md font-mono">
-                                {{ $paper->adakah_muka_surat_4_keputusan_kes_dicatat ? 'Ya' : 'Tidak' }}
-                            </div>
+                            {!! render_boolean_select('adakah_muka_surat_4_keputusan_kes_dicatat', $paper->adakah_muka_surat_4_keputusan_kes_dicatat) !!}
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-500">Adakah Fail LMM/T atau LMM Telah Ada Keputusan</label>
-                            <div class="mt-1 p-2 bg-gray-100 rounded-md font-mono">
-                                {{ $paper->adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan ? 'Ya' : 'Tidak' }}
-                            </div>
+                            {!! render_boolean_select('adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan', $paper->adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan) !!}
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-500">Adakah KS/KUS/Fail Selesai</label>
-                            <div class="mt-1 p-2 bg-gray-100 rounded-md font-mono">
-                                {{ $paper->adakah_ks_kus_fail_selesai ? 'Ya' : 'Tidak' }}
-                            </div>
+                            {!! render_boolean_select('adakah_ks_kus_fail_selesai', $paper->adakah_ks_kus_fail_selesai) !!}
                         </div>
                         <div class="col-span-full">
                             <label for="keputusan_akhir_mahkamah" class="block text-sm font-medium text-gray-700">Keputusan Akhir Mahkamah</label>
