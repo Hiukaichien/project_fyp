@@ -26,33 +26,32 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
     private static $paperConfig = [
         'Jenayah' => [
             'model'       => \App\Models\Jenayah::class,
-            'unique_by'   => 'no_ks',
+            'unique_by'   => 'no_kertas_siasatan',
             'column_map'  => [
-                'no_ks' => 'no_ks',
+                'no_kertas_siasatan' => 'no_kertas_siasatan',
                 'pegawai_penyiasat' => 'pegawai_penyiasat',
                 'seksyen' => 'seksyen',
-                'tarikh_laporan_polis' => 'tarikh_laporan_polis',
+                'tarikh_laporan_polis_dibuka' => 'tarikh_laporan_polis_dibuka',
             ],
         ],
         'Narkotik' => [
             'model'       => \App\Models\Narkotik::class,
-            'unique_by'   => 'no_ks',
+            'unique_by'   => 'no_kertas_siasatan',
             'column_map'  => [
-                'no_ks' => 'no_ks',
+                'no_kertas_siasatan' => 'no_kertas_siasatan',
                 'pegawai_penyiasat' => 'pegawai_penyiasat',
                 'seksyen' => 'seksyen',
-                'tarikh_laporan_polis' => 'tarikh_laporan_polis',
+                'tarikh_laporan_polis_dibuka' => 'tarikh_laporan_polis_dibuka',
             ],
         ],
         'Komersil' => [
             'model'       => \App\Models\Komersil::class,
-            'unique_by'   => 'no_ks',
+            'unique_by'   => 'no_kertas_siasatan',
             'column_map'  => [
-                'no_ks' => 'no_ks',
-                'pegawai_penyiasat' => 'pegawai_siasatan',
-                'pegawai_siasatan' => 'pegawai_siasatan',
+                'no_kertas_siasatan' => 'no_kertas_siasatan',
+                'pegawai_penyiasat' => 'pegawai_penyiasat',
                 'seksyen' => 'seksyen',
-                'tarikh_ks_dibuka' => 'tarikh_ks_dibuka',
+                'tarikh_laporan_polis_dibuka' => 'tarikh_laporan_polis_dibuka',
             ],
         ],
         'TrafikSeksyen' => [ 
@@ -77,12 +76,12 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
         ],
         'OrangHilang' => [
             'model'       => \App\Models\OrangHilang::class,
-            'unique_by'   => 'no_ks',
+           'unique_by'   => 'no_kertas_siasatan',
             'column_map'  => [
-                'no_ks' => 'no_ks',
+                'no_kertas_siasatan' => 'no_kertas_siasatan',
                 'pegawai_penyiasat' => 'pegawai_penyiasat',
-                'tarikh_laporan_polis_sistem' => 'tarikh_laporan_polis_sistem',
-                'tarikh_ks' => 'tarikh_ks',
+                'seksyen' => 'seksyen',
+                'tarikh_laporan_polis_dibuka' => 'tarikh_laporan_polis_dibuka',
             ],
         ],
         'LaporanMatiMengejut' => [
