@@ -109,7 +109,11 @@ class Komersil extends Model
         'status_permohonan_lain_lain_oleh_IO_AIO_text',
         'adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan_text',
         'adakah_ks_kus_fail_selesai_text',
-        'adakah_muka_surat_4_keputusan_kes_dicatat_text'
+        'adakah_muka_surat_4_keputusan_kes_dicatat_text',
+        'status_semboyan_pertama_wanted_person_text',
+        'status_semboyan_kedua_wanted_person_text',
+        'status_semboyan_ketiga_wanted_person_text',
+        'status_penandaan_kelas_warna_text',
     ];
 
     public function project()
@@ -283,9 +287,9 @@ class Komersil extends Model
         return $this->formatBooleanToMalay($this->status_penandaan_kelas_warna);
     }
 
-    public function getStatusPermohonanLainLainOlehIOAIOTextAttribute(): string 
+    public function getAdakahMukaSurat4KeputusanKesDicatatTextAttribute(): string 
     {
-        return $this->formatBooleanToMalay($this->status_permohonan_lain_lain_oleh_IO_AIO);
+        return $this->formatBooleanToMalay($this->adakah_muka_surat_4_keputusan_kes_dicatat);
     }
 
     public function getAdakahFailLmmTAtauLmmTelahAdaKeputusanTextAttribute(): string 
@@ -298,8 +302,8 @@ class Komersil extends Model
         return $this->formatBooleanToMalay($this->adakah_ks_kus_fail_selesai);
     }
 
-    public function getAdakahMukaSurat4KeputusanKesDicatatTextAttribute(): string 
+    public function getStatusPermohonanLainLainOlehIOAIOTextAttribute(): string 
     {
-        return $this->formatBooleanToMalay($this->adakah_muka_surat_4_keputusan_kes_dicatat);
+        return $this->formatBooleanToMalay($this->status_permohonan_lain_lain_oleh_IO_AIO);
     }
 }

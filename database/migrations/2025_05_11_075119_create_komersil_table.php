@@ -17,7 +17,6 @@ return new class extends Migration
 
             // BAHAGIAN 1: Maklumat Asas (B1)
             $table->string('no_kertas_siasatan')->unique()->comment('B1');
-            $table->string('no_fail_lmm_t')->nullable()->comment('B1');
             $table->string('no_repot_polis')->nullable()->comment('B1');
             $table->string('pegawai_penyiasat')->nullable()->comment('B1');
             $table->date('tarikh_laporan_polis_dibuka')->nullable()->comment('B1');
@@ -43,23 +42,26 @@ return new class extends Migration
             $table->string('keputusan_siasatan_oleh_ya_tpr')->nullable()->comment('B3');
             $table->json('adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan')->nullable()->comment('B3');
             $table->text('ulasan_keputusan_siasatan_tpr')->nullable()->comment('B3');
-            $table->text('ulasan_keputusan_pegawai_pemeriksa')->nullable()->comment('B3');
+            $table->text('ulasan_keseluruhan_pegawai_pemeriksa')->nullable()->comment('B3');
 
             // BAHAGIAN 4: Barang Kes (B4)
             $table->boolean('adakah_barang_kes_didaftarkan')->nullable()->comment('B4');
             $table->string('no_daftar_barang_kes_am')->nullable()->comment('B4');
             $table->string('no_daftar_barang_kes_berharga')->nullable()->comment('B4');
             $table->string('no_daftar_barang_kes_kenderaan')->nullable()->comment('B4');
+            $table->string('no_daftar_botol_spesimen_urin')->nullable()->comment('no_daftar_botol_spesimen_urin: VARCHAR(255)');
+            $table->string('jenis_barang_kes_am')->nullable()->comment('jenis_barang_kes_am: VARCHAR(255)');
+            $table->string('jenis_barang_kes_berharga')->nullable()->comment('jenis_barang_kes_berharga: VARCHAR(255)');
+            $table->string('jenis_barang_kes_kenderaan')->nullable()->comment('jenis_barang_kes_kenderaan: VARCHAR(255)');
             $table->json('status_pergerakan_barang_kes')->nullable()->comment('B4');
             $table->json('status_barang_kes_selesai_siasatan')->nullable()->comment('B4');
             $table->json('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan')->nullable()->comment('B4');
             $table->json('adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan')->nullable()->comment('B4');
-            $table->json('resit_kew_98e_pelupusan_tunai_perbendaharaan')->nullable()->comment('B4,resit_kew_98e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbencaharaan');
+            $table->json('resit_kew_38e_pelupusan_tunai_perbendaharaan')->nullable()->comment('B4,resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbencaharaan');
             $table->json('adakah_borang_serah_terima_pegawai_tangkapan')->nullable()->comment('B4');
             $table->string('adakah_borang_serah_terima_pemilik_saksi')->nullable()->comment('B4');
             $table->boolean('adakah_sijil_surat_kebenaran_ipo')->nullable()->comment('B4');
             $table->string('adakah_gambar_pelupusan')->nullable()->comment('B4');
-            $table->text('ulasan_keseluruhan_pegawai_pemeriksa')->nullable()->comment('B4');
 
             // BAHAGIAN 5: Bukti & Rajah (B5)
             $table->boolean('status_id_siasatan_dikemaskini')->nullable()->comment('B5');
@@ -158,12 +160,22 @@ return new class extends Migration
             $table->string('nama_telco_laporan_E_FSA_5_oleh_IO_AIO')->nullable(); // B7
             $table->date('tarikh_laporan_penuh_E_FSA_5_telco_oleh_IO_AIO')->nullable(); // B7
 
+           
             // PUSPAKOM
             $table->boolean('status_permohonan_laporan_puspakom')->nullable(); // B7
             $table->date('tarikh_permohonan_laporan_puspakom')->nullable(); // B7
             $table->boolean('status_laporan_penuh_puspakom')->nullable(); // B7
             $table->date('tarikh_laporan_penuh_puspakom')->nullable(); // B7
 
+            //JKR & JPJ
+            $table->boolean('status_permohonan_laporan_jkr')->nullable()->comment('status_permohonan_laporan_jkr: BOOLEAN');
+            $table->date('tarikh_permohonan_laporan_jkr')->nullable()->comment('tarikh_permohonan_laporan_jkr: DATE');
+            $table->boolean('status_laporan_penuh_jkr')->nullable()->comment('status_laporan_penuh_jkr: BOOLEAN');
+            $table->date('tarikh_laporan_penuh_jkr')->nullable()->comment('tarikh_laporan_penuh_jkr: DATE');
+            $table->boolean('status_permohonan_laporan_jpj')->nullable()->comment('status_permohonan_laporan_jpj: BOOLEAN');
+            $table->date('tarikh_permohonan_laporan_jpj')->nullable()->comment('tarikh_permohonan_laporan_jpj: DATE');
+            $table->boolean('status_laporan_penuh_jpj')->nullable()->comment('status_laporan_penuh_jpj: BOOLEAN');
+            $table->date('tarikh_laporan_penuh_jpj')->nullable()->comment('tarikh_laporan_penuh_jpj: DATE');
             // IMIGRESEN
             $table->boolean('status_permohonan_laporan_imigresen')->nullable(); // B7
             $table->date('tarikh_permohonan_laporan_imigresen')->nullable(); // B7
@@ -181,7 +193,7 @@ return new class extends Migration
             $table->date('tarikh_permohonan_laporan_forensik_pdrm')->nullable(); // B7
             $table->boolean('status_laporan_penuh_forensik_pdrm')->nullable(); // B7
             $table->date('tarikh_laporan_penuh_forensik_pdrm')->nullable(); // B7
-
+            $table->text('jenis_barang_kes_forensik')->nullable()->comment('jenis_barang_kes_forensik');
             // Lain-lain
             $table->string('lain_lain_permohonan_laporan')->nullable(); // B7
 
