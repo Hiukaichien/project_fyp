@@ -47,7 +47,7 @@ class DatabaseSeeder extends Seeder
         // Note: Using 'pegawai_penyiasat' as per your migration file.
         for ($i = 1; $i <= 20; $i++) {
             Jenayah::updateOrCreate(
-                ['no_kertas_siasatan' => 'JNY/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '/24'],
+                ['no_ks' => 'JNY/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '/24'],
                 [
                     'pegawai_penyiasat' => ['INSP ALI', 'SGT AHMAD', 'INSP FATIMAH'][array_rand(['INSP ALI', 'SGT AHMAD', 'INSP FATIMAH'])],
                     'seksyen' => ['302 KK', '39B ADB', '420 KK'][array_rand(['302 KK', '39B ADB', '420 KK'])],
@@ -61,7 +61,7 @@ class DatabaseSeeder extends Seeder
         // Note: Using 'pegawai_penyiasat' as per your migration file.
         for ($i = 1; $i <= 20; $i++) {
             Narkotik::updateOrCreate(
-                ['no_kertas_siasatan' => 'NRK/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '/24'],
+                ['no_ks' => 'NRK/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '/24'],
                 [
                     'pegawai_penyiasat' => ['INSP WONG', 'SGT RAZALI', 'INSP CHUA'][array_rand(['INSP WONG', 'SGT RAZALI', 'INSP CHUA'])],
                     'seksyen' => ['12(2) ADB 1952', '15(1)(a) ADB 1952', '39B ADB 1952'][array_rand(['12(2) ADB 1952', '15(1)(a) ADB 1952', '39B ADB 1952'])],
@@ -72,15 +72,16 @@ class DatabaseSeeder extends Seeder
         }
 
         // 5. Seed Komersil Papers (20 records)
-        // Note: Using 'pegawai_siasatan' as per your migration file.
+        // BAHAGIAN 1: Maklumat Asas fields only
         for ($i = 1; $i <= 20; $i++) {
             Komersil::updateOrCreate(
                 ['no_kertas_siasatan' => 'KML/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '/24'],
                 [
-                    'pegawai_siasatan' => ['ASP KUMAR', 'INSP ZAINAB', 'SGT LEE'][array_rand(['ASP KUMAR', 'INSP ZAINAB', 'SGT LEE'])],
-                    'seksyen' => ['420 KK', '4(1) AMLA', 'Seksyen 424 KK'][array_rand(['420 KK', '4(1) AMLA', 'Seksyen 424 KK'])],
-                    'tarikh_ks_dibuka' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30))->format('Y-m-d'),
                     'project_id' => $project->id,
+                    'no_repot_polis' => 'IPD/REP/' . str_pad(rand(1000, 9999), 5, '0', STR_PAD_LEFT) . '/24',
+                    'pegawai_penyiasat' => ['ASP KUMAR', 'INSP ZAINAB', 'SGT LEE', 'INSP RAHMAN', 'SGT AMINAH'][array_rand(['ASP KUMAR', 'INSP ZAINAB', 'SGT LEE', 'INSP RAHMAN', 'SGT AMINAH'])],
+                    'tarikh_laporan_polis_dibuka' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30)),
+                    'seksyen' => ['420 KK', '4(1) AMLA', 'Seksyen 424 KK', '409 KK', '417 KK'][array_rand(['420 KK', '4(1) AMLA', 'Seksyen 424 KK', '409 KK', '417 KK'])],
                 ]
             );
         }
@@ -115,7 +116,7 @@ class DatabaseSeeder extends Seeder
         // Note: Using 'pegawai_penyiasat' as per your migration file.
         for ($i = 1; $i <= 20; $i++) {
             OrangHilang::updateOrCreate(
-                ['no_kertas_siasatan' => 'OH/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '/24'],
+                ['no_ks' => 'OH/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '/24'],
                 [
                     'pegawai_penyiasat' => ['SGT RINA', 'INSP LIM', 'SGT NORA'][array_rand(['SGT RINA', 'INSP LIM', 'SGT NORA'])],
                     'tarikh_ks' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30))->format('Y-m-d'),
