@@ -40,7 +40,8 @@ return new class extends Migration
             $table->boolean('arahan_minit_oleh_ya_tpr_status')->nullable()->comment('arahan_minit_oleh_ya_tpr_status: BOOLEAN');
             $table->date('arahan_minit_oleh_ya_tpr_tarikh')->nullable()->comment('arahan_minit_oleh_ya_tpr_tarikh: DATE');
             $table->string('keputusan_siasatan_oleh_ya_tpr')->nullable()->comment('keputusan_siasatan_oleh_ya_tpr: VARCHAR(255)');
-            $table->json('adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan')->nullable()->comment('adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan: JSON');
+            // CHANGED from JSON to STRING
+            $table->string('adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan')->nullable()->comment('adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan: VARCHAR(255)');
             $table->text('ulasan_keputusan_siasatan_tpr')->nullable()->comment('ulasan_keputusan_siasatan_tpr: TEXT');
             $table->string('keputusan_siasatan_oleh_ya_koroner')->nullable()->comment('keputusan_siasatan_oleh_ya_koroner: VARCHAR(255)');
             $table->string('ulasan_keputusan_oleh_ya_koroner')->nullable()->comment('ulasan_keputusan_oleh_ya_koroner: VARCHAR(255)');
@@ -56,15 +57,23 @@ return new class extends Migration
             $table->string('jenis_barang_kes_am')->nullable()->comment('jenis_barang_kes_am: VARCHAR(255)');
             $table->string('jenis_barang_kes_berharga')->nullable()->comment('jenis_barang_kes_berharga: VARCHAR(255)');
             $table->string('jenis_barang_kes_kenderaan')->nullable()->comment('jenis_barang_kes_kenderaan: VARCHAR(255)');
-            $table->json('status_pergerakan_barang_kes')->nullable()->comment('status_pergerakan_barang_kes: JSON');
-            $table->json('status_barang_kes_selesai_siasatan')->nullable()->comment('status_barang_kes_selesai_siasatan: JSON');
-            $table->json('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan')->nullable()->comment('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan: JSON');
-            $table->json('adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan')->nullable()->comment('adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan: JSON');
-            $table->json('resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan')->nullable()->comment('resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan: JSON');
-            $table->json('adakah_borang_serah_terima_pegawai_tangkapan')->nullable()->comment('adakah_borang_serah_terima_pegawai_tangkapan: JSON');
-            $table->string('adakah_borang_serah_terima_pemilik_saksi')->nullable()->comment('adakah_borang_serah_terima_pemilik_saksi: VARCHAR(255)');
+            // CHANGED from JSON to STRING + ADDED _lain columns
+            $table->string('status_pergerakan_barang_kes')->nullable()->comment('status_pergerakan_barang_kes: VARCHAR(255)');
+            $table->string('status_pergerakan_barang_kes_lain')->nullable()->comment('status_pergerakan_barang_kes_lain: VARCHAR(255)');
+            $table->string('status_barang_kes_selesai_siasatan')->nullable()->comment('status_barang_kes_selesai_siasatan: VARCHAR(255)');
+            $table->string('status_barang_kes_selesai_siasatan_lain')->nullable()->comment('status_barang_kes_selesai_siasatan_lain: VARCHAR(255)');
+            $table->string('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan')->nullable()->comment('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan: VARCHAR(255)');
+            $table->string('kaedah_pelupusan_barang_kes_lain')->nullable()->comment('kaedah_pelupusan_barang_kes_lain: VARCHAR(255)'); // Named as per Blade for consistency
+            $table->string('adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan')->nullable()->comment('adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan: VARCHAR(255)');
+            $table->string('resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan')->nullable()->comment('resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan: VARCHAR(255)');
+            $table->string('adakah_borang_serah_terima_pegawai_tangkapan')->nullable()->comment('adakah_borang_serah_terima_pegawai_tangkapan: VARCHAR(255)');
+            // CHANGED from VARCHAR to BOOLEAN
+            $table->boolean('adakah_borang_serah_terima_pemilik_saksi')->nullable()->comment('adakah_borang_serah_terima_pemilik_saksi: BOOLEAN');
             $table->boolean('adakah_sijil_surat_kebenaran_ipo')->nullable()->comment('adakah_sijil_surat_kebenaran_ipo: BOOLEAN');
-            $table->string('adakah_gambar_pelupusan')->nullable()->comment('adakah_gambar_pelupusan: VARCHAR(255)');
+            // CHANGED from VARCHAR to BOOLEAN
+            $table->boolean('adakah_gambar_pelupusan')->nullable()->comment('adakah_gambar_pelupusan: BOOLEAN');
+            // ADDED missing column
+            $table->text('ulasan_keseluruhan_pegawai_pemeriksa_barang_kes')->nullable()->comment('ulasan_keseluruhan_pegawai_pemeriksa_barang_kes: TEXT');
             
             // BAHAGIAN 5: Dokumen Siasatan (B5)
             $table->boolean('status_id_siasatan_dikemaskini')->nullable()->comment('status_id_siasatan_dikemaskini: BOOLEAN');
@@ -149,8 +158,10 @@ return new class extends Migration
             $table->boolean('muka_surat_4_dengan_arahan_tpr')->nullable()->comment('ADAKAH MUKA SURAT 4 - BARANG KES DITULIS BERSAMA NO DAFTAR BARANG KES DAN TELAH ADA ARAHAN YA TPR UNTUK PELUPUSAN ATAU SERAHAN SEMULA KE PEMILIK');
             $table->boolean('muka_surat_4_keputusan_kes_dicatat')->nullable()->comment('ADAKAH MUKA SURAT 4 - KEPUTUSAN KES DICATAT SELENGKAPNYA...');
             $table->boolean('fail_lmm_ada_keputusan_koroner')->nullable()->comment('ADAKAH FAIL L.M.M (T) ATAU L.M.M TELAH ADA KEPUTUSAN SIASATAN OLEH YA KORONER');
-            $table->string('status_kus_fail')->nullable()->comment('ADAKAH KERTAS SIASATAN TELAH DI KUS/FAIL...');
-            $table->json('keputusan_akhir_mahkamah')->nullable()->comment('KEPUTUSAN AKHIR OLEH MAHKAMAH...');
+            // CHANGED from VARCHAR to BOOLEAN
+            $table->boolean('status_kus_fail')->nullable()->comment('ADAKAH KERTAS SIASATAN TELAH DI KUS/FAIL...');
+            // CHANGED from JSON to STRING
+            $table->string('keputusan_akhir_mahkamah')->nullable()->comment('KEPUTUSAN AKHIR OLEH MAHKAMAH...');
             $table->text('ulasan_pegawai_pemeriksa_fail')->nullable()->comment('ULASAN KESELURUHAN PEGAWAI PEMERIKSA (JIKA ADA)');
 
             $table->timestamps();

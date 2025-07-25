@@ -113,28 +113,31 @@ class DatabaseSeeder extends Seeder
         }
         
         // 7. Seed Orang Hilang Papers (20 records)
-        // Note: Using 'pegawai_penyiasat' as per your migration file.
         for ($i = 1; $i <= 20; $i++) {
-            OrangHilang::updateOrCreate(
-                ['no_ks' => 'OH/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '/24'],
-                [
-                    'pegawai_penyiasat' => ['SGT RINA', 'INSP LIM', 'SGT NORA'][array_rand(['SGT RINA', 'INSP LIM', 'SGT NORA'])],
-                    'tarikh_ks' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30))->format('Y-m-d'),
-                    'tarikh_laporan_polis_sistem' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30))->format('Y-m-d'),
-                    'project_id' => $project->id,
-                ]
-            );
+            OrangHilang::create([
+                'project_id' => $project->id,
+                
+                // BAHAGIAN 1: Maklumat Asas
+                'no_repot_polis' => 'IPD/OH/' . str_pad(rand(1000, 9999), 5, '0', STR_PAD_LEFT) . '/24',
+                'pegawai_penyiasat' => ['SGT RINA', 'INSP LIM', 'SGT NORA', 'INSP HAFIZ', 'SGT AZURA'][array_rand(['SGT RINA', 'INSP LIM', 'SGT NORA', 'INSP HAFIZ', 'SGT AZURA'])],
+                'tarikh_laporan_polis_dibuka' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30)),
+                'seksyen' => ['365 KK', '376 KK', '302 KK', '41 KK'][array_rand(['365 KK', '376 KK', '302 KK', '41 KK'])],
+            ]);
         }
 
         // 8. Seed Laporan Mati Mengejut Papers (20 records)
         for ($i = 1; $i <= 20; $i++) {
             LaporanMatiMengejut::updateOrCreate(
-                ['no_sdr_lmm' => 'LMM/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '/24'],
+                ['no_kertas_siasatan' => 'LMM/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '/24'],
                 [
-                    'pegawai_penyiasat' => ['INSP AZMAN', 'SGT YUSOF', 'INSP SARAH'][array_rand(['INSP AZMAN', 'SGT YUSOF', 'INSP SARAH'])],
-                    'no_laporan_polis' => 'IPD/REP/' . str_pad(rand(1000, 9999), 5, '0', STR_PAD_LEFT) . '/24',
-                    'tarikh_laporan_polis' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30))->format('Y-m-d'),
                     'project_id' => $project->id,
+                    // BAHAGIAN 1: Maklumat Asas
+                    'no_fail_lmm_sdr' => 'LMM/SDR/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '/24',
+                    'no_repot_polis' => 'IPD/REP/' . str_pad(rand(1000, 9999), 5, '0', STR_PAD_LEFT) . '/24',
+                    'pegawai_penyiasat' => ['INSP AZMAN', 'SGT YUSOF', 'INSP SARAH'][array_rand(['INSP AZMAN', 'SGT YUSOF', 'INSP SARAH'])],
+                    'tarikh_laporan_polis_dibuka' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30))->format('Y-m-d'),
+                    'seksyen' => ['41 KK', '302 KK', '304 KK', '324 KK'][array_rand(['41 KK', '302 KK', '304 KK', '324 KK'])],
+                    
                 ]
             );
         }

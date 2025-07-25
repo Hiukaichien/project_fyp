@@ -11,34 +11,47 @@
                 @csrf
                 @method('PUT')
 
+                @if ($errors->any())
+                    <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
+                        <p class="font-bold">Terdapat beberapa masalah dengan input anda:</p>
+                        <ul class="mt-2 list-disc list-inside">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
                 @php
                 // Helper function for simple boolean choices (e.g., Ada/Tiada, Ya/Tidak)
-                function render_boolean_select($name, $currentValue, $YaLabel = 'Ada / Ya', $TidakLabel = 'Tiada / Tidak') {
-                    $options = ['' => '-- Sila Pilih --', '1' => $YaLabel, '0' => $TidakLabel];
-                    $html = "<select name='{$name}' id='{$name}' class='mt-1 block w-full form-select'>";
-                    foreach ($options as $value => $label) {
-                        $selected = (string)old($name, $currentValue) === (string)$value && old($name, $currentValue) !== null ? 'selected' : '';
-                        $html .= "<option value='{$value}' {$selected}>{$label}</option>";
-                    }
-                    $html .= "</select>";
+                function render_boolean_radio($name, $currentValue, $YaLabel = 'Ada / Ya', $TidakLabel = 'Tiada / Tidak') {
+                    $effectiveValue = old($name, $currentValue);
+                    $html = "<div class='mt-2 flex items-center space-x-6'>";
+                    $checkedYa = (($effectiveValue === true || $effectiveValue === 1 || $effectiveValue === '1') ? 'checked' : '');
+                    $html .= "<label class='flex items-center cursor-pointer'><input type='radio' name='{$name}' value='1' class='form-radio h-4 w-4 text-indigo-600' {$checkedYa}><span class='ml-2 text-gray-700'>{$YaLabel}</span></label>";
+                    $checkedTidak = (($effectiveValue === false || $effectiveValue === 0 || $effectiveValue === '0') && $effectiveValue !== null ? 'checked' : '');
+                    $html .= "<label class='flex items-center cursor-pointer'><input type='radio' name='{$name}' value='0' class='form-radio h-4 w-4 text-indigo-600' {$checkedTidak}><span class='ml-2 text-gray-700'>{$TidakLabel}</span></label>";
+                    $html .= "</div>";
                     return $html;
                 }
 
-                // Helper for status choices that reveal a date input
-                function render_status_with_date($id, $statusName, $dateName, $currentStatus, $currentDate) {
-                    $html = "<div x-data='{ status: " . (old($statusName, $currentStatus) ? 'Ya' : 'Tidak') . " }'>";
-                    $html .= "<select name='{$statusName}' x-model='status' class='mt-1 block w-full form-select'>";
-                    $html .= "<option value='0'>Tiada / Tidak Cipta</option>";
-                    $html .= "<option value='1'>Ada / Cipta</option>";
-                    $html .= "</select>";
-                    $html .= "<div x-show='status' x-transition class='mt-2'>";
+                // Helper for status choices that reveal a date input with radio buttons
+                function render_status_with_date_radio($id, $statusName, $dateName, $currentStatus, $currentDate, $YaLabel = 'Ada / Cipta', $TidakLabel = 'Tiada / Tidak Cipta') {
+                    $effectiveStatus = old($statusName, $currentStatus);
+                    $initialStatusForAlpine = (($effectiveStatus === true || $effectiveStatus === 1 || $effectiveStatus === '1') ? '1' : '0');
+                    $html = "<div x-data='{ status: \"{$initialStatusForAlpine}\" }'>";
+                    $html .= "<div class='mt-2 flex items-center space-x-6'>";
+                    $html .= "<label class='flex items-center cursor-pointer'><input type='radio' name='{$statusName}' value='1' x-model='status' class='form-radio h-4 w-4 text-indigo-600'><span class='ml-2 text-gray-700'>{$YaLabel}</span></label>";
+                    $html .= "<label class='flex items-center cursor-pointer'><input type='radio' name='{$statusName}' value='0' x-model='status' class='form-radio h-4 w-4 text-indigo-600'><span class='ml-2 text-gray-700'>{$TidakLabel}</span></label>";
+                    $html .= "</div>";
+                    $html .= "<div x-show='status === \"1\"' x-transition class='mt-2'>";
                     $html .= "<label for='{$dateName}_{$id}' class='text-sm text-gray-600'>Jika Ada, nyatakan tarikh:</label>";
                     $html .= "<input type='date' name='{$dateName}' id='{$dateName}_{$id}' value='" . old($dateName, optional($currentDate)->format('Y-m-d')) . "' class='mt-1 block w-full form-input'>";
                     $html .= "</div></div>";
                     return $html;
                 }
 
-                // Helper for JSON fields represented by checkboxes
+                // Helper for JSON fields represented by checkboxes (for multi-select where still needed)
                 function render_json_checkboxes($name, $currentJson, $options) {
                     $currentValues = old($name, $currentJson ?? []);
                     if (!is_array($currentValues)) $currentValues = [];
@@ -49,52 +62,6 @@
                         $html .= "<label class='flex items-center'><input type='checkbox' name='{$name}[]' value='{$optionValue}' class='form-checkbox h-5 w-5 text-indigo-600' {$checked}><span class='ml-3 text-gray-700'>{$optionLabel}</span></label>";
                     }
                     $html .= "</div>";
-                    return $html;
-                }
-
-
-                // NEW HELPER: Renders radio buttons for simple boolean choices
-                // Helper function for simple boolean choices (e.g., Ada/Tiada, Ya/Tidak)
-                // REVISED: To correctly set 'checked' attribute for boolean 'true' or 'false' values.
-                function render_boolean_radio($name, $currentValue, $YaLabel = 'Ada / Ya', $TidakLabel = 'Tiada / Tidak') {
-                    // Determine the effective value to check against, prioritizing old input over current model value.
-                    // This handles cases where old() might return '1', '0', true, false, or null.
-                    $effectiveValue = old($name, $currentValue);
-
-                    $html = "<div class='mt-2 flex items-center space-x-6'>";
-                    
-                    // Option 1: Ya/Ada (value='1')
-                    // Check if the effectiveValue is logically true.
-                    $checkedYa = (($effectiveValue === true || $effectiveValue === 1 || $effectiveValue === '1') ? 'checked' : '');
-                    $html .= "<label class='flex items-center cursor-pointer'><input type='radio' name='{$name}' value='1' class='form-radio h-4 w-4 text-indigo-600' {$checkedYa}><span class='ml-2 text-gray-700'>{$YaLabel}</span></label>";
-
-                    // Option 2: Tidak/Tiada (value='0')
-                    // Check if the effectiveValue is logically false AND it's not null (meaning a choice was previously made or defaulted to false).
-                    $checkedTidak = (($effectiveValue === false || $effectiveValue === 0 || $effectiveValue === '0') && $effectiveValue !== null ? 'checked' : '');
-                    $html .= "<label class='flex items-center cursor-pointer'><input type='radio' name='{$name}' value='0' class='form-radio h-4 w-4 text-indigo-600' {$checkedTidak}><span class='ml-2 text-gray-700'>{$TidakLabel}</span></label>";
-                    $html .= "</div>";
-                    return $html;
-                }
-
-                // REVISED: To correctly initialize Alpine.js 'status' variable with '0' or '1' string.
-                function render_status_with_date_radio($id, $statusName, $dateName, $currentStatus, $currentDate) {
-                    // Determine the effective status value (prioritizing old input over current model value).
-                    $effectiveStatus = old($statusName, $currentStatus);
-                    
-                    // Ensure the initial Alpine 'status' variable is explicitly '1' (for true) or '0' (for false/null).
-                    $initialStatusForAlpine = (($effectiveStatus === true || $effectiveStatus === 1 || $effectiveStatus === '1') ? '1' : '0');
-
-                    $html = "<div x-data='{ status: \"{$initialStatusForAlpine}\" }'>";
-                    // Radio buttons (x-model handles 'checked' state based on 'status' variable)
-                    $html .= "<div class='mt-2 flex items-center space-x-6'>";
-                    $html .= "<label class='flex items-center cursor-pointer'><input type='radio' name='{$statusName}' value='1' x-model='status' class='form-radio h-4 w-4 text-indigo-600'><span class='ml-2 text-gray-700'>Ada / Cipta</span></label>";
-                    $html .= "<label class='flex items-center cursor-pointer'><input type='radio' name='{$statusName}' value='0' x-model='status' class='form-radio h-4 w-4 text-indigo-600'><span class='ml-2 text-gray-700'>Tiada / Tidak Cipta</span></label>";
-                    $html .= "</div>";
-                    // Conditionally shown date input
-                    $html .= "<div x-show='status === \"1\"' x-transition class='mt-2'>";
-                    $html .= "<label for='{$dateName}_{$id}' class='text-sm text-gray-600'>Jika Ada, nyatakan tarikh:</label>";
-                    $html .= "<input type='date' name='{$dateName}' id='{$dateName}_{$id}' value='" . old($dateName, optional($currentDate)->format('Y-m-d')) . "' class='mt-1 block w-full form-input'>";
-                    $html .= "</div></div>";
                     return $html;
                 }
                 @endphp
@@ -165,176 +132,362 @@
                     </div>
                 </div>
 
-                                <!-- BAHAGIAN 3: Arahan & Keputusan -->
+                <!-- BAHAGIAN 3: Arahan & Keputusan -->
                 <div>
                     <h3 class="text-lg font-bold mb-4 text-gray-800 border-b pb-2">BAHAGIAN 3: Arahan & Keputusan</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                        <div>
-                            <label class="block mt-1 text-sm font-medium text-gray-700">Arahan Minit Oleh SIO</label>
+                            <label class="block text-sm font-medium text-gray-700">Arahan Minit Oleh SIO</label>
                             {!! render_status_with_date_radio('sio', 'arahan_minit_oleh_sio_status', 'arahan_minit_oleh_sio_tarikh', $paper->arahan_minit_oleh_sio_status, $paper->arahan_minit_oleh_sio_tarikh) !!}
                         </div>
                         <div>
-                            <label class="block mt-5 text-sm font-medium text-gray-700">Arahan Minit Oleh Ketua Bahagian</label>
+                            <label class="block text-sm font-medium text-gray-700">Arahan Minit Oleh Ketua Bahagian</label>
                             {!! render_status_with_date_radio('kb', 'arahan_minit_ketua_bahagian_status', 'arahan_minit_ketua_bahagian_tarikh', $paper->arahan_minit_ketua_bahagian_status, $paper->arahan_minit_ketua_bahagian_tarikh) !!}
                         </div>
                         <div>
-                            <label class="block mt-5 text-sm font-medium text-gray-700">Arahan Minit Oleh Ketua Jabatan</label>
+                            <label class="block text-sm font-medium text-gray-700">Arahan Minit Oleh Ketua Jabatan</label>
                             {!! render_status_with_date_radio('kj', 'arahan_minit_ketua_jabatan_status', 'arahan_minit_ketua_jabatan_tarikh', $paper->arahan_minit_ketua_jabatan_status, $paper->arahan_minit_ketua_jabatan_tarikh) !!}
                         </div>
                         <div>
-                            <label class="block mt-5 text-sm font-medium text-gray-700">Arahan Minit Oleh YA TPR</label>
+                            <label class="block text-sm font-medium text-gray-700">Arahan Minit Oleh YA TPR</label>
                             {!! render_status_with_date_radio('tpr', 'arahan_minit_oleh_ya_tpr_status', 'arahan_minit_oleh_ya_tpr_tarikh', $paper->arahan_minit_oleh_ya_tpr_status, $paper->arahan_minit_oleh_ya_tpr_tarikh) !!}
                         </div>
 
-                        <div class="md:col-span-2 mt">
-                            <label for="keputusan_siasatan_oleh_ya_tpr" class="block mt-5 text-sm font-medium text-gray-700">Keputusan Siasatan Oleh YA TPR</label>
+                        <div class="md:col-span-2">
+                            <label for="keputusan_siasatan_oleh_ya_tpr" class="block text-sm font-medium text-gray-700">Keputusan Siasatan Oleh YA TPR</label>
                             <input type="text" name="keputusan_siasatan_oleh_ya_tpr" id="keputusan_siasatan_oleh_ya_tpr" value="{{ old('keputusan_siasatan_oleh_ya_tpr', $paper->keputusan_siasatan_oleh_ya_tpr) }}" class="mt-1 block w-full form-input">
                         </div>
                         
                         <div class="md:col-span-2">
-                            <label class="block mt-5 text-sm font-medium text-gray-700">Adakah Arahan Tuduh Oleh YA TPR Diambil Tindakan</label>
-                            @php
-                                $tuduh_options = [
-                                    'Ya' => 'Ya',
-                                    'Tidak' => 'Tidak',
-                                    'Tiada Usaha Oleh IO/AIO' => 'Tiada Usaha Oleh IO/AIO'
-                                ];
-                            @endphp
-                            {!! render_json_checkboxes('adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan', $paper->adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan, $tuduh_options) !!}
+                            <label class="block text-sm font-medium text-gray-700">Adakah Arahan Tuduh Oleh YA TPR Diambil Tindakan</label>
+                            <div class="mt-2 space-y-2">
+                                @php
+                                    $currentArahan = old('adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan', $paper->adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan);
+                                    // If it's an array (from old checkbox data), get the first value
+                                    if (is_array($currentArahan)) {
+                                        $currentArahan = !empty($currentArahan) ? $currentArahan[0] : '';
+                                    }
+                                @endphp
+                                <label class="flex items-center">
+                                    <input type="radio" name="adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan" value="Ya" 
+                                        {{ $currentArahan == 'Ya' ? 'checked' : '' }}
+                                        class="form-radio h-4 w-4 text-indigo-600">
+                                    <span class="ml-2 text-gray-700">Ya</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="radio" name="adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan" value="Tidak" 
+                                        {{ $currentArahan == 'Tidak' ? 'checked' : '' }}
+                                        class="form-radio h-4 w-4 text-indigo-600">
+                                    <span class="ml-2 text-gray-700">Tidak</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="radio" name="adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan" value="Tiada Usaha Oleh IO/AIO" 
+                                        {{ $currentArahan == 'Tiada Usaha Oleh IO/AIO' ? 'checked' : '' }}
+                                        class="form-radio h-4 w-4 text-indigo-600">
+                                    <span class="ml-2 text-gray-700">Tiada Usaha Oleh IO/AIO</span>
+                                </label>
+                            </div>
                         </div>
 
                         <div class="md:col-span-2">
-                            <label for="ulasan_keputusan_siasatan_tpr" class="block mt-5 text-sm font-medium text-gray-700">Ulasan Keputusan Siasatan TPR</label>
+                            <label for="ulasan_keputusan_siasatan_tpr" class="block text-sm font-medium text-gray-700">Ulasan Keputusan Siasatan TPR</label>
                             <textarea name="ulasan_keputusan_siasatan_tpr" id="ulasan_keputusan_siasatan_tpr" rows="3" class="mt-1 block w-full form-textarea">{{ old('ulasan_keputusan_siasatan_tpr', $paper->ulasan_keputusan_siasatan_tpr) }}</textarea>
                         </div>
                         
                         <div>
-                            <label for="keputusan_siasatan_oleh_ya_koroner" class="block mt-5 text-sm font-medium text-gray-700">Keputusan Siasatan Oleh YA Koroner</label>
+                            <label for="keputusan_siasatan_oleh_ya_koroner" class="block text-sm font-medium text-gray-700">Keputusan Siasatan Oleh YA Koroner</label>
                             <input type="text" name="keputusan_siasatan_oleh_ya_koroner" id="keputusan_siasatan_oleh_ya_koroner" value="{{ old('keputusan_siasatan_oleh_ya_koroner', $paper->keputusan_siasatan_oleh_ya_koroner) }}" class="mt-1 block w-full form-input">
                         </div>
                         <div>
-                            <label for="ulasan_keputusan_oleh_ya_koroner" class="block mt-5 text-sm font-medium text-gray-700">Ulasan Keputusan Oleh YA Koroner</label>
+                            <label for="ulasan_keputusan_oleh_ya_koroner" class="block text-sm font-medium text-gray-700">Ulasan Keputusan Oleh YA Koroner</label>
                             <input type="text" name="ulasan_keputusan_oleh_ya_koroner" id="ulasan_keputusan_oleh_ya_koroner" value="{{ old('ulasan_keputusan_oleh_ya_koroner', $paper->ulasan_keputusan_oleh_ya_koroner) }}" class="mt-1 block w-full form-input">
                         </div>
                         
                         <div class="md:col-span-2">
-                            <label for="ulasan_keseluruhan_pegawai_pemeriksa" class="block mt-5 text-sm font-medium text-gray-700">Ulasan Keseluruhan Pegawai Pemeriksa (Jika Ada)</label>
+                            <label for="ulasan_keseluruhan_pegawai_pemeriksa" class="block text-sm font-medium text-gray-700">Ulasan Keseluruhan Pegawai Pemeriksa (Jika Ada)</label>
                             <textarea name="ulasan_keseluruhan_pegawai_pemeriksa" id="ulasan_keseluruhan_pegawai_pemeriksa" rows="4" class="mt-1 block w-full form-textarea">{{ old('ulasan_keseluruhan_pegawai_pemeriksa', $paper->ulasan_keseluruhan_pegawai_pemeriksa) }}</textarea>
                         </div>
                     </div>
                 </div>
 
-                                <!-- BAHAGIAN 4: Barang Kes -->
+                <!-- BAHAGIAN 4: Barang Kes -->
                 <div>
-                    <h3 class="text-lg mt-5 font-bold mb-4 text-gray-800 border-b pb-2">BAHAGIAN 4: Barang Kes</h3>
+                    <h3 class="text-lg font-bold mb-4 text-gray-800 border-b pb-2">BAHAGIAN 4: Barang Kes</h3>
                     <div class="space-y-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Adakah Barang Kes Didaftarkan</label>
-                        {!! render_boolean_radio('adakah_barang_kes_didaftarkan', $paper->adakah_barang_kes_didaftarkan, 'Ya', 'Tidak') !!}
-                    </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Adakah Barang Kes Didaftarkan</label>
+                            {!! render_boolean_radio('adakah_barang_kes_didaftarkan', $paper->adakah_barang_kes_didaftarkan, 'Ya', 'Tidak') !!}
+                        </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <div><label for="no_daftar_barang_kes_am" class="block text-sm font-medium text-gray-700">No. Daftar Barang Kes Am</label><input type="text" name="no_daftar_barang_kes_am" id="no_daftar_barang_kes_am" value="{{ old('no_daftar_barang_kes_am', $paper->no_daftar_barang_kes_am) }}" class="mt-1 block w-full form-input"></div>
-                            <div><label for="no_daftar_barang_kes_berharga" class="block text-sm font-medium text-gray-700">No. Daftar Barang Kes Berharga</label><input type="text" name="no_daftar_barang_kes_berharga" id="no_daftar_barang_kes_berharga" value="{{ old('no_daftar_barang_kes_berharga', $paper->no_daftar_barang_kes_berharga) }}" class="mt-1 block w-full form-input"></div>
-                            <div><label for="no_daftar_barang_kes_kenderaan" class="block text-sm font-medium text-gray-700">No. Daftar Barang Kes Kenderaan</label><input type="text" name="no_daftar_barang_kes_kenderaan" id="no_daftar_barang_kes_kenderaan" value="{{ old('no_daftar_barang_kes_kenderaan', $paper->no_daftar_barang_kes_kenderaan) }}" class="mt-1 block w-full form-input"></div>
-                            <div><label for="no_daftar_botol_spesimen_urin" class="block text-sm font-medium text-gray-700">No. Daftar Botol Spesimen Urin</label><input type="text" name="no_daftar_botol_spesimen_urin" id="no_daftar_botol_spesimen_urin" value="{{ old('no_daftar_botol_spesimen_urin', $paper->no_daftar_botol_spesimen_urin) }}" class="mt-1 block w-full form-input"></div>
-                            <div><label for="no_daftar_spesimen_darah" class="block text-sm font-medium text-gray-700">No. Daftar Spesimen Darah</label><input type="text" name="no_daftar_spesimen_darah" id="no_daftar_spesimen_darah" value="{{ old('no_daftar_spesimen_darah', $paper->no_daftar_spesimen_darah) }}" class="mt-1 block w-full form-input"></div>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <div><label for="jenis_barang_kes_am" class="block text-sm font-medium text-gray-700">Jenis Barang Kes Am</label><input type="text" name="jenis_barang_kes_am" id="jenis_barang_kes_am" value="{{ old('jenis_barang_kes_am', $paper->jenis_barang_kes_am) }}" class="mt-1 block w-full form-input"></div>
-                            <div><label for="jenis_barang_kes_berharga" class="block text-sm font-medium text-gray-700">Jenis Barang Kes Berharga</label><input type="text" name="jenis_barang_kes_berharga" id="jenis_barang_kes_berharga" value="{{ old('jenis_barang_kes_berharga', $paper->jenis_barang_kes_berharga) }}" class="mt-1 block w-full form-input"></div>
-                            <div><label for="jenis_barang_kes_kenderaan" class="block text-sm font-medium text-gray-700">Jenis Barang Kes Kenderaan</label><input type="text" name="jenis_barang_kes_kenderaan" id="jenis_barang_kes_kenderaan" value="{{ old('jenis_barang_kes_kenderaan', $paper->jenis_barang_kes_kenderaan) }}" class="mt-1 block w-full form-input"></div>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Status Pergerakan Barang Kes</label>
-                            @php
-                                $pergerakan_options = [
-                                    'Simpanan Stor Ekshibit' => 'Simpanan Stor Ekshibit',
-                                    'Ujian Makmal' => 'Ujian Makmal',
-                                    'Di Mahkamah' => 'Di Mahkamah',
-                                    'Pada IO/AIO' => 'Pada IO/AIO',
-                                    'Lain-Lain' => 'Lain-Lain'
-                                ];
-                            @endphp
-                            {!! render_json_checkboxes('status_pergerakan_barang_kes', $paper->status_pergerakan_barang_kes, $pergerakan_options) !!}
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Status Barang Kes Selesai Siasatan</label>
-                            @php
-                                $selesai_options = [
-                                    'Dilupuskan ke Perbendaharaan' => 'Dilupuskan ke Perbendaharaan',
-                                    'Dikembalikan Kepada Pemilik' => 'Dikembalikan Kepada Pemilik',
-                                    'Dilupuskan' => 'Dilupuskan',
-                                    'Lain-Lain' => 'Lain-Lain'
-                                ];
-                            @endphp
-                            {!! render_json_checkboxes('status_barang_kes_selesai_siasatan', $paper->status_barang_kes_selesai_siasatan, $selesai_options) !!}
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Sekiranya Barang Kes Dilupuskan, Bagaimana Kaedah Pelupusan Dilaksanakan</label>
-                            @php
-                                $kaedah_options = [
-                                    'Dibakar' => 'Dibakar',
-                                    'Ditanam' => 'Ditanam',
-                                    'Dihancurkan' => 'Dihancurkan',
-                                    'Dilelong' => 'Dilelong',
-                                    'Lain-Lain' => 'Lain-Lain'
-                                ];
-                            @endphp
-                            {!! render_json_checkboxes('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan', $paper->barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan, $kaedah_options) !!}
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Adakah Pelupusan Barang Kes Itu Telah Ada Arahan Mahkamah Atau YA TPR</label>
-                            @php
-                                $arahan_options = [
-                                    'Ya' => 'Ya',
-                                    'Tidak' => 'Tidak',
-                                    'Inisiatif IO/AIO Sendiri' => 'Inisiatif IO/AIO Sendiri'
-                                ];
-                            @endphp
-                            {!! render_json_checkboxes('adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan', $paper->adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan, $arahan_options) !!}
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Resit Kew.38e Bagi Pelupusan Barang Kes Wang Tunai Ke Perbendaharaan</label>
-                            @php
-                                $resit_options = ['Ada Dilampirkan' => 'Ada Dilampirkan', 'Tidak Dilampirkan' => 'Tidak Dilampirkan'];
-                            @endphp
-                            {!! render_json_checkboxes('resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan', $paper->resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan, $resit_options) !!}
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Adakah Borang Serah/Terima Barang Kes Antara Pegawai Tangkapan dan IO/AIO Dilampirkan</label>
-                            {!! render_json_checkboxes('adakah_borang_serah_terima_pegawai_tangkapan', $paper->adakah_borang_serah_terima_pegawai_tangkapan, $resit_options) !!}
-                        </div>
-                        
-                        <div>
-                            <label for="adakah_borang_serah_terima_pemilik_saksi" class="block text-sm font-medium text-gray-700">Adakah Borang Serah/Terima Barang Kes Antara Pegawai Penyiasat, Pemilik dan Saksi Pegawai Kanan Polis Dilampirkan</label>
-                            <input type="text" name="adakah_borang_serah_terima_pemilik_saksi" id="adakah_borang_serah_terima_pemilik_saksi" value="{{ old('adakah_borang_serah_terima_pemilik_saksi', $paper->adakah_borang_serah_terima_pemilik_saksi) }}" class="mt-1 block w-full form-input">
-                        </div>
-                        
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">Adakah Sijil Atau Surat Arahan Kebenaran Oleh IPD Bagi Melaksanakan Pelupusan Barang Kes Dilampirkan</label>
-                                {!! render_boolean_radio('adakah_sijil_surat_kebenaran_ipo', $paper->adakah_sijil_surat_kebenaran_ipo, 'Ada Dilampirkan', 'Tidak Dilampirkan') !!}
+                                <label for="no_daftar_barang_kes_am" class="block text-sm font-medium text-gray-700">No. Daftar Barang Kes Am</label>
+                                <input type="text" name="no_daftar_barang_kes_am" id="no_daftar_barang_kes_am" value="{{ old('no_daftar_barang_kes_am', $paper->no_daftar_barang_kes_am) }}" class="mt-1 block w-full form-input">
                             </div>
+                            <div>
+                                <label for="no_daftar_barang_kes_berharga" class="block text-sm font-medium text-gray-700">No. Daftar Barang Kes Berharga</label>
+                                <input type="text" name="no_daftar_barang_kes_berharga" id="no_daftar_barang_kes_berharga" value="{{ old('no_daftar_barang_kes_berharga', $paper->no_daftar_barang_kes_berharga) }}" class="mt-1 block w-full form-input">
+                            </div>
+                            <div>
+                                <label for="no_daftar_barang_kes_kenderaan" class="block text-sm font-medium text-gray-700">No. Daftar Barang Kes Kenderaan</label>
+                                <input type="text" name="no_daftar_barang_kes_kenderaan" id="no_daftar_barang_kes_kenderaan" value="{{ old('no_daftar_barang_kes_kenderaan', $paper->no_daftar_barang_kes_kenderaan) }}" class="mt-1 block w-full form-input">
+                            </div>
+                            <div>
+                                <label for="no_daftar_botol_spesimen_urin" class="block text-sm font-medium text-gray-700">No. Daftar Botol Spesimen Urin</label>
+                                <input type="text" name="no_daftar_botol_spesimen_urin" id="no_daftar_botol_spesimen_urin" value="{{ old('no_daftar_botol_spesimen_urin', $paper->no_daftar_botol_spesimen_urin) }}" class="mt-1 block w-full form-input">
+                            </div>
+                            <div>
+                                <label for="no_daftar_spesimen_darah" class="block text-sm font-medium text-gray-700">No. Daftar Spesimen Darah</label>
+                                <input type="text" name="no_daftar_spesimen_darah" id="no_daftar_spesimen_darah" value="{{ old('no_daftar_spesimen_darah', $paper->no_daftar_spesimen_darah) }}" class="mt-1 block w-full form-input">
+                            </div>
+                        </div>
                         
-                        <div>
-                            <label for="adakah_gambar_pelupusan" class="block text-sm font-medium text-gray-700">Adakah Gambar Pelupusan Barang Kes Dilampirkan</label>
-                            <input type="text" name="adakah_gambar_pelupusan" id="adakah_gambar_pelupusan" value="{{ old('adakah_gambar_pelupusan', $paper->adakah_gambar_pelupusan) }}" class="mt-1 block w-full form-input">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div>
+                                <label for="jenis_barang_kes_am" class="block text-sm font-medium text-gray-700">Jenis Barang Kes Am</label>
+                                <input type="text" name="jenis_barang_kes_am" id="jenis_barang_kes_am" value="{{ old('jenis_barang_kes_am', $paper->jenis_barang_kes_am) }}" class="mt-1 block w-full form-input">
+                            </div>
+                            <div>
+                                <label for="jenis_barang_kes_berharga" class="block text-sm font-medium text-gray-700">Jenis Barang Kes Berharga</label>
+                                <input type="text" name="jenis_barang_kes_berharga" id="jenis_barang_kes_berharga" value="{{ old('jenis_barang_kes_berharga', $paper->jenis_barang_kes_berharga) }}" class="mt-1 block w-full form-input">
+                            </div>
+                            <div>
+                                <label for="jenis_barang_kes_kenderaan" class="block text-sm font-medium text-gray-700">Jenis Barang Kes Kenderaan</label>
+                                <input type="text" name="jenis_barang_kes_kenderaan" id="jenis_barang_kes_kenderaan" value="{{ old('jenis_barang_kes_kenderaan', $paper->jenis_barang_kes_kenderaan) }}" class="mt-1 block w-full form-input">
+                            </div>
                         </div>
 
+                        <!-- Status Pergerakan Barang Kes -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Status Pergerakan Barang Kes</label>
+                            <div class="space-y-2 pl-4">
+                                @php
+                                    $currentPergerakan = old('status_pergerakan_barang_kes', is_array($paper->status_pergerakan_barang_kes) ? ($paper->status_pergerakan_barang_kes[0] ?? '') : $paper->status_pergerakan_barang_kes);
+                                @endphp
+                                <label class="flex items-center">
+                                    <input type="radio" name="status_pergerakan_barang_kes" value="Simpanan Stor Ekshibit" 
+                                        {{ $currentPergerakan == 'Simpanan Stor Ekshibit' ? 'checked' : '' }} 
+                                        class="form-radio h-4 w-4 text-blue-600">
+                                    <span class="ml-2 text-gray-700">Simpanan Stor Ekshibit</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="radio" name="status_pergerakan_barang_kes" value="Ujian Makmal" 
+                                        {{ $currentPergerakan == 'Ujian Makmal' ? 'checked' : '' }} 
+                                        class="form-radio h-4 w-4 text-blue-600">
+                                    <span class="ml-2 text-gray-700">Ujian Makmal</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="radio" name="status_pergerakan_barang_kes" value="Di Mahkamah" 
+                                        {{ $currentPergerakan == 'Di Mahkamah' ? 'checked' : '' }} 
+                                        class="form-radio h-4 w-4 text-blue-600">
+                                    <span class="ml-2 text-gray-700">Di Mahkamah</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="radio" name="status_pergerakan_barang_kes" value="Pada IO/AIO" 
+                                        {{ $currentPergerakan == 'Pada IO/AIO' ? 'checked' : '' }} 
+                                        class="form-radio h-4 w-4 text-blue-600">
+                                    <span class="ml-2 text-gray-700">Pada IO/AIO</span>
+                                </label>
+                                <div class="flex items-center">
+                                    <label class="flex items-center">
+                                        <input type="radio" name="status_pergerakan_barang_kes" value="Lain-Lain" 
+                                            {{ $currentPergerakan == 'Lain-Lain' ? 'checked' : '' }} 
+                                            class="form-radio h-4 w-4 text-blue-600" id="pergerakan_lain_trafik">
+                                        <span class="ml-2 text-gray-700">Lain-lain</span>
+                                    </label>
+                                    <input type="text" name="status_pergerakan_barang_kes_lain" id="status_pergerakan_barang_kes_lain_trafik" 
+                                        value="{{ old('status_pergerakan_barang_kes_lain', ($currentPergerakan == 'Lain-Lain' ? (is_array($paper->status_pergerakan_barang_kes) ? ($paper->status_pergerakan_barang_kes[1] ?? '') : '') : '')) }}" 
+                                        class="ml-2 form-input text-sm w-64" 
+                                        {{ $currentPergerakan != 'Lain-Lain' ? 'disabled' : '' }}>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Status Barang Kes Selesai Siasatan -->
+                        <div class="mt-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Status Barang Kes Selesai Siasatan</label>
+                            <div class="space-y-2 pl-4">
+                                @php
+                                    $currentSelesai = old('status_barang_kes_selesai_siasatan', is_array($paper->status_barang_kes_selesai_siasatan) ? ($paper->status_barang_kes_selesai_siasatan[0] ?? '') : $paper->status_barang_kes_selesai_siasatan);
+                                @endphp
+                                <label class="flex items-center">
+                                    <input type="radio" name="status_barang_kes_selesai_siasatan" value="Dilupuskan ke Perbendaharaan" 
+                                        {{ $currentSelesai == 'Dilupuskan ke Perbendaharaan' ? 'checked' : '' }} 
+                                        class="form-radio h-4 w-4 text-blue-600">
+                                    <span class="ml-2 text-gray-700">Dilupuskan ke Perbendaharaan</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="radio" name="status_barang_kes_selesai_siasatan" value="Dikembalikan Kepada Pemilik" 
+                                        {{ $currentSelesai == 'Dikembalikan Kepada Pemilik' ? 'checked' : '' }} 
+                                        class="form-radio h-4 w-4 text-blue-600">
+                                    <span class="ml-2 text-gray-700">Dikembalikan Kepada Pemilik</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="radio" name="status_barang_kes_selesai_siasatan" value="Dilupuskan" 
+                                        {{ $currentSelesai == 'Dilupuskan' ? 'checked' : '' }} 
+                                        class="form-radio h-4 w-4 text-blue-600">
+                                    <span class="ml-2 text-gray-700">Dilupuskan</span>
+                                </label>
+                                <div class="flex items-center">
+                                    <label class="flex items-center">
+                                        <input type="radio" name="status_barang_kes_selesai_siasatan" value="Lain-Lain" 
+                                            {{ $currentSelesai == 'Lain-Lain' ? 'checked' : '' }} 
+                                            class="form-radio h-4 w-4 text-blue-600" id="selesai_lain_trafik">
+                                        <span class="ml-2 text-gray-700">Lain-lain</span>
+                                    </label>
+                                    <input type="text" name="status_barang_kes_selesai_siasatan_lain" id="status_barang_kes_selesai_siasatan_lain_trafik" 
+                                        value="{{ old('status_barang_kes_selesai_siasatan_lain', ($currentSelesai == 'Lain-Lain' ? (is_array($paper->status_barang_kes_selesai_siasatan) ? ($paper->status_barang_kes_selesai_siasatan[1] ?? '') : '') : '')) }}" 
+                                        class="ml-2 form-input text-sm w-64" 
+                                        {{ $currentSelesai != 'Lain-Lain' ? 'disabled' : '' }}>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Kaedah Pelupusan Barang Kes -->
+                        <div class="mt-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Sekiranya Barang Kes Dilupuskan, Bagaimana Kaedah Pelupusan Dilaksanakan</label>
+                            <div class="space-y-2 pl-4">
+                                @php
+                                    $currentKaedah = old('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan', is_array($paper->barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan) ? ($paper->barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan[0] ?? '') : $paper->barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan);
+                                @endphp
+                                <label class="flex items-center">
+                                    <input type="radio" name="barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan" value="Dibakar" 
+                                        {{ $currentKaedah == 'Dibakar' ? 'checked' : '' }} 
+                                        class="form-radio h-4 w-4 text-blue-600">
+                                    <span class="ml-2 text-gray-700">Dibakar</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="radio" name="barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan" value="Ditanam" 
+                                        {{ $currentKaedah == 'Ditanam' ? 'checked' : '' }} 
+                                        class="form-radio h-4 w-4 text-blue-600">
+                                    <span class="ml-2 text-gray-700">Ditanam</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="radio" name="barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan" value="Dihancurkan" 
+                                        {{ $currentKaedah == 'Dihancurkan' ? 'checked' : '' }} 
+                                        class="form-radio h-4 w-4 text-blue-600">
+                                    <span class="ml-2 text-gray-700">Dihancurkan</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="radio" name="barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan" value="Dilelong" 
+                                        {{ $currentKaedah == 'Dilelong' ? 'checked' : '' }} 
+                                        class="form-radio h-4 w-4 text-blue-600">
+                                    <span class="ml-2 text-gray-700">Dilelong</span>
+                                </label>
+                                <div class="flex items-center">
+                                    <label class="flex items-center">
+                                        <input type="radio" name="barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan" value="Lain-Lain" 
+                                            {{ $currentKaedah == 'Lain-Lain' ? 'checked' : '' }} 
+                                            class="form-radio h-4 w-4 text-blue-600" id="kaedah_lain_trafik">
+                                        <span class="ml-2 text-gray-700">Lain-lain</span>
+                                    </label>
+                                    <input type="text" name="barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan_lain" id="kaedah_pelupusan_barang_kes_lain_trafik" 
+                                        value="{{ old('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan_lain', ($currentKaedah == 'Lain-Lain' ? (is_array($paper->barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan) ? ($paper->barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan[1] ?? '') : '') : '')) }}" 
+                                        class="ml-2 form-input text-sm w-64" 
+                                        {{ $currentKaedah != 'Lain-Lain' ? 'disabled' : '' }}>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Arahan Pelupusan Barang Kes -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Adakah Pelupusan Barang Kes Itu Telah Ada Arahan Mahkamah Atau YA TPR</label>
+                            <div class="flex flex-col space-y-2 pl-4">
+                                @php
+                                    $currentArahanPelupusan = old('adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan', is_array($paper->adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan) ? ($paper->adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan[0] ?? '') : $paper->adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan);
+                                @endphp
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan" value="Ya" 
+                                        {{ $currentArahanPelupusan == 'Ya' ? 'checked' : '' }} 
+                                        class="form-radio h-4 w-4 text-blue-600">
+                                    <span class="ml-2 text-gray-700">Ya (Arahan Mahkamah/TPR)</span>
+                                </label>
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan" value="Tidak" 
+                                        {{ $currentArahanPelupusan == 'Tidak' ? 'checked' : '' }} 
+                                        class="form-radio h-4 w-4 text-blue-600">
+                                    <span class="ml-2 text-gray-700">Tidak</span>
+                                </label>
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan" value="Inisiatif IO/AIO Sendiri" 
+                                        {{ $currentArahanPelupusan == 'Inisiatif IO/AIO Sendiri' ? 'checked' : '' }} 
+                                        class="form-radio h-4 w-4 text-blue-600">
+                                    <span class="ml-2 text-gray-700">Inisiatif IO/AIO Sendiri</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Resit Kew.38e -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Resit Kew.38e Bagi Pelupusan Barang Kes Wang Tunai Ke Perbendaharaan</label>
+                            <div class="flex flex-col space-y-2 pl-4">
+                                @php
+                                    $currentResit = old('resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan', is_array($paper->resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan) ? ($paper->resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan[0] ?? '') : $paper->resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan);
+                                @endphp
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan" value="Ada Dilampirkan" 
+                                        {{ $currentResit == 'Ada Dilampirkan' ? 'checked' : '' }} 
+                                        class="form-radio h-4 w-4 text-blue-600">
+                                    <span class="ml-2 text-gray-700">Ada Dilampirkan</span>
+                                </label>
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan" value="Tidak Dilampirkan" 
+                                        {{ $currentResit == 'Tidak Dilampirkan' ? 'checked' : '' }} 
+                                        class="form-radio h-4 w-4 text-blue-600">
+                                    <span class="ml-2 text-gray-700">Tidak Dilampirkan</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Borang Serah/Terima Barang Kes Antara Pegawai Tangkapan dan IO/AIO -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Adakah Borang Serah/Terima Barang Kes Antara Pegawai Tangkapan dan IO/AIO Dilampirkan</label>
+                            <div class="flex flex-col space-y-2 pl-4">
+                                @php
+                                    $currentBorangTangkapan = old('adakah_borang_serah_terima_pegawai_tangkapan', is_array($paper->adakah_borang_serah_terima_pegawai_tangkapan) ? ($paper->adakah_borang_serah_terima_pegawai_tangkapan[0] ?? '') : $paper->adakah_borang_serah_terima_pegawai_tangkapan);
+                                @endphp
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="adakah_borang_serah_terima_pegawai_tangkapan" value="Ada Dilampirkan" 
+                                        {{ $currentBorangTangkapan == 'Ada Dilampirkan' ? 'checked' : '' }} 
+                                        class="form-radio h-4 w-4 text-blue-600">
+                                    <span class="ml-2 text-gray-700">Ada Dilampirkan</span>
+                                </label>
+                                <label class="inline-flex items-center">
+                                    <input type="radio" name="adakah_borang_serah_terima_pegawai_tangkapan" value="Tidak Dilampirkan" 
+                                        {{ $currentBorangTangkapan == 'Tidak Dilampirkan' ? 'checked' : '' }} 
+                                        class="form-radio h-4 w-4 text-blue-600">
+                                    <span class="ml-2 text-gray-700">Tidak Dilampirkan</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Borang Serah/Terima Barang Kes Antara Pegawai Penyiasat, Pemilik dan Saksi Pegawai Kanan Polis Dilampirkan -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Adakah Borang Serah/Terima Barang Kes Antara Pegawai Penyiasat, Pemilik dan Saksi Pegawai Kanan Polis Dilampirkan</label>
+                            {!! render_boolean_radio('adakah_borang_serah_terima_pemilik_saksi', $paper->adakah_borang_serah_terima_pemilik_saksi, 'Ada Dilampirkan', 'Tidak Dilampirkan') !!}
+                        </div>
+                        
+                        <!-- Adakah Sijil Atau Surat Arahan Kebenaran Oleh IPD Bagi Melaksanakan Pelupusan Barang Kes Dilampirkan -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Adakah Sijil Atau Surat Arahan Kebenaran Oleh IPD Bagi Melaksanakan Pelupusan Barang Kes Dilampirkan</label>
+                            {!! render_boolean_radio('adakah_sijil_surat_kebenaran_ipo', $paper->adakah_sijil_surat_kebenaran_ipo, 'Ada Dilampirkan', 'Tidak Dilampirkan') !!}
+                        </div>
+                        
+                        <!-- Adakah Gambar Pelupusan Barang Kes Dilampirkan -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Adakah Gambar Pelupusan Barang Kes Dilampirkan</label>
+                            {!! render_boolean_radio('adakah_gambar_pelupusan', $paper->adakah_gambar_pelupusan, 'Ada Dilampirkan', 'Tidak Dilampirkan') !!}
+                        </div>
+                        <div class="md:col-span-3">
+                            <label for="ulasan_keseluruhan_pegawai_pemeriksa_barang_kes" class="block text-sm font-medium text-gray-700">Ulasan Keseluruhan Pegawai Pemeriksa (Barang Kes)</label>
+                            <textarea name="ulasan_keseluruhan_pegawai_pemeriksa_barang_kes" id="ulasan_keseluruhan_pegawai_pemeriksa_barang_kes" rows="3" class="mt-1 block w-full form-textarea">{{ old('ulasan_keseluruhan_pegawai_pemeriksa_barang_kes', $paper->ulasan_keseluruhan_pegawai_pemeriksa_barang_kes) }}</textarea>
+                        </div>
                     </div>
                 </div>
 
-                                <!-- BAHAGIAN 5: Dokumen Siasatan -->
+                <!-- BAHAGIAN 5: Dokumen Siasatan -->
                 <div>
-                    <h3 class="text-lg mt-5 font-bold mb-4 text-gray-800 border-b pb-2">BAHAGIAN 5: Dokumen Siasatan</h3>
+                    <h3 class="text-lg font-bold mb-4 text-gray-800 border-b pb-2">BAHAGIAN 5: Dokumen Siasatan</h3>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
                         <div>
                             <label class="block text-sm font-medium text-gray-700">ID Siasatan Dikemaskini</label>
@@ -375,9 +528,9 @@
                     </div>
                 </div>
 
-                                <!-- BAHAGIAN 6: Borang & Semakan -->
+                <!-- BAHAGIAN 6: Borang & Semakan -->
                 <div>
-                    <h3 class="text-lg mt-5 font-bold mb-4 text-gray-800 border-b pb-2">BAHAGIAN 6: Borang & Semakan</h3>
+                    <h3 class="text-lg font-bold mb-4 text-gray-800 border-b pb-2">BAHAGIAN 6: Borang & Semakan</h3>
                     <div class="space-y-6">
                         
                         <div>
@@ -431,20 +584,20 @@
                             </div>
                         </div>
 
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700">Semboyan Usaha Pemakluman Pertama Wanted Person</label>
-                                    {!! render_status_with_date_radio('wp1', 'status_semboyan_pertama_wanted_person', 'tarikh_semboyan_pertama_wanted_person', $paper->status_semboyan_pertama_wanted_person, $paper->tarikh_semboyan_pertama_wanted_person) !!}
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700">Semboyan Usaha Pemakluman Kedua Wanted Person</label>
-                                    {!! render_status_with_date_radio('wp2', 'status_semboyan_kedua_wanted_person', 'tarikh_semboyan_kedua_wanted_person', $paper->status_semboyan_kedua_wanted_person, $paper->tarikh_semboyan_kedua_wanted_person) !!}
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700">Semboyan Usaha Pemakluman Ketiga Wanted Person</label>
-                                    {!! render_status_with_date_radio('wp3', 'status_semboyan_ketiga_wanted_person', 'tarikh_semboyan_ketiga_wanted_person', $paper->status_semboyan_ketiga_wanted_person, $paper->tarikh_semboyan_ketiga_wanted_person) !!}
-                                </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Semboyan Usaha Pemakluman Pertama Wanted Person</label>
+                                {!! render_status_with_date_radio('wp1', 'status_semboyan_pertama_wanted_person', 'tarikh_semboyan_pertama_wanted_person', $paper->status_semboyan_pertama_wanted_person, $paper->tarikh_semboyan_pertama_wanted_person) !!}
                             </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Semboyan Usaha Pemakluman Kedua Wanted Person</label>
+                                {!! render_status_with_date_radio('wp2', 'status_semboyan_kedua_wanted_person', 'tarikh_semboyan_kedua_wanted_person', $paper->status_semboyan_kedua_wanted_person, $paper->tarikh_semboyan_kedua_wanted_person) !!}
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Semboyan Usaha Pemakluman Ketiga Wanted Person</label>
+                                {!! render_status_with_date_radio('wp3', 'status_semboyan_ketiga_wanted_person', 'tarikh_semboyan_ketiga_wanted_person', $paper->status_semboyan_ketiga_wanted_person, $paper->tarikh_semboyan_ketiga_wanted_person) !!}
+                            </div>
+                        </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Adakah Penandaan Kelas Warna Pada Kulit Kertas Siasatan Dibuat</label>
@@ -452,144 +605,146 @@
                         </div>
                     </div>
                 </div>
-                                <!-- BAHAGIAN 7: Permohonan Laporan Agensi Luar -->
-                                <!-- BAHAGIAN 7: Permohonan Laporan Agensi Luar -->
+
+                <!-- BAHAGIAN 7: Permohonan Laporan Agensi Luar -->
                 <div>
-                    <h3 class="text-lg mt-5 font-bold mb-4 text-gray-800 border-b pb-2">BAHAGIAN 7: Permohonan Laporan Agensi Luar</h3>
+                    <h3 class="text-lg font-bold mb-4 text-gray-800 border-b pb-2">BAHAGIAN 7: Permohonan Laporan Agensi Luar</h3>
                     <div class="space-y-8">
 
-                    <!-- Permohonan Laporan Post Mortem Mayat -->
-                    <div class="p-4 border rounded-md">
-                        <h4 class="font-semibold text-md text-gray-700">Permohonan Laporan Post Mortem Mayat</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">Status Permohonan</label>
-                                {!! render_status_with_date_radio('post_mortem_mayat_permohonan', 'status_permohonan_laporan_post_mortem_mayat', 'tarikh_permohonan_laporan_post_mortem_mayat', $paper->status_permohonan_laporan_post_mortem_mayat, $paper->tarikh_permohonan_laporan_post_mortem_mayat) !!}
+                        <!-- Permohonan Laporan Post Mortem Mayat -->
+                        <div class="p-4 border rounded-md">
+                            <h4 class="font-semibold text-md text-gray-700">Permohonan Laporan Post Mortem Mayat</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Status Permohonan</label>
+                                    {!! render_status_with_date_radio('post_mortem_mayat_permohonan', 'status_permohonan_laporan_post_mortem_mayat', 'tarikh_permohonan_laporan_post_mortem_mayat', $paper->status_permohonan_laporan_post_mortem_mayat, $paper->tarikh_permohonan_laporan_post_mortem_mayat, 'Dibuat', 'Tidak') !!}
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Bedah Siasat -->
-                    <div class="p-4 border rounded-md">
-                        <h4 class="font-semibold text-md text-gray-700">Bedah Siasat</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">Laporan Penuh</label>
-                                {!! render_status_with_date_radio('bedah_siasat_penuh', 'status_laporan_penuh_bedah_siasat', 'tarikh_laporan_penuh_bedah_siasat', $paper->status_laporan_penuh_bedah_siasat, $paper->tarikh_laporan_penuh_bedah_siasat) !!}
+                        <!-- Bedah Siasat -->
+                        <div class="p-4 border rounded-md">
+                            <h4 class="font-semibold text-md text-gray-700">Bedah Siasat</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Laporan Penuh</label>
+                                    {!! render_status_with_date_radio('bedah_siasat_penuh', 'status_laporan_penuh_bedah_siasat', 'tarikh_laporan_penuh_bedah_siasat', $paper->status_laporan_penuh_bedah_siasat, $paper->tarikh_laporan_penuh_bedah_siasat, 'Diterima', 'Tidak') !!}
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Jabatan Kimia -->
-                    <div class="p-4 border rounded-md">
-                        <h4 class="font-semibold text-md text-gray-700">Jabatan Kimia</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">Permohonan Laporan</label>
-                                {!! render_status_with_date_radio('jabatan_kimia_permohonan', 'status_permohonan_laporan_jabatan_kimia', 'tarikh_permohonan_laporan_jabatan_kimia', $paper->status_permohonan_laporan_jabatan_kimia, $paper->tarikh_permohonan_laporan_jabatan_kimia) !!}
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">Laporan Penuh</label>
-                                {!! render_status_with_date_radio('jabatan_kimia_penuh', 'status_laporan_penuh_jabatan_kimia', 'tarikh_laporan_penuh_jabatan_kimia', $paper->status_laporan_penuh_jabatan_kimia, $paper->tarikh_laporan_penuh_jabatan_kimia) !!}
-                            </div>
-                            <div class="col-span-full">
-                                <label for="keputusan_laporan_jabatan_kimia" class="block text-sm font-medium text-gray-700">Keputusan Laporan</label>
-                                <input type="text" name="keputusan_laporan_jabatan_kimia" id="keputusan_laporan_jabatan_kimia" value="{{ old('keputusan_laporan_jabatan_kimia', $paper->keputusan_laporan_jabatan_kimia) }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        <!-- Jabatan Kimia -->
+                        <div class="p-4 border rounded-md">
+                            <h4 class="font-semibold text-md text-gray-700">Jabatan Kimia</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Permohonan Laporan</label>
+                                    {!! render_status_with_date_radio('jabatan_kimia_permohonan', 'status_permohonan_laporan_jabatan_kimia', 'tarikh_permohonan_laporan_jabatan_kimia', $paper->status_permohonan_laporan_jabatan_kimia, $paper->tarikh_permohonan_laporan_jabatan_kimia, 'Dibuat', 'Tidak') !!}
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Laporan Penuh</label>
+                                    {!! render_status_with_date_radio('jabatan_kimia_penuh', 'status_laporan_penuh_jabatan_kimia', 'tarikh_laporan_penuh_jabatan_kimia', $paper->status_laporan_penuh_jabatan_kimia, $paper->tarikh_laporan_penuh_jabatan_kimia, 'Diterima', 'Tidak') !!}
+                                </div>
+                                <div class="col-span-full">
+                                    <label for="keputusan_laporan_jabatan_kimia" class="block text-sm font-medium text-gray-700">Keputusan Laporan</label>
+                                    <input type="text" name="keputusan_laporan_jabatan_kimia" id="keputusan_laporan_jabatan_kimia" value="{{ old('keputusan_laporan_jabatan_kimia', $paper->keputusan_laporan_jabatan_kimia) }}" class="mt-1 block w-full form-input">
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Jabatan Patalogi -->
-                    <div class="p-4 border rounded-md">
-                        <h4 class="font-semibold text-md text-gray-700">Jabatan Patalogi</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">Permohonan Laporan</label>
-                                {!! render_status_with_date_radio('jabatan_patalogi_permohonan', 'status_permohonan_laporan_jabatan_patalogi', 'tarikh_permohonan_laporan_jabatan_patalogi', $paper->status_permohonan_laporan_jabatan_patalogi, $paper->tarikh_permohonan_laporan_jabatan_patalogi) !!}
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">Laporan Penuh</label>
-                                {!! render_status_with_date_radio('jabatan_patalogi_penuh', 'status_laporan_penuh_jabatan_patalogi', 'tarikh_laporan_penuh_jabatan_patalogi', $paper->status_laporan_penuh_jabatan_patalogi, $paper->tarikh_laporan_penuh_jabatan_patalogi) !!}
-                            </div>
-                            <div class="col-span-full">
-                                <label for="keputusan_laporan_jabatan_patalogi" class="block text-sm font-medium text-gray-700">Keputusan Laporan</label>
-                                <input type="text" name="keputusan_laporan_jabatan_patalogi" id="keputusan_laporan_jabatan_patalogi" value="{{ old('keputusan_laporan_jabatan_patalogi', $paper->keputusan_laporan_jabatan_patalogi) }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        <!-- Jabatan Patalogi -->
+                        <div class="p-4 border rounded-md">
+                            <h4 class="font-semibold text-md text-gray-700">Jabatan Patalogi</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Permohonan Laporan</label>
+                                    {!! render_status_with_date_radio('jabatan_patalogi_permohonan', 'status_permohonan_laporan_jabatan_patalogi', 'tarikh_permohonan_laporan_jabatan_patalogi', $paper->status_permohonan_laporan_jabatan_patalogi, $paper->tarikh_permohonan_laporan_jabatan_patalogi, 'Dibuat', 'Tidak') !!}
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Laporan Penuh</label>
+                                    {!! render_status_with_date_radio('jabatan_patalogi_penuh', 'status_laporan_penuh_jabatan_patalogi', 'tarikh_laporan_penuh_jabatan_patalogi', $paper->status_laporan_penuh_jabatan_patalogi, $paper->tarikh_laporan_penuh_jabatan_patalogi, 'Diterima', 'Tidak') !!}
+                                </div>
+                                <div class="col-span-full">
+                                    <label for="keputusan_laporan_jabatan_patalogi" class="block text-sm font-medium text-gray-700">Keputusan Laporan</label>
+                                    <input type="text" name="keputusan_laporan_jabatan_patalogi" id="keputusan_laporan_jabatan_patalogi" value="{{ old('keputusan_laporan_jabatan_patalogi', $paper->keputusan_laporan_jabatan_patalogi) }}" class="mt-1 block w-full form-input">
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- PUSPAKOM -->
-                    <div class="p-4 border rounded-md">
-                        <h4 class="font-semibold text-md text-gray-700">PUSPAKOM</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">Permohonan Laporan</label>
-                                {!! render_status_with_date_radio('puspakom_permohonan', 'status_permohonan_laporan_puspakom', 'tarikh_permohonan_laporan_puspakom', $paper->status_permohonan_laporan_puspakom, $paper->tarikh_permohonan_laporan_puspakom) !!}
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">Laporan Penuh</label>
-                                {!! render_status_with_date_radio('puspakom_penuh', 'status_laporan_penuh_puspakom', 'tarikh_laporan_penuh_puspakom', $paper->status_laporan_penuh_puspakom, $paper->tarikh_laporan_penuh_puspakom) !!}
-                            </div>
-                        </div>
-                    </div>
-                        
-                <!-- JKR -->
-                <div class="p-4 border rounded-md">
-                    <h4 class="font-semibold text-md text-gray-700">JKR</h4>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Permohonan Laporan</label>
-                            {!! render_status_with_date_radio('jkr_permohonan', 'status_permohonan_laporan_jkr', 'tarikh_permohonan_laporan_jkr', $paper->status_permohonan_laporan_jkr, $paper->tarikh_permohonan_laporan_jkr) !!}
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Laporan Penuh</label>
-                            {!! render_status_with_date_radio('jkr_penuh', 'status_laporan_penuh_jkr', 'tarikh_laporan_penuh_jkr', $paper->status_laporan_penuh_jkr, $paper->tarikh_laporan_penuh_jkr) !!}
-                        </div>
-                    </div>
-                </div>
-                    <!-- JPJ -->
-                    <div class="p-4 border rounded-md">
-                        <h4 class="font-semibold text-md text-gray-700">JPJ</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">Permohonan Laporan</label>
-                                {!! render_status_with_date_radio('jpj_permohonan', 'status_permohonan_laporan_jpj', 'tarikh_permohonan_laporan_jpj', $paper->status_permohonan_laporan_jpj, $paper->tarikh_permohonan_laporan_jpj) !!}
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">Laporan Penuh</label>
-                                {!! render_status_with_date_radio('jpj_penuh', 'status_laporan_penuh_jpj', 'tarikh_laporan_penuh_jpj', $paper->status_laporan_penuh_jpj, $paper->tarikh_laporan_penuh_jpj) !!}
+                        <!-- PUSPAKOM -->
+                        <div class="p-4 border rounded-md">
+                            <h4 class="font-semibold text-md text-gray-700">PUSPAKOM</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Permohonan Laporan</label>
+                                    {!! render_status_with_date_radio('puspakom_permohonan', 'status_permohonan_laporan_puspakom', 'tarikh_permohonan_laporan_puspakom', $paper->status_permohonan_laporan_puspakom, $paper->tarikh_permohonan_laporan_puspakom, 'Dibuat', 'Tidak') !!}
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Laporan Penuh</label>
+                                    {!! render_status_with_date_radio('puspakom_penuh', 'status_laporan_penuh_puspakom', 'tarikh_laporan_penuh_puspakom', $paper->status_laporan_penuh_puspakom, $paper->tarikh_laporan_penuh_puspakom, 'Diterima', 'Tidak') !!}
+                                </div>
                             </div>
                         </div>
-                    </div>
+                            
+                        <!-- JKR -->
+                        <div class="p-4 border rounded-md">
+                            <h4 class="font-semibold text-md text-gray-700">JKR</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Permohonan Laporan</label>
+                                    {!! render_status_with_date_radio('jkr_permohonan', 'status_permohonan_laporan_jkr', 'tarikh_permohonan_laporan_jkr', $paper->status_permohonan_laporan_jkr, $paper->tarikh_permohonan_laporan_jkr, 'Dibuat', 'Tidak') !!}
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Laporan Penuh</label>
+                                    {!! render_status_with_date_radio('jkr_penuh', 'status_laporan_penuh_jkr', 'tarikh_laporan_penuh_jkr', $paper->status_laporan_penuh_jkr, $paper->tarikh_laporan_penuh_jkr, 'Diterima', 'Tidak') !!}
+                                </div>
+                            </div>
+                        </div>
 
-                    <!-- Imigresen -->
-                    <div class="p-4 border rounded-md">
-                        <h4 class="font-semibold text-md text-gray-700">Imigresen</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">Permohonan Laporan</label>
-                                {!! render_status_with_date_radio('imigresen_permohonan', 'status_permohonan_laporan_imigresen', 'tarikh_permohonan_laporan_imigresen', $paper->status_permohonan_laporan_imigresen, $paper->tarikh_permohonan_laporan_imigresen) !!}
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">Laporan Penuh</label>
-                                {!! render_status_with_date_radio('imigresen_penuh', 'status_laporan_penuh_imigresen', 'tarikh_laporan_penuh_imigresen', $paper->status_laporan_penuh_imigresen, $paper->tarikh_laporan_penuh_imigresen) !!}
+                        <!-- JPJ -->
+                        <div class="p-4 border rounded-md">
+                            <h4 class="font-semibold text-md text-gray-700">JPJ</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Permohonan Laporan</label>
+                                    {!! render_status_with_date_radio('jpj_permohonan', 'status_permohonan_laporan_jpj', 'tarikh_permohonan_laporan_jpj', $paper->status_permohonan_laporan_jpj, $paper->tarikh_permohonan_laporan_jpj, 'Dibuat', 'Tidak') !!}
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Laporan Penuh</label>
+                                    {!! render_status_with_date_radio('jpj_penuh', 'status_laporan_penuh_jpj', 'tarikh_laporan_penuh_jpj', $paper->status_laporan_penuh_jpj, $paper->tarikh_laporan_penuh_jpj, 'Diterima', 'Tidak') !!}
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Lain-lain Permohonan Laporan -->
-                    <div class="p-4 border rounded-md">
-                        <h4 class="font-semibold text-md text-gray-700">Lain-lain Permohonan Laporan</h4>
-                        <div class="grid grid-cols-1 gap-6 mt-4">
-                            <div>
-                                <label for="lain_lain_permohonan_laporan" class="block text-sm font-medium text-gray-700">Catatan</label>
-                                <textarea name="lain_lain_permohonan_laporan" id="lain_lain_permohonan_laporan" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">{{ old('lain_lain_permohonan_laporan', $paper->lain_lain_permohonan_laporan) }}</textarea>
+                        <!-- Imigresen -->
+                        <div class="p-4 border rounded-md">
+                            <h4 class="font-semibold text-md text-gray-700">Imigresen</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Permohonan Laporan</label>
+                                    {!! render_status_with_date_radio('imigresen_permohonan', 'status_permohonan_laporan_imigresen', 'tarikh_permohonan_laporan_imigresen', $paper->status_permohonan_laporan_imigresen, $paper->tarikh_permohonan_laporan_imigresen, 'Dibuat', 'Tidak') !!}
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Laporan Penuh</label>
+                                    {!! render_status_with_date_radio('imigresen_penuh', 'status_laporan_penuh_imigresen', 'tarikh_laporan_penuh_imigresen', $paper->status_laporan_penuh_imigresen, $paper->tarikh_laporan_penuh_imigresen, 'Diterima', 'Tidak') !!}
+                                </div>
                             </div>
                         </div>
-                    </div>
+
+                        <!-- Lain-lain Permohonan Laporan -->
+                        <div class="p-4 border rounded-md">
+                            <h4 class="font-semibold text-md text-gray-700">Lain-lain Permohonan Laporan</h4>
+                            <div class="grid grid-cols-1 gap-6 mt-4">
+                                <div>
+                                    <label for="lain_lain_permohonan_laporan" class="block text-sm font-medium text-gray-700">Catatan</label>
+                                    <textarea name="lain_lain_permohonan_laporan" id="lain_lain_permohonan_laporan" rows="3" class="mt-1 block w-full form-textarea">{{ old('lain_lain_permohonan_laporan', $paper->lain_lain_permohonan_laporan) }}</textarea>
+                                </div>
+                            </div>
+                        </div>
 
                     </div> 
                 </div> 
+
                 <!-- BAHAGIAN 8: Status Fail -->
                 <div>
                     <h3 class="text-lg font-bold mb-4 text-gray-800 border-b pb-2">BAHAGIAN 8: Status Fail</h3>
@@ -614,25 +769,23 @@
                         </div>
 
                         <div>
-                            <label for="status_kus_fail" class="block text-sm font-medium text-gray-700">Adakah Kertas Siasatan Telah Di KUS/FAIL Bagi Siasatan Yang Telah Selesai Dan Ada Keputusan Mahkamah</label>
-                            <input type="text" name="status_kus_fail" id="status_kus_fail" value="{{ old('status_kus_fail', $paper->status_kus_fail) }}" class="mt-1 block w-full form-input">
+                            <label class="block text-sm font-medium text-gray-700">Adakah Kertas Siasatan Telah Di KUS/FAIL Bagi Siasatan Yang Telah Selesai Dan Ada Keputusan Mahkamah</label>
+                            {!! render_boolean_radio('status_kus_fail', $paper->status_kus_fail, 'Ya', 'Tidak') !!}
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Keputusan Akhir Oleh Mahkamah Sebelum Kertas Siasatan Di KUS/FAIL Atau Disimpan</label>
-                             @php
-                                $mahkamah_options = [
-                                    'Jatuh Hukum' => 'Jatuh Hukum',
-                                    'NFA' => 'NFA',
-                                    'DNA' => 'DNA',
-                                    'DNAA' => 'DNAA',
-                                    'KUS/Sementara' => 'KUS/Sementara',
-                                    'Masih Dalam Siasatan OYDS Gagal Dikesan' => 'Masih Dalam Siasatan OYDS Gagal Dikesan',
-                                    'Masih Dalam Siasatan Untuk Lengkapkan Dokumentasi' => 'Masih Dalam Siasatan Untuk Lengkapkan Dokumentasi',
-                                    'Terbengkalai/Tiada Tindakan' => 'Terbengkalai/Tiada Tindakan',
-                                ];
-                            @endphp
-                            {!! render_json_checkboxes('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah, $mahkamah_options) !!}
+                             <select name="keputusan_akhir_mahkamah" class="mt-1 block w-full form-select">
+                                <option value="">-- Sila Pilih --</option>
+                                <option value="Jatuh Hukum" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'Jatuh Hukum' ? 'selected' : '' }}>Jatuh Hukum</option>
+                                <option value="NFA" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'NFA' ? 'selected' : '' }}>NFA</option>
+                                <option value="DNA" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'DNA' ? 'selected' : '' }}>DNA</option>
+                                <option value="DNAA" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'DNAA' ? 'selected' : '' }}>DNAA</option>
+                                <option value="KUS/Sementara" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'KUS/Sementara' ? 'selected' : '' }}>KUS/Sementara</option>
+                                <option value="Masih Dalam Siasatan OYDS Gagal Dikesan" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'Masih Dalam Siasatan OYDS Gagal Dikesan' ? 'selected' : '' }}>Masih Dalam Siasatan OYDS Gagal Dikesan</option>
+                                <option value="Masih Dalam Siasatan Untuk Lengkapkan Dokumentasi" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'Masih Dalam Siasatan Untuk Lengkapkan Dokumentasi' ? 'selected' : '' }}>Masih Dalam Siasatan Untuk Lengkapkan Dokumentasi</option>
+                                <option value="Terbengkalai/Tiada Tindakan" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'Terbengkalai/Tiada Tindakan' ? 'selected' : '' }}>Terbengkalai/Tiada Tindakan</option>
+                            </select>
                         </div>
 
                         <div>
@@ -642,23 +795,62 @@
                     </div>
                 </div>
 
-                                {{-- Submit Button --}}
+                {{-- Submit Button --}}
                 <div class="flex justify-end pt-4 mt-6 border-t">
                     <a href="{{ route('projects.show', $paper->project_id) }}" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg mr-3">Batal</a>
                     <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Kemaskini</button>
                 </div>
 
+                <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Function to handle enabling/disabling of "Lain-lain" text input
+                    function setupOtherInputToggle(radioName, otherInputId) {
+                        const radios = document.querySelectorAll(`input[name="${radioName}"]`);
+                        const otherInput = document.getElementById(otherInputId);
+
+                        radios.forEach(radio => {
+                            radio.addEventListener('change', function() {
+                                if (this.value === 'Lain-Lain') {
+                                    otherInput.disabled = false;
+                                    otherInput.focus();
+                                } else {
+                                    otherInput.disabled = true;
+                                    otherInput.value = ''; // Clear value when not 'Lain-lain'
+                                }
+                            });
+                        });
+
+                        // Initial state on page load
+                        const currentChecked = document.querySelector(`input[name="${radioName}"]:checked`);
+                        if (currentChecked && currentChecked.value === 'Lain-Lain') {
+                            otherInput.disabled = false;
+                        } else {
+                            otherInput.disabled = true;
+                        }
+                    }
+
+                    // Apply to Barang Kes "Status Pergerakan"
+                    setupOtherInputToggle('status_pergerakan_barang_kes', 'status_pergerakan_barang_kes_lain_trafik');
+
+                    // Apply to Barang Kes "Status Selesai Siasatan"
+                    setupOtherInputToggle('status_barang_kes_selesai_siasatan', 'status_barang_kes_selesai_siasatan_lain_trafik');
+                    
+                    // Apply to Barang Kes "Kaedah Pelupusan"
+                    setupOtherInputToggle('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan', 'kaedah_pelupusan_barang_kes_lain_trafik');
+                });
+                </script>
                 
             </form>
         </div>
     </div>
 
     <style>
+        /* General form element styling for consistency */
         .form-input, .form-select, .form-textarea {
             @apply rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm;
         }
-        .form-checkbox {
-            @apply rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500;
+        .form-radio, .form-checkbox {
+            @apply rounded-full border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500; /* Adjusted form-radio to rounded-full */
         }
     </style>
 </x-app-layout>

@@ -35,6 +35,17 @@ class KertasSiasatanController extends Controller
 
         Gate::authorize('access-project', $paper->project);
 
+        // This block is only relevant if you have calculateStatuses on the model.
+        // As per the provided LaporanMatiMengejut model, it has applyClientSpecificCalculations in the boot method,
+        // which means it runs automatically on saving, not necessarily on retrieval via a `calculateStatuses` method.
+        // If your TrafikSeksyen model also uses the 'saving' event, this `if` block can be removed.
+        // If you actually have a dedicated `calculateStatuses` method for display-time calculations, keep it.
+        /*
+        if (method_exists($paper, 'calculateStatuses')) {
+            $paper->calculateStatuses();
+        }
+        */
+
         $viewFolderName = Str::snake($paperType); 
         $viewName = 'kertas_siasatan.' . $viewFolderName . '.show';
         
@@ -70,8 +81,60 @@ class KertasSiasatanController extends Controller
         // Get all the data from the form.
         $data = $request->all();
 
-        // --- START: DEFINITIVE FIX ---
-        // Manually process all boolean fields to remove any ambiguity.
+        // --- START: SPECIAL HANDLING FOR SINGLE-SELECT RADIO FIELDS WITH 'Lain-lain' TEXT INPUT ---
+        // This block now handles both LaporanMatiMengejut and TrafikSeksyen
+        if ($paperType === 'LaporanMatiMengejut' || $paperType === 'TrafikSeksyen') {
+            $singleSelectFieldsWithOtherInput = [];
+
+            if ($paperType === 'LaporanMatiMengejut') {
+                $singleSelectFieldsWithOtherInput = [
+                    'status_pergerakan_barang_kes' => 'status_pergerakan_barang_kes_lain',
+                    'status_barang_kes_selesai_siasatan' => 'status_barang_kes_selesai_siasatan_lain', 
+                    'kaedah_pelupusan_barang_kes' => 'kaedah_pelupusan_barang_kes_lain'
+                ];
+            } elseif ($paperType === 'TrafikSeksyen') {
+                $singleSelectFieldsWithOtherInput = [
+                    'status_pergerakan_barang_kes' => 'status_pergerakan_barang_kes_lain',
+                    'status_barang_kes_selesai_siasatan' => 'status_barang_kes_selesai_siasatan_lain',
+                    'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan' => 'kaedah_pelupusan_barang_kes_lain' // Note: This field's 'lain' column is named 'kaedah_pelupusan_barang_kes_lain' in TrafikSeksyen migration
+                ];
+            }
+            
+            foreach ($singleSelectFieldsWithOtherInput as $mainField => $lainField) {
+                if ($request->has($mainField)) {
+                    $value = $request->input($mainField);
+                    
+                    // If "Lain-lain" is selected for the main radio option
+                    if ($value === 'Lain-lain') {
+                        // Use the content of the `_lain` text field if it's provided and not empty
+                        if ($request->has($lainField) && !empty($request->input($lainField))) {
+                            $data[$mainField] = $request->input($lainField);
+                        } else {
+                            // Otherwise, store "Lain-lain" (or an empty string if you prefer empty if no text)
+                            $data[$mainField] = $value;
+                        }
+                        // Remove the separate text field from the data array to prevent it being saved under its own column IF the main field now stores the text.
+                        // However, if your migration adds `_lain` columns specifically for this, you should keep it in $data.
+                        // Based on your migration, you *do* have `_lain` columns, so we set them properly.
+                        $data[$lainField] = $request->input($lainField) ?? null; // Ensure `_lain` column is saved
+                    } else {
+                        // If a specific option (not "Lain-lain") is selected
+                        $data[$mainField] = $value;
+                        // Clear the corresponding `_lain` field
+                        $data[$lainField] = null;
+                    }
+                } else {
+                    // If the main radio group is not present in the request (e.g., no option selected),
+                    // ensure both main and lain fields are null.
+                    $data[$mainField] = null;
+                    $data[$lainField] = null;
+                }
+            }
+        }
+        // --- END: SPECIAL HANDLING ---
+
+        // --- START: DEFINITIVE FIX FOR BOOLEAN FIELDS ---
+        // Manually process all boolean fields to remove any ambiguity caused by unchecked radios/checkboxes.
         foreach ($paper->getCasts() as $field => $type) {
             if ($type === 'boolean') {
                 // If the field exists in the request (i.e., a radio button was selected
@@ -80,8 +143,9 @@ class KertasSiasatanController extends Controller
                 if ($request->has($field)) {
                     $data[$field] = (bool)$request->input($field);
                 } else {
-                    // If the field is NOT in the request (i.e., an unchecked checkbox),
-                    // we force it to be 'false'. This makes the code robust for all cases.
+                    // If the field is NOT in the request (i.e., an unchecked checkbox or a radio group
+                    // where '0' is not explicitly sent but no '1' is, or the '0' value of a radio button
+                    // if it's the default and not interacted with), we force it to be 'false'.
                     $data[$field] = false;
                 }
             }

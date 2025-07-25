@@ -14,16 +14,86 @@
     // A single source of truth for all table configurations.
     // Keys are PascalCase to match the $dashboardData array from the controller.
     $paperTypes = [
-        'Jenayah' => ['model' => new Jenayah(), 'route' => 'projects.jenayah_data', 'title' => 'JSJ(Jenayah)'],
-        'Narkotik' => ['model' => new Narkotik(), 'route' => 'projects.narkotik_data', 'title' => 'JSJN(Narkotik)'],
-        'Komersil' => ['model' => new Komersil(), 'route' => 'projects.komersil_data', 'title' => 'JSJK(Komersil)'],
-        'TrafikSeksyen' => ['model' => new TrafikSeksyen(), 'route' => 'projects.trafik_seksyen_data', 'title' => 'JSPT(Seksyen) '],
-        'TrafikRule' => ['model' => new TrafikRule(), 'route' => 'projects.trafik_rule_data', 'title' => 'JSPT(Rule)'],
-        'OrangHilang' => ['model' => new OrangHilang(), 'route' => 'projects.orang_hilang_data', 'title' => 'JP(Orang Hilang)'],
-        'LaporanMatiMengejut' => ['model' => new LaporanMatiMengejut(), 'route' => 'projects.laporan_mati_mengejut_data', 'title' => 'JP(LMM)'],
+        'Jenayah' => ['model' => new Jenayah(), 'route' => 'projects.jenayah_data', 'title' => 'Jenayah'],
+        'Narkotik' => ['model' => new Narkotik(), 'route' => 'projects.narkotik_data', 'title' => 'Narkotik'],
+        'Komersil' => ['model' => new Komersil(), 'route' => 'projects.komersil_data', 'title' => 'Komersil'],
+        'TrafikSeksyen' => ['model' => new TrafikSeksyen(), 'route' => 'projects.trafik_seksyen_data', 'title' => 'Trafik Seksyen'],
+        'TrafikRule' => ['model' => new TrafikRule(), 'route' => 'projects.trafik_rule_data', 'title' => 'Trafik Rule'],
+        'OrangHilang' => ['model' => new OrangHilang(), 'route' => 'projects.orang_hilang_data', 'title' => 'Orang Hilang'],
+        'LaporanMatiMengejut' => ['model' => new LaporanMatiMengejut(), 'route' => 'projects.laporan_mati_mengejut_data', 'title' => 'LMM'],
     ];
 
     $ignoreColumns = ['id', 'user_id', 'project_id', 'created_at', 'updated_at'];
+    
+    // Define custom columns for OrangHilang based on actual form fields in edit.blade.php
+    $orangHilangColumns = [
+        // BAHAGIAN 1: Maklumat Asas
+        'no_kertas_siasatan' => 'No. Kertas Siasatan',
+        'no_repot_polis' => 'No. Repot Polis',
+        'pegawai_penyiasat' => 'Pegawai Penyiasat',
+        'tarikh_laporan_polis_dibuka' => 'Tarikh Laporan Polis',
+        'seksyen' => 'Seksyen',
+        'pegawai_pemeriksa' => 'Pegawai Pemeriksa',
+        'tarikh_edaran_minit_ks_pertama' => 'Tarikh Minit KS Pertama',
+        'tarikh_edaran_minit_ks_kedua' => 'Tarikh Minit KS Kedua',
+        
+        // BAHAGIAN 2: Arahan Minit
+        'arahan_minit_oleh_sio_status' => 'Arahan Minit SIO',
+        'arahan_minit_oleh_sio_tarikh' => 'Tarikh Arahan SIO',
+        'arahan_minit_ketua_bahagian_status' => 'Arahan Minit Ketua Bahagian',
+        'arahan_minit_ketua_bahagian_tarikh' => 'Tarikh Arahan Ketua Bahagian',
+        'arahan_minit_ketua_jabatan_status' => 'Arahan Minit Ketua Jabatan',
+        'arahan_minit_ketua_jabatan_tarikh' => 'Tarikh Arahan Ketua Jabatan',
+        'arahan_minit_oleh_ya_tpr_status' => 'Arahan Minit YA TPR',
+        'arahan_minit_oleh_ya_tpr_tarikh' => 'Tarikh Arahan YA TPR',
+        'keputusan_siasatan_oleh_ya_tpr' => 'Keputusan Siasatan YA TPR',
+        
+        // BAHAGIAN 3: Barang Kes & Pendaftaran
+        'adakah_barang_kes_didaftarkan' => 'Barang Kes Didaftarkan',
+        'tarikh_barang_kes_didaftarkan' => 'Tarikh Barang Kes',
+        'jenis_barang_kes' => 'Jenis Barang Kes',
+        'keadaan_barang_kes' => 'Keadaan Barang Kes',
+        'ulasan_lain_lain_barang_kes' => 'Ulasan Barang Kes',
+        
+        // BAHAGIAN 4: Status Dokumen & Gambar
+        'status_id_siasatan_dikemaskini' => 'ID Siasatan Dikemaskini',
+        'status_rajah_kasar_tempat_kejadian' => 'Rajah Kasar Tempat Kejadian',
+        'status_gambar_tempat_kejadian' => 'Gambar Tempat Kejadian',
+        'status_gambar_barang_kes_am' => 'Gambar Barang Kes AM',
+        'status_gambar_barang_kes_berharga' => 'Gambar Barang Kes Berharga',
+        'status_gambar_orang_hilang' => 'Gambar Orang Hilang',
+        'status_pem' => 'Status PEM',
+        'status_mps1' => 'Status MPS1',
+        'tarikh_mps1' => 'Tarikh MPS1',
+        'status_mps2' => 'Status MPS2',
+        'tarikh_mps2' => 'Tarikh MPS2',
+        'ulasan_laporan_polis' => 'Ulasan Laporan Polis',
+        
+        // BAHAGIAN 5: Hebahan & Media
+        'hebahan_media_massa' => 'Hebahan Media Massa',
+        'tarikh_hebahan_media_massa' => 'Tarikh Hebahan Media',
+        'jenis_hebahan_media_massa' => 'Jenis Hebahan Media',
+        'kos_hebahan_media_massa' => 'Kos Hebahan Media',
+        'ulasan_hebahan_media_massa' => 'Ulasan Hebahan Media',
+        
+        // BAHAGIAN 6: Pemakluman Kedutaan
+        'semboyan_pemakluman_ke_kedutaan_bukan_warganegara' => 'Pemakluman Kedutaan',
+        'tarikh_pemakluman_ke_kedutaan' => 'Tarikh Pemakluman Kedutaan',
+        'negara_asal_orang_hilang' => 'Negara Asal',
+        
+        // BAHAGIAN 7: Laporan Imigresen
+        'status_permohonan_laporan_imigresen' => 'Permohonan Laporan Imigresen',
+        'tarikh_permohonan_laporan_imigresen' => 'Tarikh Permohonan Imigresen',
+        'status_laporan_penuh_imigresen' => 'Laporan Penuh Imigresen',
+        'tarikh_laporan_penuh_imigresen' => 'Tarikh Laporan Penuh Imigresen',
+        'ulasan_imigresen' => 'Ulasan Imigresen',
+        
+        // BAHAGIAN 8: Status Fail & Keputusan
+        'keputusan_akhir_mahkamah' => 'Keputusan Akhir Mahkamah',
+        'tarikh_keputusan_akhir_mahkamah' => 'Tarikh Keputusan Akhir',
+        'adakah_ks_kus_fail_selesai' => 'KS KUS/FAIL Selesai',
+        'ulasan_keputusan_akhir' => 'Ulasan Keputusan Akhir',
+    ];
 @endphp
 
 <x-app-layout>
@@ -145,13 +215,20 @@
                                 <table id="{{ $key }}-datatable" class="w-full text-sm text-left" style="width:100%">
                                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 sticky top-0 z-20">
                                         <tr>
-                                            {{-- Use the table's actual columns for DataTables --}}
-                                            @php $columns = array_diff(Schema::getColumnListing($config['model']->getTable()), $ignoreColumns); @endphp
                                             <th class="px-4 py-3 sticky left-0 bg-gray-50 dark:bg-gray-700 z-30 border-r border-gray-200 dark:border-gray-600">Tindakan</th>
                                             <th class="px-4 py-3">No.</th>
-                                            @foreach($columns as $column)
-                                                <th scope="col" class="px-4 py-3">{{ Str::of($column)->replace('_', ' ')->title() }}</th>
-                                            @endforeach
+                                            @if($key === 'OrangHilang')
+                                                {{-- Use custom columns for OrangHilang --}}
+                                                @foreach($orangHilangColumns as $column => $label)
+                                                    <th scope="col" class="px-4 py-3">{{ $label }}</th>
+                                                @endforeach
+                                            @else
+                                                {{-- Use the table's actual columns for other models --}}
+                                                @php $columns = array_diff(Schema::getColumnListing($config['model']->getTable()), $ignoreColumns); @endphp
+                                                @foreach($columns as $column)
+                                                    <th scope="col" class="px-4 py-3">{{ Str::of($column)->replace('_', ' ')->title() }}</th>
+                                                @endforeach
+                                            @endif
                                         </tr>
                                     </thead>
                                     <tbody></tbody>

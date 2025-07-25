@@ -26,21 +26,33 @@ class TrafikSeksyen extends Model
         'tarikh_edaran_minit_ks_sebelum_akhir' => 'date:Y-m-d',
         'tarikh_edaran_minit_ks_akhir' => 'date:Y-m-d',
         'tarikh_semboyan_pemeriksaan_jips_ke_daerah' => 'date:Y-m-d',
-        // B3 - ENSURE THESE ARE 'boolean'
+
+        // B3 - ENSURE THESE ARE 'boolean' or 'string'
         'arahan_minit_oleh_sio_status' => 'boolean',
+        'arahan_minit_oleh_sio_tarikh' => 'date:Y-m-d', // Added date cast
         'arahan_minit_ketua_bahagian_status' => 'boolean',
+        'arahan_minit_ketua_bahagian_tarikh' => 'date:Y-m-d', // Added date cast
         'arahan_minit_ketua_jabatan_status' => 'boolean',
+        'arahan_minit_ketua_jabatan_tarikh' => 'date:Y-m-d', // Added date cast
         'arahan_minit_oleh_ya_tpr_status' => 'boolean',
-        'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan' => 'array', // Keep as array for JSON
-        // B4 - ENSURE THESE ARE 'boolean' or 'array' for JSON
+        'arahan_minit_oleh_ya_tpr_tarikh' => 'date:Y-m-d', // Added date cast
+        'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan' => 'string', // Changed from array to string
+        
+        // B4 - ENSURE THESE ARE 'boolean' or 'string' for single choice, and new '_lain' fields
         'adakah_barang_kes_didaftarkan' => 'boolean',
-        'status_pergerakan_barang_kes' => 'array',
-        'status_barang_kes_selesai_siasatan' => 'array',
-        'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan' => 'array',
-        'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => 'array',
-        'resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => 'array',
-        'adakah_borang_serah_terima_pegawai_tangkapan' => 'array',
+        'status_pergerakan_barang_kes' => 'string', // Changed from array to string
+        'status_pergerakan_barang_kes_lain' => 'string', // New column
+        'status_barang_kes_selesai_siasatan' => 'string', // Changed from array to string
+        'status_barang_kes_selesai_siasatan_lain' => 'string', // New column
+        'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan' => 'string', // Changed from array to string
+        'kaedah_pelupusan_barang_kes_lain' => 'string', // New column
+        'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => 'string', // Changed from array to string
+        'resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => 'string', // Changed from array to string
+        'adakah_borang_serah_terima_pegawai_tangkapan' => 'string', // Changed from array to string
+        'adakah_borang_serah_terima_pemilik_saksi' => 'boolean', // Changed from string to boolean
         'adakah_sijil_surat_kebenaran_ipo' => 'boolean',
+        'adakah_gambar_pelupusan' => 'boolean', // Changed from string to boolean
+
         // B5 - ENSURE THESE ARE 'boolean'
         'status_id_siasatan_dikemaskini' => 'boolean',
         'status_rajah_kasar_tempat_kejadian' => 'boolean',
@@ -51,8 +63,9 @@ class TrafikSeksyen extends Model
         'status_gambar_barang_kes_kenderaan' => 'boolean',
         'status_gambar_barang_kes_darah' => 'boolean',
         'status_gambar_barang_kes_kontraban' => 'boolean',
+
         // B6 - ENSURE THESE ARE 'boolean' or 'array' for JSON
-        'status_pem' => 'array',
+        'status_pem' => 'array', // This remains JSON as it's multiple checkboxes (PEM 1, PEM 2, etc.)
         'status_rj2' => 'boolean',
         'tarikh_rj2' => 'date:Y-m-d',
         'status_rj2b' => 'boolean',
@@ -74,6 +87,7 @@ class TrafikSeksyen extends Model
         'status_semboyan_ketiga_wanted_person' => 'boolean',
         'tarikh_semboyan_ketiga_wanted_person' => 'date:Y-m-d',
         'status_penandaan_kelas_warna' => 'boolean',
+
         // B7 - Permohonan Laporan Agensi Luar (Updated and new fields)
         'status_permohonan_laporan_post_mortem_mayat' => 'boolean',
         'tarikh_permohonan_laporan_post_mortem_mayat' => 'date:Y-m-d',
@@ -83,12 +97,12 @@ class TrafikSeksyen extends Model
         'tarikh_permohonan_laporan_jabatan_kimia' => 'date:Y-m-d',
         'status_laporan_penuh_jabatan_kimia' => 'boolean',
         'tarikh_laporan_penuh_jabatan_kimia' => 'date:Y-m-d',
-        // 'keputusan_laporan_jabatan_kimia' => 'string', // String types don't strictly need casting unless specific formatting is required
+        // 'keputusan_laporan_jabatan_kimia' is a string, no specific cast needed unless custom formatting is desired
         'status_permohonan_laporan_jabatan_patalogi' => 'boolean',
         'tarikh_permohonan_laporan_jabatan_patalogi' => 'date:Y-m-d',
         'status_laporan_penuh_jabatan_patalogi' => 'boolean',
         'tarikh_laporan_penuh_jabatan_patalogi' => 'date:Y-m-d',
-        // 'keputusan_laporan_jabatan_patalogi' => 'string', // String types don't strictly need casting unless specific formatting is required
+        // 'keputusan_laporan_jabatan_patalogi' is a string
         'status_permohonan_laporan_puspakom' => 'boolean',
         'tarikh_permohonan_laporan_puspakom' => 'date:Y-m-d',
         'status_laporan_penuh_puspakom' => 'boolean',
@@ -105,13 +119,16 @@ class TrafikSeksyen extends Model
         'tarikh_permohonan_laporan_imigresen' => 'date:Y-m-d',
         'status_laporan_penuh_imigresen' => 'boolean',
         'tarikh_laporan_penuh_imigresen' => 'date:Y-m-d',
-        // 'lain_lain_permohonan_laporan' => 'string', // String types don't strictly need casting unless specific formatting is required
-        // B8 - ENSURE THESE ARE 'boolean' or 'array' for JSON
+        // 'lain_lain_permohonan_laporan' is a string
+
+        // B8 - ENSURE THESE ARE 'boolean' or 'string'
         'muka_surat_4_barang_kes_ditulis' => 'boolean',
         'muka_surat_4_dengan_arahan_tpr' => 'boolean',
         'muka_surat_4_keputusan_kes_dicatat' => 'boolean',
         'fail_lmm_ada_keputusan_koroner' => 'boolean',
-        'keputusan_akhir_mahkamah' => 'array',
+        'status_kus_fail' => 'boolean', // Changed from string to boolean
+        'keputusan_akhir_mahkamah' => 'string', // Changed from array to string
+        
         // Common timestamps
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
@@ -136,8 +153,19 @@ class TrafikSeksyen extends Model
         'arahan_minit_ketua_bahagian_status_text',
         'arahan_minit_ketua_jabatan_status_text',
         'arahan_minit_oleh_ya_tpr_status_text',
+        // 'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan_text' - REMOVED, now direct string
         'adakah_barang_kes_didaftarkan_text',
+        // 'status_pergerakan_barang_kes_text' - REMOVED, now direct string + _lain
+        // 'status_barang_kes_selesai_siasatan_text' - REMOVED, now direct string + _lain
+        // 'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan_text' - REMOVED, now direct string + _lain
+        // 'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan_text' - REMOVED, now direct string
+        // 'resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan_text' - REMOVED, now direct string
+        // 'adakah_borang_serah_terima_pegawai_tangkapan_text' - REMOVED, now direct string
+        'adakah_borang_serah_terima_pemilik_saksi_text', // ADDED
         'adakah_sijil_surat_kebenaran_ipo_text',
+        'adakah_gambar_pelupusan_text', // ADDED
+
+        // B5 - ENSURE THESE ARE 'boolean'
         'status_id_siasatan_dikemaskini_text',
         'status_rajah_kasar_tempat_kejadian_text',
         'status_gambar_tempat_kejadian_text',
@@ -147,6 +175,8 @@ class TrafikSeksyen extends Model
         'status_gambar_barang_kes_kenderaan_text',
         'status_gambar_barang_kes_darah_text',
         'status_gambar_barang_kes_kontraban_text',
+
+        // B6 Accessors
         'status_rj2_text',
         'status_rj2b_text',
         'status_rj9_text',
@@ -159,6 +189,7 @@ class TrafikSeksyen extends Model
         'status_semboyan_kedua_wanted_person_text',
         'status_semboyan_ketiga_wanted_person_text',
         'status_penandaan_kelas_warna_text',
+
         // B7 - New and existing boolean accessors
         'status_permohonan_laporan_post_mortem_mayat_text',
         'status_laporan_penuh_bedah_siasat_text',
@@ -174,11 +205,14 @@ class TrafikSeksyen extends Model
         'status_laporan_penuh_jpj_text',
         'status_permohonan_laporan_imigresen_text',
         'status_laporan_penuh_imigresen_text',
+
         // B8 Accessors
         'muka_surat_4_barang_kes_ditulis_text',
         'muka_surat_4_dengan_arahan_tpr_text',
         'muka_surat_4_keputusan_kes_dicatat_text',
         'fail_lmm_ada_keputusan_koroner_text',
+        'status_kus_fail_text', // ADDED
+        // 'keputusan_akhir_mahkamah_text' - REMOVED, now direct string
     ];
 
     public function project()
@@ -290,8 +324,15 @@ class TrafikSeksyen extends Model
     public function getAdakahBarangKesDidaftarkanTextAttribute(): string {
         return $this->formatBooleanToMalay($this->adakah_barang_kes_didaftarkan);
     }
+    // No specific accessors needed for _lain fields, they are handled directly in blade now.
+    public function getAdakahBorangSerahTerimaPemilikSaksiTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->adakah_borang_serah_terima_pemilik_saksi, 'Ada Dilampirkan', 'Tidak Dilampirkan');
+    }
     public function getAdakahSijilSuratKebenaranIpoTextAttribute(): string {
         return $this->formatBooleanToMalay($this->adakah_sijil_surat_kebenaran_ipo, 'Ada Dilampirkan', 'Tidak Dilampirkan');
+    }
+    public function getAdakahGambarPelupusanTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->adakah_gambar_pelupusan, 'Ada Dilampirkan', 'Tidak Dilampirkan');
     }
 
     // B5 Accessors
@@ -311,7 +352,6 @@ class TrafikSeksyen extends Model
         return $this->formatBooleanToMalay($this->status_gambar_barang_kes_am, 'Ada', 'Tiada');
     }
     public function getStatusGambarBarangKesBerhargaTextAttribute(): string {
-      
         return $this->formatBooleanToMalay($this->status_gambar_barang_kes_berharga, 'Ada', 'Tiada');
     }
     public function getStatusGambarBarangKesKenderaanTextAttribute(): string {
@@ -362,7 +402,7 @@ class TrafikSeksyen extends Model
         return $this->formatBooleanToMalay($this->status_penandaan_kelas_warna);
     }
 
-    // B7 Accessors (New and existing)
+    // B7 Accessors
     public function getStatusPermohonanLaporanPostMortemMayatTextAttribute(): string {
         return $this->formatBooleanToMalay($this->status_permohonan_laporan_post_mortem_mayat, 'Permohonan Dibuat', 'Tiada Permohonan');
     }
@@ -419,4 +459,8 @@ class TrafikSeksyen extends Model
     public function getFailLmmAdaKeputusanKoronerTextAttribute(): string {
         return $this->formatBooleanToMalay($this->fail_lmm_ada_keputusan_koroner);
     }
+    public function getStatusKusFailTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->status_kus_fail);
+    }
+    // 'keputusan_akhir_mahkamah_text' removed as it's now a direct string.
 }

@@ -78,20 +78,25 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
             'model'       => \App\Models\OrangHilang::class,
            'unique_by'   => 'no_kertas_siasatan',
             'column_map'  => [
+                // BAHAGIAN 1: Maklumat Asas
                 'no_kertas_siasatan' => 'no_kertas_siasatan',
+                'no_repot_polis' => 'no_repot_polis',
                 'pegawai_penyiasat' => 'pegawai_penyiasat',
-                'seksyen' => 'seksyen',
                 'tarikh_laporan_polis_dibuka' => 'tarikh_laporan_polis_dibuka',
+                'seksyen' => 'seksyen',
             ],
         ],
         'LaporanMatiMengejut' => [
             'model'       => \App\Models\LaporanMatiMengejut::class,
             'unique_by'   => 'no_sdr_lmm',
             'column_map'  => [
-                'no_sdr_lmm' => 'no_sdr_lmm',
+                // BAHAGIAN 1: Maklumat Asas
+                'no_kertas_siasatan' => 'no_kertas_siasatan',
+                'no_fail_lmm_sdr' => 'no_fail_lmm_sdr',
+                'no_repot_polis' => 'no_repot_polis',
                 'pegawai_penyiasat' => 'pegawai_penyiasat',
-                'no_laporan_polis' => 'no_laporan_polis',
-                'tarikh_laporan_polis' => 'tarikh_laporan_polis',
+                'tarikh_laporan_polis_dibuka' => 'tarikh_laporan_polis_dibuka',
+                'seksyen' => 'seksyen',
             ],
         ],
     ];
