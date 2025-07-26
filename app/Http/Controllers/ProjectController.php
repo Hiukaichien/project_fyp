@@ -87,9 +87,10 @@ class ProjectController extends Controller
             $jumlahBelumDiperiksa = $jumlahKeseluruhan - $jumlahDiperiksa;
 
             // Filter for issue lists for this department
-            $lewatItems = $allPapers->filter(fn ($paper) => property_exists($paper, 'lewat_edaran_48_jam_status') && $paper->lewat_edaran_48_jam_status === 'YA, LEWAT')->values();
-            $terbengkalaiItems = $allPapers->filter(fn ($paper) => property_exists($paper, 'terbengkalai_status') && Str::contains($paper->terbengkalai_status, 'TERBENGKALAI'))->values();
-            $kemaskiniItems = $allPapers->filter(fn ($paper) => property_exists($paper, 'baru_dikemaskini_status') && $paper->baru_dikemaskini_status === 'TERBENGKALAI / KS BARU DIKEMASKINI')->values();
+            // Access the properties directly. Laravel's accessors will handle them.
+            $lewatItems = $allPapers->filter(fn ($paper) => $paper->lewat_edaran_48_jam_status === 'YA, LEWAT')->values();
+            $terbengkalaiItems = $allPapers->filter(fn ($paper) => Str::contains($paper->terbengkalai_status, 'TERBENGKALAI'))->values();
+            $kemaskiniItems = $allPapers->filter(fn ($paper) => $paper->baru_dikemaskini_status === 'TERBENGKALAI / KS BARU DIKEMASKINI')->values();
 
             // Create Paginators for this department
             $lewatPage = $request->get($type . '_lewat_page', 1);
