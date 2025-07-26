@@ -91,10 +91,12 @@ class DatabaseSeeder extends Seeder
             TrafikSeksyen::updateOrCreate(
                 ['no_kertas_siasatan' => 'TRFS/KS/' . str_pad($i, 4, '0', STR_PAD_LEFT) . '/24'],
                 [
+                    // BAHAGIAN 1: Maklumat Asas
                     'project_id' => $project->id,
+                    'no_repot_polis' => 'IPD/TRAFFIC/' . str_pad(rand(1000, 99999), 5, '0', STR_PAD_LEFT) . '/' . date('y'),
                     'pegawai_penyiasat' => ['SGT MAJID', 'INSP TAN', 'SGT AMIN'][array_rand(['SGT MAJID', 'INSP TAN', 'SGT AMIN'])],
-                    'seksyen' => ['41(1) APJ 1987', '42(1) APJ 1987', '43(1) APJ 1987'][array_rand(['41(1) APJ 1987', '42(1) APJ 1987', '43(1) APJ 1987'])],
                     'tarikh_laporan_polis_dibuka' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30))->format('Y-m-d'),
+                    'seksyen' => ['41(1) APJ 1987', '42(1) APJ 1987', '43(1) APJ 1987'][array_rand(['41(1) APJ 1987', '42(1) APJ 1987', '43(1) APJ 1987'])],
                 ]
             );
         }
@@ -102,12 +104,15 @@ class DatabaseSeeder extends Seeder
         // 6. Seed Trafik Rule Papers (20 records)
         for ($i = 1; $i <= 20; $i++) {
             TrafikRule::updateOrCreate(
-                ['no_kertas_siasatan' => 'TRFS/KS/' . str_pad($i, 4, '0', STR_PAD_LEFT) . '/24'],
+                ['no_kertas_siasatan' => 'TRFR/KS/' . str_pad($i, 4, '0', STR_PAD_LEFT) . '/24'], // Note: Changed prefix to TRFR for "Trafik Rule"
                 [
+                    // BAHAGIAN 1: Maklumat Asas
                     'project_id' => $project->id,
+                    'no_fail_lmm_t' => 'LMM(T)/' . rand(100, 999) . '/' . date('y'),
+                    'no_repot_polis' => 'IPD/TRAFFIC/' . str_pad(rand(1000, 99999), 5, '0', STR_PAD_LEFT) . '/' . date('y'),
                     'pegawai_penyiasat' => ['SGT MAJID', 'INSP TAN', 'SGT AMIN'][array_rand(['SGT MAJID', 'INSP TAN', 'SGT AMIN'])],
-                    'seksyen' => ['41(1) APJ 1987', '42(1) APJ 1987', '43(1) APJ 1987'][array_rand(['41(1) APJ 1987', '42(1) APJ 1987', '43(1) APJ 1987'])],
                     'tarikh_laporan_polis_dibuka' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30))->format('Y-m-d'),
+                    'seksyen' => ['R.166A LN 166/59', 'R.17 LN 166/59', 'R.10 LN 166/59'][array_rand(['R.166A LN 166/59', 'R.17 LN 166/59', 'R.10 LN 166/59'])], // Using more appropriate sections for Trafik Rule
                 ]
             );
         }

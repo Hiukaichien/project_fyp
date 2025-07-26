@@ -25,11 +25,7 @@ class TrafikRule extends Model
         'tarikh_edaran_minit_ks_sebelum_akhir' => 'date:Y-m-d',
         'tarikh_edaran_minit_ks_akhir' => 'date:Y-m-d',
         'tarikh_semboyan_pemeriksaan_jips_ke_daerah' => 'date:Y-m-d',
-        'tarikh_edaran_minit_fail_lmm_t_pertama' => 'date:Y-m-d',
-        'tarikh_edaran_minit_fail_lmm_t_kedua' => 'date:Y-m-d',
-        'tarikh_edaran_minit_fail_lmm_t_sebelum_minit_akhir' => 'date:Y-m-d',
-        'tarikh_edaran_minit_fail_lmm_t_akhir' => 'date:Y-m-d',
-        'fail_lmm_bahagian_pengurusan_pada_muka_surat_2' => 'date:Y-m-d',
+        
         // B3
         'arahan_minit_oleh_sio_status' => 'boolean',
         'arahan_minit_oleh_sio_tarikh' => 'date:Y-m-d',
@@ -39,17 +35,20 @@ class TrafikRule extends Model
         'arahan_minit_ketua_jabatan_tarikh' => 'date:Y-m-d',
         'arahan_minit_oleh_ya_tpr_status' => 'boolean',
         'arahan_minit_oleh_ya_tpr_tarikh' => 'date:Y-m-d',
-        'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan' => 'array',
+        'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan' => 'string', // Corrected from array
+
         // B5
         'status_id_siasatan_dikemaskini' => 'boolean',
         'status_rajah_kasar_tempat_kejadian' => 'boolean',
         'status_gambar_tempat_kejadian' => 'boolean',
+
         // B6
         'status_pem' => 'array',
         'status_rj10b' => 'boolean',
         'tarikh_rj10b' => 'date:Y-m-d',
         'status_saman_pdrm_s_257' => 'boolean',
         'status_saman_pdrm_s_167' => 'boolean',
+
         // B7
         'status_permohonan_laporan_jkr' => 'boolean',
         'tarikh_permohonan_laporan_jkr' => 'date:Y-m-d',
@@ -59,25 +58,50 @@ class TrafikRule extends Model
         'tarikh_permohonan_laporan_jpj' => 'date:Y-m-d',
         'status_laporan_penuh_jkjr' => 'boolean',
         'tarikh_laporan_penuh_jkjr' => 'date:Y-m-d',
+
         // B8
-        'adakah_muka_surat_4_keputusan_kes_dicatat' => 'string',
-        'adakah_ks_kus_fail_selesai' => 'string',
-        'adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan' => 'string',
-        'keputusan_akhir_mahkamah' => 'array',
-        'ulasan_keseluruhan_pegawai_pemeriksa_fail' => 'string',
+        'adakah_muka_surat_4_keputusan_kes_dicatat' => 'boolean', // Corrected from string
+        'adakah_ks_kus_fail_selesai' => 'boolean', // Corrected from string
+        'adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan' => 'boolean', // Corrected from string
+        'keputusan_akhir_mahkamah' => 'string', // Corrected from array
+        
+        // Common Timestamps
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'project_id' => 'integer',
     ];
 
     
      /**
      * The accessors to append to the model's array form.
-     * This makes the calculated values available in DataTables.
+     * This makes the calculated values available in DataTables and exports.
      */
     protected $appends = [
+        // Calculated statuses
         'lewat_edaran_48_jam_status',
         'terbengkalai_status',
         'baru_dikemaskini_status',
         'tempoh_lewat_edaran_dikesan', 
-        'tempoh_dikemaskini',      
+        'tempoh_dikemaskini',
+
+        // Text versions of boolean fields for display
+        'arahan_minit_oleh_sio_status_text',
+        'arahan_minit_ketua_bahagian_status_text',
+        'arahan_minit_ketua_jabatan_status_text',
+        'arahan_minit_oleh_ya_tpr_status_text',
+        'status_id_siasatan_dikemaskini_text',
+        'status_rajah_kasar_tempat_kejadian_text',
+        'status_gambar_tempat_kejadian_text',
+        'status_rj10b_text',
+        'status_saman_pdrm_s_257_text',
+        'status_saman_pdrm_s_167_text',
+        'status_permohonan_laporan_jkr_text',
+        'status_laporan_penuh_jkr_text',
+        'status_permohonan_laporan_jpj_text',
+        'status_laporan_penuh_jkjr_text',
+        'adakah_muka_surat_4_keputusan_kes_dicatat_text',
+        'adakah_ks_kus_fail_selesai_text',
+        'adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan_text',
     ];
 
     public function project()
@@ -87,9 +111,6 @@ class TrafikRule extends Model
 
     // --- ACCESSORS FOR DYNAMIC CALCULATION ---
     
-    /**
-     * Logic based on "Contoh 2 - LEWAT 48 JAM"
-     */
     public function getLewatEdaran48JamStatusAttribute(): ?string
     {
         $tarikhA = $this->tarikh_edaran_minit_ks_pertama;
@@ -102,9 +123,6 @@ class TrafikRule extends Model
         return $tarikhA->diffInHours($tarikhB) > 48 ? 'YA, LEWAT' : 'DALAM TEMPOH';
     }
 
-    /**
-     * NEW Accessor based on "Contoh 2 - TEMPOH LEWAT EDARAN DIKESAN"
-     */
     public function getTempohLewatEdaranDikesanAttribute(): ?string
     {
         $tarikhA = $this->tarikh_edaran_minit_ks_pertama;
@@ -118,9 +136,6 @@ class TrafikRule extends Model
         return null;
     }
 
-    /**
-     * Logic based on "Contoh 3 - TERBENGKALAI MELEBIHI 3 BULAN"
-     */
     public function getTerbengkalaiStatusAttribute(): ?string
     {
         $tarikhA = $this->tarikh_edaran_minit_ks_pertama;
@@ -133,9 +148,6 @@ class TrafikRule extends Model
         return 'TIDAK BERKENAAN'; // Not considered abandoned if it has an end date or never started
     }
 
-    /**
-     * Logic based on "Contoh 4 - BARU DIKEMASKINI"
-     */
     public function getBaruDikemaskiniStatusAttribute(): string
     {
         $tarikhD = $this->tarikh_edaran_minit_ks_akhir;
@@ -153,9 +165,6 @@ class TrafikRule extends Model
         return 'TIADA PERGERAKAN BARU';
     }
 
-    /**
-     * NEW Accessor based on "Contoh 4 - TEMPOH DIKEMASKINI"
-     */
     public function getTempohDikemaskiniAttribute(): ?string
     {
         $tarikhD = $this->tarikh_edaran_minit_ks_akhir;
@@ -172,33 +181,74 @@ class TrafikRule extends Model
     /**
      * Helper function to format boolean values into Malay text.
      */
-    private function formatBooleanToMalay($value, $trueText = 'Ya', $falseText = 'Tidak')
+    private function formatBooleanToMalay(?bool $value, string $trueText = 'Ya', string $falseText = 'Tidak', string $nullText = '-') : string
     {
         if (is_null($value)) {
-            return null; // Or return 'Tidak Diketahui' if you prefer
+            return $nullText;
         }
         return $value ? $trueText : $falseText;
     }
 
+    // --- Accessors for Boolean Fields to display Malay Text ---
+
     // B3 Accessors
-    public function getArahanMinitOlehSioStatusAttribute($value) { return $this->formatBooleanToMalay($value); }
-    public function getArahanMinitKetuaBahagianStatusAttribute($value) { return $this->formatBooleanToMalay($value); }
-    public function getArahanMinitKetuaJabatanStatusAttribute($value) { return $this->formatBooleanToMalay($value); }
-    public function getArahanMinitOlehYaTprStatusAttribute($value) { return $this->formatBooleanToMalay($value); }
+    public function getArahanMinitOlehSioStatusTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->arahan_minit_oleh_sio_status);
+    }
+    public function getArahanMinitKetuaBahagianStatusTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->arahan_minit_ketua_bahagian_status);
+    }
+    public function getArahanMinitKetuaJabatanStatusTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->arahan_minit_ketua_jabatan_status);
+    }
+    public function getArahanMinitOlehYaTprStatusTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->arahan_minit_oleh_ya_tpr_status);
+    }
 
     // B5 Accessors
-    public function getStatusIdSiasatanDikemaskiniAttribute($value) { return $this->formatBooleanToMalay($value, 'Dikemaskini', 'Tidak Dikemaskini'); }
-    public function getStatusRajahKasarTempatKejadianAttribute($value) { return $this->formatBooleanToMalay($value, 'Ada', 'Tiada'); }
-    public function getStatusGambarTempatKejadianAttribute($value) { return $this->formatBooleanToMalay($value, 'Ada', 'Tiada'); }
+    public function getStatusIdSiasatanDikemaskiniTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->status_id_siasatan_dikemaskini, 'Dikemaskini', 'Tidak Dikemaskini');
+    }
+    public function getStatusRajahKasarTempatKejadianTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->status_rajah_kasar_tempat_kejadian, 'Ada', 'Tiada');
+    }
+    public function getStatusGambarTempatKejadianTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->status_gambar_tempat_kejadian, 'Ada', 'Tiada');
+    }
     
     // B6 Accessors
-    public function getStatusRj10bAttribute($value) { return $this->formatBooleanToMalay($value, 'Cipta', 'Tidak Cipta'); }
-    public function getStatusSamanPdrmS257Attribute($value) { return $this->formatBooleanToMalay($value, 'Dicipta', 'Tidak Dicipta'); }
-    public function getStatusSamanPdrmS167Attribute($value) { return $this->formatBooleanToMalay($value, 'Dicipta', 'Tidak Dicipta'); }
+    public function getStatusRj10bTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->status_rj10b, 'Cipta', 'Tidak Cipta');
+    }
+    public function getStatusSamanPdrmS257TextAttribute(): string {
+        return $this->formatBooleanToMalay($this->status_saman_pdrm_s_257, 'Dicipta', 'Tidak Dicipta');
+    }
+    public function getStatusSamanPdrmS167TextAttribute(): string {
+        return $this->formatBooleanToMalay($this->status_saman_pdrm_s_167, 'Dicipta', 'Tidak Dicipta');
+    }
 
     // B7 Accessors
-    public function getStatusPermohonanLaporanJkrAttribute($value) { return $this->formatBooleanToMalay($value); }
-    public function getStatusLaporanPenuhJkrAttribute($value) { return $this->formatBooleanToMalay($value, 'Dilampirkan', 'Tidak'); }
-    public function getStatusPermohonanLaporanJpjAttribute($value) { return $this->formatBooleanToMalay($value); }
-    public function getStatusLaporanPenuhJkjrAttribute($value) { return $this->formatBooleanToMalay($value, 'Dilampirkan', 'Tidak'); }
+    public function getStatusPermohonanLaporanJkrTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->status_permohonan_laporan_jkr);
+    }
+    public function getStatusLaporanPenuhJkrTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->status_laporan_penuh_jkr, 'Dilampirkan', 'Tidak');
+    }
+    public function getStatusPermohonanLaporanJpjTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->status_permohonan_laporan_jpj);
+    }
+    public function getStatusLaporanPenuhJkjrTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->status_laporan_penuh_jkjr, 'Dilampirkan', 'Tidak');
+    }
+
+    // B8 Accessors
+    public function getAdakahMukaSurat4KeputusanKesDicatatTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->adakah_muka_surat_4_keputusan_kes_dicatat);
+    }
+    public function getAdakahKsKusFailSelesaiTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->adakah_ks_kus_fail_selesai);
+    }
+    public function getAdakahFailLmmTAtauLmmTelahAdaKeputusanTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan);
+    }
 }

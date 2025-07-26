@@ -30,12 +30,7 @@ return new class extends Migration
             $table->date('tarikh_edaran_minit_ks_sebelum_akhir')->nullable()->comment('B2');
             $table->date('tarikh_edaran_minit_ks_akhir')->nullable()->comment('B2');
             $table->date('tarikh_semboyan_pemeriksaan_jips_ke_daerah')->nullable()->comment('B2');
-            $table->date('tarikh_edaran_minit_fail_lmm_t_pertama')->nullable()->comment('B2');
-            $table->date('tarikh_edaran_minit_fail_lmm_t_kedua')->nullable()->comment('B2');
-            $table->date('tarikh_edaran_minit_fail_lmm_t_sebelum_minit_akhir')->nullable()->comment('B2');
-            $table->date('tarikh_edaran_minit_fail_lmm_t_akhir')->nullable()->comment('B2');
-            $table->date('fail_lmm_bahagian_pengurusan_pada_muka_surat_2')->nullable()->comment('B2');
-
+            
             // BAHAGIAN 3: Arahan & Keputusan (B3)
             $table->boolean('arahan_minit_oleh_sio_status')->nullable()->comment('B3');
             $table->date('arahan_minit_oleh_sio_tarikh')->nullable()->comment('B3');
@@ -46,7 +41,7 @@ return new class extends Migration
             $table->boolean('arahan_minit_oleh_ya_tpr_status')->nullable()->comment('B3');
             $table->date('arahan_minit_oleh_ya_tpr_tarikh')->nullable()->comment('B3');
             $table->string('keputusan_siasatan_oleh_ya_tpr')->nullable()->comment('B3');
-            $table->json('adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan')->nullable()->comment('B3');
+            $table->string('adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan')->nullable()->comment('B3');
             $table->text('ulasan_keputusan_siasatan_tpr')->nullable()->comment('B3');
             $table->text('ulasan_keseluruhan_pegawai_pemeriksa')->nullable()->comment('B3');
 
@@ -56,7 +51,7 @@ return new class extends Migration
             $table->boolean('status_gambar_tempat_kejadian')->nullable()->comment('B5');
 
             // BAHAGIAN 6: Borang & Semakan (B6)
-            $table->json('status_pem')->nullable()->comment('B6');
+            $table->json('status_pem')->nullable()->comment('B6'); // This is still multi-select checkboxes
             $table->boolean('status_rj10b')->nullable()->comment('B6');
             $table->date('tarikh_rj10b')->nullable()->comment('B6');
             $table->text('lain_lain_rj_dikesan')->nullable()->comment('B6');
@@ -73,15 +68,15 @@ return new class extends Migration
             $table->date('tarikh_laporan_penuh_jkr')->nullable()->comment('B7');
             $table->boolean('status_permohonan_laporan_jpj')->nullable()->comment('B7');
             $table->date('tarikh_permohonan_laporan_jpj')->nullable()->comment('B7');
-            $table->boolean('status_laporan_penuh_jkjr')->nullable()->comment('B7'); // Name from diagram
-            $table->date('tarikh_laporan_penuh_jkjr')->nullable()->comment('B7'); // Name from diagram
+            $table->boolean('status_laporan_penuh_jkjr')->nullable()->comment('B7'); 
+            $table->date('tarikh_laporan_penuh_jkjr')->nullable()->comment('B7'); 
             $table->string('lain_lain_permohonan_laporan')->nullable()->comment('B7');
 
             // BAHAGIAN 8: Status Fail (B8)
-            $table->string('adakah_muka_surat_4_keputusan_kes_dicatat')->nullable()->comment('B8');
-            $table->string('adakah_ks_kus_fail_selesai')->nullable()->comment('B8');
-            $table->string('adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan')->nullable()->comment('B8');
-            $table->json('keputusan_akhir_mahkamah')->nullable()->comment('B8');
+            $table->boolean('adakah_muka_surat_4_keputusan_kes_dicatat')->nullable()->comment('B8');
+            $table->boolean('adakah_ks_kus_fail_selesai')->nullable()->comment('B8');
+            $table->boolean('adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan')->nullable()->comment('B8');
+            $table->string('keputusan_akhir_mahkamah')->nullable()->comment('B8');
             $table->text('ulasan_keseluruhan_pegawai_pemeriksa_fail')->nullable()->comment('B8');
             
             $table->timestamps();

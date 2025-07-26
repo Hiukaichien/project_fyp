@@ -662,11 +662,141 @@ public function exportPapers(Request $request, Project $project)
                 'lain_lain_permohonan_laporan', // String, ensuring it's in rawColumns if special chars might exist
             ]))
             ->make(true);
-    }
-    public function getTrafikRuleData(Project $project) {
+    }public function getTrafikRuleData(Project $project) {
         Gate::authorize('access-project', $project);
         $query = TrafikRule::where('project_id', $project->id);
-        return DataTables::of($query)->addIndexColumn()->addColumn('action', fn($row) => $this->buildActionButtons($row, 'TrafikRule'))->rawColumns(['action'])->make(true);
+        
+        return DataTables::of($query)
+            ->addIndexColumn()
+            ->addColumn('action', fn($row) => $this->buildActionButtons($row, 'TrafikRule'))
+            
+            // Format Date fields
+            ->editColumn('tarikh_laporan_polis_dibuka', function($row) {
+                return optional($row->tarikh_laporan_polis_dibuka)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('tarikh_edaran_minit_ks_pertama', function($row) {
+                return optional($row->tarikh_edaran_minit_ks_pertama)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('tarikh_edaran_minit_ks_kedua', function($row) {
+                return optional($row->tarikh_edaran_minit_ks_kedua)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('tarikh_edaran_minit_ks_sebelum_akhir', function($row) {
+                return optional($row->tarikh_edaran_minit_ks_sebelum_akhir)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('tarikh_edaran_minit_ks_akhir', function($row) {
+                return optional($row->tarikh_edaran_minit_ks_akhir)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('tarikh_semboyan_pemeriksaan_jips_ke_daerah', function($row) {
+                return optional($row->tarikh_semboyan_pemeriksaan_jips_ke_daerah)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('arahan_minit_oleh_sio_tarikh', function($row) {
+                return optional($row->arahan_minit_oleh_sio_tarikh)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('arahan_minit_ketua_bahagian_tarikh', function($row) {
+                return optional($row->arahan_minit_ketua_bahagian_tarikh)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('arahan_minit_ketua_jabatan_tarikh', function($row) {
+                return optional($row->arahan_minit_ketua_jabatan_tarikh)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('arahan_minit_oleh_ya_tpr_tarikh', function($row) {
+                return optional($row->arahan_minit_oleh_ya_tpr_tarikh)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('tarikh_rj10b', function($row) {
+                return optional($row->tarikh_rj10b)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('tarikh_permohonan_laporan_jkr', function($row) {
+                return optional($row->tarikh_permohonan_laporan_jkr)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('tarikh_laporan_penuh_jkr', function($row) {
+                return optional($row->tarikh_laporan_penuh_jkr)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('tarikh_permohonan_laporan_jpj', function($row) {
+                return optional($row->tarikh_permohonan_laporan_jpj)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('tarikh_laporan_penuh_jkjr', function($row) {
+                return optional($row->tarikh_laporan_penuh_jkjr)->format('d/m/Y') ?? '-';
+            })
+            
+            // Format boolean fields
+            ->editColumn('arahan_minit_oleh_sio_status', function($row) {
+                return $this->formatBoolean($row->arahan_minit_oleh_sio_status);
+            })
+            ->editColumn('arahan_minit_ketua_bahagian_status', function($row) {
+                return $this->formatBoolean($row->arahan_minit_ketua_bahagian_status);
+            })
+            ->editColumn('arahan_minit_ketua_jabatan_status', function($row) {
+                return $this->formatBoolean($row->arahan_minit_ketua_jabatan_status);
+            })
+            ->editColumn('arahan_minit_oleh_ya_tpr_status', function($row) {
+                return $this->formatBoolean($row->arahan_minit_oleh_ya_tpr_status);
+            })
+            ->editColumn('status_id_siasatan_dikemaskini', function($row) {
+                return $this->formatBoolean($row->status_id_siasatan_dikemaskini, 'Dikemaskini', 'Tidak');
+            })
+            ->editColumn('status_rajah_kasar_tempat_kejadian', function($row) {
+                return $this->formatBoolean($row->status_rajah_kasar_tempat_kejadian, 'Ada', 'Tiada');
+            })
+            ->editColumn('status_gambar_tempat_kejadian', function($row) {
+                return $this->formatBoolean($row->status_gambar_tempat_kejadian, 'Ada', 'Tiada');
+            })
+            ->editColumn('status_rj10b', function($row) {
+                return $this->formatBoolean($row->status_rj10b, 'Cipta', 'Tidak');
+            })
+            ->editColumn('status_saman_pdrm_s_257', function($row) {
+                return $this->formatBoolean($row->status_saman_pdrm_s_257, 'Dicipta', 'Tidak');
+            })
+            ->editColumn('status_saman_pdrm_s_167', function($row) {
+                return $this->formatBoolean($row->status_saman_pdrm_s_167, 'Dicipta', 'Tidak');
+            })
+            ->editColumn('status_permohonan_laporan_jkr', function($row) {
+                return $this->formatBoolean($row->status_permohonan_laporan_jkr);
+            })
+            ->editColumn('status_laporan_penuh_jkr', function($row) {
+                return $this->formatBoolean($row->status_laporan_penuh_jkr, 'Dilampirkan', 'Tidak');
+            })
+            ->editColumn('status_permohonan_laporan_jpj', function($row) {
+                return $this->formatBoolean($row->status_permohonan_laporan_jpj);
+            })
+            ->editColumn('status_laporan_penuh_jkjr', function($row) {
+                return $this->formatBoolean($row->status_laporan_penuh_jkjr, 'Dilampirkan', 'Tidak');
+            })
+            ->editColumn('adakah_muka_surat_4_keputusan_kes_dicatat', function($row) {
+                return $this->formatBoolean($row->adakah_muka_surat_4_keputusan_kes_dicatat);
+            })
+            ->editColumn('adakah_ks_kus_fail_selesai', function($row) {
+                return $this->formatBoolean($row->adakah_ks_kus_fail_selesai);
+            })
+            ->editColumn('adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan', function($row) {
+                return $this->formatBoolean($row->adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan);
+            })
+
+            // Format JSON array fields (status_pem)
+            ->editColumn('status_pem', function($row) {
+                return $this->formatArrayField($row->status_pem);
+            })
+
+            ->rawColumns([
+                'action',
+                'arahan_minit_oleh_sio_status',
+                'arahan_minit_ketua_bahagian_status',
+                'arahan_minit_ketua_jabatan_status',
+                'arahan_minit_oleh_ya_tpr_status',
+                'status_id_siasatan_dikemaskini',
+                'status_rajah_kasar_tempat_kejadian',
+                'status_gambar_tempat_kejadian',
+                'status_pem',
+                'status_rj10b',
+                'status_saman_pdrm_s_257',
+                'status_saman_pdrm_s_167',
+                'status_permohonan_laporan_jkr',
+                'status_laporan_penuh_jkr',
+                'status_permohonan_laporan_jpj',
+                'status_laporan_penuh_jkjr',
+                'adakah_muka_surat_4_keputusan_kes_dicatat',
+                'adakah_ks_kus_fail_selesai',
+                'adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan'
+            ])
+            ->make(true);
     }
     public function getOrangHilangData(Project $project) {
         Gate::authorize('access-project', $project);
