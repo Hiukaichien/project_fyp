@@ -57,22 +57,40 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // 3. Seed Jenayah Papers (20 records)
-        // Note: Using 'pegawai_penyiasat' as per your migration file.
+        // 3. Seed Jenayah Papers (20 records) - Basic fields only from actual migration
         for ($i = 1; $i <= 20; $i++) {
             Jenayah::updateOrCreate(
                 ['no_ks' => 'JNY/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '/24'],
                 [
-                    'pegawai_penyiasat' => ['INSP ALI', 'SGT AHMAD', 'INSP FATIMAH'][array_rand(['INSP ALI', 'SGT AHMAD', 'INSP FATIMAH'])],
-                    'seksyen' => ['302 KK', '39B ADB', '420 KK'][array_rand(['302 KK', '39B ADB', '420 KK'])],
-                    'tarikh_laporan_polis' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30))->format('Y-m-d'),
                     'project_id' => $project->id,
+                    'pegawai_penyiasat' => ['INSP ALI', 'SGT AHMAD', 'INSP FATIMAH', 'ASP ZAITON', 'SGT BAHARUDDIN'][array_rand(['INSP ALI', 'SGT AHMAD', 'INSP FATIMAH', 'ASP ZAITON', 'SGT BAHARUDDIN'])],
+                    'seksyen' => ['302 KK', '39B ADB', '420 KK', '376 KK', '457 KK'][array_rand(['302 KK', '39B ADB', '420 KK', '376 KK', '457 KK'])],
+                    'tarikh_laporan_polis' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30)),
+                    'pegawai_pemeriksa_jips' => ['INSP NORAIDAH', 'ASP SALLEH', 'SGT FAIZAH'][array_rand(['INSP NORAIDAH', 'ASP SALLEH', 'SGT FAIZAH'])],
+                    'tarikh_minit_pertama' => Carbon::now()->subMonths(rand(1, 6))->subDays(rand(1, 15)),
+                    'tarikh_minit_akhir' => Carbon::now()->subMonths(rand(1, 3))->subDays(rand(1, 5)),
+                    'terbengkalai_tb' => ['Ya', 'Tidak'][array_rand(['Ya', 'Tidak'])],
+                    'no_ext_brg_kes' => 'BK/EXT/' . str_pad(rand(1, 999), 3, '0', STR_PAD_LEFT) . '/24',
+                    'brg_kes_tak_daftar' => ['Ya', 'Tidak'][array_rand(['Ya', 'Tidak'])],
+                    'gambar_brg_kes' => ['Ada', 'Tiada'][array_rand(['Ada', 'Tiada'])],
+                    'wang_tunai_lucut_hak_judi' => rand(0, 1) ? rand(100, 50000) : null,
+                    'ulasan_barang_kes' => 'Barang kes telah didaftarkan dan disimpan mengikut prosedur.',
+                    'pem_1_2_3_4' => ['PEM 1', 'PEM 2', 'PEM 3', 'PEM 4'][array_rand(['PEM 1', 'PEM 2', 'PEM 3', 'PEM 4'])],
+                    'rj9' => ['Ada', 'Tiada'][array_rand(['Ada', 'Tiada'])],
+                    'rj99' => ['Ada', 'Tiada'][array_rand(['Ada', 'Tiada'])],
+                    'rj10a' => ['Ada', 'Tiada'][array_rand(['Ada', 'Tiada'])],
+                    'rj10b' => ['Ada', 'Tiada'][array_rand(['Ada', 'Tiada'])],
+                    'rj21' => ['Ada', 'Tiada'][array_rand(['Ada', 'Tiada'])],
+                    'pdrma43_jamin_polis' => ['Ada', 'Tiada'][array_rand(['Ada', 'Tiada'])],
+                    'laporan_pakar' => ['Ada', 'Tiada'][array_rand(['Ada', 'Tiada'])],
+                    'arahan_ya_tpr' => ['Tuduh', 'Tidak Tuduh', 'Siasatan Lanjut'][array_rand(['Tuduh', 'Tidak Tuduh', 'Siasatan Lanjut'])],
+                    'arahan_tuduh_ya_tpr' => ['Ya', 'Tidak'][array_rand(['Ya', 'Tidak'])],
+                    'ulasan_keseluruhan_ks' => 'Siasatan telah dijalankan dengan teliti mengikut prosedur yang ditetapkan.',
                 ]
             );
         }
 
-        // 4. Seed Narkotik Papers (20 records)
-        // Note: Using 'pegawai_penyiasat' as per your migration file.
+        // 4. Seed Narkotik Papers (20 records) - Basic fields from actual migration
         for ($i = 1; $i <= 20; $i++) {
             Narkotik::updateOrCreate(
                 ['no_kertas_siasatan' => 'NAR/KS/' . str_pad($i, 4, '0', STR_PAD_LEFT) . '/24'],
@@ -80,29 +98,183 @@ class DatabaseSeeder extends Seeder
                     // BAHAGIAN 1: Maklumat Asas
                     'project_id' => $project->id,
                     'no_repot_polis' => 'IPD/NARKOTIK/' . str_pad(rand(1000, 99999), 5, '0', STR_PAD_LEFT) . '/' . date('y'),
-                    'pegawai_penyiasat' => ['SGT MAJID', 'INSP TAN', 'SGT AMIN'][array_rand(['SGT MAJID', 'INSP TAN', 'SGT AMIN'])],
-                    'tarikh_laporan_polis_dibuka' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30))->format('Y-m-d'),
-                    'seksyen' => ['41(1) APJ 1987', '42(1) APJ 1987', '43(1) APJ 1987'][array_rand(['41(1) APJ 1987', '42(1) APJ 1987', '43(1) APJ 1987'])],
+                    'pegawai_penyiasat' => ['SGT MAJID', 'INSP TAN', 'SGT AMIN', 'ASP JULIE', 'INSP AZMI'][array_rand(['SGT MAJID', 'INSP TAN', 'SGT AMIN', 'ASP JULIE', 'INSP AZMI'])],
+                    'tarikh_laporan_polis_dibuka' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30)),
+                    'seksyen' => ['12(2) APJ 1987', '15(1)(a) APJ 1987', '39B APJ 1987', '6 APJ 1987'][array_rand(['12(2) APJ 1987', '15(1)(a) APJ 1987', '39B APJ 1987', '6 APJ 1987'])],
+                    
+                    // BAHAGIAN 2: Pemeriksaan & Status
+                    'pegawai_pemeriksa' => ['INSP NORAIDAH', 'ASP SALLEH', 'SGT FAIZAH'][array_rand(['INSP NORAIDAH', 'ASP SALLEH', 'SGT FAIZAH'])],
+                    'tarikh_edaran_minit_ks_pertama' => Carbon::now()->subMonths(rand(1, 6))->subDays(rand(1, 15)),
+                    'tarikh_edaran_minit_ks_kedua' => Carbon::now()->subMonths(rand(1, 5))->subDays(rand(1, 10)),
+                    'tarikh_edaran_minit_ks_sebelum_akhir' => Carbon::now()->subMonths(rand(1, 4))->subDays(rand(1, 8)),
+                    'tarikh_edaran_minit_ks_akhir' => Carbon::now()->subMonths(rand(1, 3))->subDays(rand(1, 5)),
                 ]
             );
         }
 
-        // 5. Seed Komersil Papers (20 records)
-        // BAHAGIAN 1: Maklumat Asas fields only
+        // 5. Seed Komersil Papers (20 records) - Enhanced with comprehensive data
         for ($i = 1; $i <= 20; $i++) {
+            $barangKesTypes = ['Wang Tunai', 'Emas', 'Kenderaan', 'Peralatan Elektronik', 'Dokumen'];
+            $bankNames = ['Bank Islam', 'Maybank', 'CIMB Bank', 'Public Bank', 'RHB Bank'];
+            $telcoNames = ['Celcom', 'Maxis', 'Digi', 'U Mobile', 'TM'];
+            $keputusanMahkamah = ['Sabit', 'Tidak Sabit', 'Bebas', 'Bersalah', 'Tidak Bersalah'];
+            
             Komersil::updateOrCreate(
                 ['no_kertas_siasatan' => 'KML/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '/24'],
                 [
+                    // BAHAGIAN 1: Maklumat Asas
                     'project_id' => $project->id,
                     'no_repot_polis' => 'IPD/REP/' . str_pad(rand(1000, 9999), 5, '0', STR_PAD_LEFT) . '/24',
                     'pegawai_penyiasat' => ['ASP KUMAR', 'INSP ZAINAB', 'SGT LEE', 'INSP RAHMAN', 'SGT AMINAH'][array_rand(['ASP KUMAR', 'INSP ZAINAB', 'SGT LEE', 'INSP RAHMAN', 'SGT AMINAH'])],
                     'tarikh_laporan_polis_dibuka' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30)),
                     'seksyen' => ['420 KK', '4(1) AMLA', 'Seksyen 424 KK', '409 KK', '417 KK'][array_rand(['420 KK', '4(1) AMLA', 'Seksyen 424 KK', '409 KK', '417 KK'])],
+
+                    // BAHAGIAN 2: Pemeriksaan JIPS
+                    'pegawai_pemeriksa' => ['INSP NORAIDAH', 'ASP SALLEH', 'SGT FAIZAH'][array_rand(['INSP NORAIDAH', 'ASP SALLEH', 'SGT FAIZAH'])],
+                    'tarikh_edaran_minit_ks_pertama' => Carbon::now()->subMonths(rand(1, 6))->subDays(rand(1, 15)),
+                    'tarikh_edaran_minit_ks_kedua' => Carbon::now()->subMonths(rand(1, 5))->subDays(rand(1, 10)),
+                    'tarikh_edaran_minit_ks_sebelum_akhir' => Carbon::now()->subMonths(rand(1, 4))->subDays(rand(1, 8)),
+                    'tarikh_edaran_minit_ks_akhir' => Carbon::now()->subMonths(rand(1, 3))->subDays(rand(1, 5)),
+                    'tarikh_semboyan_pemeriksaan_jips_ke_daerah' => Carbon::now()->subMonths(rand(1, 2))->subDays(rand(1, 3)),
+
+                    // BAHAGIAN 3: Arahan SIO & Ketua
+                    'arahan_minit_oleh_sio_status' => rand(0, 1),
+                    'arahan_minit_oleh_sio_tarikh' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 30)) : null,
+                    'arahan_minit_ketua_bahagian_status' => rand(0, 1),
+                    'arahan_minit_ketua_bahagian_tarikh' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 25)) : null,
+                    'arahan_minit_ketua_jabatan_status' => rand(0, 1),
+                    'arahan_minit_ketua_jabatan_tarikh' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 20)) : null,
+                    'arahan_minit_oleh_ya_tpr_status' => rand(0, 1),
+                    'arahan_minit_oleh_ya_tpr_tarikh' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 15)) : null,
+                    'keputusan_siasatan_oleh_ya_tpr' => ['Tuduh', 'Tidak Tuduh', 'Siasatan Lanjut'][array_rand(['Tuduh', 'Tidak Tuduh', 'Siasatan Lanjut'])],
+                    'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan' => json_encode(['Ya']),
+                    'ulasan_keputusan_siasatan_tpr' => 'Siasatan telah dilakukan dengan teliti dan mengikut prosedur yang betul.',
+                    'ulasan_keseluruhan_pegawai_pemeriksa' => 'Kertas siasatan lengkap dan mengikut format yang ditetapkan.',
+
+                    // BAHAGIAN 4: Barang Kes
+                    'adakah_barang_kes_didaftarkan' => rand(0, 1),
+                    'no_daftar_barang_kes_am' => 'BK/AM/' . str_pad(rand(1, 999), 3, '0', STR_PAD_LEFT) . '/24',
+                    'no_daftar_barang_kes_berharga' => rand(0, 1) ? 'BK/BH/' . str_pad(rand(1, 999), 3, '0', STR_PAD_LEFT) . '/24' : null,
+                    'no_daftar_barang_kes_kenderaan' => rand(0, 1) ? 'BK/KD/' . str_pad(rand(1, 999), 3, '0', STR_PAD_LEFT) . '/24' : null,
+                    'jenis_barang_kes_am' => $barangKesTypes[array_rand($barangKesTypes)],
+                    'jenis_barang_kes_berharga' => rand(0, 1) ? $barangKesTypes[array_rand($barangKesTypes)] : null,
+                    'jenis_barang_kes_kenderaan' => rand(0, 1) ? 'Kereta/Motosikal/Lori' : null,
+                    'status_pergerakan_barang_kes' => json_encode(['Simpanan Stor Ekshibit']),
+                    'status_barang_kes_selesai_siasatan' => json_encode(['Dikembalikan Kepada Pemilik']),
+                    'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan' => json_encode(['Dilelong']),
+                    'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => json_encode(['Ya']),
+                    'resit_kew_38e_pelupusan_tunai_perbendaharaan' => json_encode(['Ada Dilampirkan']),
+                    'adakah_borang_serah_terima_pegawai_tangkapan' => json_encode(['Ada Dilampirkan']),
+                    'adakah_borang_serah_terima_pemilik_saksi' => 'Ada Dilampirkan',
+                    'adakah_sijil_surat_kebenaran_ipo' => rand(0, 1),
+                    'adakah_gambar_pelupusan' => 'Ada Dilampirkan',
+                    'status_saman_pdrm_s_257' => rand(0, 1),
+                    'no_saman_pdrm_s_257' => rand(0, 1) ? 'S257/' . str_pad(rand(1000, 9999), 4, '0', STR_PAD_LEFT) . '/24' : null,
+                    'status_saman_pdrm_s_167' => rand(0, 1),
+                    'no_saman_pdrm_s_167' => rand(0, 1) ? 'S167/' . str_pad(rand(1000, 9999), 4, '0', STR_PAD_LEFT) . '/24' : null,
+
+                    // BAHAGIAN 5: Bukti & Rajah
+                    'status_id_siasatan_dikemaskini' => rand(0, 1),
+                    'status_rajah_kasar_tempat_kejadian' => rand(0, 1),
+                    'status_gambar_tempat_kejadian' => rand(0, 1),
+                    'status_gambar_barang_kes_am' => rand(0, 1),
+                    'status_gambar_barang_kes_berharga' => rand(0, 1),
+                    'status_gambar_barang_kes_kenderaan' => rand(0, 1),
+                    'status_gambar_barang_kes_darah' => rand(0, 1),
+                    'status_gambar_barang_kes_kontraban' => rand(0, 1),
+
+                    // BAHAGIAN 6: Laporan RJ & Semboyan
+                    'status_pem' => json_encode(['PEM 1', 'PEM 2']),
+                    'status_rj2' => rand(0, 1),
+                    'tarikh_rj2' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 60)) : null,
+                    'status_rj2b' => rand(0, 1),
+                    'tarikh_rj2b' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 55)) : null,
+                    'status_rj9' => rand(0, 1),
+                    'tarikh_rj9' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 50)) : null,
+                    'status_rj99' => rand(0, 1),
+                    'tarikh_rj99' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 45)) : null,
+                    'status_rj10a' => rand(0, 1),
+                    'tarikh_rj10a' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 40)) : null,
+                    'status_rj10b' => rand(0, 1),
+                    'tarikh_rj10b' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 35)) : null,
+                    'lain_lain_rj_dikesan' => 'RJ tambahan sekiranya diperlukan untuk kes ini.',
+                    'status_semboyan_pertama_wanted_person' => rand(0, 1),
+                    'tarikh_semboyan_pertama_wanted_person' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 30)) : null,
+                    'status_semboyan_kedua_wanted_person' => rand(0, 1),
+                    'tarikh_semboyan_kedua_wanted_person' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 25)) : null,
+                    'status_semboyan_ketiga_wanted_person' => rand(0, 1),
+                    'tarikh_semboyan_ketiga_wanted_person' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 20)) : null,
+                    'status_penandaan_kelas_warna' => rand(0, 1),
+
+                    // BAHAGIAN 7: Laporan E-FSA & Agensi Luar
+                    'status_permohonan_laporan_post_mortem_mayat' => rand(0, 1),
+                    'tarikh_permohonan_laporan_post_mortem_mayat' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 90)) : null,
+                    
+                    // E-FSA Bank Records
+                    'status_permohonan_E_FSA_1_oleh_IO_AIO' => rand(0, 1),
+                    'nama_bank_permohonan_E_FSA_1' => rand(0, 1) ? $bankNames[array_rand($bankNames)] : null,
+                    'status_laporan_penuh_E_FSA_1_oleh_IO_AIO' => rand(0, 1),
+                    'nama_bank_laporan_E_FSA_1_oleh_IO_AIO' => rand(0, 1) ? $bankNames[array_rand($bankNames)] : null,
+                    'tarikh_laporan_penuh_E_FSA_1_oleh_IO_AIO' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 60)) : null,
+
+                    'status_permohonan_E_FSA_2_oleh_IO_AIO' => rand(0, 1),
+                    'nama_bank_permohonan_E_FSA_2_BANK' => rand(0, 1) ? $bankNames[array_rand($bankNames)] : null,
+                    'status_laporan_penuh_E_FSA_2_oleh_IO_AIO' => rand(0, 1),
+                    'nama_bank_laporan_E_FSA_2_oleh_IO_AIO' => rand(0, 1) ? $bankNames[array_rand($bankNames)] : null,
+                    'tarikh_laporan_penuh_E_FSA_2_oleh_IO_AIO' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 55)) : null,
+
+                    // E-FSA Telco Records
+                    'status_permohonan_E_FSA_1_telco_oleh_IO_AIO' => rand(0, 1),
+                    'nama_telco_permohonan_E_FSA_1_oleh_IO_AIO' => rand(0, 1) ? $telcoNames[array_rand($telcoNames)] : null,
+                    'status_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO' => rand(0, 1),
+                    'nama_telco_laporan_E_FSA_1_oleh_IO_AIO' => rand(0, 1) ? $telcoNames[array_rand($telcoNames)] : null,
+                    'tarikh_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 50)) : null,
+
+                    // Other Agency Reports
+                    'status_permohonan_laporan_puspakom' => rand(0, 1),
+                    'tarikh_permohonan_laporan_puspakom' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 45)) : null,
+                    'status_laporan_penuh_puspakom' => rand(0, 1),
+                    'tarikh_laporan_penuh_puspakom' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 40)) : null,
+
+                    'status_permohonan_laporan_jkr' => rand(0, 1),
+                    'tarikh_permohonan_laporan_jkr' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 35)) : null,
+                    'status_laporan_penuh_jkr' => rand(0, 1),
+                    'tarikh_laporan_penuh_jkr' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 30)) : null,
+
+                    'status_permohonan_laporan_jpj' => rand(0, 1),
+                    'tarikh_permohonan_laporan_jpj' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 25)) : null,
+                    'status_laporan_penuh_jpj' => rand(0, 1),
+                    'tarikh_laporan_penuh_jpj' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 20)) : null,
+
+                    'status_permohonan_laporan_imigresen' => rand(0, 1),
+                    'tarikh_permohonan_laporan_imigresen' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 15)) : null,
+                    'status_laporan_penuh_imigresen' => rand(0, 1),
+                    'tarikh_laporan_penuh_imigresen' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 10)) : null,
+
+                    'status_permohonan_laporan_kastam' => rand(0, 1),
+                    'tarikh_permohonan_laporan_kastam' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 12)) : null,
+                    'status_laporan_penuh_kastam' => rand(0, 1),
+                    'tarikh_laporan_penuh_kastam' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 8)) : null,
+
+                    'status_permohonan_laporan_forensik_pdrm' => rand(0, 1),
+                    'tarikh_permohonan_laporan_forensik_pdrm' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 18)) : null,
+                    'status_laporan_penuh_forensik_pdrm' => rand(0, 1),
+                    'tarikh_laporan_penuh_forensik_pdrm' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 14)) : null,
+                    'jenis_barang_kes_forensik' => 'DNA, Cap Jari, Serbuk Mesiu',
+
+                    // BAHAGIAN 8: Status Fail
+                    'muka_surat_4_barang_kes_ditulis' => rand(0, 1),
+                    'muka_surat_4_dengan_arahan_tpr' => rand(0, 1),
+                    'muka_surat_4_keputusan_kes_dicatat' => rand(0, 1),
+                    'fail_lmm_ada_keputusan_koroner' => rand(0, 1),
+                    'status_kus_fail' => rand(0, 1),
+                    'keputusan_akhir_mahkamah' => $keputusanMahkamah[array_rand($keputusanMahkamah)],
+                    'ulasan_pegawai_pemeriksa_fail' => 'Fail kertas siasatan telah lengkap dan disimpan mengikut prosedur yang ditetapkan.',
                 ]
             );
         }
 
-        // 6. Seed Trafik Seksyen Papers (20 records)
+        // 6. Seed Trafik Seksyen Papers (20 records) - Basic fields only
         for ($i = 1; $i <= 20; $i++) {
             TrafikSeksyen::updateOrCreate(
                 ['no_kertas_siasatan' => 'TRFS/KS/' . str_pad($i, 4, '0', STR_PAD_LEFT) . '/24'],
@@ -110,55 +282,65 @@ class DatabaseSeeder extends Seeder
                     // BAHAGIAN 1: Maklumat Asas
                     'project_id' => $project->id,
                     'no_repot_polis' => 'IPD/TRAFFIC/' . str_pad(rand(1000, 99999), 5, '0', STR_PAD_LEFT) . '/' . date('y'),
-                    'pegawai_penyiasat' => ['SGT MAJID', 'INSP TAN', 'SGT AMIN'][array_rand(['SGT MAJID', 'INSP TAN', 'SGT AMIN'])],
-                    'tarikh_laporan_polis_dibuka' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30))->format('Y-m-d'),
-                    'seksyen' => ['41(1) APJ 1987', '42(1) APJ 1987', '43(1) APJ 1987'][array_rand(['41(1) APJ 1987', '42(1) APJ 1987', '43(1) APJ 1987'])],
+                    'pegawai_penyiasat' => ['SGT RAHMAN', 'INSP LILY', 'SGT AZMAN', 'ASP WONG', 'INSP SITI'][array_rand(['SGT RAHMAN', 'INSP LILY', 'SGT AZMAN', 'ASP WONG', 'INSP SITI'])],
+                    'tarikh_laporan_polis_dibuka' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30)),
+                    'seksyen' => ['41(1) APJ 1987', '42(1) APJ 1987', '43(1) APJ 1987', '44(1) APJ 1987'][array_rand(['41(1) APJ 1987', '42(1) APJ 1987', '43(1) APJ 1987', '44(1) APJ 1987'])],
+                    
+                    // BAHAGIAN 2: Pemeriksaan & Status
+                    'pegawai_pemeriksa' => ['INSP NORAIDAH', 'ASP SALLEH', 'SGT FAIZAH'][array_rand(['INSP NORAIDAH', 'ASP SALLEH', 'SGT FAIZAH'])],
+                    'tarikh_edaran_minit_ks_pertama' => Carbon::now()->subMonths(rand(1, 6))->subDays(rand(1, 15)),
+                    'tarikh_edaran_minit_ks_kedua' => Carbon::now()->subMonths(rand(1, 5))->subDays(rand(1, 10)),
+                    'tarikh_edaran_minit_ks_sebelum_akhir' => Carbon::now()->subMonths(rand(1, 4))->subDays(rand(1, 8)),
+                    'tarikh_edaran_minit_ks_akhir' => Carbon::now()->subMonths(rand(1, 3))->subDays(rand(1, 5)),
                 ]
             );
         }
 
-        // 6. Seed Trafik Rule Papers (20 records)
+        // 7. Seed Trafik Rule Papers (20 records) - Basic fields only
         for ($i = 1; $i <= 20; $i++) {
             TrafikRule::updateOrCreate(
-                ['no_kertas_siasatan' => 'TRFR/KS/' . str_pad($i, 4, '0', STR_PAD_LEFT) . '/24'], // Note: Changed prefix to TRFR for "Trafik Rule"
+                ['no_kertas_siasatan' => 'TRFR/KS/' . str_pad($i, 4, '0', STR_PAD_LEFT) . '/24'],
                 [
                     // BAHAGIAN 1: Maklumat Asas
                     'project_id' => $project->id,
                     'no_fail_lmm_t' => 'LMM(T)/' . rand(100, 999) . '/' . date('y'),
                     'no_repot_polis' => 'IPD/TRAFFIC/' . str_pad(rand(1000, 99999), 5, '0', STR_PAD_LEFT) . '/' . date('y'),
-                    'pegawai_penyiasat' => ['SGT MAJID', 'INSP TAN', 'SGT AMIN'][array_rand(['SGT MAJID', 'INSP TAN', 'SGT AMIN'])],
-                    'tarikh_laporan_polis_dibuka' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30))->format('Y-m-d'),
-                    'seksyen' => ['R.166A LN 166/59', 'R.17 LN 166/59', 'R.10 LN 166/59'][array_rand(['R.166A LN 166/59', 'R.17 LN 166/59', 'R.10 LN 166/59'])], // Using more appropriate sections for Trafik Rule
+                    'pegawai_penyiasat' => ['SGT FARID', 'INSP MAYA', 'SGT ROSLI', 'ASP DAVID', 'INSP KHADIJAH'][array_rand(['SGT FARID', 'INSP MAYA', 'SGT ROSLI', 'ASP DAVID', 'INSP KHADIJAH'])],
+                    'tarikh_laporan_polis_dibuka' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30)),
+                    'seksyen' => ['R.166A LN 166/59', 'R.17 LN 166/59', 'R.10 LN 166/59', 'R.18 LN 166/59'][array_rand(['R.166A LN 166/59', 'R.17 LN 166/59', 'R.10 LN 166/59', 'R.18 LN 166/59'])],
                 ]
             );
         }
         
-        // 7. Seed Orang Hilang Papers (20 records)
-        for ($i = 1; $i <= 20; $i++) {
-            OrangHilang::create([
-                'project_id' => $project->id,
-                
-                // BAHAGIAN 1: Maklumat Asas
-                'no_repot_polis' => 'IPD/OH/' . str_pad(rand(1000, 9999), 5, '0', STR_PAD_LEFT) . '/24',
-                'pegawai_penyiasat' => ['SGT RINA', 'INSP LIM', 'SGT NORA', 'INSP HAFIZ', 'SGT AZURA'][array_rand(['SGT RINA', 'INSP LIM', 'SGT NORA', 'INSP HAFIZ', 'SGT AZURA'])],
-                'tarikh_laporan_polis_dibuka' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30)),
-                'seksyen' => ['365 KK', '376 KK', '302 KK', '41 KK'][array_rand(['365 KK', '376 KK', '302 KK', '41 KK'])],
-            ]);
-        }
-
-        // 8. Seed Laporan Mati Mengejut Papers (20 records)
-        for ($i = 1; $i <= 20; $i++) {
-            LaporanMatiMengejut::updateOrCreate(
-                ['no_kertas_siasatan' => 'LMM/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '/24'],
+        // 8. Seed Orang Hilang Papers (15 records) - Basic fields only
+        for ($i = 1; $i <= 15; $i++) {
+            OrangHilang::updateOrCreate(
+                ['no_kertas_siasatan' => 'OH/KS/' . str_pad($i, 4, '0', STR_PAD_LEFT) . '/24'],
                 [
                     'project_id' => $project->id,
-                    // BAHAGIAN 1: Maklumat Asas
+                    'no_repot_polis' => 'IPD/CID/' . str_pad(rand(1000, 99999), 5, '0', STR_PAD_LEFT) . '/' . date('y'),
+                    'pegawai_penyiasat' => ['SGT FATIMAH', 'INSP KAMAL', 'SGT ROZANA', 'ASP CHONG', 'INSP RAVI'][array_rand(['SGT FATIMAH', 'INSP KAMAL', 'SGT ROZANA', 'ASP CHONG', 'INSP RAVI'])],
+                    'tarikh_laporan_polis_dibuka' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30)),
+                    'seksyen' => '365 KANUN KESEKSAAN',
+                    'pegawai_pemeriksa' => ['INSP NORAIDAH', 'ASP SALLEH', 'SGT FAIZAH'][array_rand(['INSP NORAIDAH', 'ASP SALLEH', 'SGT FAIZAH'])],
+                    'tarikh_edaran_minit_ks_pertama' => Carbon::now()->subMonths(rand(1, 6))->subDays(rand(1, 15)),
+                ]
+            );
+        }
+
+        // 9. Seed Laporan Mati Mengejut Papers (10 records) - Basic fields only
+        for ($i = 1; $i <= 10; $i++) {
+            LaporanMatiMengejut::updateOrCreate(
+                ['no_kertas_siasatan' => 'LMM/KS/' . str_pad($i, 4, '0', STR_PAD_LEFT) . '/24'],
+                [
+                    'project_id' => $project->id,
                     'no_fail_lmm_sdr' => 'LMM/SDR/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '/24',
-                    'no_repot_polis' => 'IPD/REP/' . str_pad(rand(1000, 9999), 5, '0', STR_PAD_LEFT) . '/24',
-                    'pegawai_penyiasat' => ['INSP AZMAN', 'SGT YUSOF', 'INSP SARAH'][array_rand(['INSP AZMAN', 'SGT YUSOF', 'INSP SARAH'])],
-                    'tarikh_laporan_polis_dibuka' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30))->format('Y-m-d'),
-                    'seksyen' => ['41 KK', '302 KK', '304 KK', '324 KK'][array_rand(['41 KK', '302 KK', '304 KK', '324 KK'])],
-                    
+                    'no_repot_polis' => 'IPD/CID/' . str_pad(rand(1000, 99999), 5, '0', STR_PAD_LEFT) . '/' . date('y'),
+                    'pegawai_penyiasat' => ['SGT AZLINA', 'INSP HAFIZ', 'SGT KAMARUL', 'ASP LINA', 'INSP SURESH'][array_rand(['SGT AZLINA', 'INSP HAFIZ', 'SGT KAMARUL', 'ASP LINA', 'INSP SURESH'])],
+                    'tarikh_laporan_polis_dibuka' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30)),
+                    'seksyen' => '174 KANUN ACARA JENAYAH',
+                    'pegawai_pemeriksa' => ['INSP NORAIDAH', 'ASP SALLEH', 'SGT FAIZAH'][array_rand(['INSP NORAIDAH', 'ASP SALLEH', 'SGT FAIZAH'])],
+                    'tarikh_edaran_minit_ks_pertama' => Carbon::now()->subMonths(rand(1, 6))->subDays(rand(1, 15)),
                 ]
             );
         }
