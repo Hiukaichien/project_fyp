@@ -133,6 +133,63 @@ class KertasSiasatanController extends Controller
         }
         // --- END: SPECIAL HANDLING ---
 
+
+        if ($paperType === 'Narkotik') {
+            // Special handling for Narkotik fields that have multiple options with 'Lain-lain' and special cases.
+            $singleSelectFieldsWithOtherInput = [
+                'status_pergerakan_barang_kes' => [
+                    'lain' => 'status_pergerakan_barang_kes_lain',
+                    'special' => [ // Special cases for Narkotik
+                        'Ujian Makmal' => 'status_pergerakan_barang_kes_makmal',
+                    ],
+                ],
+                'status_barang_kes_selesai_siasatan' => [
+                    'lain' => 'status_barang_kes_selesai_siasatan_lain',
+                    'special' => [
+                        'Dilupuskan ke Perbendaharaan' => 'status_barang_kes_selesai_siasatan_RM',
+                    ],
+                ],
+                'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan' => [
+                    'lain' => 'kaedah_pelupusan_barang_kes_lain',
+                ],
+            ];
+
+            foreach ($singleSelectFieldsWithOtherInput as $mainField => $config) {
+                $lainField = $config['lain'] ?? null;
+                $specials = $config['special'] ?? [];
+
+                $value = $request->input($mainField);
+
+                // 1. handle 'Lain-Lain' option (note: uppercase L)
+                if ($value === 'Lain-Lain') {
+                    if ($lainField) {
+                        // Only save if 'Lain-Lain' is selected and content is not empty
+                        $data[$lainField] = $request->input($lainField) ?? null;
+                    }
+                } else {
+                    // Clear lain field for other options
+                    if ($lainField) {
+                        $data[$lainField] = null;
+                    }
+                }
+
+                // 2. handle special cases
+                // This will only set the special field if the value matches one of the special options.
+                foreach ($specials as $option => $specialField) {
+                    if ($value === $option) {
+                        $data[$specialField] = $request->input($specialField) ?? null;
+                    } else {
+                        $data[$specialField] = null;
+                    }
+                }
+
+                // Finally, set the main field value.
+                $data[$mainField] = $value ?? null;
+            }
+        }
+
+
+        
         // --- START: DEFINITIVE FIX FOR BOOLEAN FIELDS ---
         // Manually process all boolean fields to remove any ambiguity caused by unchecked radios/checkboxes.
         foreach ($paper->getCasts() as $field => $type) {

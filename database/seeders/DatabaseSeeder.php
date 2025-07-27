@@ -61,12 +61,14 @@ class DatabaseSeeder extends Seeder
         // Note: Using 'pegawai_penyiasat' as per your migration file.
         for ($i = 1; $i <= 20; $i++) {
             Narkotik::updateOrCreate(
-                ['no_ks' => 'NRK/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '/24'],
+                ['no_kertas_siasatan' => 'NAR/KS/' . str_pad($i, 4, '0', STR_PAD_LEFT) . '/24'],
                 [
-                    'pegawai_penyiasat' => ['INSP WONG', 'SGT RAZALI', 'INSP CHUA'][array_rand(['INSP WONG', 'SGT RAZALI', 'INSP CHUA'])],
-                    'seksyen' => ['12(2) ADB 1952', '15(1)(a) ADB 1952', '39B ADB 1952'][array_rand(['12(2) ADB 1952', '15(1)(a) ADB 1952', '39B ADB 1952'])],
-                    'tarikh_laporan_polis' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30))->format('Y-m-d'),
+                    // BAHAGIAN 1: Maklumat Asas
                     'project_id' => $project->id,
+                    'no_repot_polis' => 'IPD/NARKOTIK/' . str_pad(rand(1000, 99999), 5, '0', STR_PAD_LEFT) . '/' . date('y'),
+                    'pegawai_penyiasat' => ['SGT MAJID', 'INSP TAN', 'SGT AMIN'][array_rand(['SGT MAJID', 'INSP TAN', 'SGT AMIN'])],
+                    'tarikh_laporan_polis_dibuka' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30))->format('Y-m-d'),
+                    'seksyen' => ['41(1) APJ 1987', '42(1) APJ 1987', '43(1) APJ 1987'][array_rand(['41(1) APJ 1987', '42(1) APJ 1987', '43(1) APJ 1987'])],
                 ]
             );
         }

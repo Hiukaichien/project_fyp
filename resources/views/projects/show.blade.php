@@ -24,7 +24,146 @@
     ];
 
     $ignoreColumns = ['id', 'user_id', 'project_id', 'created_at', 'updated_at'];
-    
+    // Define custom columns for Narkotik based on actual form fields in edit.blade.php
+    $narkotikColumns = [
+    // BAHAGIAN 1: Maklumat Asas
+    'no_kertas_siasatan' => 'No. Kertas Siasatan',
+    'no_repot_polis' => 'No. Repot Polis',
+    'pegawai_penyiasat' => 'Pegawai Penyiasat',
+    'tarikh_laporan_polis_dibuka' => 'Tarikh Laporan Polis Dibuka',
+    'seksyen' => 'Seksyen',
+
+    // BAHAGIAN 2: Pemeriksaan & Status
+    'pegawai_pemeriksa' => 'Pegawai Pemeriksa',
+    'tarikh_edaran_minit_ks_pertama' => 'Tarikh Minit KS Pertama (A)',
+    'tarikh_edaran_minit_ks_kedua' => 'Tarikh Minit KS Kedua (B)',
+    'tarikh_edaran_minit_ks_sebelum_akhir' => 'Tarikh Minit KS Sebelum Akhir (C)',
+    'tarikh_edaran_minit_ks_akhir' => 'Tarikh Minit KS Akhir (D)',
+    'tarikh_semboyan_pemeriksaan_jips_ke_daerah' => 'Tarikh Semboyan JIPS ke Daerah (E)',
+
+    // BAHAGIAN 3: Arahan & Keputusan
+    'arahan_minit_oleh_sio_status' => 'Arahan Minit SIO',
+    'arahan_minit_oleh_sio_tarikh' => 'Tarikh Arahan SIO',
+    'arahan_minit_ketua_bahagian_status' => 'Arahan Minit Ketua Bahagian',
+    'arahan_minit_ketua_bahagian_tarikh' => 'Tarikh Arahan Ketua Bahagian',
+    'arahan_minit_ketua_jabatan_status' => 'Arahan Minit Ketua Jabatan',
+    'arahan_minit_ketua_jabatan_tarikh' => 'Tarikh Arahan Ketua Jabatan',
+    'arahan_minit_oleh_ya_tpr_status' => 'Arahan Minit YA TPR',
+    'arahan_minit_oleh_ya_tpr_tarikh' => 'Tarikh Arahan YA TPR',
+    'keputusan_siasatan_oleh_ya_tpr' => 'Keputusan Siasatan YA TPR',
+    'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan' => 'Arahan Tuduh YA TPR',
+    'ulasan_keputusan_siasatan_tpr' => 'Ulasan Keputusan Siasatan TPR',
+    'ulasan_keseluruhan_pegawai_pemeriksa_b3' => 'Ulasan Pegawai Pemeriksa B3',
+
+    // BAHAGIAN 4: Barang Kes
+    'adakah_barang_kes_didaftarkan' => 'Barang Kes Didaftarkan',
+    'no_daftar_barang_kes_am' => 'No. Daftar Barang Kes Am',
+    'no_daftar_barang_kes_berharga' => 'No. Daftar Barang Kes Berharga',
+    'no_daftar_barang_kes_kenderaan' => 'No. Daftar Barang Kes Kenderaan',
+    'no_daftar_botol_spesimen_urin' => 'No. Daftar Botol Spesimen Urin',
+    'no_daftar_barang_kes_dadah' => 'No. Daftar Barang Kes Dadah',
+    'no_daftar_spesimen_darah' => 'No. Daftar Spesimen Darah',
+    'jenis_barang_kes_am' => 'Jenis Barang Kes Am',
+    'jenis_barang_kes_berharga' => 'Jenis Barang Kes Berharga',
+    'jenis_barang_kes_kenderaan' => 'Jenis Barang Kes Kenderaan',
+    'jenis_barang_kes_dadah' => 'Jenis Barang Kes Dadah',
+    'status_pergerakan_barang_kes' => 'Status Pergerakan Barang Kes',
+    'status_pergerakan_barang_kes_makmal' => 'Pergerakan Barang Kes Makmal',
+    'status_pergerakan_barang_kes_lain' => 'Pergerakan Barang Kes Lain',
+    'status_barang_kes_selesai_siasatan' => 'Status Barang Kes Selesai Siasatan',
+    'status_barang_kes_selesai_siasatan_RM' => 'Siasatan Selesai RM',
+    'status_barang_kes_selesai_siasatan_lain' => 'Siasatan Selesai Lain',
+    'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan' => 'Kaedah Pelupusan',
+    'kaedah_pelupusan_barang_kes_lain' => 'Kaedah Pelupusan Lain',
+    'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => 'Arahan Pelupusan',
+    'resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => 'Resit Kew.38e',
+    'adakah_borang_serah_terima_pegawai_tangkapan' => 'Borang Serah Terima Pegawai Tangkapan',
+    'adakah_borang_serah_terima_pemilik_saksi' => 'Borang Serah Terima Pemilik Saksi',
+    'adakah_sijil_surat_kebenaran_ipo' => 'Sijil Surat Kebenaran IPO',
+    'adakah_gambar_pelupusan' => 'Gambar Pelupusan',
+    'ulasan_keseluruhan_pegawai_pemeriksa_b4' => 'Ulasan Pegawai Pemeriksa B4',
+
+    // BAHAGIAN 5: Dokumen Siasatan
+    'status_id_siasatan_dikemaskini' => 'ID Siasatan Dikemaskini',
+    'status_rajah_kasar_tempat_kejadian' => 'Rajah Kasar Tempat Kejadian',
+    'status_gambar_tempat_kejadian' => 'Gambar Tempat Kejadian',
+    'status_gambar_botol_spesimen_urin_3_dimensi_dan_berseal_merah' => 'Gambar Botol Spesimen Urin 3D',
+    'status_gambar_pembalut_botol_spesimen_urin_bernombor_siri_dan_test_strip_dadah_positif' => 'Gambar Pembalut Botol Spesimen',
+    'status_gambar_barang_kes_am' => 'Gambar Barang Kes Am',
+    'status_gambar_barang_kes_berharga' => 'Gambar Barang Kes Berharga',
+    'status_gambar_barang_kes_kenderaan' => 'Gambar Barang Kes Kenderaan',
+    'status_gambar_barang_kes_dadah' => 'Gambar Barang Kes Dadah',
+    'status_gambar_barang_kes_ketum' => 'Gambar Barang Kes Ketum',
+    'status_gambar_barang_kes_darah' => 'Gambar Barang Kes Darah',
+    'status_gambar_barang_kes_kontraban' => 'Gambar Barang Kes Kontraban',
+
+    // BAHAGIAN 6: Borang & Semakan
+    'status_pem' => 'Status PEM',
+    'status_rj2' => 'Status RJ2',
+    'tarikh_rj2' => 'Tarikh RJ2',
+    'status_rj2b' => 'Status RJ2B',
+    'tarikh_rj2b' => 'Tarikh RJ2B',
+    'status_rj9' => 'Status RJ9',
+    'tarikh_rj9' => 'Tarikh RJ9',
+    'status_rj99' => 'Status RJ99',
+    'tarikh_rj99' => 'Tarikh RJ99',
+    'status_rj10a' => 'Status RJ10A',
+    'tarikh_rj10a' => 'Tarikh RJ10A',
+    'status_rj10b' => 'Status RJ10B',
+    'tarikh_rj10b' => 'Tarikh RJ10B',
+    'lain_lain_rj_dikesan' => 'Lain-lain RJ Dikesan',
+    'status_semboyan_pertama_wanted_person' => 'Semboyan Pertama Wanted Person',
+    'tarikh_semboyan_pertama_wanted_person' => 'Tarikh Semboyan Pertama',
+    'status_semboyan_kedua_wanted_person' => 'Semboyan Kedua Wanted Person',
+    'tarikh_semboyan_kedua_wanted_person' => 'Tarikh Semboyan Kedua',
+    'status_semboyan_ketiga_wanted_person' => 'Semboyan Ketiga Wanted Person',
+    'tarikh_semboyan_ketiga_wanted_person' => 'Tarikh Semboyan Ketiga',
+    'status_penandaan_kelas_warna' => 'Penandaan Kelas Warna',
+    'ulasan_keseluruhan_pegawai_pemeriksa_b6' => 'Ulasan Pegawai Pemeriksa B6',
+
+    // BAHAGIAN 7: Permohonan Laporan Agensi Luar
+    'status_permohonan_laporan_jabatan_kimia' => 'Permohonan Laporan Jabatan Kimia',
+    'tarikh_permohonan_laporan_jabatan_kimia' => 'Tarikh Permohonan Jabatan Kimia',
+    'status_laporan_penuh_jabatan_kimia' => 'Laporan Penuh Jabatan Kimia',
+    'tarikh_laporan_penuh_jabatan_kimia' => 'Tarikh Laporan Penuh Jabatan Kimia',
+    'keputusan_laporan_jabatan_kimia' => 'Keputusan Laporan Jabatan Kimia',
+    'status_permohonan_laporan_jabatan_patalogi' => 'Permohonan Laporan Jabatan Patalogi',
+    'tarikh_permohonan_laporan_jabatan_patalogi' => 'Tarikh Permohonan Jabatan Patalogi',
+    'status_laporan_penuh_jabatan_patalogi' => 'Laporan Penuh Jabatan Patalogi',
+    'tarikh_laporan_penuh_jabatan_patalogi' => 'Tarikh Laporan Penuh Jabatan Patalogi',
+    'keputusan_laporan_jabatan_patalogi' => 'Keputusan Laporan Jabatan Patalogi',
+    'status_permohonan_laporan_puspakom' => 'Permohonan Laporan PUSPAKOM',
+    'tarikh_permohonan_laporan_puspakom' => 'Tarikh Permohonan PUSPAKOM',
+    'status_laporan_penuh_puspakom' => 'Laporan Penuh PUSPAKOM',
+    'tarikh_laporan_penuh_puspakom' => 'Tarikh Laporan Penuh PUSPAKOM',
+    'status_permohonan_laporan_jpj' => 'Permohonan Laporan JPJ',
+    'tarikh_permohonan_laporan_jpj' => 'Tarikh Permohonan JPJ',
+    'status_laporan_penuh_jpj' => 'Laporan Penuh JPJ',
+    'tarikh_laporan_penuh_jpj' => 'Tarikh Laporan Penuh JPJ',
+    'status_permohonan_laporan_imigresen' => 'Permohonan Laporan Imigresen',
+    'tarikh_permohonan_laporan_imigresen' => 'Tarikh Permohonan Imigresen',
+    'status_laporan_penuh_imigresen' => 'Laporan Penuh Imigresen',
+    'tarikh_laporan_penuh_imigresen' => 'Tarikh Laporan Penuh Imigresen',
+    'status_permohonan_laporan_kastam' => 'Permohonan Laporan Kastam',
+    'tarikh_permohonan_laporan_kastam' => 'Tarikh Permohonan Kastam',
+    'status_laporan_penuh_kastam' => 'Laporan Penuh Kastam',
+    'tarikh_laporan_penuh_kastam' => 'Tarikh Laporan Penuh Kastam',
+    'status_permohonan_laporan_forensik_pdrm' => 'Permohonan Laporan Forensik PDRM',
+    'tarikh_permohonan_laporan_forensik_pdrm' => 'Tarikh Permohonan Forensik PDRM',
+    'status_laporan_penuh_forensik_pdrm' => 'Laporan Penuh Forensik PDRM',
+    'tarikh_laporan_penuh_forensik_pdrm' => 'Tarikh Laporan Penuh Forensik PDRM',
+    'jenis_barang_kes_di_hantar' => 'Jenis Barang Kes Di Hantar',
+    'lain_lain_permohonan_laporan' => 'Lain-lain Permohonan Laporan',
+
+    // BAHAGIAN 8: Status Fail
+    'muka_surat_4_barang_kes_ditulis' => 'Muka Surat 4 Barang Kes Ditulis',
+    'muka_surat_4_dengan_arahan_tpr' => 'Muka Surat 4 Dengan Arahan TPR',
+    'muka_surat_4_keputusan_kes_dicatat' => 'Muka Surat 4 Keputusan Kes Dicatat',
+    'fail_lmm_ada_keputusan_koroner' => 'Fail LMM Ada Keputusan Koroner',
+    'status_kus_fail' => 'Status KUS/FAIL',
+    'keputusan_akhir_mahkamah' => 'Keputusan Akhir Mahkamah',
+    'ulasan_keseluruhan_pegawai_pemeriksa_fail' => 'Ulasan Pegawai Pemeriksa Fail',
+    ];
     // Define custom columns for OrangHilang based on actual form fields in edit.blade.php
     $orangHilangColumns = [
         // BAHAGIAN 1: Maklumat Asas
@@ -101,11 +240,28 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.tailwindcss.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/fixedcolumns/5.0.1/css/fixedColumns.dataTables.css">
     <style>
-        table.dataTable th.dt-ordering-asc::after, table.dataTable th.dt-ordering-desc::after { font-family: "Font Awesome 5 Free"; font-weight: 900; margin-left: 0.5em; }
-        table.dataTable th.dt-ordering-asc::after { content: "\f0de"; }
-        table.dataTable th.dt-ordering-desc::after { content: "\f0dd"; }
-        .is-restoring-scroll { visibility: hidden; }
-        .datatable-container-loading { min-height: 400px; }
+        table.dataTable th.dt-ordering-asc::after,
+        table.dataTable th.dt-ordering-desc::after {
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            margin-left: 0.5em;
+        }
+
+        table.dataTable th.dt-ordering-asc::after {
+            content: "\f0de";
+        }
+
+        table.dataTable th.dt-ordering-desc::after {
+            content: "\f0dd";
+        }
+
+        .is-restoring-scroll {
+            visibility: hidden;
+        }
+
+        .datatable-container-loading {
+            min-height: 400px;
+        }
     </style>
     @endpush
 
@@ -217,7 +373,12 @@
                                         <tr>
                                             <th class="px-4 py-3 sticky left-0 bg-gray-50 dark:bg-gray-700 z-30 border-r border-gray-200 dark:border-gray-600">Tindakan</th>
                                             <th class="px-4 py-3">No.</th>
-                                            @if($key === 'OrangHilang')
+                                            @if($key === 'Narkotik')
+                                        {{-- Use custom columns for Narkotik --}}
+                                        @foreach($narkotikColumns as $column => $label)
+                                        <th scope="col" class="px-4 py-3">{{ $label }}</th>
+                                        @endforeach
+                                        @elseif($key === 'OrangHilang')
                                                 {{-- Use custom columns for OrangHilang --}}
                                                 @foreach($orangHilangColumns as $column => $label)
                                                     <th scope="col" class="px-4 py-3">{{ $label }}</th>
@@ -353,133 +514,186 @@
             panel.addClass('datatable-container-loading dark:text-white');
         }
 
-        @foreach($paperTypes as $key => $config)
-            if (tabName === '{{ $key }}') {
-                @php
-                    // Get the model instance, raw DB columns, and appended accessors for the current model.
-                    $modelInstance = new $config['model'];
-                    $rawDbColumns = Schema::getColumnListing($modelInstance->getTable());
-                    $appendedAccessors = $modelInstance->getAppends();
-
-                    $booleanDbColumnsWithTextAccessors = [
-                        'arahan_minit_oleh_sio_status', 'arahan_minit_ketua_bahagian_status', 'arahan_minit_ketua_jabatan_status',
-                        'arahan_minit_oleh_ya_tpr_status', 'adakah_barang_kes_didaftarkan', 'adakah_sijil_surat_kebenaran_ipo',
-                        'status_id_siasatan_dikemaskini', 'status_rajah_kasar_tempat_kejadian', 'status_gambar_tempat_kejadian',
-                        'status_gambar_post_mortem_mayat_di_hospital', 'status_gambar_barang_kes_am', 'status_gambar_barang_kes_berharga', 'status_gambar_barang_kes_kenderaan',
-                        'status_gambar_barang_kes_darah', 'status_gambar_barang_kes_kontraban', 'status_rj2', 'status_rj2b',
-                        'status_rj9', 'status_rj99', 'status_rj10a', 'status_rj10b', 'status_saman_pdrm_s_257', 'status_saman_pdrm_s_167',
-                        'status_semboyan_pertama_wanted_person', 'status_semboyan_kedua_wanted_person', 'status_semboyan_ketiga_wanted_person',
-                        'status_penandaan_kelas_warna', 'status_permohonan_laporan_post_mortem_mayat', 'status_laporan_penuh_bedah_siasat',
-                        'status_permohonan_laporan_jabatan_kimia', 'status_laporan_penuh_jabatan_kimia', 'status_permohonan_laporan_jabatan_patalogi',
-                        'status_laporan_penuh_jabatan_patalogi', 'status_permohonan_laporan_puspakom', 'status_laporan_penuh_puspakom',
-                        'status_permohonan_laporan_jkr', 'status_laporan_penuh_jkr', 'status_permohonan_laporan_jpj', 'status_laporan_penuh_jpj',
-                        'status_permohonan_laporan_imigresen', 'status_laporan_penuh_imigresen', 'muka_surat_4_barang_kes_ditulis',
-                        'muka_surat_4_dengan_arahan_tpr', 'muka_surat_4_keputusan_kes_dicatat', 'fail_lmm_ada_keputusan_koroner'
+@foreach($paperTypes as $key => $config)
+    if (tabName === '{{ $key }}') {
+        @if($key === 'OrangHilang')
+            {{-- Use custom columns for OrangHilang --}}
+            @php
+                $dtColumns = [
+                    ['data' => 'action', 'name' => 'action', 'orderable' => false, 'searchable' => false, 'title' => 'Tindakan', 'width' => '100px'],
+                    ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'title' => 'No.']
+                ];
+                
+                foreach($orangHilangColumns as $column => $label) {
+                    $dtColumns[] = [
+                        'data' => $column,
+                        'name' => $column,
+                        'title' => $label,
+                        'defaultContent' => '-',
+                        'orderable' => true,
+                        'searchable' => true
                     ];
+                }
+            @endphp
 
-                    $jsonArrayColumns = [
-                        'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan', 'status_pem', 'status_pergerakan_barang_kes',
-                        'status_barang_kes_selesai_siasatan', 'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan',
-                        'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan', 'resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan',
-                        'adakah_borang_serah_terima_pegawai_tangkapan', 'adakah_borang_serah_terima_pemilik_saksi', 'keputusan_akhir_mahkamah'
-                    ];
+            // Initialize the DataTable with custom OrangHilang columns
+            $(tableId).DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: "{{ route($config['route'], $project->id) }}",
+                    type: "POST",
+                    data: { _token: '{{ csrf_token() }}' }
+                },
+                columns: @json($dtColumns),
+                order: [[2, 'desc']],
+                columnDefs: [{
+                    targets: 0,
+                    className: "sticky left-0 bg-gray-50 dark:text-white dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600"
+                }],
+                fixedColumns: { left: 1 },
+                language: {
+                    search: "Cari:",
+                    lengthMenu: "Tunjukkan _MENU_ entri",
+                    info: "Menunjukkan _START_ hingga _END_ daripada _TOTAL_ entri",
+                    infoEmpty: "Menunjukkan 0 hingga 0 daripada 0 entri",
+                    emptyTable: "Tiada data tersedia dalam jadual"
+                },
+                "drawCallback": function( settings ) {
+                    if (panel.length) {
+                        panel.removeClass('datatable-container-loading');
+                    }
+                }
+            });
+            initializedTables[tabName] = true;
 
-                    $dtColumns = [
-                        ['data' => 'action', 'name' => 'action', 'orderable' => false, 'searchable' => false, 'title' => 'Tindakan', 'width' => '100px'],
-                        ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'title' => 'No.']
-                    ];
+        @else
+            {{-- Use automatic column generation for other models --}}
+            @php
+                // Get the model instance, raw DB columns, and appended accessors for the current model.
+                $modelInstance = new $config['model'];
+                $rawDbColumns = Schema::getColumnListing($modelInstance->getTable());
+                $appendedAccessors = $modelInstance->getAppends();
 
-                    foreach($rawDbColumns as $column) {
-                        if (in_array($column, ['id', 'project_id', 'created_at', 'updated_at'])) continue;
+                $booleanDbColumnsWithTextAccessors = [
+                    'arahan_minit_oleh_sio_status', 'arahan_minit_ketua_bahagian_status', 'arahan_minit_ketua_jabatan_status',
+                    'arahan_minit_oleh_ya_tpr_status', 'adakah_barang_kes_didaftarkan', 'adakah_sijil_surat_kebenaran_ipo',
+                    'status_id_siasatan_dikemaskini', 'status_rajah_kasar_tempat_kejadian', 'status_gambar_tempat_kejadian',
+                    'status_gambar_post_mortem_mayat_di_hospital', 'status_gambar_barang_kes_am', 'status_gambar_barang_kes_berharga', 'status_gambar_barang_kes_kenderaan',
+                    'status_gambar_barang_kes_darah', 'status_gambar_barang_kes_kontraban', 'status_rj2', 'status_rj2b',
+                    'status_rj9', 'status_rj99', 'status_rj10a', 'status_rj10b', 'status_saman_pdrm_s_257', 'status_saman_pdrm_s_167',
+                    'status_semboyan_pertama_wanted_person', 'status_semboyan_kedua_wanted_person', 'status_semboyan_ketiga_wanted_person',
+                    'status_penandaan_kelas_warna', 'status_permohonan_laporan_post_mortem_mayat', 'status_laporan_penuh_bedah_siasat',
+                    'status_permohonan_laporan_jabatan_kimia', 'status_laporan_penuh_jabatan_kimia', 'status_permohonan_laporan_jabatan_patalogi',
+                    'status_laporan_penuh_jabatan_patalogi', 'status_permohonan_laporan_puspakom', 'status_laporan_penuh_puspakom',
+                    'status_permohonan_laporan_jkr', 'status_laporan_penuh_jkr', 'status_permohonan_laporan_jpj', 'status_laporan_penuh_jpj',
+                    'status_permohonan_laporan_imigresen', 'status_laporan_penuh_imigresen', 'muka_surat_4_barang_kes_ditulis',
+                    'muka_surat_4_dengan_arahan_tpr', 'muka_surat_4_keputusan_kes_dicatat', 'fail_lmm_ada_keputusan_koroner'
+                ];
 
-                        $columnConfig = ['name' => $column, 'defaultContent' => '-', 'orderable' => true, 'searchable' => true];
+                $jsonArrayColumns = [
+                    'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan', 'status_pem', 'status_pergerakan_barang_kes',
+                    'status_barang_kes_selesai_siasatan', 'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan',
+                    'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan', 'resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan',
+                    'adakah_borang_serah_terima_pegawai_tangkapan', 'adakah_borang_serah_terima_pemilik_saksi', 'keputusan_akhir_mahkamah'
+                ];
 
-                        if (in_array($column, $booleanDbColumnsWithTextAccessors)) {
-                            $accessorName = $column . '_text';
-                            if (in_array($accessorName, $appendedAccessors)) {
-                                $columnConfig['data'] = $accessorName;
-                                $columnConfig['title'] = Str::of($column)->replace('_', ' ')->title() . ' (Status)';
-                            } else {
-                                $columnConfig['data'] = $column;
-                                $columnConfig['title'] = Str::of($column)->replace('_', ' ')->title();
-                            }
-                        } else if (in_array($column, $jsonArrayColumns)) {
-                            $columnConfig['data'] = $column;
-                            $columnConfig['title'] = Str::of($column)->replace('_', ' ')->title();
-                            $columnConfig['orderable'] = false;
-                            $columnConfig['searchable'] = false;
-                            // Use a placeholder string for the render function
-                            $columnConfig['render'] = '%%JSON_RENDER%%';
+                $dtColumns = [
+                    ['data' => 'action', 'name' => 'action', 'orderable' => false, 'searchable' => false, 'title' => 'Tindakan', 'width' => '100px'],
+                    ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'title' => 'No.']
+                ];
+
+                foreach($rawDbColumns as $column) {
+                    if (in_array($column, ['id', 'project_id', 'created_at', 'updated_at'])) continue;
+
+                    $columnConfig = ['name' => $column, 'defaultContent' => '-', 'orderable' => true, 'searchable' => true];
+
+                    if (in_array($column, $booleanDbColumnsWithTextAccessors)) {
+                        $accessorName = $column . '_text';
+                        if (in_array($accessorName, $appendedAccessors)) {
+                            $columnConfig['data'] = $accessorName;
+                            $columnConfig['title'] = Str::of($column)->replace('_', ' ')->title() . ' (Status)';
                         } else {
                             $columnConfig['data'] = $column;
                             $columnConfig['title'] = Str::of($column)->replace('_', ' ')->title();
                         }
-                        $dtColumns[] = $columnConfig;
+                    } else if (in_array($column, $jsonArrayColumns)) {
+                        $columnConfig['data'] = $column;
+                        $columnConfig['title'] = Str::of($column)->replace('_', ' ')->title();
+                        $columnConfig['orderable'] = false;
+                        $columnConfig['searchable'] = false;
+                        $columnConfig['render'] = '%%JSON_RENDER%%';
+                    } else {
+                        $columnConfig['data'] = $column;
+                        $columnConfig['title'] = Str::of($column)->replace('_', ' ')->title();
                     }
-                @endphp
+                    $dtColumns[] = $columnConfig;
+                }
+            @endphp
 
-                // Step 1: Get the column configuration from PHP
-                let dtColumnsConfig = @json($dtColumns);
+            // Step 1: Get the column configuration from PHP
+            let dtColumnsConfig = @json($dtColumns);
 
-                // Step 2: Define the actual render function in JavaScript
-                const jsonRenderFunction = function(data, type, row) {
-                    if (data === null || data === undefined) return "-";
-                    let parsedData = data;
-                    // Check if data is a string that looks like a JSON array
-                    if (typeof data === "string" && data.startsWith('[') && data.endsWith(']')) {
-                        try {
-                            parsedData = JSON.parse(data);
-                        } catch (e) {
-                            return data; // Return original string if it's not valid JSON
-                        }
+            // Step 2: Define the actual render function in JavaScript
+            const jsonRenderFunction = function(data, type, row) {
+                if (data === null || data === undefined) return "-";
+                let parsedData = data;
+                // Check if data is a string that looks like a JSON array
+                if (typeof data === "string" && data.startsWith('[') && data.endsWith(']')) {
+                    try {
+                        parsedData = JSON.parse(data);
+                    } catch (e) {
+                        return data; // Return original string if it's not valid JSON
                     }
-                    // Check if we now have a valid array
-                    if (Array.isArray(parsedData)) {
-                        return parsedData.length > 0 ? parsedData.join(", ") : "-";
-                    }
-                    // If not an array or parsable string, return it as is
-                    return parsedData;
-                };
+                }
+                // Check if we now have a valid array
+                if (Array.isArray(parsedData)) {
+                    return parsedData.length > 0 ? parsedData.join(", ") : "-";
+                }
+                // If not an array or parsable string, return it as is
+                return parsedData;
+            };
 
-                // Step 3: Loop through the config and replace the placeholder
-                dtColumnsConfig.forEach(function(column) {
-                    if (column.render === '%%JSON_RENDER%%') {
-                        column.render = jsonRenderFunction;
-                    }
-                });
+            // Step 3: Loop through the config and replace the placeholder
+            dtColumnsConfig.forEach(function(column) {
+                if (column.render === '%%JSON_RENDER%%') {
+                    column.render = jsonRenderFunction;
+                }
+            });
 
-                // Step 4: Initialize the DataTable with the corrected configuration
-                $(tableId).DataTable({
-                    processing: true,
-                    serverSide: true,
-                    ajax: {
-                        url: "{{ route($config['route'], $project->id) }}",
-                        type: "POST",
-                        data: { _token: '{{ csrf_token() }}' }
-                    },
-                    columns: dtColumnsConfig, // Use the processed JavaScript variable
-                    order: [[2, 'desc']],
-                    columnDefs: [{
-                        targets: 0,
-                        className: "sticky left-0 bg-gray-50 dark:text-white dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600"
-                    }],
-                    fixedColumns: { left: 1 },
-                    language: {
-                        search: "Cari:",
-                        lengthMenu: "Tunjukkan _MENU_ entri",
-                        info: "Menunjukkan _START_ hingga _END_ daripada _TOTAL_ entri",
-                        infoEmpty: "Menunjukkan 0 hingga 0 daripada 0 entri",
-                        emptyTable: "Tiada data tersedia dalam jadual"
-                    },
-                    "drawCallback": function( settings ) {
-                        if (panel.length) {
-                            panel.removeClass('datatable-container-loading');
-                        }
+            // Step 4: Initialize the DataTable with the corrected configuration
+            $(tableId).DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: "{{ route($config['route'], $project->id) }}",
+                    type: "POST",
+                    data: { _token: '{{ csrf_token() }}' }
+                },
+                columns: dtColumnsConfig, // Use the processed JavaScript variable
+                order: [[2, 'desc']],
+                columnDefs: [{
+                    targets: 0,
+                    className: "sticky left-0 bg-gray-50 dark:text-white dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600"
+                }],
+                fixedColumns: { left: 1 },
+                language: {
+                    search: "Cari:",
+                    lengthMenu: "Tunjukkan _MENU_ entri",
+                    info: "Menunjukkan _START_ hingga _END_ daripada _TOTAL_ entri",
+                    infoEmpty: "Menunjukkan 0 hingga 0 daripada 0 entri",
+                    emptyTable: "Tiada data tersedia dalam jadual"
+                },
+                "drawCallback": function( settings ) {
+                    if (panel.length) {
+                        panel.removeClass('datatable-container-loading');
                     }
-                });
-                initializedTables[tabName] = true;
-            }
-        @endforeach
+                }
+            });
+            initializedTables[tabName] = true;
+        @endif
+    }
+@endforeach
     }
 
     // Initialize all Chart.js charts on initial page load.
