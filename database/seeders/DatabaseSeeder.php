@@ -30,8 +30,22 @@ class DatabaseSeeder extends Seeder
                 'username' => 'test',
                 'password' => Hash::make('password'),
                 'email_verified_at' => now(),
+          'superadmin' => 'no', // Default user is not a superadmin
             ]
         );
+        
+         // Create a default superadmin user
+        $superadmin = User::updateOrCreate(
+            ['email' => 'superadmin@example.com'],
+            [
+                'name' => 'Super Admin',
+                'username' => 'superadmin',
+                'password' => Hash::make('password'),
+                'email_verified_at' => now(),
+                'superadmin' => 'yes',
+            ]
+        );
+
 
         // 2. Create a default project and associate it with the new user
         $project = Project::updateOrCreate(

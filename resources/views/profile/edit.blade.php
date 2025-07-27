@@ -2,6 +2,13 @@
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Profil') }}
+        @php
+            if (Auth::user()->superadmin === 'yes') {
+                echo ' : Superadmin';
+            } else {
+                echo ' : User';
+            }
+        @endphp
         </h2>
     </x-slot>
 

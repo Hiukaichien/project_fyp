@@ -21,10 +21,13 @@ class AuthServiceProvider extends ServiceProvider
     /**
      * Register any authentication / authorization services.
      */
-    public function boot(): void
+   public function boot(): void
     {
         // This gate checks if the authenticated user owns the project.
         Gate::define('access-project', function (User $user, Project $project) {
+            if ($user->superadmin === 'yes') {
+                return true;
+            }
             return $user->id === $project->user_id;
         });
     }

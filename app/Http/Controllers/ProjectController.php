@@ -33,15 +33,19 @@ use Yajra\DataTables\DataTables;
 
 class ProjectController extends Controller
 {
-    public function index()
+ public function index()
     {
-        // Show only projects belonging to the authenticated user.
-        $projects = Project::where('user_id', Auth::id())
-                           ->orderBy('project_date', 'desc')
-                           ->paginate(10);
+        if (Auth::user()->superadmin == 'yes')
+            $projects = Project::orderBy('project_date', 'desc')->paginate(10);
+        else {
+            // Show only projects belonging to the authenticated user.
+            $projects = Project::where('user_id', Auth::id())
+                ->orderBy('project_date', 'desc')
+                ->paginate(10);
+        }
+
         return view('projects.project', compact('projects'));
     }
-
     public function create()
     {
         return view('projects.create');

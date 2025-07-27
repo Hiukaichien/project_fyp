@@ -22,6 +22,7 @@ class User extends Authenticatable
         'username',
         'email',
         'password',
+        'superadmin', // Added superadmin field
     ];
 
     /**
@@ -32,7 +33,9 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'superadmin', // Hide superadmin field from serialization
     ];
+
 
     /**
      * Get the attributes that should be cast.
