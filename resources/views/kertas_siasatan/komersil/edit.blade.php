@@ -395,7 +395,7 @@
                                     </label>
                                     <input type="text" name="status_pergerakan_barang_kes_lain"
                                         id="status_pergerakan_barang_kes_lain_komersil"
-                                        value="{{ old('status_pergerakan_barang_kes_lain', ($currentPergerakan == 'Lain-Lain' ? (is_array($paper->status_pergerakan_barang_kes) ? ($paper->status_pergerakan_barang_kes[1] ?? '') : '') : '')) }}"
+                                        value="{{ old('status_pergerakan_barang_kes_lain', $paper->status_pergerakan_barang_kes_lain) }}"
                                         class="ml-2 form-input text-sm w-64" {{ $currentPergerakan != 'Lain-Lain' ? 'disabled' : '' }}>
                                 </div>
                             </div>
@@ -433,7 +433,7 @@
                                     </label>
                                     <input type="text" name="status_barang_kes_selesai_siasatan_lain"
                                         id="status_barang_kes_selesai_siasatan_lain_komersil"
-                                        value="{{ old('status_barang_kes_selesai_siasatan_lain', ($currentSelesai == 'Lain-Lain' ? (is_array($paper->status_barang_kes_selesai_siasatan) ? ($paper->status_barang_kes_selesai_siasatan[1] ?? '') : '') : '')) }}"
+                                        value="{{ old('status_barang_kes_selesai_siasatan_lain', $paper->status_barang_kes_selesai_siasatan_lain) }}"
                                         class="ml-2 form-input text-sm w-64" {{ $currentSelesai != 'Lain-Lain' ? 'disabled' : '' }}>
                                 </div>
                             </div>
@@ -486,7 +486,7 @@
                                     <input type="text"
                                         name="barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan_lain"
                                         id="kaedah_pelupusan_barang_kes_lain_komersil"
-                                        value="{{ old('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan_lain', ($currentKaedah == 'Lain-Lain' ? (is_array($paper->barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan) ? ($paper->barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan[1] ?? '') : '') : '')) }}"
+                                        value="{{ old('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan_lain', $paper->barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan_lain) }}"
                                         class="ml-2 form-input text-sm w-64" {{ $currentKaedah != 'Lain-Lain' ? 'disabled' : '' }}>
                                 </div>
                             </div>
