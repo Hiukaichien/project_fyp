@@ -57,7 +57,7 @@ return new class extends Migration
             $table->json('status_barang_kes_selesai_siasatan')->nullable()->comment('B4');
             $table->json('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan')->nullable()->comment('B4');
             $table->json('adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan')->nullable()->comment('B4');
-            $table->json('resit_kew_38e_pelupusan_tunai_perbendaharaan')->nullable()->comment('B4,resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbencaharaan');
+            $table->json('resit_kew_38e_bagi_pelupusan')->nullable()->comment('B4,resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan');
             $table->json('adakah_borang_serah_terima_pegawai_tangkapan')->nullable()->comment('B4');
             $table->string('adakah_borang_serah_terima_pemilik_saksi')->nullable()->comment('B4');
             $table->boolean('adakah_sijil_surat_kebenaran_ipo')->nullable()->comment('B4');
@@ -97,7 +97,22 @@ return new class extends Migration
             $table->text('ulasan_keseluruhan_pegawai_pemeriksa_borang')->nullable()->comment('B6');
             $table->boolean('status_penandaan_kelas_warna')->nullable()->comment('B6');
 
+            // Additional BAHAGIAN 6 fields from edit form
+            $table->boolean('status_saman_pdrm_s_257')->nullable()->comment('B6 - Saman PDRM S257 status');
+            $table->string('no_saman_pdrm_s_257')->nullable()->comment('B6 - Saman PDRM S257 number');
+            $table->boolean('status_saman_pdrm_s_167')->nullable()->comment('B6 - Saman PDRM S167 status');
+            $table->string('no_saman_pdrm_s_167')->nullable()->comment('B6 - Saman PDRM S167 number');
+
+            // Additional BAHAGIAN 4 fields from edit form
+            $table->string('status_pergerakan_barang_kes_lain')->nullable()->comment('B4 - Other movement status');
+            $table->string('status_barang_kes_selesai_siasatan_lain')->nullable()->comment('B4 - Other completion status');
+            $table->string('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan_lain')->nullable()->comment('B4 - Other disposal method');
+            $table->text('ulasan_keseluruhan_pegawai_pemeriksa_barang_kes')->nullable()->comment('B4 - Overall examiner comments on evidence');
+            
             // BAHAGIAN 7: Laporan E-FSA, Puspakom, dll (B7)
+            // Post Mortem fields
+            $table->boolean('status_permohonan_laporan_post_mortem_mayat')->nullable()->comment('B7 - Post mortem request status');
+            $table->date('tarikh_permohonan_laporan_post_mortem_mayat')->nullable()->comment('B7 - Post mortem request date');
             // BANK
             $table->boolean('status_permohonan_E_FSA_1_oleh_IO_AIO')->nullable(); // B7
             $table->string('nama_bank_permohonan_E_FSA_1')->nullable(); // B7
@@ -202,8 +217,8 @@ return new class extends Migration
             $table->boolean('muka_surat_4_dengan_arahan_tpr')->nullable()->comment('ADAKAH MUKA SURAT 4 - BARANG KES DITULIS BERSAMA NO DAFTAR BARANG KES DAN TELAH ADA ARAHAN YA TPR UNTUK PELUPUSAN ATAU SERAHAN SEMULA KE PEMILIK');
             $table->boolean('muka_surat_4_keputusan_kes_dicatat')->nullable()->comment('ADAKAH MUKA SURAT 4 - KEPUTUSAN KES DICATAT SELENGKAPNYA...');
             $table->boolean('fail_lmm_ada_keputusan_koroner')->nullable()->comment('ADAKAH FAIL L.M.M (T) ATAU L.M.M TELAH ADA KEPUTUSAN SIASATAN OLEH YA KORONER');
-            $table->string('status_kus_fail')->nullable()->comment('ADAKAH KERTAS SIASATAN TELAH DI KUS/FAIL...');
-            $table->json('keputusan_akhir_mahkamah')->nullable()->comment('KEPUTUSAN AKHIR OLEH MAHKAMAH...');
+            $table->boolean('status_kus_fail')->nullable()->comment('ADAKAH KERTAS SIASATAN TELAH DI KUS/FAIL...');
+            $table->string('keputusan_akhir_mahkamah')->nullable()->comment('KEPUTUSAN AKHIR OLEH MAHKAMAH...');
             $table->text('ulasan_pegawai_pemeriksa_fail')->nullable()->comment('ULASAN KESELURUHAN PEGAWAI PEMERIKSA (JIKA ADA)');
 
             $table->timestamps();
