@@ -191,7 +191,7 @@ class ProjectController extends Controller
     {
         Gate::authorize('access-project', $project);
         
-        $validPaperTypes = ['Jenayah', 'Narkotik', 'TrafikSeksyen', 'Komersil', 'LaporanMatiMengejut', 'OrangHilang'];
+        $validPaperTypes = ['Jenayah', 'Narkotik', 'TrafikSeksyen','TrafikRule', 'Komersil', 'LaporanMatiMengejut', 'OrangHilang'];
         if (!in_array($paperType, $validPaperTypes)) {
             return redirect()->route('projects.show', $project)->with('error', 'Jenis kertas yang dinyatakan tidak sah.');
         }
