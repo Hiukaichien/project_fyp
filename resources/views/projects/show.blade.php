@@ -795,7 +795,7 @@
                         type: 'pie',
                         data: {
                             // Use the PHP variable to dynamically set the JavaScript label
-                            labels: ['{{ $lewatPieLabel }}', 'KS Terbengkalai (> 3 Bulan)', 'KS Baru Dikemaskini'],
+                            labels: ['{!! $lewatPieLabel !!}', 'KS Terbengkalai (> 3 Bulan)', 'KS Baru Dikemaskini'],
                             datasets: [{
                                 data: [{{ $data['lewatCount'] }}, {{ $data['terbengkalaiCount'] }}, {{ $data['kemaskiniCount'] }}],
                                 backgroundColor: ['#F87171', '#FBBF24', '#34D399'],
