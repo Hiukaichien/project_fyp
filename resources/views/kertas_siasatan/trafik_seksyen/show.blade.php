@@ -152,7 +152,7 @@
                     <dl class="sm:divide-y sm:divide-gray-200">
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-yellow-800">Status Lewat Edaran (>48 Jam)</dt>
-                            <dd class="mt-1 text-sm font-bold text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->lewat_edaran_48_jam_status ?? 'Tidak Terkira' }}</dd>
+                            <dd class="mt-1 text-sm font-bold text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->lewat_edaran_status ?? 'Tidak Terkira' }}</dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-yellow-800">Status Terbengkalai (>3 Bulan)</dt>

@@ -137,9 +137,11 @@ class Komersil extends Model
 
     protected $appends = [
         // Calculated statuses
-        'lewat_edaran_48_jam_status',
+        'lewat_edaran_status',
         'terbengkalai_status',
         'baru_dikemaskini_status',
+        'tempoh_lewat_edaran_dikesan',
+        'tempoh_dikemaskini',
         
         // B3 - Arahan & Keputusan text versions
         'arahan_minit_oleh_sio_status_text',
@@ -222,41 +224,83 @@ class Komersil extends Model
         return $value ? $trueText : $falseText;
     }
 
-    // --- Status Calculation Methods ---
-    public function getLewatEdaran48JamStatusAttribute(): ?string
+    // --- Status Calculation Methods (Accessors) ---
+    public function getLewatEdaranStatusAttribute(): ?string
     {
-        if (!$this->tarikh_edaran_minit_ks_pertama || !$this->tarikh_edaran_minit_ks_kedua) {
+        $tarikhA = $this->tarikh_edaran_minit_ks_pertama;
+        $tarikhB = $this->tarikh_edaran_minit_ks_kedua;
+        $limitInHours = 48;
+
+        if (!$tarikhA || !$tarikhB) {
             return null;
         }
 
-        return $this->tarikh_edaran_minit_ks_pertama->diffInHours($this->tarikh_edaran_minit_ks_kedua) > 48 
-            ? 'YA, LEWAT EDARAN' 
+        return $tarikhA->diffInHours($tarikhB) > $limitInHours 
+            ? 'YA, LEWAT' 
             : 'DALAM TEMPOH';
+    }
+    
+    public function getTempohLewatEdaranDikesanAttribute(): ?string
+    {
+        $tarikhA = $this->tarikh_edaran_minit_ks_pertama;
+        $tarikhB = $this->tarikh_edaran_minit_ks_kedua;
+
+        if ($tarikhA && $tarikhB) {
+            $days = $tarikhA->diffInDays($tarikhB);
+            return "{$days} HARI";
+        }
+        return null;
     }
 
     public function getTerbengkalaiStatusAttribute(): string
     {
-        if (!$this->tarikh_edaran_minit_ks_pertama) {
-            return 'TIDAK DAPAT DITENTUKAN';
+        $tarikhA = $this->tarikh_edaran_minit_ks_pertama;
+        $tarikhC = $this->tarikh_edaran_minit_ks_sebelum_akhir;
+        $tarikhD = $this->tarikh_edaran_minit_ks_akhir;
+        $isTerbengkalai = false;
+
+        // Rule 1: Check (D - C) if both dates exist.
+        if ($tarikhD && $tarikhC) {
+            if ($tarikhC->diffInMonths($tarikhD) >= 3) {
+                $isTerbengkalai = true;
+            }
         }
 
-        if (!$this->tarikh_edaran_minit_ks_akhir) {
-            return $this->tarikh_edaran_minit_ks_pertama->diffInMonths(now()) > 3 
-                ? 'YA, TERBENGKALAI' 
-                : 'TIDAK TERBENGKALAI';
+        // Rule 2: If not already flagged, check (D - A) if both dates exist.
+        if (!$isTerbengkalai && $tarikhD && $tarikhA) {
+            if ($tarikhA->diffInMonths($tarikhD) >= 3) {
+                $isTerbengkalai = true;
+            }
         }
-
-        return 'TIDAK TERBENGKALAI';
+        
+        return $isTerbengkalai ? 'YA, TERBENGKALAI MELEBIHI 3 BULAN' : 'TIDAK TERBENGKALAI';
     }
 
     public function getBaruDikemaskiniStatusAttribute(): string
     {
-        if ($this->updated_at && Carbon::parse($this->updated_at)->isAfter(Carbon::now()->subDays(7))) {
-            return 'YA, BARU DIKEMASKINI';
-        }
+        $tarikhD = $this->tarikh_edaran_minit_ks_akhir;
+        $tarikhE = $this->tarikh_semboyan_pemeriksaan_jips_ke_daerah;
 
+        if ($tarikhE && $tarikhD && $tarikhE->isAfter($tarikhD)) {
+            return 'TERBENGKALAI / KS BARU DIKEMASKINI';
+        }
+        
         return 'TIADA PERGERAKAN BARU';
     }
+
+    public function getTempohDikemaskiniAttribute(): ?string
+    {
+        $tarikhD = $this->tarikh_edaran_minit_ks_akhir;
+        $tarikhE = $this->tarikh_semboyan_pemeriksaan_jips_ke_daerah;
+
+        if ($tarikhD && $tarikhE) {
+            $days = $tarikhD->diffInDays($tarikhE);
+            return "{$days} HARI";
+        }
+
+        return null;
+    }
+
 
     // --- Boolean Field Text Accessors ---
     // B3 Accessors

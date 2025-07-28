@@ -24,10 +24,16 @@ class Jenayah extends Model
      */
     protected $casts = [
         'project_id' => 'integer',
-        'tarikh_laporan_polis' => 'date:Y-m-d',
-        'tarikh_minit_pertama' => 'date:Y-m-d',
 
-        'tarikh_minit_akhir' => 'date:Y-m-d',
+        // Standardized Date Fields (ensure your DB table matches these names)
+        'tarikh_laporan_polis_dibuka' => 'date:Y-m-d',
+        'tarikh_edaran_minit_ks_pertama' => 'date:Y-m-d',
+        'tarikh_edaran_minit_ks_kedua' => 'date:Y-m-d',
+        'tarikh_edaran_minit_ks_sebelum_akhir' => 'date:Y-m-d',
+        'tarikh_edaran_minit_ks_akhir' => 'date:Y-m-d',
+        'tarikh_semboyan_pemeriksaan_jips_ke_daerah' => 'date:Y-m-d',
+
+        // Original Jenayah Specific Fields
         'tarikh_akhir_diari_dikemaskini' => 'date:Y-m-d',
         'tarikh_daftar_bk_berharga_tunai' => 'date:Y-m-d',
         'tarikh_daftar_bk_am' => 'date:Y-m-d',
@@ -58,6 +64,17 @@ class Jenayah extends Model
     ];
 
     /**
+     * The accessors to append to the model's array form.
+     */
+    protected $appends = [
+        'lewat_edaran_status',
+        'terbengkalai_status',
+        'baru_dikemaskini_status',
+        'tempoh_lewat_edaran_dikesan',
+        'tempoh_dikemaskini',
+    ];
+
+    /**
      * Get the project that this paper belongs to.
      */
     public function project()
@@ -65,83 +82,81 @@ class Jenayah extends Model
         return $this->belongsTo(Project::class);
     }
 
-    /**
-     * The "booted" method of the model.
-     */
-    protected static function boot()
-    {
-        parent::boot();
-        static::saving(function ($model) {
-            $model->applyClientSpecificCalculations();
-        });
-    }
+    // --- ACCESSORS FOR DYNAMIC CALCULATION ---
 
-    /**
-     * Apply all business logic calculations before saving.
-     */
-    public function applyClientSpecificCalculations()
+    public function getLewatEdaranStatusAttribute(): ?string
     {
-        $this->calculateEdaranLebih48Jam();
-        $this->calculateTerbengkalai3Bulan();
-        // The logic for 'Baru Kemaskini' might need refinement based on business rules
-        $this->calculateBaruKemaskini();
-    }
+        // IMPORTANT: Jenayah uses the 24-hour rule
+        $tarikhA = $this->tarikh_edaran_minit_ks_pertama;
+        $tarikhB = $this->tarikh_edaran_minit_ks_kedua;
+        $limitInHours = 24;
 
-    public function calculateEdaranLebih48Jam()
-    {
-        // If tarikh_minit_akhir is filled, the case is not considered late.
-        if ($this->tarikh_minit_akhir) {
-            $this->edar_lebih_24_jam_status = 'EDARAN DALAM TEMPOH';
-            return;
+        if (!$tarikhA || !$tarikhB) {
+            return null; // Cannot calculate if dates are missing
         }
 
-        // If tarikh_minit_akhir is not filled, check against tarikh_minit_pertama.
-        if ($this->tarikh_minit_pertama) {
-            $tarikhPertama = $this->tarikh_minit_pertama;
-            
-            if ($tarikhPertama->diffInHours(Carbon::now()) > 48) {
-                $this->edar_lebih_24_jam_status = 'YA, EDARAN LEWAT 48 JAM';
-            } else {
-                $this->edar_lebih_24_jam_status = 'EDARAN DALAM TEMPOH 48 JAM';
-            }
-        } else {
-            $this->edar_lebih_24_jam_status = null; // Cannot calculate
-        }
-    }
-    
-    public function calculateTerbengkalai3Bulan()
-    {
-        // If 'tarikh_minit_pertama' is not set, we cannot determine the status.
-        if (is_null($this->tarikh_minit_pertama)) {
-            $this->terbengkalai_3_bulan_status = null;
-            return;
-        }
-
-        // A case is considered abandoned if it has a 'tarikh_minit_pertama' but no 'tarikh_minit_akhir',
-        // and more than 3 months have passed since 'tarikh_minit_pertama'.
-        if (is_null($this->tarikh_minit_akhir)) {
-            $openingDate = $this->tarikh_minit_pertama;
-
-            // Check if more than 3 months have passed since the first minute date.
-            if ($openingDate->diffInMonths(Carbon::now()) > 3) {
-                $this->terbengkalai_3_bulan_status = 'YA, TERBENGKALAI LEBIH 3 BULAN';
-            } else {
-                $this->terbengkalai_3_bulan_status = 'TIDAK TERBENGKALAI';
-            }
-        } else {
-            // If 'tarikh_minit_akhir' is set, the case is not considered abandoned by this rule.
-            $this->terbengkalai_3_bulan_status = 'TIDAK TERBENGKALAI';
-        }
+        return $tarikhA->diffInHours($tarikhB) > $limitInHours ? 'YA, LEWAT' : 'DALAM TEMPOH';
     }
 
-    public function calculateBaruKemaskini()
+    public function getTempohLewatEdaranDikesanAttribute(): ?string
     {
-        $this->baru_kemaskini_status = 'TIADA PERGERAKAN BARU';
-        if ($this->tarikh_minit_akhir && $this->updated_at) {
-            // Check if the record was updated recently (e.g., within the last 7 days)
-            if (Carbon::parse($this->updated_at)->isAfter(Carbon::now()->subDays(7))) {
-                $this->baru_kemaskini_status = 'YA, BARU DIKEMASKINI';
+        $tarikhA = $this->tarikh_edaran_minit_ks_pertama;
+        $tarikhB = $this->tarikh_edaran_minit_ks_kedua;
+
+        if ($tarikhA && $tarikhB) {
+            $days = $tarikhA->diffInDays($tarikhB);
+            return "{$days} HARI";
+        }
+
+        return null;
+    }
+
+    public function getTerbengkalaiStatusAttribute(): string
+    {
+        $tarikhA = $this->tarikh_edaran_minit_ks_pertama;
+        $tarikhC = $this->tarikh_edaran_minit_ks_sebelum_akhir;
+        $tarikhD = $this->tarikh_edaran_minit_ks_akhir;
+        $isTerbengkalai = false;
+
+        // Rule 1: Check (D - C) if both dates exist.
+        if ($tarikhD && $tarikhC) {
+            if ($tarikhC->diffInMonths($tarikhD) >= 3) {
+                $isTerbengkalai = true;
             }
         }
+
+        // Rule 2: If not already flagged, check (D - A) if both dates exist.
+        if (!$isTerbengkalai && $tarikhD && $tarikhA) {
+            if ($tarikhA->diffInMonths($tarikhD) >= 3) {
+                $isTerbengkalai = true;
+            }
+        }
+        
+        return $isTerbengkalai ? 'YA, TERBENGKALAI MELEBIHI 3 BULAN' : 'TIDAK TERBENGKALAI';
+    }
+
+    public function getBaruDikemaskiniStatusAttribute(): string
+    {
+        $tarikhD = $this->tarikh_edaran_minit_ks_akhir;
+        $tarikhE = $this->tarikh_semboyan_pemeriksaan_jips_ke_daerah;
+
+        if ($tarikhE && $tarikhD && $tarikhE->isAfter($tarikhD)) {
+            return 'TERBENGKALAI / KS BARU DIKEMASKINI';
+        }
+        
+        return 'TIADA PERGERAKAN BARU';
+    }
+
+    public function getTempohDikemaskiniAttribute(): ?string
+    {
+        $tarikhD = $this->tarikh_edaran_minit_ks_akhir;
+        $tarikhE = $this->tarikh_semboyan_pemeriksaan_jips_ke_daerah;
+
+        if ($tarikhD && $tarikhE) {
+            $days = $tarikhD->diffInDays($tarikhE);
+            return "{$days} HARI";
+        }
+
+        return null;
     }
 }

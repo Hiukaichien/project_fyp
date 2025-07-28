@@ -139,7 +139,7 @@ class Narkotik extends Model
      */
     protected $appends = [
         // Calculated statuses (already string outputs)
-        'lewat_edaran_48_jam_status',
+        'lewat_edaran_status',
         'terbengkalai_status',
         'baru_dikemaskini_status',
         'tempoh_lewat_edaran_dikesan',
@@ -205,7 +205,7 @@ class Narkotik extends Model
         return $this->belongsTo(Project::class);
     }
 
-    public function getLewatEdaran48JamStatusAttribute(): ?string
+    public function getLewatEdaranStatusAttribute(): ?string
     {
         $tarikhA = $this->tarikh_edaran_minit_ks_pertama;
         $tarikhB = $this->tarikh_edaran_minit_ks_kedua;

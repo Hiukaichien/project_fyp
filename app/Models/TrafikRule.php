@@ -78,7 +78,7 @@ class TrafikRule extends Model
      */
     protected $appends = [
         // Calculated statuses
-        'lewat_edaran_48_jam_status',
+        'lewat_edaran_status',
         'terbengkalai_status',
         'baru_dikemaskini_status',
         'tempoh_lewat_edaran_dikesan', 
@@ -111,7 +111,7 @@ class TrafikRule extends Model
 
     // --- ACCESSORS FOR DYNAMIC CALCULATION ---
     
-    public function getLewatEdaran48JamStatusAttribute(): ?string
+    public function getLewatEdaranStatusAttribute(): ?string
     {
         $tarikhA = $this->tarikh_edaran_minit_ks_pertama;
         $tarikhB = $this->tarikh_edaran_minit_ks_kedua;
@@ -120,7 +120,7 @@ class TrafikRule extends Model
             return null; // Cannot calculate if dates are missing
         }
 
-        return $tarikhA->diffInHours($tarikhB) > 48 ? 'YA, LEWAT' : 'DALAM TEMPOH';
+        return $tarikhA->diffInHours($tarikhB) > 24 ? 'YA, LEWAT' : 'DALAM TEMPOH';
     }
 
     public function getTempohLewatEdaranDikesanAttribute(): ?string

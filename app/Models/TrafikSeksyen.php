@@ -141,31 +141,22 @@ class TrafikSeksyen extends Model
      * It uses the name `original_db_column_name_text`.
      */
     protected $appends = [
-        // Calculated statuses (already string outputs)
-        'lewat_edaran_48_jam_status',
+        'lewat_edaran_status',
         'terbengkalai_status',
         'baru_dikemaskini_status',
         'tempoh_lewat_edaran_dikesan',
         'tempoh_dikemaskini',
 
-        // Appending text versions of boolean fields for display/export
         'arahan_minit_oleh_sio_status_text',
         'arahan_minit_ketua_bahagian_status_text',
         'arahan_minit_ketua_jabatan_status_text',
         'arahan_minit_oleh_ya_tpr_status_text',
-        // 'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan_text' - REMOVED, now direct string
         'adakah_barang_kes_didaftarkan_text',
-        // 'status_pergerakan_barang_kes_text' - REMOVED, now direct string + _lain
-        // 'status_barang_kes_selesai_siasatan_text' - REMOVED, now direct string + _lain
-        // 'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan_text' - REMOVED, now direct string + _lain
-        // 'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan_text' - REMOVED, now direct string
-        // 'resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan_text' - REMOVED, now direct string
-        // 'adakah_borang_serah_terima_pegawai_tangkapan_text' - REMOVED, now direct string
-        'adakah_borang_serah_terima_pemilik_saksi_text', // ADDED
+        'adakah_borang_serah_terima_pemilik_saksi_text', 
         'adakah_sijil_surat_kebenaran_ipo_text',
-        'adakah_gambar_pelupusan_text', // ADDED
+        'adakah_gambar_pelupusan_text', 
 
-        // B5 - ENSURE THESE ARE 'boolean'
+        // B5 
         'status_id_siasatan_dikemaskini_text',
         'status_rajah_kasar_tempat_kejadian_text',
         'status_gambar_tempat_kejadian_text',
@@ -221,8 +212,7 @@ class TrafikSeksyen extends Model
     }
 
     // --- ACCESSORS FOR DYNAMIC CALCULATION ---
-    // (Keep your existing calculated accessors, e.g., getLewatEdaran48JamStatusAttribute)
-    public function getLewatEdaran48JamStatusAttribute(): ?string
+    public function getLewatEdaranStatusAttribute(): ?string
     {
         $tarikhA = $this->tarikh_edaran_minit_ks_pertama;
         $tarikhB = $this->tarikh_edaran_minit_ks_kedua;

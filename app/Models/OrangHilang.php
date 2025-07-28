@@ -70,6 +70,41 @@ class OrangHilang extends Model
     ];
 
     /**
+     * The accessors to append to the model's array form.
+     */
+    protected $appends = [
+        // Calculated statuses
+        'lewat_edaran_status',
+        'terbengkalai_status',
+        'baru_dikemaskini_status',
+        'tempoh_lewat_edaran_dikesan',
+        'tempoh_dikemaskini',
+
+        // Text versions of boolean fields
+        'arahan_minit_oleh_sio_status_text',
+        'arahan_minit_ketua_bahagian_status_text',
+        'arahan_minit_ketua_jabatan_status_text',
+        'arahan_minit_oleh_ya_tpr_status_text',
+        'adakah_barang_kes_didaftarkan_text',
+        'status_id_siasatan_dikemaskini_text',
+        'status_rajah_kasar_tempat_kejadian_text',
+        'status_gambar_tempat_kejadian_text',
+        'status_gambar_barang_kes_am_text',
+        'status_gambar_barang_kes_berharga_text',
+        'status_gambar_orang_hilang_text',
+        'status_mps1_text',
+        'status_mps2_text',
+        'hebahan_media_massa_text',
+        'orang_hilang_dijumpai_mati_mengejut_bukan_jenayah_text',
+        'orang_hilang_dijumpai_mati_mengejut_jenayah_text',
+        'semboyan_pemakluman_ke_kedutaan_bukan_warganegara_text',
+        'status_permohonan_laporan_imigresen_text',
+        'status_laporan_penuh_imigresen_text',
+        'adakah_muka_surat_4_keputusan_kes_dicatat_text',
+        'adakah_ks_kus_fail_selesai_text',
+    ];
+
+    /**
      * Get the project that this paper belongs to.
      */
     public function project()
@@ -84,110 +119,158 @@ class OrangHilang extends Model
     {
         return $this->belongsTo(User::class);
     }
-
-    /**
-     * The "booted" method of the model.
-     */
-    protected static function boot()
-    {
-        parent::boot();
-        
-        static::creating(function ($model) {
-            // Generate unique no_kertas_siasatan when creating
-            if (empty($model->no_kertas_siasatan)) {
-                $model->no_kertas_siasatan = $model->generateNoKertasSiasatan();
-            }
-        });
-    }
-
-    /**
-     * Generate unique no_kertas_siasatan
-     */
-    public function generateNoKertasSiasatan()
-    {
-        $year = now()->year;
-        $prefix = "OH/{$year}/";
-        
-        // Get the latest number for this year
-        $latestRecord = static::where('no_kertas_siasatan', 'LIKE', $prefix . '%')
-                            ->orderBy('no_kertas_siasatan', 'desc')
-                            ->first();
-        
-        if ($latestRecord) {
-            $latestNumber = (int) str_replace($prefix, '', $latestRecord->no_kertas_siasatan);
-            $nextNumber = $latestNumber + 1;
-        } else {
-            $nextNumber = 1;
-        }
-        
-        return $prefix . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
-    }
-
-    /**
-     * Apply all business logic calculations before saving.
-     */
-    public function applyClientSpecificCalculations()
-    {
-        $this->calculateEdaranLebih48Jam();
-        $this->calculateTerbengkalai3Bulan();
-        $this->calculateBaruKemaskini();
-    }
-
-    public function calculateEdaranLebih48Jam()
-    {
-        // If tarikh_edaran_minit_ks_akhir is filled, the case is not considered late.
-        if ($this->tarikh_edaran_minit_ks_akhir) {
-            $this->edar_lebih_24_jam_status = 'EDARAN DALAM TEMPOH';
-            return;
-        }
-
-        // If tarikh_edaran_minit_ks_akhir is not filled, check against tarikh_edaran_minit_ks_pertama.
-        if ($this->tarikh_edaran_minit_ks_pertama) {
-            $tarikhPertama = $this->tarikh_edaran_minit_ks_pertama;
-            
-            if ($tarikhPertama->diffInHours(Carbon::now()) > 48) {
-                $this->edar_lebih_24_jam_status = 'YA, EDARAN LEWAT 48 JAM';
-            } else {
-                $this->edar_lebih_24_jam_status = 'EDARAN DALAM TEMPOH 48 JAM';
-            }
-        } else {
-            $this->edar_lebih_24_jam_status = null; // Cannot calculate
-        }
-    }
     
-    /**
-     * Calculates if the case is abandoned based on the first and last minute dates.
-     */
-    public function calculateTerbengkalai3Bulan()
-    {
-        // A case is considered abandoned if it has a 'tarikh_edaran_minit_ks_pertama' but no 'tarikh_edaran_minit_ks_akhir',
-        // and more than 3 months have passed since 'tarikh_edaran_minit_ks_pertama'.
-        if ($this->tarikh_edaran_minit_ks_pertama && is_null($this->tarikh_edaran_minit_ks_akhir)) {
-            $openingDate = $this->tarikh_edaran_minit_ks_pertama;
+    // --- ACCESSORS FOR DYNAMIC CALCULATION ---
 
-            // Check if more than 3 months have passed since the first minute date.
-            if ($openingDate->diffInMonths(Carbon::now()) > 3) {
-                $this->terbengkalai_3_bulan_status = 'YA, TERBENGKALAI LEBIH 3 BULAN';
-            } else {
-                $this->terbengkalai_3_bulan_status = 'TIDAK TERBENGKALAI';
-            }
-        } else {
-            // If 'tarikh_edaran_minit_ks_pertama' is not set, or if 'tarikh_edaran_minit_ks_akhir' is set,
-            // the case is not considered abandoned by this rule.
-            $this->terbengkalai_3_bulan_status = 'TIDAK TERBENGKALAI';
+    public function getLewatEdaranStatusAttribute(): ?string
+    {
+        $tarikhA = $this->tarikh_edaran_minit_ks_pertama;
+        $tarikhB = $this->tarikh_edaran_minit_ks_kedua;
+        $limitInHours = 24;
+
+        if (!$tarikhA || !$tarikhB) {
+            return null; // Cannot calculate if dates are missing
         }
+
+        return $tarikhA->diffInHours($tarikhB) > $limitInHours ? 'YA, LEWAT' : 'DALAM TEMPOH';
+    }
+
+    public function getTempohLewatEdaranDikesanAttribute(): ?string
+    {
+        $tarikhA = $this->tarikh_edaran_minit_ks_pertama;
+        $tarikhB = $this->tarikh_edaran_minit_ks_kedua;
+
+        if ($tarikhA && $tarikhB) {
+            $days = $tarikhA->diffInDays($tarikhB);
+            return "{$days} HARI";
+        }
+
+        return null;
+    }
+
+    public function getTerbengkalaiStatusAttribute(): string
+    {
+        $tarikhA = $this->tarikh_edaran_minit_ks_pertama;
+        $tarikhC = $this->tarikh_edaran_minit_ks_sebelum_akhir;
+        $tarikhD = $this->tarikh_edaran_minit_ks_akhir;
+        $isTerbengkalai = false;
+
+        // Rule 1: Check (D - C) if both dates exist.
+        if ($tarikhD && $tarikhC) {
+            if ($tarikhC->diffInMonths($tarikhD) >= 3) {
+                $isTerbengkalai = true;
+            }
+        }
+
+        // Rule 2: If not already flagged, check (D - A) if both dates exist.
+        if (!$isTerbengkalai && $tarikhD && $tarikhA) {
+            if ($tarikhA->diffInMonths($tarikhD) >= 3) {
+                $isTerbengkalai = true;
+            }
+        }
+        
+        return $isTerbengkalai ? 'YA, TERBENGKALAI MELEBIHI 3 BULAN' : 'TIDAK TERBENGKALAI';
+    }
+
+    public function getBaruDikemaskiniStatusAttribute(): string
+    {
+        $tarikhD = $this->tarikh_edaran_minit_ks_akhir;
+        $tarikhE = $this->tarikh_semboyan_pemeriksaan_jips_ke_daerah;
+
+        if ($tarikhE && $tarikhD && $tarikhE->isAfter($tarikhD)) {
+            return 'TERBENGKALAI / KS BARU DIKEMASKINI';
+        }
+
+        return 'TIADA PERGERAKAN BARU';
+    }
+
+    public function getTempohDikemaskiniAttribute(): ?string
+    {
+        $tarikhD = $this->tarikh_edaran_minit_ks_akhir;
+        $tarikhE = $this->tarikh_semboyan_pemeriksaan_jips_ke_daerah;
+
+        if ($tarikhD && $tarikhE) {
+            $days = $tarikhD->diffInDays($tarikhE);
+            return "{$days} HARI";
+        }
+
+        return null;
     }
 
     /**
-     * A simple logic to check if the record was recently updated.
+     * Helper function to format boolean values into Malay text.
      */
-    public function calculateBaruKemaskini()
+    private function formatBooleanToMalay(?bool $value, string $trueText = 'Ya', string $falseText = 'Tidak', string $nullText = '-') : string
     {
-        $this->baru_kemaskini_status = 'TIADA PERGERAKAN BARU';
-        if ($this->tarikh_edaran_minit_ks_akhir && $this->updated_at) {
-            if (Carbon::parse($this->updated_at)->isAfter(Carbon::now()->subDays(7))) {
-                $this->baru_kemaskini_status = 'YA, BARU DIKEMASKINI';
-            }
+        if (is_null($value)) {
+            return $nullText;
         }
+        return $value ? $trueText : $falseText;
+    }
+
+    // --- Accessors for Boolean Fields to display Malay Text ---
+
+    public function getArahanMinitOlehSioStatusTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->arahan_minit_oleh_sio_status);
+    }
+    public function getArahanMinitKetuaBahagianStatusTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->arahan_minit_ketua_bahagian_status);
+    }
+    public function getArahanMinitKetuaJabatanStatusTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->arahan_minit_ketua_jabatan_status);
+    }
+    public function getArahanMinitOlehYaTprStatusTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->arahan_minit_oleh_ya_tpr_status);
+    }
+    public function getAdakahBarangKesDidaftarkanTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->adakah_barang_kes_didaftarkan);
+    }
+    public function getStatusIdSiasatanDikemaskiniTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->status_id_siasatan_dikemaskini, 'Dikemaskini', 'Tidak');
+    }
+    public function getStatusRajahKasarTempatKejadianTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->status_rajah_kasar_tempat_kejadian, 'Ada', 'Tiada');
+    }
+    public function getStatusGambarTempatKejadianTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->status_gambar_tempat_kejadian, 'Ada', 'Tiada');
+    }
+    public function getStatusGambarBarangKesAmTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->status_gambar_barang_kes_am, 'Ada', 'Tiada');
+    }
+    public function getStatusGambarBarangKesBerhargaTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->status_gambar_barang_kes_berharga, 'Ada', 'Tiada');
+    }
+    public function getStatusGambarOrangHilangTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->status_gambar_orang_hilang, 'Ada', 'Tiada');
+    }
+    public function getStatusMps1TextAttribute(): string {
+        return $this->formatBooleanToMalay($this->status_mps1, 'Cipta', 'Tidak');
+    }
+    public function getStatusMps2TextAttribute(): string {
+        return $this->formatBooleanToMalay($this->status_mps2, 'Cipta', 'Tidak');
+    }
+    public function getHebahanMediaMassaTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->hebahan_media_massa, 'Dibuat', 'Tidak');
+    }
+    public function getOrangHilangDijumpaiMatiMengejutBukanJenayahTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->orang_hilang_dijumpai_mati_mengejut_bukan_jenayah);
+    }
+    public function getOrangHilangDijumpaiMatiMengejutJenayahTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->orang_hilang_dijumpai_mati_mengejut_jenayah);
+    }
+    public function getSemboyanPemaklumanKeKedutaanBukanWarganegaraTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->semboyan_pemakluman_ke_kedutaan_bukan_warganegara, 'Dibuat', 'Tidak');
+    }
+    public function getStatusPermohonanLaporanImigresenTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->status_permohonan_laporan_imigresen);
+    }
+    public function getStatusLaporanPenuhImigresenTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->status_laporan_penuh_imigresen, 'Diterima', 'Tidak');
+    }
+    public function getAdakahMukaSurat4KeputusanKesDicatatTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->adakah_muka_surat_4_keputusan_kes_dicatat);
+    }
+    public function getAdakahKsKusFailSelesaiTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->adakah_ks_kus_fail_selesai);
     }
 }
