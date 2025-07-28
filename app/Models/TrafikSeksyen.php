@@ -247,16 +247,28 @@ class TrafikSeksyen extends Model
         return null;
     }
 
-    public function getTerbengkalaiStatusAttribute(): ?string
+    public function getTerbengkalaiStatusAttribute(): string
     {
         $tarikhA = $this->tarikh_edaran_minit_ks_pertama;
+        $tarikhC = $this->tarikh_edaran_minit_ks_sebelum_akhir;
         $tarikhD = $this->tarikh_edaran_minit_ks_akhir;
+        $isTerbengkalai = false;
 
-        if ($tarikhA && !$tarikhD) {
-            return $tarikhA->diffInMonths(Carbon::now()) > 3 ? 'YA, TERBENGKALAI' : 'TIDAK TERBENGKALAI';
+        // Rule 1: Check (D - C) if both dates exist.
+        if ($tarikhD && $tarikhC) {
+            if ($tarikhC->diffInMonths($tarikhD) >= 3) {
+                $isTerbengkalai = true;
+            }
         }
 
-        return 'TIDAK BERKENAAN'; // Not considered abandoned if it has an end date or never started
+        // Rule 2: If not already flagged, check (D - A) if both dates exist.
+        if (!$isTerbengkalai && $tarikhD && $tarikhA) {
+            if ($tarikhA->diffInMonths($tarikhD) >= 3) {
+                $isTerbengkalai = true;
+            }
+        }
+        
+        return $isTerbengkalai ? 'YA, TERBENGKALAI MELEBIHI 3 BULAN' : 'TIDAK TERBENGKALAI';
     }
 
     public function getBaruDikemaskiniStatusAttribute(): string
