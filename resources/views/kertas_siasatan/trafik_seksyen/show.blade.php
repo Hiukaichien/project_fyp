@@ -260,29 +260,68 @@
                             <dt class="text-sm font-medium text-gray-500">Jenis Barang Kes Kenderaan</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->jenis_barang_kes_kenderaan ?? '-' }}</dd>
                         </div>
+
+                        <!-- Status Pergerakan Barang Kes -->
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">Status Pergerakan Barang Kes</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_json_list($paper->status_pergerakan_barang_kes) !!}</dd>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                {{ $paper->status_pergerakan_barang_kes ?? '-' }}
+
+                                @if($paper->status_pergerakan_barang_kes === 'Ujian Makmal' && !empty($paper->status_pergerakan_barang_kes_makmal))
+                                <div class="text-xs text-gray-600 mt-1 pl-2 border-l-2 border-gray-300">
+                                    <span class="font-semibold">Nyatakan:</span> {{ $paper->status_pergerakan_barang_kes_makmal }}
+                                </div>
+                                @elseif($paper->status_pergerakan_barang_kes === 'Lain-Lain' && !empty($paper->status_pergerakan_barang_kes_lain))
+                                <div class="text-xs text-gray-600 mt-1 pl-2 border-l-2 border-gray-300">
+                                    <span class="font-semibold">Nyatakan:</span> {{ $paper->status_pergerakan_barang_kes_lain }}
+                                </div>
+                                @endif
+                            </dd>
                         </div>
+
+                        <!-- Status Barang Kes Selesai Siasatan -->
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">Status Barang Kes Selesai Siasatan</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_json_list($paper->status_barang_kes_selesai_siasatan) !!}</dd>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                {{ $paper->status_barang_kes_selesai_siasatan ?? '-' }}
+
+                                @if($paper->status_barang_kes_selesai_siasatan === 'Dilupuskan ke Perbendaharaan' && !empty($paper->status_barang_kes_selesai_siasatan_RM))
+                                <div class="text-xs text-gray-600 mt-1 pl-2 border-l-2 border-gray-300">
+                                    <span class="font-semibold">RM:</span> {{ $paper->status_barang_kes_selesai_siasatan_RM }}
+                                </div>
+                                @elseif($paper->status_barang_kes_selesai_siasatan === 'Lain-Lain' && !empty($paper->status_barang_kes_selesai_siasatan_lain))
+                                <div class="text-xs text-gray-600 mt-1 pl-2 border-l-2 border-gray-300">
+                                    <span class="font-semibold">Nyatakan:</span> {{ $paper->status_barang_kes_selesai_siasatan_lain }}
+                                </div>
+                                @endif
+                            </dd>
                         </div>
+
+                        <!-- Kaedah Pelupusan Dilaksanakan -->
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">Kaedah Pelupusan Dilaksanakan</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_json_list($paper->barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan) !!}</dd>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                {{ $paper->barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan ?? '-' }}
+
+                                @if($paper->barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan === 'Lain-Lain' && !empty($paper->kaedah_pelupusan_barang_kes_lain))
+                                <div class="text-xs text-gray-600 mt-1 pl-2 border-l-2 border-gray-300">
+                                    <span class="font-semibold">Nyatakan:</span> {{ $paper->kaedah_pelupusan_barang_kes_lain }}
+                                </div>
+                                @endif
+                            </dd>
                         </div>
+
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">Pelupusan Dengan Arahan Mahkamah / YA TPR</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_json_list($paper->adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan) !!}</dd>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan ?? '-' }}</dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">Resit Kew.38e Bagi Pelupusan Wang Tunai</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_json_list($paper->resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan) !!}</dd>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan ?? '-' }}</dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">Borang Serah/Terima (Pegawai Tangkapan & IO/AIO)</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_json_list($paper->adakah_borang_serah_terima_pegawai_tangkapan) !!}</dd>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->adakah_borang_serah_terima_pegawai_tangkapan ?? '-' }}</dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">Borang Serah/Terima (Penyiasat, Pemilik, Saksi)</dt>

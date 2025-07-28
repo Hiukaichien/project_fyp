@@ -40,18 +40,20 @@ class TrafikSeksyen extends Model
         
         // B4 - ENSURE THESE ARE 'boolean' or 'string' for single choice, and new '_lain' fields
         'adakah_barang_kes_didaftarkan' => 'boolean',
-        'status_pergerakan_barang_kes' => 'string', // Changed from array to string
-        'status_pergerakan_barang_kes_lain' => 'string', // New column
-        'status_barang_kes_selesai_siasatan' => 'string', // Changed from array to string
-        'status_barang_kes_selesai_siasatan_lain' => 'string', // New column
-        'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan' => 'string', // Changed from array to string
-        'kaedah_pelupusan_barang_kes_lain' => 'string', // New column
-        'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => 'string', // Changed from array to string
-        'resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => 'string', // Changed from array to string
-        'adakah_borang_serah_terima_pegawai_tangkapan' => 'string', // Changed from array to string
-        'adakah_borang_serah_terima_pemilik_saksi' => 'boolean', // Changed from string to boolean
+        'status_pergerakan_barang_kes' => 'string',
+        'status_pergerakan_barang_kes_makmal' => 'string', 
+        'status_pergerakan_barang_kes_lain' => 'string',
+        'status_barang_kes_selesai_siasatan' => 'string',
+        'status_barang_kes_selesai_siasatan_RM' => 'string',
+        'status_barang_kes_selesai_siasatan_lain' => 'string',
+        'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan' => 'string',
+        'kaedah_pelupusan_barang_kes_lain' => 'string',
+        'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => 'string',
+        'resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => 'string',
+        'adakah_borang_serah_terima_pegawai_tangkapan' => 'string',
+        'adakah_borang_serah_terima_pemilik_saksi' => 'boolean',
         'adakah_sijil_surat_kebenaran_ipo' => 'boolean',
-        'adakah_gambar_pelupusan' => 'boolean', // Changed from string to boolean
+        'adakah_gambar_pelupusan' => 'boolean',
 
         // B5 - ENSURE THESE ARE 'boolean'
         'status_id_siasatan_dikemaskini' => 'boolean',

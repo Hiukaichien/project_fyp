@@ -59,8 +59,10 @@ return new class extends Migration
             $table->string('jenis_barang_kes_kenderaan')->nullable()->comment('jenis_barang_kes_kenderaan: VARCHAR(255)');
             // CHANGED from JSON to STRING + ADDED _lain columns
             $table->string('status_pergerakan_barang_kes')->nullable()->comment('status_pergerakan_barang_kes: VARCHAR(255)');
+            $table->string('status_pergerakan_barang_kes_makmal')->nullable()->after('status_pergerakan_barang_kes');
             $table->string('status_pergerakan_barang_kes_lain')->nullable()->comment('status_pergerakan_barang_kes_lain: VARCHAR(255)');
             $table->string('status_barang_kes_selesai_siasatan')->nullable()->comment('status_barang_kes_selesai_siasatan: VARCHAR(255)');
+            $table->string('status_barang_kes_selesai_siasatan_RM')->nullable()->after('status_barang_kes_selesai_siasatan_lain');
             $table->string('status_barang_kes_selesai_siasatan_lain')->nullable()->comment('status_barang_kes_selesai_siasatan_lain: VARCHAR(255)');
             $table->string('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan')->nullable()->comment('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan: VARCHAR(255)');
             $table->string('kaedah_pelupusan_barang_kes_lain')->nullable()->comment('kaedah_pelupusan_barang_kes_lain: VARCHAR(255)'); // Named as per Blade for consistency
