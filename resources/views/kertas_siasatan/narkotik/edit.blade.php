@@ -46,7 +46,7 @@
                         $html .= "</div>";
                     $html .= "<div x-show='status === \"1\"' x-transition class='mt-2'>";
                         $html .= "<label for='{$dateName}_{$id}' class='text-sm text-gray-600'>Jika Ada, nyatakan tarikh:</label>";
-                        $html .= "<input type='date' name='{$dateName}' id='{$dateName}_{$id}' value='" . old($dateName, optional($currentDate)->format(' Y-m-d')) . "' class='mt-1 block w-full form-input'>" ;
+                       $html .= "<input type='date' name='{$dateName}' id='{$dateName}_{$id}' value='" . old($dateName, optional($currentDate)->format('Y-m-d')) . "' class='mt-1 block w-full form-input'>" ;
                             $html .="</div></div>" ;
                             return $html;
                             }
