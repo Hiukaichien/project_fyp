@@ -1,6 +1,7 @@
 @props([
     'key',
-    'data'
+    'data',
+    'lewatTitle'
 ])
 
 @php
@@ -30,7 +31,7 @@
     <!-- Row 2: Tables -->
     <div class="w-full flex flex-col gap-4">
         <x-collapsible-table 
-            title="Edaran Kertas Siasatan Lewat 48 Jam" 
+            :title="$lewatTitle" 
             :collection="$data['ksLewat']" 
             bgColor="bg-red-50 dark:bg-red-900/20" 
             :pageName="$key.'_lewat_page'"
@@ -80,7 +81,7 @@
                     new Chart(statusCtx_{{ $key }}, {
                         type: 'pie',
                         data: {
-                            labels: ['KS Lewat Edar (> 48 Jam)', 'KS Terbengkalai (> 3 Bulan)', 'KS Baru Dikemaskini'],
+                            labels: ['KS Lewat Edar', 'KS Terbengkalai (> 3 Bulan)', 'KS Baru Dikemaskini'],
                             datasets: [{
                                 data: [{{ $data['lewatCount'] }}, {{ $data['terbengkalaiCount'] }}, {{ $data['kemaskiniCount'] }}],
                                 backgroundColor: ['#F87171', '#FBBF24', '#34D399'],

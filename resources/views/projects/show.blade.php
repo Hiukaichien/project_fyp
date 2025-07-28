@@ -359,7 +359,16 @@
                             @if($data)
                                 {{-- Dashboard Section (Charts & Summaries) is now INSIDE each tab --}}
                                 <div class="mb-12">
-                                    <x-dashboard-section :key="$key" :data="$data" />
+                                    @php
+                                        // Define which paper types use the 24-hour rule.
+                                        $typesWith24HourRule = ['Jenayah', 'Komersil', 'TrafikSeksyen', 'OrangHilang', 'LaporanMatiMengejut'];
+
+                                        // Determine the correct title dynamically based on the current paper type ($key).
+                                        $lewatTitle = in_array($key, $typesWith24HourRule) 
+                                            ? 'Edaran Kertas Siasatan Lewat (> 24 Jam)' 
+                                            : 'Edaran Kertas Siasatan Lewat (> 48 Jam)';
+                                    @endphp
+                                    <x-dashboard-section :key="$key" :data="$data" :lewat-title="$lewatTitle" />
                                 </div>
                                 
                                 <div class="my-8 border-t border-gray-200 dark:border-gray-700"></div>
@@ -374,11 +383,11 @@
                                             <th class="px-4 py-3 sticky left-0 bg-gray-50 dark:bg-gray-700 z-30 border-r border-gray-200 dark:border-gray-600">Tindakan</th>
                                             <th class="px-4 py-3">No.</th>
                                             @if($key === 'Narkotik')
-                                        {{-- Use custom columns for Narkotik --}}
-                                        @foreach($narkotikColumns as $column => $label)
-                                        <th scope="col" class="px-4 py-3">{{ $label }}</th>
-                                        @endforeach
-                                        @elseif($key === 'OrangHilang')
+                                                {{-- Use custom columns for Narkotik --}}
+                                                @foreach($narkotikColumns as $column => $label)
+                                                    <th scope="col" class="px-4 py-3">{{ $label }}</th>
+                                                @endforeach
+                                            @elseif($key === 'OrangHilang')
                                                 {{-- Use custom columns for OrangHilang --}}
                                                 @foreach($orangHilangColumns as $column => $label)
                                                     <th scope="col" class="px-4 py-3">{{ $label }}</th>
@@ -770,13 +779,23 @@
                 }
             @endif
 
-            @if($hasIssueData)
+                @if($hasIssueData)
                 const statusCtx_{{ $key }} = document.getElementById('statusPieChart-{{ $key }}')?.getContext('2d');
                 if (statusCtx_{{ $key }}) {
+                    @php
+                        // Define which paper types use the 24-hour rule.
+                        $typesWith24HourRule = ['Jenayah', 'TrafikRule', 'OrangHilang', 'LaporanMatiMengejut'];
+                        
+                        // Determine the correct label for the pie chart.
+                        $lewatPieLabel = in_array($key, $typesWith24HourRule) 
+                            ? 'KS Lewat Edar (> 24 Jam)' 
+                            : 'KS Lewat Edar (> 48 Jam)';
+                    @endphp
                     new Chart(statusCtx_{{ $key }}, {
                         type: 'pie',
                         data: {
-                            labels: ['KS Lewat Edar (> 48 Jam)', 'KS Terbengkalai (> 3 Bulan)', 'KS Baru Dikemaskini'],
+                            // Use the PHP variable to dynamically set the JavaScript label
+                            labels: ['{{ $lewatPieLabel }}', 'KS Terbengkalai (> 3 Bulan)', 'KS Baru Dikemaskini'],
                             datasets: [{
                                 data: [{{ $data['lewatCount'] }}, {{ $data['terbengkalaiCount'] }}, {{ $data['kemaskiniCount'] }}],
                                 backgroundColor: ['#F87171', '#FBBF24', '#34D399'],
