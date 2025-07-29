@@ -859,6 +859,40 @@
                     </dl>
                 </div>
             </div>
+              <!-- Maklumat Rekod -->
+            <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                <div class="px-4 py-5 sm:px-6 bg-gray-50">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">
+                        Maklumat Rekod
+                    </h3>
+                </div>
+                <div class="border-t border-gray-200">
+                    <dl class="sm:divide-y sm:divide-gray-200">
+                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt class="text-sm font-medium text-gray-500">Tarikh Cipta</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                {{ optional($paper->created_at)->format('d/m/Y H:i:s') }}
+                                @if($paper->created_at)
+                                    {{-- Added ->locale('ms') to translate the output --}}
+                                    <span class="text-gray-500 text-xs">({{ $paper->created_at->locale('ms')->diffForHumans() }})</span>
+                                @endif
+                            </dd>
+                        </div>
+                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt class="text-sm font-medium text-gray-500">Tarikh Kemaskini Terakhir</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                {{ optional($paper->updated_at)->format('d/m/Y H:i:s') }}
+                                @if($paper->updated_at)
+                                    {{-- Added ->locale('ms') to translate the output --}}
+                                    <span class="text-gray-500 text-xs">({{ $paper->updated_at->locale('ms')->diffForHumans() }})</span>
+                                @endif
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
         </div>
     </div>
 </x-app-layout>
