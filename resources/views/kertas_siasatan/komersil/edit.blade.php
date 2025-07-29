@@ -511,7 +511,7 @@
                         <!-- Arahan Pelupusan Barang Kes -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Adakah Pelupusan Barang Kes Itu
-                                Telah Ada Arahan Mahkamah Atau YA TPR</label>
+                                Telah Ada Arahan Mahkamah Atau YA TPRa</label>
                             <div class="flex flex-col space-y-2 pl-4">
                                 @php
                                     $currentArahanPelupusan = old('adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan', is_array($paper->adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan) ? ($paper->adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan[0] ?? '') : $paper->adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan);
