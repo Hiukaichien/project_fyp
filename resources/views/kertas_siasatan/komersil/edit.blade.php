@@ -375,7 +375,11 @@
                                 <label class="flex items-center">
                                     <input type="radio" name="status_pergerakan_barang_kes" value="Ujian Makmal" {{ $currentPergerakan == 'Ujian Makmal' ? 'checked' : '' }}
                                         class="form-radio h-4 w-4 text-blue-600">
-                                    <span class="ml-2 text-gray-700">Ujian Makmal</span>
+                                    <span class="ml-2 text-gray-700">Ujian Makmal(Nyatakan)</span>
+                                    <input type="text" name="status_pergerakan_barang_kes_lain"
+                                        id="status_pergerakan_barang_kes_lain_komersil"
+                                        value="{{ old('status_pergerakan_barang_kes_lain', $paper->status_pergerakan_barang_kes_lain) }}"
+                                        class="ml-2 form-input text-sm w-64" {{ $currentPergerakan != 'Ujian Makmal' ? 'disabled' : '' }}>
                                 </label>
                                 <label class="flex items-center">
                                     <input type="radio" name="status_pergerakan_barang_kes" value="Di Mahkamah" {{ $currentPergerakan == 'Di Mahkamah' ? 'checked' : '' }}
@@ -409,6 +413,18 @@
                                 @php
                                     $currentSelesai = old('status_barang_kes_selesai_siasatan', is_array($paper->status_barang_kes_selesai_siasatan) ? ($paper->status_barang_kes_selesai_siasatan[0] ?? '') : $paper->status_barang_kes_selesai_siasatan);
                                 @endphp
+                                <div class="flex items-center">
+                                    <label class="flex items-center">
+                                        <input type="radio" name="status_barang_kes_selesai_siasatan"
+                                            value="Dilupuskan ke Perbendaharaan" {{ $currentSelesai == 'Dilupuskan ke Perbendaharaan' ? 'checked' : '' }}
+                                            class="form-radio h-4 w-4 text-blue-600">
+                                        <span class="ml-2 text-gray-700">Dilupuskan ke Perbendaharaan</span>
+                                    </label>
+                                    <input type="text" name="status_barang_kes_selesai_siasatan_lain"
+                                        id="status_barang_kes_selesai_siasatan_lain_komersil"
+                                        value="{{ old('status_barang_kes_selesai_siasatan_lain', $paper->status_barang_kes_selesai_siasatan_lain) }}"
+                                        class="ml-2 form-input text-sm w-64" {{ $currentSelesai != 'Dilupuskan ke Perbendaharaan' ? 'disabled' : '' }}>
+                                </div>
                                 <label class="flex items-center">
                                     <input type="radio" name="status_barang_kes_selesai_siasatan"
                                         value="Dilupuskan ke Perbendaharaan" {{ $currentSelesai == 'Dilupuskan ke Perbendaharaan' ? 'checked' : '' }} class="form-radio h-4 w-4 text-blue-600">
@@ -529,16 +545,13 @@
                                     $currentResit = old('resit_kew_38e_bagi_pelupusan', is_array($paper->resit_kew_38e_bagi_pelupusan) ? ($paper->resit_kew_38e_bagi_pelupusan[0] ?? '') : $paper->resit_kew_38e_bagi_pelupusan);
                                 @endphp
                                 <label class="inline-flex items-center">
-                                    <input type="radio"
-                                        name="resit_kew_38e_bagi_pelupusan"
-                                        value="Ada Dilampirkan" {{ $currentResit == 'Ada Dilampirkan' ? 'checked' : '' }}
+                                    <input type="radio" name="resit_kew_38e_bagi_pelupusan" value="Ada Dilampirkan" {{ $currentResit == 'Ada Dilampirkan' ? 'checked' : '' }}
                                         class="form-radio h-4 w-4 text-blue-600">
                                     <span class="ml-2 text-gray-700">Ada Dilampirkan</span>
                                 </label>
                                 <label class="inline-flex items-center">
-                                    <input type="radio"
-                                        name="resit_kew_38e_bagi_pelupusan"
-                                        value="Tidak Dilampirkan" {{ $currentResit == 'Tidak Dilampirkan' ? 'checked' : '' }} class="form-radio h-4 w-4 text-blue-600">
+                                    <input type="radio" name="resit_kew_38e_bagi_pelupusan" value="Tidak Dilampirkan" {{ $currentResit == 'Tidak Dilampirkan' ? 'checked' : '' }}
+                                        class="form-radio h-4 w-4 text-blue-600">
                                     <span class="ml-2 text-gray-700">Tidak Dilampirkan</span>
                                 </label>
                             </div>
@@ -1716,7 +1729,7 @@
 
                             radios.forEach(radio => {
                                 radio.addEventListener('change', function () {
-                                    if (this.value === 'Lain-Lain') {
+                                    if (this.value === 'Lain-Lain' || this.value == 'Ujian Makmal' || this.value == 'Dilupuskan ke Perbendaharaan') {
                                         otherInput.disabled = false;
                                         otherInput.focus();
                                     } else {
