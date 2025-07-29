@@ -60,13 +60,15 @@ return new class extends Migration
             $table->string('no_daftar_barang_kes_berharga')->nullable();
             $table->string('jenis_barang_kes_am')->nullable();
             $table->string('jenis_barang_kes_berharga')->nullable();
-            $table->json('status_pergerakan_barang_kes')->nullable();
+            $table->string('status_pergerakan_barang_kes')->nullable();
             $table->text('status_pergerakan_barang_kes_lain')->nullable();
-            $table->json('status_barang_kes_selesai_siasatan')->nullable();
+            $table->text('ujian_makmal_details')->nullable();
+            $table->string('status_barang_kes_selesai_siasatan')->nullable();
             $table->text('status_barang_kes_selesai_siasatan_lain')->nullable();
-            $table->json('kaedah_pelupusan_barang_kes')->nullable();
+            $table->decimal('dilupuskan_perbendaharaan_amount', 10, 2)->nullable();
+            $table->string('kaedah_pelupusan_barang_kes')->nullable();
             $table->text('kaedah_pelupusan_barang_kes_lain')->nullable();
-            $table->json('arahan_pelupusan_barang_kes')->nullable();
+            $table->string('arahan_pelupusan_barang_kes')->nullable();
             $table->boolean('adakah_borang_serah_terima_pegawai_tangkapan_io')->nullable();
             $table->boolean('adakah_borang_serah_terima_penyiasat_pemilik_saksi')->nullable();
             $table->boolean('adakah_sijil_surat_kebenaran_ipd')->nullable();
@@ -97,18 +99,21 @@ return new class extends Migration
             $table->date('tarikh_permohonan_laporan_post_mortem_mayat')->nullable();
             $table->boolean('status_laporan_penuh_bedah_siasat')->nullable();
             $table->date('tarikh_laporan_penuh_bedah_siasat')->nullable();
+            $table->text('keputusan_laporan_post_mortem')->nullable();
             
             // Jabatan Kimia
             $table->boolean('status_permohonan_laporan_jabatan_kimia')->nullable();
             $table->date('tarikh_permohonan_laporan_jabatan_kimia')->nullable();
             $table->boolean('status_laporan_penuh_jabatan_kimia')->nullable();
             $table->date('tarikh_laporan_penuh_jabatan_kimia')->nullable();
+            $table->text('keputusan_laporan_jabatan_kimia')->nullable();
             
             // Jabatan Patalogi
             $table->boolean('status_permohonan_laporan_jabatan_patalogi')->nullable();
             $table->date('tarikh_permohonan_laporan_jabatan_patalogi')->nullable();
             $table->boolean('status_laporan_penuh_jabatan_patalogi')->nullable();
             $table->date('tarikh_laporan_penuh_jabatan_patalogi')->nullable();
+            $table->text('keputusan_laporan_jabatan_patalogi')->nullable();
             
             // Imigresen
             $table->boolean('status_permohonan_laporan_imigresen')->nullable();
@@ -116,7 +121,7 @@ return new class extends Migration
             $table->boolean('status_laporan_penuh_imigresen')->nullable();
             $table->date('tarikh_laporan_penuh_imigresen')->nullable();
             
-            $table->string('lain_lain_permohonan_laporan')->nullable();
+            $table->text('lain_lain_permohonan_laporan')->nullable();
 
             // BAHAGIAN 8: Status Fail
             $table->boolean('status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar')->nullable();

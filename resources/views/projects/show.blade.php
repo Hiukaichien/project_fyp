@@ -170,13 +170,98 @@
         'no_kertas_siasatan' => 'No. Kertas Siasatan',
         'no_repot_polis' => 'No. Repot Polis',
         'pegawai_penyiasat' => 'Pegawai Penyiasat',
-        'tarikh_laporan_polis_dibuka' => 'Tarikh Laporan Polis',
+        'tarikh_laporan_polis_dibuka' => 'Tarikh Laporan Polis Dibuka',
         'seksyen' => 'Seksyen',
-        'pegawai_pemeriksa' => 'Pegawai Pemeriksa',
-        'tarikh_edaran_minit_ks_pertama' => 'Tarikh Minit KS Pertama',
-        'tarikh_edaran_minit_ks_kedua' => 'Tarikh Minit KS Kedua',
         
-        // BAHAGIAN 2: Arahan Minit
+        // BAHAGIAN 2: Pemeriksaan & Status
+        'pegawai_pemeriksa' => 'Pegawai Pemeriksa',
+        'tarikh_edaran_minit_ks_pertama' => 'Tarikh Edaran Minit KS Pertama (A)',
+        'tarikh_edaran_minit_ks_kedua' => 'Tarikh Edaran Minit KS Kedua (B)',
+        'tarikh_edaran_minit_ks_sebelum_akhir' => 'Tarikh Edaran Minit KS Sebelum Akhir (C)',
+        'tarikh_edaran_minit_ks_akhir' => 'Tarikh Edaran Minit KS Akhir (D)',
+        'tarikh_semboyan_pemeriksaan_jips_ke_daerah' => 'Tarikh Semboyan Pemeriksaan JIPS ke Daerah (E)',
+        
+        // BAHAGIAN 3: Arahan & Keputusan
+        'arahan_minit_oleh_sio_status' => 'Arahan Minit Oleh SIO',
+        'arahan_minit_oleh_sio_tarikh' => 'Tarikh Arahan Minit SIO',
+        'arahan_minit_ketua_bahagian_status' => 'Arahan Minit Ketua Bahagian',
+        'arahan_minit_ketua_bahagian_tarikh' => 'Tarikh Arahan Minit Ketua Bahagian',
+        'arahan_minit_ketua_jabatan_status' => 'Arahan Minit Ketua Jabatan',
+        'arahan_minit_ketua_jabatan_tarikh' => 'Tarikh Arahan Minit Ketua Jabatan',
+        'arahan_minit_oleh_ya_tpr_status' => 'Arahan Minit Oleh YA TPR',
+        'arahan_minit_oleh_ya_tpr_tarikh' => 'Tarikh Arahan Minit YA TPR',
+        'keputusan_siasatan_oleh_ya_tpr' => 'Keputusan Siasatan Oleh YA TPR',
+        'arahan_tuduh_oleh_ya_tpr' => 'Arahan Tuduh Oleh YA TPR',
+        'ulasan_keputusan_siasatan_tpr' => 'Ulasan Keputusan Siasatan TPR',
+        'ulasan_keseluruhan_pegawai_pemeriksa' => 'Ulasan Keseluruhan Pegawai Pemeriksa',
+        
+        // BAHAGIAN 4: Barang Kes
+        'adakah_barang_kes_didaftarkan' => 'Adakah Barang Kes Didaftarkan',
+        'no_daftar_barang_kes_am' => 'No. Daftar Barang Kes Am',
+        'no_daftar_barang_kes_berharga' => 'No. Daftar Barang Kes Berharga',
+        
+        // BAHAGIAN 5: Dokumen Siasatan
+        'status_id_siasatan_dikemaskini' => 'ID Siasatan Dikemaskini',
+        'status_rajah_kasar_tempat_kejadian' => 'Rajah Kasar Tempat Kejadian',
+        'status_gambar_tempat_kejadian' => 'Gambar Tempat Kejadian',
+        'status_gambar_barang_kes_am' => 'Gambar Barang Kes Am',
+        'status_gambar_barang_kes_berharga' => 'Gambar Barang Kes Berharga',
+        'status_gambar_orang_hilang' => 'Gambar Orang Hilang',
+        
+        // BAHAGIAN 6: Borang & Semakan
+        'status_pem' => 'Borang PEM',
+        'status_mps1' => 'Status MPS1',
+        'tarikh_mps1' => 'Tarikh MPS1',
+        'status_mps2' => 'Status MPS2',
+        'tarikh_mps2' => 'Tarikh MPS2',
+        'pemakluman_nur_alert_jsj_bawah_18_tahun' => 'Pemakluman NUR-Alert JSJ (Bawah 18 Tahun)',
+        'rakaman_percakapan_orang_hilang' => 'Rakaman Percakapan Orang Hilang',
+        'laporan_polis_orang_hilang_dijumpai' => 'Laporan Polis Orang Hilang Dijumpai',
+        'hebahan_media_massa' => 'Hebahan Media Massa',
+        'orang_hilang_dijumpai_mati_mengejut_bukan_jenayah' => 'Orang Hilang Dijumpai (Mati Mengejut Bukan Jenayah)',
+        'alasan_orang_hilang_dijumpai_mati_mengejut_bukan_jenayah' => 'Alasan Mati Mengejut Bukan Jenayah',
+        'orang_hilang_dijumpai_mati_mengejut_jenayah' => 'Orang Hilang Dijumpai (Mati Mengejut Jenayah)',
+        'alasan_orang_hilang_dijumpai_mati_mengejut_jenayah' => 'Alasan Mati Mengejut Jenayah',
+        'semboyan_pemakluman_ke_kedutaan_bukan_warganegara' => 'Semboyan Pemakluman ke Kedutaan (Bukan Warganegara)',
+        'ulasan_keseluruhan_pegawai_pemeriksa_borang' => 'Ulasan Keseluruhan Pegawai Pemeriksa (Borang)',
+        
+        // BAHAGIAN 7: Permohonan Laporan Agensi Luar
+        'status_permohonan_laporan_imigresen' => 'Permohonan Laporan Imigresen',
+        'tarikh_permohonan_laporan_imigresen' => 'Tarikh Permohonan Laporan Imigresen',
+        'status_laporan_penuh_imigresen' => 'Status Laporan Penuh Imigresen',
+        'tarikh_laporan_penuh_imigresen' => 'Tarikh Laporan Penuh Imigresen',
+        
+        // BAHAGIAN 8: Status Fail
+        'adakah_muka_surat_4_keputusan_kes_dicatat' => 'M/S 4 - Keputusan Kes Dicatat',
+        'adakah_ks_kus_fail_selesai' => 'KS KUS/FAIL Selesai',
+        'keputusan_akhir_mahkamah' => 'Keputusan Akhir Mahkamah',
+        'ulasan_keseluruhan_pegawai_pemeriksa_fail' => 'Ulasan Keseluruhan Pegawai Pemeriksa (Fail)',
+    ];
+
+    // Define custom columns for LaporanMatiMengejut based on BAHAGIAN 1-8 order from show.blade.php
+    $laporanMatiMengejutColumns = [
+        // BAHAGIAN 1: Maklumat Asas
+        'no_kertas_siasatan' => 'No. Kertas Siasatan',
+        'no_fail_lmm_sdr' => 'No. Fail LMM/SDR',
+        'no_repot_polis' => 'No. Repot Polis',
+        'pegawai_penyiasat' => 'Pegawai Penyiasat',
+        'tarikh_laporan_polis_dibuka' => 'Tarikh Laporan Polis Dibuka',
+        'seksyen' => 'Seksyen',
+
+        // BAHAGIAN 2: Pemeriksaan & Status
+        'pegawai_pemeriksa' => 'Pegawai Pemeriksa',
+        'tarikh_edaran_minit_ks_pertama' => 'Tarikh Minit KS Pertama (A)',
+        'tarikh_edaran_minit_ks_kedua' => 'Tarikh Minit KS Kedua (B)',
+        'tarikh_edaran_minit_ks_sebelum_akhir' => 'Tarikh Minit KS Sebelum Akhir (C)',
+        'tarikh_edaran_minit_ks_akhir' => 'Tarikh Minit KS Akhir (D)',
+        'tarikh_semboyan_pemeriksaan_jips_ke_daerah' => 'Tarikh Semboyan JIPS (E)',
+        'tarikh_edaran_minit_fail_lmm_t_pertama' => 'Tarikh Minit LMM(T) Pertama',
+        'tarikh_edaran_minit_fail_lmm_t_kedua' => 'Tarikh Minit LMM(T) Kedua',
+        'tarikh_edaran_minit_fail_lmm_t_sebelum_minit_akhir' => 'Tarikh Minit LMM(T) Sebelum Akhir',
+        'tarikh_edaran_minit_fail_lmm_t_akhir' => 'Tarikh Minit LMM(T) Akhir',
+        'fail_lmm_bahagian_pengurusan_pada_muka_surat_2' => 'Fail LMM Bhg. Pengurusan M/S 2',
+
+        // BAHAGIAN 3: Arahan & Keputusan
         'arahan_minit_oleh_sio_status' => 'Arahan Minit SIO',
         'arahan_minit_oleh_sio_tarikh' => 'Tarikh Arahan SIO',
         'arahan_minit_ketua_bahagian_status' => 'Arahan Minit Ketua Bahagian',
@@ -186,52 +271,78 @@
         'arahan_minit_oleh_ya_tpr_status' => 'Arahan Minit YA TPR',
         'arahan_minit_oleh_ya_tpr_tarikh' => 'Tarikh Arahan YA TPR',
         'keputusan_siasatan_oleh_ya_tpr' => 'Keputusan Siasatan YA TPR',
-        
-        // BAHAGIAN 3: Barang Kes & Pendaftaran
+        'arahan_tuduh_oleh_ya_tpr' => 'Arahan Tuduh YA TPR',
+        'ulasan_keputusan_siasatan_tpr' => 'Ulasan Keputusan Siasatan TPR',
+        'keputusan_siasatan_oleh_ya_koroner' => 'Keputusan Siasatan YA Koroner',
+        'ulasan_keputusan_oleh_ya_koroner' => 'Ulasan Keputusan YA Koroner',
+        'ulasan_keseluruhan_pegawai_pemeriksa' => 'Ulasan Pegawai Pemeriksa',
+
+        // BAHAGIAN 4: Barang Kes
         'adakah_barang_kes_didaftarkan' => 'Barang Kes Didaftarkan',
-        'tarikh_barang_kes_didaftarkan' => 'Tarikh Barang Kes',
-        'jenis_barang_kes' => 'Jenis Barang Kes',
-        'keadaan_barang_kes' => 'Keadaan Barang Kes',
-        'ulasan_lain_lain_barang_kes' => 'Ulasan Barang Kes',
-        
-        // BAHAGIAN 4: Status Dokumen & Gambar
+        'no_daftar_barang_kes_am' => 'No. Daftar Barang Kes Am',
+        'no_daftar_barang_kes_berharga' => 'No. Daftar Barang Kes Berharga',
+        'jenis_barang_kes_am' => 'Jenis Barang Kes Am',
+        'jenis_barang_kes_berharga' => 'Jenis Barang Kes Berharga',
+        'status_pergerakan_barang_kes' => 'Status Pergerakan Barang Kes',
+        'ujian_makmal_details' => 'Ujian Makmal',
+        'status_barang_kes_selesai_siasatan' => 'Status Barang Kes Selesai Siasatan',
+        'dilupuskan_perbendaharaan_amount' => 'Dilupuskan ke Perbendaharaan',
+        'kaedah_pelupusan_barang_kes' => 'Kaedah Pelupusan Barang Kes',
+        'arahan_pelupusan_barang_kes' => 'Arahan Pelupusan Barang Kes',
+        'adakah_borang_serah_terima_pegawai_tangkapan_io' => 'Borang Serah/Terima (Pegawai Tangkapan)',
+        'adakah_borang_serah_terima_penyiasat_pemilik_saksi' => 'Borang Serah/Terima (Penyiasat/Pemilik)',
+        'adakah_sijil_surat_kebenaran_ipd' => 'Sijil/Surat Kebenaran IPD',
+        'adakah_gambar_pelupusan' => 'Gambar Pelupusan',
+        'ulasan_keseluruhan_pegawai_pemeriksa_barang_kes' => 'Ulasan Pegawai Pemeriksa (Barang Kes)',
+
+        // BAHAGIAN 5: Dokumen Siasatan
         'status_id_siasatan_dikemaskini' => 'ID Siasatan Dikemaskini',
         'status_rajah_kasar_tempat_kejadian' => 'Rajah Kasar Tempat Kejadian',
         'status_gambar_tempat_kejadian' => 'Gambar Tempat Kejadian',
-        'status_gambar_barang_kes_am' => 'Gambar Barang Kes AM',
+        'status_gambar_post_mortem_mayat_di_hospital' => 'Gambar Post Mortem Mayat',
+        'status_gambar_barang_kes_am' => 'Gambar Barang Kes Am',
         'status_gambar_barang_kes_berharga' => 'Gambar Barang Kes Berharga',
-        'status_gambar_orang_hilang' => 'Gambar Orang Hilang',
+        'status_gambar_barang_kes_darah' => 'Gambar Barang Kes Darah',
+
+        // BAHAGIAN 6: Borang & Semakan
         'status_pem' => 'Status PEM',
-        'status_mps1' => 'Status MPS1',
-        'tarikh_mps1' => 'Tarikh MPS1',
-        'status_mps2' => 'Status MPS2',
-        'tarikh_mps2' => 'Tarikh MPS2',
-        'ulasan_laporan_polis' => 'Ulasan Laporan Polis',
-        
-        // BAHAGIAN 5: Hebahan & Media
-        'hebahan_media_massa' => 'Hebahan Media Massa',
-        'tarikh_hebahan_media_massa' => 'Tarikh Hebahan Media',
-        'jenis_hebahan_media_massa' => 'Jenis Hebahan Media',
-        'kos_hebahan_media_massa' => 'Kos Hebahan Media',
-        'ulasan_hebahan_media_massa' => 'Ulasan Hebahan Media',
-        
-        // BAHAGIAN 6: Pemakluman Kedutaan
-        'semboyan_pemakluman_ke_kedutaan_bukan_warganegara' => 'Pemakluman Kedutaan',
-        'tarikh_pemakluman_ke_kedutaan' => 'Tarikh Pemakluman Kedutaan',
-        'negara_asal_orang_hilang' => 'Negara Asal',
-        
-        // BAHAGIAN 7: Laporan Imigresen
+        'status_rj2' => 'Status RJ2',
+        'tarikh_rj2' => 'Tarikh RJ2',
+        'status_rj2b' => 'Status RJ2B',
+        'tarikh_rj2b' => 'Tarikh RJ2B',
+        'status_semboyan_pemakluman_ke_kedutaan_bagi_kes_mati' => 'Semboyan Pemakluman Kedutaan',
+        'ulasan_keseluruhan_pegawai_pemeriksa_borang' => 'Ulasan Pegawai Pemeriksa (Borang)',
+
+        // BAHAGIAN 7: Permohonan Laporan Agensi Luar
+        'status_permohonan_laporan_post_mortem_mayat' => 'Permohonan Post Mortem',
+        'tarikh_permohonan_laporan_post_mortem_mayat' => 'Tarikh Permohonan Post Mortem',
+        'status_laporan_penuh_bedah_siasat' => 'Laporan Penuh Bedah Siasat',
+        'tarikh_laporan_penuh_bedah_siasat' => 'Tarikh Laporan Penuh Bedah Siasat',
+        'keputusan_laporan_post_mortem' => 'Keputusan Laporan Post Mortem',
+        'status_permohonan_laporan_jabatan_kimia' => 'Permohonan Jabatan Kimia',
+        'tarikh_permohonan_laporan_jabatan_kimia' => 'Tarikh Permohonan Jabatan Kimia',
+        'status_laporan_penuh_jabatan_kimia' => 'Laporan Penuh Jabatan Kimia',
+        'tarikh_laporan_penuh_jabatan_kimia' => 'Tarikh Laporan Penuh Jabatan Kimia',
+        'keputusan_laporan_jabatan_kimia' => 'Keputusan Laporan Jabatan Kimia',
+        'status_permohonan_laporan_jabatan_patalogi' => 'Permohonan Jabatan Patalogi',
+        'tarikh_permohonan_laporan_jabatan_patalogi' => 'Tarikh Permohonan Jabatan Patalogi',
+        'status_laporan_penuh_jabatan_patalogi' => 'Laporan Penuh Jabatan Patalogi',
+        'tarikh_laporan_penuh_jabatan_patalogi' => 'Tarikh Laporan Penuh Jabatan Patalogi',
+        'keputusan_laporan_jabatan_patalogi' => 'Keputusan Laporan Jabatan Patalogi',
         'status_permohonan_laporan_imigresen' => 'Permohonan Laporan Imigresen',
         'tarikh_permohonan_laporan_imigresen' => 'Tarikh Permohonan Imigresen',
         'status_laporan_penuh_imigresen' => 'Laporan Penuh Imigresen',
         'tarikh_laporan_penuh_imigresen' => 'Tarikh Laporan Penuh Imigresen',
-        'ulasan_imigresen' => 'Ulasan Imigresen',
-        
-        // BAHAGIAN 8: Status Fail & Keputusan
-        'keputusan_akhir_mahkamah' => 'Keputusan Akhir Mahkamah',
-        'tarikh_keputusan_akhir_mahkamah' => 'Tarikh Keputusan Akhir',
+        'lain_lain_permohonan_laporan' => 'Lain-lain Permohonan Laporan',
+
+        // BAHAGIAN 8: Status Fail
+        'status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar' => 'M/S 4 - Barang Kes Ditulis',
+        'status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar_dan_telah_ada_arahan_ya_tpr' => 'M/S 4 - Dengan Arahan TPR',
+        'adakah_muka_surat_4_keputusan_kes_dicatat' => 'M/S 4 - Keputusan Kes Dicatat',
+        'adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan' => 'Fail LMM(T) Ada Keputusan',
         'adakah_ks_kus_fail_selesai' => 'KS KUS/FAIL Selesai',
-        'ulasan_keputusan_akhir' => 'Ulasan Keputusan Akhir',
+        'keputusan_akhir_mahkamah' => 'Keputusan Akhir Mahkamah',
+        'ulasan_keseluruhan_pegawai_pemeriksa_fail' => 'Ulasan Pegawai Pemeriksa (Fail)',
     ];
 @endphp
 
@@ -392,6 +503,11 @@
                                                 @foreach($orangHilangColumns as $column => $label)
                                                     <th scope="col" class="px-4 py-3">{{ $label }}</th>
                                                 @endforeach
+                                            @elseif($key === 'LaporanMatiMengejut')
+                                                {{-- Use custom columns for LaporanMatiMengejut --}}
+                                                @foreach($laporanMatiMengejutColumns as $column => $label)
+                                                    <th scope="col" class="px-4 py-3">{{ $label }}</th>
+                                                @endforeach
                                             @else
                                                 {{-- Use the table's actual columns for other models --}}
                                                 @php $columns = array_diff(Schema::getColumnListing($config['model']->getTable()), $ignoreColumns); @endphp
@@ -546,6 +662,57 @@
             @endphp
 
             // Initialize the DataTable with custom OrangHilang columns
+            $(tableId).DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: "{{ route($config['route'], $project->id) }}",
+                    type: "POST",
+                    data: { _token: '{{ csrf_token() }}' }
+                },
+                columns: @json($dtColumns),
+                order: [[2, 'desc']],
+                columnDefs: [{
+                    targets: 0,
+                    className: "sticky left-0 bg-gray-50 dark:text-white dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600"
+                }],
+                fixedColumns: { left: 1 },
+                language: {
+                    search: "Cari:",
+                    lengthMenu: "Tunjukkan _MENU_ entri",
+                    info: "Menunjukkan _START_ hingga _END_ daripada _TOTAL_ entri",
+                    infoEmpty: "Menunjukkan 0 hingga 0 daripada 0 entri",
+                    emptyTable: "Tiada data tersedia dalam jadual"
+                },
+                "drawCallback": function( settings ) {
+                    if (panel.length) {
+                        panel.removeClass('datatable-container-loading');
+                    }
+                }
+            });
+            initializedTables[tabName] = true;
+
+        @elseif($key === 'LaporanMatiMengejut')
+            {{-- Use custom columns for LaporanMatiMengejut --}}
+            @php
+                $dtColumns = [
+                    ['data' => 'action', 'name' => 'action', 'orderable' => false, 'searchable' => false, 'title' => 'Tindakan', 'width' => '100px'],
+                    ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'title' => 'No.']
+                ];
+                
+                foreach($laporanMatiMengejutColumns as $column => $label) {
+                    $dtColumns[] = [
+                        'data' => $column,
+                        'name' => $column,
+                        'title' => $label,
+                        'defaultContent' => '-',
+                        'orderable' => true,
+                        'searchable' => true
+                    ];
+                }
+            @endphp
+
+            // Initialize the DataTable with custom LaporanMatiMengejut columns
             $(tableId).DataTable({
                 processing: true,
                 serverSide: true,
