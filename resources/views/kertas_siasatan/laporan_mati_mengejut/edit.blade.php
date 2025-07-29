@@ -58,6 +58,26 @@
                     $html .= "</div>";
                     return $html;
                 }
+                function render_status_with_date_and_keputusan_radio($id, $statusName, $dateName, $keputusanName, $currentStatus, $currentDate, $currentKeputusan, $YaLabel = 'Diterima', $TidakLabel = 'Tidak') {
+                    $effectiveStatus = old($statusName, $currentStatus);
+                    $initialStatusForAlpine = (($effectiveStatus === true || $effectiveStatus === 1 || $effectiveStatus === '1') ? '1' : '0');
+                    $html = "<div x-data='{ status: \"{$initialStatusForAlpine}\" }'>";
+                    $html .= "<div class='mt-2 flex items-center space-x-6'>";
+                    $html .= "<label class='flex items-center cursor-pointer'><input type='radio' name='{$statusName}' value='1' x-model='status' class='form-radio h-4 w-4 text-indigo-600'><span class='ml-2 text-gray-700'>{$YaLabel}</span></label>";
+                    $html .= "<label class='flex items-center cursor-pointer'><input type='radio' name='{$statusName}' value='0' x-model='status' class='form-radio h-4 w-4 text-indigo-600'><span class='ml-2 text-gray-700'>{$TidakLabel}</span></label>";
+                    $html .= "</div>";
+                    $html .= "<div x-show='status === \"1\"' x-transition class='mt-2 space-y-3'>";
+                    $html .= "<div>";
+                    $html .= "<label for='{$dateName}_{$id}' class='text-sm text-gray-600'>Jika Ada, nyatakan tarikh:</label>";
+                    $html .= "<input type='date' name='{$dateName}' id='{$dateName}_{$id}' value='" . old($dateName, optional($currentDate)->format('Y-m-d')) . "' class='mt-1 block w-full form-input'>";
+                    $html .= "</div>";
+                    $html .= "<div>";
+                    $html .= "<label for='{$keputusanName}_{$id}' class='text-sm text-gray-600'>KEPUTUSAN LAPORAN:</label>";
+                    $html .= "<textarea name='{$keputusanName}' id='{$keputusanName}_{$id}' rows='3' class='mt-1 block w-full form-textarea' placeholder='Nyatakan keputusan laporan...'>" . old($keputusanName, $currentKeputusan) . "</textarea>";
+                    $html .= "</div>";
+                    $html .= "</div></div>";
+                    return $html;
+                }
                 @endphp
 
                 <!-- BAHAGIAN 1: Maklumat Asas -->
@@ -252,45 +272,61 @@
                         <!-- Status Pergerakan Barang Kes -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Status Pergerakan Barang Kes</label>
-                            <div class="space-y-2 pl-4">
-                                @php
-                                    $currentValue = $paper->status_pergerakan_barang_kes ?? '';
-                                @endphp
+                            <div x-data="{ 
+                                selectedStatus: (() => {
+                                    const currentValue = '{{ old('status_pergerakan_barang_kes', $paper->status_pergerakan_barang_kes ?? '') }}';
+                                    const predefinedOptions = ['Simpanan Stor Ekshibit', 'Ujian Makmal', 'Di Mahkamah', 'Pada IO/AIO'];
+                                    return predefinedOptions.includes(currentValue) ? currentValue : (currentValue ? 'Lain-lain' : '');
+                                })()
+                            }" class="space-y-2 pl-4">
                                 <label class="flex items-center">
                                     <input type="radio" name="status_pergerakan_barang_kes" value="Simpanan Stor Ekshibit" 
-                                        {{ $currentValue == 'Simpanan Stor Ekshibit' ? 'checked' : '' }} 
+                                        x-model="selectedStatus"
                                         class="form-radio h-4 w-4 text-blue-600">
                                     <span class="ml-2 text-gray-700">Simpanan Stor Ekshibit</span>
                                 </label>
-                                <label class="flex items-center">
-                                    <input type="radio" name="status_pergerakan_barang_kes" value="Ujian Makmal" 
-                                        {{ $currentValue == 'Ujian Makmal' ? 'checked' : '' }} 
-                                        class="form-radio h-4 w-4 text-blue-600">
-                                    <span class="ml-2 text-gray-700">Ujian Makmal</span>
-                                </label>
+                                
+                                <div class="space-y-1">
+                                    <label class="flex items-center">
+                                        <input type="radio" name="status_pergerakan_barang_kes" value="Ujian Makmal" 
+                                            x-model="selectedStatus"
+                                            class="form-radio h-4 w-4 text-blue-600">
+                                        <span class="ml-2 text-gray-700">Ujian Makmal</span>
+                                    </label>
+                                    <div x-show="selectedStatus === 'Ujian Makmal'" x-transition class="ml-6">
+                                        <input type="text" name="ujian_makmal_details" id="ujian_makmal_details" 
+                                            value="{{ old('ujian_makmal_details', $paper->ujian_makmal_details ?? '') }}" 
+                                            placeholder="Sila nyatakan"
+                                            class="mt-1 form-input text-sm w-64">
+                                    </div>
+                                </div>
+                                
                                 <label class="flex items-center">
                                     <input type="radio" name="status_pergerakan_barang_kes" value="Di Mahkamah" 
-                                        {{ $currentValue == 'Di Mahkamah' ? 'checked' : '' }} 
+                                        x-model="selectedStatus"
                                         class="form-radio h-4 w-4 text-blue-600">
                                     <span class="ml-2 text-gray-700">Di Mahkamah</span>
                                 </label>
+                                
                                 <label class="flex items-center">
                                     <input type="radio" name="status_pergerakan_barang_kes" value="Pada IO/AIO" 
-                                        {{ $currentValue == 'Pada IO/AIO' ? 'checked' : '' }} 
+                                        x-model="selectedStatus"
                                         class="form-radio h-4 w-4 text-blue-600">
                                     <span class="ml-2 text-gray-700">Pada IO/AIO</span>
                                 </label>
-                                <div class="flex items-center">
+                                
+                                <div class="space-y-1">
                                     <label class="flex items-center">
                                         <input type="radio" name="status_pergerakan_barang_kes" value="Lain-lain" 
-                                            {{ $currentValue == 'Lain-lain' ? 'checked' : '' }} 
-                                            class="form-radio h-4 w-4 text-blue-600" id="status_pergerakan_lain">
+                                            x-model="selectedStatus"
+                                            class="form-radio h-4 w-4 text-blue-600">
                                         <span class="ml-2 text-gray-700">Lain-lain</span>
                                     </label>
-                                    <input type="text" name="status_pergerakan_barang_kes_lain" id="status_pergerakan_barang_kes_lain" 
-                                        value="{{ old('status_pergerakan_barang_kes_lain', '') }}" 
-                                        class="ml-2 form-input text-sm w-64" 
-                                        {{ $currentValue != 'Lain-lain' ? 'disabled' : '' }}>
+                                    <div x-show="selectedStatus === 'Lain-lain'" x-transition class="ml-6">
+                                        <input type="text" name="status_pergerakan_barang_kes_lain" id="status_pergerakan_barang_kes_lain" 
+                                            value="{{ old('status_pergerakan_barang_kes_lain', $paper->status_pergerakan_barang_kes_lain ?? '') }}" 
+                                            class="mt-1 form-input text-sm w-64">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -298,39 +334,57 @@
                         <!-- Status Barang Kes Selesai Siasatan -->
                         <div class="mt-4">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Status Barang Kes Selesai Siasatan</label>
-                            <div class="space-y-2 pl-4">
-                                @php
-                                    $currentValueSelesai = $paper->status_barang_kes_selesai_siasatan ?? '';
-                                @endphp
+                            <div x-data="{ 
+                                selectedStatusSelesai: (() => {
+                                    const currentValue = '{{ old('status_barang_kes_selesai_siasatan', $paper->status_barang_kes_selesai_siasatan ?? '') }}';
+                                    const predefinedOptions = ['Dilupuskan ke Perbendaharaan', 'Dikembalikan Kepada Pemilik', 'Dilupuskan'];
+                                    return predefinedOptions.includes(currentValue) ? currentValue : (currentValue ? 'Lain-lain' : '');
+                                })()
+                            }" class="space-y-2 pl-4">
+                                <div class="space-y-1">
+                                    <label class="flex items-center">
+                                        <input type="radio" name="status_barang_kes_selesai_siasatan" value="Dilupuskan ke Perbendaharaan" 
+                                            x-model="selectedStatusSelesai"
+                                            class="form-radio h-4 w-4 text-blue-600">
+                                        <span class="ml-2 text-gray-700">Dilupuskan ke Perbendaharaan</span>
+                                    </label>
+                                    <div x-show="selectedStatusSelesai === 'Dilupuskan ke Perbendaharaan'" x-transition class="ml-6">
+                                        <div class="flex items-center">
+                                            <span class="text-sm text-gray-600 mr-2">RM</span>
+                                            <input type="number" name="dilupuskan_perbendaharaan_amount" id="dilupuskan_perbendaharaan_amount" 
+                                                value="{{ old('dilupuskan_perbendaharaan_amount', $paper->dilupuskan_perbendaharaan_amount ?? '') }}" 
+                                                step="0.01"
+                                                class="mt-1 form-input text-sm w-32">
+                                        </div>
+                                    </div>
+                                </div>
+                                
                                 <label class="flex items-center">
-                                    <input type="radio" name="status_barang_kes_selesai_siasatan" value="Dilupuskan ke Perbendaharaan" 
-                                        {{ $currentValueSelesai == 'Dilupuskan ke Perbendaharaan' ? 'checked' : '' }} 
+                                    <input type="radio" name="status_barang_kes_selesai_siasatan" value="Dikembalikan Kepada Pemilik" 
+                                        x-model="selectedStatusSelesai"
                                         class="form-radio h-4 w-4 text-blue-600">
-                                    <span class="ml-2 text-gray-700">Dilupuskan ke Perbendaharaan</span>
+                                    <span class="ml-2 text-gray-700">Dikembalikan Kepada Pemilik</span>
                                 </label>
-                                <label class="flex items-center">
-                                    <input type="radio" name="status_barang_kes_selesai_siasatan" value="Dikembalikan kepada Pemilik" 
-                                        {{ $currentValueSelesai == 'Dikembalikan kepada Pemilik' ? 'checked' : '' }} 
-                                        class="form-radio h-4 w-4 text-blue-600">
-                                    <span class="ml-2 text-gray-700">Dikembalikan kepada Pemilik</span>
-                                </label>
+                                
                                 <label class="flex items-center">
                                     <input type="radio" name="status_barang_kes_selesai_siasatan" value="Dilupuskan" 
-                                        {{ $currentValueSelesai == 'Dilupuskan' ? 'checked' : '' }} 
+                                        x-model="selectedStatusSelesai"
                                         class="form-radio h-4 w-4 text-blue-600">
                                     <span class="ml-2 text-gray-700">Dilupuskan</span>
                                 </label>
-                                <div class="flex items-center">
+                                
+                                <div class="space-y-1">
                                     <label class="flex items-center">
                                         <input type="radio" name="status_barang_kes_selesai_siasatan" value="Lain-lain" 
-                                            {{ $currentValueSelesai == 'Lain-lain' ? 'checked' : '' }} 
-                                            class="form-radio h-4 w-4 text-blue-600" id="status_selesai_lain">
+                                            x-model="selectedStatusSelesai"
+                                            class="form-radio h-4 w-4 text-blue-600">
                                         <span class="ml-2 text-gray-700">Lain-lain</span>
                                     </label>
-                                    <input type="text" name="status_barang_kes_selesai_siasatan_lain" id="status_barang_kes_selesai_siasatan_lain" 
-                                        value="{{ old('status_barang_kes_selesai_siasatan_lain', '') }}" 
-                                        class="ml-2 form-input text-sm w-64" 
-                                        {{ $currentValueSelesai != 'Lain-lain' ? 'disabled' : '' }}>
+                                    <div x-show="selectedStatusSelesai === 'Lain-lain'" x-transition class="ml-6">
+                                        <input type="text" name="status_barang_kes_selesai_siasatan_lain" id="status_barang_kes_selesai_siasatan_lain" 
+                                            value="{{ old('status_barang_kes_selesai_siasatan_lain', $paper->status_barang_kes_selesai_siasatan_lain ?? '') }}" 
+                                            class="mt-1 form-input text-sm w-64">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -338,45 +392,53 @@
                         <!-- Kaedah Pelupusan Barang Kes -->
                         <div class="mt-4">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Kaedah Pelupusan Barang Kes</label>
-                            <div class="space-y-2 pl-4">
-                                @php
-                                    $currentValueKaedah = $paper->kaedah_pelupusan_barang_kes ?? '';
-                                @endphp
+                            <div x-data="{ 
+                                selectedKaedah: (() => {
+                                    const currentValue = '{{ old('kaedah_pelupusan_barang_kes', $paper->kaedah_pelupusan_barang_kes ?? '') }}';
+                                    const predefinedOptions = ['Dibakar', 'Ditanam', 'Dihancurkan', 'Dilelong'];
+                                    return predefinedOptions.includes(currentValue) ? currentValue : (currentValue ? 'Lain-lain' : '');
+                                })()
+                            }" class="space-y-2 pl-4">
                                 <label class="flex items-center">
                                     <input type="radio" name="kaedah_pelupusan_barang_kes" value="Dibakar" 
-                                        {{ $currentValueKaedah == 'Dibakar' ? 'checked' : '' }} 
+                                        x-model="selectedKaedah"
                                         class="form-radio h-4 w-4 text-blue-600">
                                     <span class="ml-2 text-gray-700">Dibakar</span>
                                 </label>
+                                
                                 <label class="flex items-center">
                                     <input type="radio" name="kaedah_pelupusan_barang_kes" value="Ditanam" 
-                                        {{ $currentValueKaedah == 'Ditanam' ? 'checked' : '' }} 
+                                        x-model="selectedKaedah"
                                         class="form-radio h-4 w-4 text-blue-600">
                                     <span class="ml-2 text-gray-700">Ditanam</span>
                                 </label>
+                                
                                 <label class="flex items-center">
                                     <input type="radio" name="kaedah_pelupusan_barang_kes" value="Dihancurkan" 
-                                        {{ $currentValueKaedah == 'Dihancurkan' ? 'checked' : '' }} 
+                                        x-model="selectedKaedah"
                                         class="form-radio h-4 w-4 text-blue-600">
                                     <span class="ml-2 text-gray-700">Dihancurkan</span>
                                 </label>
+                                
                                 <label class="flex items-center">
                                     <input type="radio" name="kaedah_pelupusan_barang_kes" value="Dilelong" 
-                                        {{ $currentValueKaedah == 'Dilelong' ? 'checked' : '' }} 
+                                        x-model="selectedKaedah"
                                         class="form-radio h-4 w-4 text-blue-600">
                                     <span class="ml-2 text-gray-700">Dilelong</span>
                                 </label>
-                                <div class="flex items-center">
+                                
+                                <div class="space-y-1">
                                     <label class="flex items-center">
                                         <input type="radio" name="kaedah_pelupusan_barang_kes" value="Lain-lain" 
-                                            {{ $currentValueKaedah == 'Lain-lain' ? 'checked' : '' }} 
-                                            class="form-radio h-4 w-4 text-blue-600" id="kaedah_pelupusan_lain">
+                                            x-model="selectedKaedah"
+                                            class="form-radio h-4 w-4 text-blue-600">
                                         <span class="ml-2 text-gray-700">Lain-lain</span>
                                     </label>
-                                    <input type="text" name="kaedah_pelupusan_barang_kes_lain" id="kaedah_pelupusan_barang_kes_lain" 
-                                        value="{{ old('kaedah_pelupusan_barang_kes_lain', '') }}" 
-                                        class="ml-2 form-input text-sm w-64" 
-                                        {{ $currentValueKaedah != 'Lain-lain' ? 'disabled' : '' }}>
+                                    <div x-show="selectedKaedah === 'Lain-lain'" x-transition class="ml-6">
+                                        <input type="text" name="kaedah_pelupusan_barang_kes_lain" id="kaedah_pelupusan_barang_kes_lain" 
+                                            value="{{ old('kaedah_pelupusan_barang_kes_lain', $paper->kaedah_pelupusan_barang_kes_lain ?? '') }}" 
+                                            class="mt-1 form-input text-sm w-64">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -535,7 +597,7 @@
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700">Laporan Penuh Diterima</label>
-                                    {!! render_status_with_date_radio('pm_penuh', 'status_laporan_penuh_bedah_siasat', 'tarikh_laporan_penuh_bedah_siasat', $paper->status_laporan_penuh_bedah_siasat, $paper->tarikh_laporan_penuh_bedah_siasat, 'Diterima', 'Tidak') !!}
+                                    {!! render_status_with_date_and_keputusan_radio('pm_penuh', 'status_laporan_penuh_bedah_siasat', 'tarikh_laporan_penuh_bedah_siasat', 'keputusan_laporan_post_mortem', $paper->status_laporan_penuh_bedah_siasat, $paper->tarikh_laporan_penuh_bedah_siasat, $paper->keputusan_laporan_post_mortem, 'Diterima', 'Tidak') !!}
                                 </div>
                             </div>
                         </div>
@@ -548,7 +610,7 @@
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700">Laporan Penuh Diterima</label>
-                                    {!! render_status_with_date_radio('kimia_penuh', 'status_laporan_penuh_jabatan_kimia', 'tarikh_laporan_penuh_jabatan_kimia', $paper->status_laporan_penuh_jabatan_kimia, $paper->tarikh_laporan_penuh_jabatan_kimia, 'Diterima', 'Tidak') !!}
+                                    {!! render_status_with_date_and_keputusan_radio('kimia_penuh', 'status_laporan_penuh_jabatan_kimia', 'tarikh_laporan_penuh_jabatan_kimia', 'keputusan_laporan_jabatan_kimia', $paper->status_laporan_penuh_jabatan_kimia, $paper->tarikh_laporan_penuh_jabatan_kimia, $paper->keputusan_laporan_jabatan_kimia, 'Diterima', 'Tidak') !!}
                                 </div>
                             </div>
                         </div>
@@ -561,7 +623,7 @@
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700">Laporan Penuh Diterima</label>
-                                    {!! render_status_with_date_radio('patalogi_penuh', 'status_laporan_penuh_jabatan_patalogi', 'tarikh_laporan_penuh_jabatan_patalogi', $paper->status_laporan_penuh_jabatan_patalogi, $paper->tarikh_laporan_penuh_jabatan_patalogi, 'Diterima', 'Tidak') !!}
+                                    {!! render_status_with_date_and_keputusan_radio('patalogi_penuh', 'status_laporan_penuh_jabatan_patalogi', 'tarikh_laporan_penuh_jabatan_patalogi', 'keputusan_laporan_jabatan_patalogi', $paper->status_laporan_penuh_jabatan_patalogi, $paper->tarikh_laporan_penuh_jabatan_patalogi, $paper->keputusan_laporan_jabatan_patalogi, 'Diterima', 'Tidak') !!}
                                 </div>
                             </div>
                         </div>

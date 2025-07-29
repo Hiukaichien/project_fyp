@@ -28,6 +28,43 @@
                     $date_html = $status && $date ? (is_string($date) ? $date : optional($date)->format('d/m/Y')) : '-';
                     return "{$status_html} | Tarikh: {$date_html}";
                 }
+                
+                function show_status_date_and_keputusan($status, $date = null, $keputusan = null, $trueText = 'Diterima', $falseText = 'Tidak') {
+                    $status_html = show_boolean_badge($status, $trueText, $falseText);
+                    $date_html = $status && $date ? (is_string($date) ? $date : optional($date)->format('d/m/Y')) : '-';
+                    $keputusan_html = $status && $keputusan ? htmlspecialchars($keputusan) : '-';
+                    return "{$status_html} | Tarikh: {$date_html}" . ($keputusan_html !== '-' ? " | Keputusan: {$keputusan_html}" : '');
+                }
+                
+                function show_lain_lain_value($main_value, $lain_value = null, $field_name = '') {
+                    if (empty($main_value)) return '-';
+                    
+                    // Define predefined options for specific fields
+                    $predefined_options = [
+                        'status_pergerakan_barang_kes' => ['Dalam siasatan', 'Diserah kepada pemilik', 'Telah dilupuskan', 'Ujian Makmal'],
+                        'status_barang_kes_selesai_siasatan' => ['Diserah kepada pemilik', 'Dilupuskan', 'Disimpan sebagai rujukan', 'Dilupuskan ke Perbendaharaan'],
+                        'kaedah_pelupusan_barang_kes' => ['Dibakar', 'Ditanam', 'Dihancurkan', 'Dilelong']
+                    ];
+                    
+                    // For these specific fields, check if the value is predefined
+                    if ($field_name && isset($predefined_options[$field_name])) {
+                        if (in_array($main_value, $predefined_options[$field_name])) {
+                            return htmlspecialchars($main_value);
+                        } else {
+                            // This is a custom value, show the custom text directly
+                            $custom_text = $lain_value ?: $main_value;
+                            return htmlspecialchars($custom_text);
+                        }
+                    }
+                    
+                    // For other cases, check if there's a separate lain_value field
+                    if (!empty($lain_value)) {
+                        return htmlspecialchars($lain_value);
+                    }
+                    
+                    // Default case
+                    return htmlspecialchars($main_value);
+                }
                 function show_json_list($json_data) {
                     if (empty($json_data)) return '-';
                     
@@ -240,16 +277,40 @@
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">Status Pergerakan Barang Kes</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_json_list($paper->status_pergerakan_barang_kes) !!}</dd>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_lain_lain_value($paper->status_pergerakan_barang_kes, $paper->status_pergerakan_barang_kes_lain, 'status_pergerakan_barang_kes') !!}</dd>
                         </div>
+                        @if($paper->status_pergerakan_barang_kes === 'Ujian Makmal' && $paper->ujian_makmal_details)
+                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50">
+                            <dt class="text-sm font-medium text-gray-500">Ujian Makmal</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 whitespace-pre-wrap">{{ $paper->ujian_makmal_details }}</dd>
+                        </div>
+                        @endif
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">Status Barang Kes Selesai Siasatan</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_json_list($paper->status_barang_kes_selesai_siasatan) !!}</dd>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_lain_lain_value($paper->status_barang_kes_selesai_siasatan, $paper->status_barang_kes_selesai_siasatan_lain, 'status_barang_kes_selesai_siasatan') !!}</dd>
                         </div>
+                        @if($paper->status_barang_kes_selesai_siasatan === 'Dilupuskan ke Perbendaharaan' && $paper->dilupuskan_perbendaharaan_amount)
+                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50">
+                            <dt class="text-sm font-medium text-gray-500">Dilupuskan ke Perbendaharaan</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">RM {{ number_format($paper->dilupuskan_perbendaharaan_amount, 2) }}</dd>
+                        </div>
+                        @endif
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">Kaedah Pelupusan Barang Kes</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_json_list($paper->kaedah_pelupusan_barang_kes) !!}</dd>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                @if(in_array($paper->kaedah_pelupusan_barang_kes, ['Dibakar', 'Ditanam', 'Dihancurkan', 'Dilelong']))
+                                    {{ $paper->kaedah_pelupusan_barang_kes }}
+                                @else
+                                    Lain-lain
+                                @endif
+                            </dd>
                         </div>
+                        @if(!in_array($paper->kaedah_pelupusan_barang_kes, ['Dibakar', 'Ditanam', 'Dihancurkan', 'Dilelong']) && $paper->kaedah_pelupusan_barang_kes_lain)
+                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50">
+                            <dt class="text-sm font-medium text-gray-500">Lain-lain</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 whitespace-pre-wrap">{{ $paper->kaedah_pelupusan_barang_kes_lain }}</dd>
+                        </div>
+                        @endif
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">Arahan Pelupusan Barang Kes</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_json_list($paper->arahan_pelupusan_barang_kes) !!}</dd>
@@ -346,9 +407,7 @@
                         </div>
                     </dl>
                 </div>
-            </div>
-
-            <!-- BAHAGIAN 7: Permohonan Laporan Agensi Luar -->
+            </div>            <!-- BAHAGIAN 7: Permohonan Laporan Agensi Luar -->
             <div class="bg-white shadow overflow-hidden sm:rounded-lg">
                 <div class="px-4 py-5 sm:px-6 bg-indigo-50">
                     <h3 class="text-lg leading-6 font-medium text-gray-900">BAHAGIAN 7: Permohonan Laporan Agensi Luar</h3>
@@ -365,7 +424,7 @@
                                 </div>
                                 <div>
                                     <dt class="text-sm font-medium text-gray-500 mb-1">Laporan Penuh Diterima</dt>
-                                    <dd class="text-sm text-gray-900">{!! show_status_and_date($paper->status_laporan_penuh_bedah_siasat, $paper->tarikh_laporan_penuh_bedah_siasat, 'Diterima', 'Tidak') !!}</dd>
+                                    <dd class="text-sm text-gray-900">{!! show_status_date_and_keputusan($paper->status_laporan_penuh_bedah_siasat, $paper->tarikh_laporan_penuh_bedah_siasat, $paper->keputusan_laporan_post_mortem, 'Diterima', 'Tidak') !!}</dd>
                                 </div>
                             </div>
                         </div>
@@ -380,7 +439,7 @@
                                 </div>
                                 <div>
                                     <dt class="text-sm font-medium text-gray-500 mb-1">Laporan Penuh Diterima</dt>
-                                    <dd class="text-sm text-gray-900">{!! show_status_and_date($paper->status_laporan_penuh_jabatan_kimia, $paper->tarikh_laporan_penuh_jabatan_kimia, 'Diterima', 'Tidak') !!}</dd>
+                                    <dd class="text-sm text-gray-900">{!! show_status_date_and_keputusan($paper->status_laporan_penuh_jabatan_kimia, $paper->tarikh_laporan_penuh_jabatan_kimia, $paper->keputusan_laporan_jabatan_kimia, 'Diterima', 'Tidak') !!}</dd>
                                 </div>
                             </div>
                         </div>
@@ -395,7 +454,7 @@
                                 </div>
                                 <div>
                                     <dt class="text-sm font-medium text-gray-500 mb-1">Laporan Penuh Diterima</dt>
-                                    <dd class="text-sm text-gray-900">{!! show_status_and_date($paper->status_laporan_penuh_jabatan_patalogi, $paper->tarikh_laporan_penuh_jabatan_patalogi, 'Diterima', 'Tidak') !!}</dd>
+                                    <dd class="text-sm text-gray-900">{!! show_status_date_and_keputusan($paper->status_laporan_penuh_jabatan_patalogi, $paper->tarikh_laporan_penuh_jabatan_patalogi, $paper->keputusan_laporan_jabatan_patalogi, 'Diterima', 'Tidak') !!}</dd>
                                 </div>
                             </div>
                         </div>
@@ -483,6 +542,38 @@
                                 <dt class="text-sm font-medium text-yellow-800">Status Kemaskini</dt>
                                 <dd class="mt-1 text-sm font-bold text-gray-900">{{ $paper->baru_kemaskini_status ?? 'Tidak Terkira' }}</dd>
                             </div>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+                        <!-- Maklumat Rekod -->
+            <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                <div class="px-4 py-5 sm:px-6 bg-gray-50">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">
+                        Maklumat Rekod
+                    </h3>
+                </div>
+                <div class="border-t border-gray-200">
+                    <dl class="sm:divide-y sm:divide-gray-200">
+                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt class="text-sm font-medium text-gray-500">Tarikh Cipta</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                {{ optional($paper->created_at)->format('d/m/Y H:i:s') }}
+                                @if($paper->created_at)
+                                    {{-- Added ->locale('ms') to translate the output --}}
+                                    <span class="text-gray-500 text-xs">({{ $paper->created_at->locale('ms')->diffForHumans() }})</span>
+                                @endif
+                            </dd>
+                        </div>
+                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt class="text-sm font-medium text-gray-500">Tarikh Kemaskini Terakhir</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                {{ optional($paper->updated_at)->format('d/m/Y H:i:s') }}
+                                @if($paper->updated_at)
+                                    {{-- Added ->locale('ms') to translate the output --}}
+                                    <span class="text-gray-500 text-xs">({{ $paper->updated_at->locale('ms')->diffForHumans() }})</span>
+                                @endif
+                            </dd>
                         </div>
                     </dl>
                 </div>

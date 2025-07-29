@@ -202,6 +202,46 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
         try { return Carbon::parse($value)->format($format); } catch (\Exception $e) { Log::warning("Could not parse date format for value: '{$value}'. Error: " . $e->getMessage()); return null; }
     }
 
+        private function transformBoolean($value)
+    {
+        if (empty($value) || is_null($value)) return null;
+        
+        $value = is_string($value) ? trim(strtolower($value)) : $value;
+        
+        // Handle various boolean representations
+        if (in_array($value, ['ya', 'yes', 'true', '1', 1, 'ada', 'cipta', 'dibuat', 'diterima', 'dikemaskini'])) {
+            return true;
+        } elseif (in_array($value, ['tidak', 'no', 'false', '0', 0, 'tiada', 'tidak cipta', 'tidak dibuat', 'tidak diterima', 'tidak dikemaskini'])) {
+            return false;
+        }
+        
+        return null;
+    }
+
+    private function transformDecimal($value)
+    {
+        if (empty($value) || is_null($value)) return null;
+        
+        // Remove currency symbols and spaces
+        $value = preg_replace('/[RM\s,]/', '', $value);
+        
+        return is_numeric($value) ? (float) $value : null;
+    }
+
+    private function transformJsonArray($value)
+    {
+        if (empty($value) || is_null($value)) return null;
+        
+        // Handle comma-separated values (PEM 1, PEM 2, etc.)
+        if (is_string($value)) {
+            $items = array_map('trim', explode(',', $value));
+            return array_filter($items); // Remove empty items
+        }
+        
+        return null;
+    }
+
+    
     public function getSuccessCount(): int
     {
         return $this->successCount;

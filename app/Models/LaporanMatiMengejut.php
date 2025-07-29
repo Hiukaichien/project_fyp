@@ -48,12 +48,10 @@ class LaporanMatiMengejut extends Model
         'arahan_minit_oleh_ya_tpr_status' => 'boolean',
         'arahan_minit_oleh_ya_tpr_tarikh' => 'date:Y-m-d',
         
-        // BAHAGIAN 4: Barang Kes - Boolean and Array (for single radio with 'Lain-lain') fields
+        // BAHAGIAN 4: Barang Kes - Boolean fields
         'adakah_barang_kes_didaftarkan' => 'boolean',
-        'status_pergerakan_barang_kes' => 'string',
-        'status_barang_kes_selesai_siasatan' => 'string',
-        'kaedah_pelupusan_barang_kes' => 'string',
-        'arahan_pelupusan_barang_kes' => 'string',
+        'dilupuskan_perbendaharaan_amount' => 'decimal:2',
+        'arahan_pelupusan_barang_kes' => 'array',
         'adakah_borang_serah_terima_pegawai_tangkapan_io' => 'boolean',
         'adakah_borang_serah_terima_penyiasat_pemilik_saksi' => 'boolean',
         'adakah_sijil_surat_kebenaran_ipd' => 'boolean',
@@ -100,14 +98,6 @@ class LaporanMatiMengejut extends Model
         'adakah_muka_surat_4_keputusan_kes_dicatat' => 'boolean',
         'adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan' => 'boolean',
         'adakah_ks_kus_fail_selesai' => 'boolean',
-        
-        // Legacy fields
-        'tarikh_laporan_polis' => 'date:Y-m-d',
-        'tarikh_minit_pertama' => 'date:Y-m-d',
-        'tarikh_minit_akhir' => 'date:Y-m-d',
-        'tarikh_permohonan_pm_dipohon' => 'date:Y-m-d',
-        'tarikh_rujuk_tpr' => 'date:Y-m-d',
-        'tarikh_rujuk_koroner' => 'date:Y-m-d',
         
         // System fields
         'created_at' => 'datetime',
