@@ -356,6 +356,277 @@
         'created_at' => 'Tarikh Dicipta',
         'updated_at' => 'Tarikh Dikemaskini',
     ];
+
+    // Define custom columns for TrafikSeksyen based on migration structure
+    $trafikSeksyenColumns = [
+        // BAHAGIAN 1: Maklumat Asas
+        'no_kertas_siasatan' => 'No. Kertas Siasatan',
+        'no_repot_polis' => 'No. Repot Polis',
+        'pegawai_penyiasat' => 'Pegawai Penyiasat',
+        'tarikh_laporan_polis_dibuka' => 'Tarikh Laporan Polis Dibuka',
+        'seksyen' => 'Seksyen',
+        
+        // BAHAGIAN 2: Pemeriksaan & Status
+        'pegawai_pemeriksa' => 'Pegawai Pemeriksa',
+        'tarikh_edaran_minit_ks_pertama' => 'Tarikh Edaran Minit KS Pertama (A)',
+        'tarikh_edaran_minit_ks_kedua' => 'Tarikh Edaran Minit KS Kedua (B)',
+        'tarikh_edaran_minit_ks_sebelum_akhir' => 'Tarikh Edaran Minit KS Sebelum Akhir (C)',
+        'tarikh_edaran_minit_ks_akhir' => 'Tarikh Edaran Minit KS Akhir (D)',
+        'tarikh_semboyan_pemeriksaan_jips_ke_daerah' => 'Tarikh Semboyan Pemeriksaan JIPS ke Daerah (E)',
+        
+        // BAHAGIAN 3: Arahan & Keputusan
+        'arahan_minit_oleh_sio_status' => 'Arahan Minit Oleh SIO',
+        'arahan_minit_oleh_sio_tarikh' => 'Tarikh Arahan Minit SIO',
+        'arahan_minit_ketua_bahagian_status' => 'Arahan Minit Ketua Bahagian',
+        'arahan_minit_ketua_bahagian_tarikh' => 'Tarikh Arahan Minit Ketua Bahagian',
+        'arahan_minit_ketua_jabatan_status' => 'Arahan Minit Ketua Jabatan',
+        'arahan_minit_ketua_jabatan_tarikh' => 'Tarikh Arahan Minit Ketua Jabatan',
+        'arahan_minit_oleh_ya_tpr_status' => 'Arahan Minit Oleh YA TPR',
+        'arahan_minit_oleh_ya_tpr_tarikh' => 'Tarikh Arahan Minit YA TPR',
+        'keputusan_siasatan_oleh_ya_tpr' => 'Keputusan Siasatan Oleh YA TPR',
+        'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan' => 'Arahan Tuduh YA TPR Diambil Tindakan',
+        'ulasan_keputusan_siasatan_tpr' => 'Ulasan Keputusan Siasatan TPR',
+        'keputusan_siasatan_oleh_ya_koroner' => 'Keputusan Siasatan YA Koroner',
+        'ulasan_keputusan_oleh_ya_koroner' => 'Ulasan Keputusan YA Koroner',
+        'ulasan_keseluruhan_pegawai_pemeriksa' => 'Ulasan Keseluruhan Pegawai Pemeriksa',
+        
+        // BAHAGIAN 4: Barang Kes
+        'adakah_barang_kes_didaftarkan' => 'Barang Kes Didaftarkan',
+        'no_daftar_barang_kes_am' => 'No. Daftar Barang Kes Am',
+        'no_daftar_barang_kes_berharga' => 'No. Daftar Barang Kes Berharga',
+        'no_daftar_barang_kes_kenderaan' => 'No. Daftar Barang Kes Kenderaan',
+        'jenis_barang_kes_am' => 'Jenis Barang Kes Am',
+        'jenis_barang_kes_berharga' => 'Jenis Barang Kes Berharga',
+        'jenis_barang_kes_kenderaan' => 'Jenis Barang Kes Kenderaan',
+        'status_pergerakan_barang_kes' => 'Status Pergerakan Barang Kes',
+        'status_barang_kes_selesai_siasatan' => 'Status Barang Kes Selesai Siasatan',
+        'kaedah_pelupusan_barang_kes' => 'Kaedah Pelupusan Barang Kes',
+        'arahan_pelupusan_barang_kes' => 'Arahan Pelupusan Barang Kes',
+        'adakah_borang_serah_terima_pegawai_tangkapan' => 'Borang Serah Terima Pegawai Tangkapan',
+        'adakah_borang_serah_terima_pemilik_saksi' => 'Borang Serah Terima Pemilik Saksi',
+        'adakah_sijil_surat_kebenaran_ipo' => 'Sijil Surat Kebenaran IPO',
+        'adakah_gambar_pelupusan' => 'Gambar Pelupusan',
+        
+        // BAHAGIAN 5: Dokumen Siasatan
+        'status_id_siasatan_dikemaskini' => 'ID Siasatan Dikemaskini',
+        'status_rajah_kasar_tempat_kejadian' => 'Rajah Kasar Tempat Kejadian',
+        'status_gambar_tempat_kejadian' => 'Gambar Tempat Kejadian',
+        'status_gambar_barang_kes_am' => 'Gambar Barang Kes Am',
+        'status_gambar_barang_kes_berharga' => 'Gambar Barang Kes Berharga',
+        'status_gambar_barang_kes_kenderaan' => 'Gambar Barang Kes Kenderaan',
+        'status_gambar_barang_kes_darah' => 'Gambar Barang Kes Darah',
+        
+        // BAHAGIAN 6: Borang & Semakan
+        'status_saman_pdrm_s_257' => 'Status Saman PDRM S.257',
+        'tarikh_saman_pdrm_s_257' => 'Tarikh Saman PDRM S.257',
+        'status_saman_pdrm_s_167' => 'Status Saman PDRM S.167',
+        'tarikh_saman_pdrm_s_167' => 'Tarikh Saman PDRM S.167',
+        'status_penandaan_kelas_warna' => 'Penandaan Kelas Warna',
+        
+        // BAHAGIAN 7: Permohonan Laporan Agensi Luar
+        'status_permohonan_laporan_puspakom' => 'Permohonan Laporan PUSPAKOM',
+        'tarikh_permohonan_laporan_puspakom' => 'Tarikh Permohonan PUSPAKOM',
+        'status_laporan_penuh_puspakom' => 'Laporan Penuh PUSPAKOM',
+        'tarikh_laporan_penuh_puspakom' => 'Tarikh Laporan Penuh PUSPAKOM',
+        'status_permohonan_laporan_jkr' => 'Permohonan Laporan JKR',
+        'tarikh_permohonan_laporan_jkr' => 'Tarikh Permohonan JKR',
+        'status_laporan_penuh_jkr' => 'Laporan Penuh JKR',
+        'tarikh_laporan_penuh_jkr' => 'Tarikh Laporan Penuh JKR',
+        'status_permohonan_laporan_jpj' => 'Permohonan Laporan JPJ',
+        'tarikh_permohonan_laporan_jpj' => 'Tarikh Permohonan JPJ',
+        'status_laporan_penuh_jpj' => 'Laporan Penuh JPJ',
+        'tarikh_laporan_penuh_jpj' => 'Tarikh Laporan Penuh JPJ',
+        'lain_lain_permohonan_laporan' => 'Lain-lain Permohonan Laporan',
+        
+        // BAHAGIAN 8: Status Fail
+        'adakah_muka_surat_4_keputusan_kes_dicatat' => 'M/S 4 - Keputusan Kes Dicatat',
+        'adakah_ks_kus_fail_selesai' => 'KS KUS/FAIL Selesai',
+        'keputusan_akhir_mahkamah' => 'Keputusan Akhir Mahkamah',
+        'ulasan_keseluruhan_pegawai_pemeriksa_fail' => 'Ulasan Pegawai Pemeriksa (Fail)',
+        
+        // Date columns
+        'created_at' => 'Tarikh Dicipta',
+        'updated_at' => 'Tarikh Dikemaskini',
+    ];
+
+    // Define custom columns for TrafikRule based on migration structure
+    $trafikRuleColumns = [
+        // BAHAGIAN 1: Maklumat Asas
+        'no_kertas_siasatan' => 'No. Kertas Siasatan',
+        'no_fail_lmm_t' => 'No. Fail LMM(T)',
+        'no_repot_polis' => 'No. Repot Polis',
+        'pegawai_penyiasat' => 'Pegawai Penyiasat',
+        'tarikh_laporan_polis_dibuka' => 'Tarikh Laporan Polis Dibuka',
+        'seksyen' => 'Seksyen',
+        
+        // BAHAGIAN 2: Pemeriksaan & Status
+        'pegawai_pemeriksa' => 'Pegawai Pemeriksa',
+        'tarikh_edaran_minit_ks_pertama' => 'Tarikh Edaran Minit KS Pertama (A)',
+        'tarikh_edaran_minit_ks_kedua' => 'Tarikh Edaran Minit KS Kedua (B)',
+        'tarikh_edaran_minit_ks_sebelum_akhir' => 'Tarikh Edaran Minit KS Sebelum Akhir (C)',
+        'tarikh_edaran_minit_ks_akhir' => 'Tarikh Edaran Minit KS Akhir (D)',
+        'tarikh_semboyan_pemeriksaan_jips_ke_daerah' => 'Tarikh Semboyan Pemeriksaan JIPS ke Daerah (E)',
+        
+        // BAHAGIAN 3: Arahan & Keputusan
+        'arahan_minit_oleh_sio_status' => 'Arahan Minit Oleh SIO',
+        'arahan_minit_oleh_sio_tarikh' => 'Tarikh Arahan Minit SIO',
+        'arahan_minit_ketua_bahagian_status' => 'Arahan Minit Ketua Bahagian',
+        'arahan_minit_ketua_bahagian_tarikh' => 'Tarikh Arahan Minit Ketua Bahagian',
+        'arahan_minit_ketua_jabatan_status' => 'Arahan Minit Ketua Jabatan',
+        'arahan_minit_ketua_jabatan_tarikh' => 'Tarikh Arahan Minit Ketua Jabatan',
+        'arahan_minit_oleh_ya_tpr_status' => 'Arahan Minit Oleh YA TPR',
+        'arahan_minit_oleh_ya_tpr_tarikh' => 'Tarikh Arahan Minit YA TPR',
+        'keputusan_siasatan_oleh_ya_tpr' => 'Keputusan Siasatan Oleh YA TPR',
+        'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan' => 'Arahan Tuduh YA TPR Diambil Tindakan',
+        'ulasan_keputusan_siasatan_tpr' => 'Ulasan Keputusan Siasatan TPR',
+        'ulasan_keseluruhan_pegawai_pemeriksa' => 'Ulasan Keseluruhan Pegawai Pemeriksa',
+        
+        // BAHAGIAN 5: Dokumen Siasatan
+        'status_id_siasatan_dikemaskini' => 'ID Siasatan Dikemaskini',
+        'status_rajah_kasar_tempat_kejadian' => 'Rajah Kasar Tempat Kejadian',
+        'status_gambar_tempat_kejadian' => 'Gambar Tempat Kejadian',
+        'status_gambar_barang_kes_kenderaan' => 'Gambar Barang Kes Kenderaan',
+        'status_gambar_barang_kes_darah' => 'Gambar Barang Kes Darah',
+        
+        // BAHAGIAN 6: Borang & Semakan
+        'status_saman_pdrm_s_257' => 'Status Saman PDRM S.257',
+        'tarikh_saman_pdrm_s_257' => 'Tarikh Saman PDRM S.257',
+        'status_saman_pdrm_s_167' => 'Status Saman PDRM S.167',
+        'tarikh_saman_pdrm_s_167' => 'Tarikh Saman PDRM S.167',
+        'status_penandaan_kelas_warna' => 'Penandaan Kelas Warna',
+        
+        // BAHAGIAN 7: Permohonan Laporan Agensi Luar
+        'status_permohonan_laporan_puspakom' => 'Permohonan Laporan PUSPAKOM',
+        'tarikh_permohonan_laporan_puspakom' => 'Tarikh Permohonan PUSPAKOM',
+        'status_laporan_penuh_puspakom' => 'Laporan Penuh PUSPAKOM',
+        'tarikh_laporan_penuh_puspakom' => 'Tarikh Laporan Penuh PUSPAKOM',
+        'status_permohonan_laporan_jpj' => 'Permohonan Laporan JPJ',
+        'tarikh_permohonan_laporan_jpj' => 'Tarikh Permohonan JPJ',
+        'status_laporan_penuh_jpj' => 'Laporan Penuh JPJ',
+        'tarikh_laporan_penuh_jpj' => 'Tarikh Laporan Penuh JPJ',
+        'lain_lain_permohonan_laporan' => 'Lain-lain Permohonan Laporan',
+        
+        // BAHAGIAN 8: Status Fail
+        'adakah_muka_surat_4_keputusan_kes_dicatat' => 'M/S 4 - Keputusan Kes Dicatat',
+        'adakah_ks_kus_fail_selesai' => 'KS KUS/FAIL Selesai',
+        'keputusan_akhir_mahkamah' => 'Keputusan Akhir Mahkamah',
+        'ulasan_keseluruhan_pegawai_pemeriksa_fail' => 'Ulasan Pegawai Pemeriksa (Fail)',
+        
+        // Date columns
+        'created_at' => 'Tarikh Dicipta',
+        'updated_at' => 'Tarikh Dikemaskini',
+    ];
+
+    // Define custom columns for Komersil based on migration structure
+    $komersilColumns = [
+        // BAHAGIAN 1: Maklumat Asas
+        'no_kertas_siasatan' => 'No. Kertas Siasatan',
+        'no_repot_polis' => 'No. Repot Polis',
+        'pegawai_penyiasat' => 'Pegawai Penyiasat',
+        'tarikh_laporan_polis_dibuka' => 'Tarikh Laporan Polis Dibuka',
+        'seksyen' => 'Seksyen',
+        
+        // BAHAGIAN 2: Pemeriksaan JIPS
+        'pegawai_pemeriksa' => 'Pegawai Pemeriksa',
+        'tarikh_edaran_minit_ks_pertama' => 'Tarikh Edaran Minit KS Pertama (A)',
+        'tarikh_edaran_minit_ks_kedua' => 'Tarikh Edaran Minit KS Kedua (B)',
+        'tarikh_edaran_minit_ks_sebelum_akhir' => 'Tarikh Edaran Minit KS Sebelum Akhir (C)',
+        'tarikh_edaran_minit_ks_akhir' => 'Tarikh Edaran Minit KS Akhir (D)',
+        'tarikh_semboyan_pemeriksaan_jips_ke_daerah' => 'Tarikh Semboyan Pemeriksaan JIPS ke Daerah (E)',
+        
+        // BAHAGIAN 3: Arahan SIO & Ketua
+        'arahan_minit_oleh_sio_status' => 'Arahan Minit Oleh SIO',
+        'arahan_minit_oleh_sio_tarikh' => 'Tarikh Arahan Minit SIO',
+        'arahan_minit_ketua_bahagian_status' => 'Arahan Minit Ketua Bahagian',
+        'arahan_minit_ketua_bahagian_tarikh' => 'Tarikh Arahan Minit Ketua Bahagian',
+        'arahan_minit_ketua_jabatan_status' => 'Arahan Minit Ketua Jabatan',
+        'arahan_minit_ketua_jabatan_tarikh' => 'Tarikh Arahan Minit Ketua Jabatan',
+        'arahan_minit_oleh_ya_tpr_status' => 'Arahan Minit Oleh YA TPR',
+        'arahan_minit_oleh_ya_tpr_tarikh' => 'Tarikh Arahan Minit YA TPR',
+        'keputusan_siasatan_oleh_ya_tpr' => 'Keputusan Siasatan Oleh YA TPR',
+        'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan' => 'Arahan Tuduh YA TPR Diambil Tindakan',
+        'ulasan_keputusan_siasatan_tpr' => 'Ulasan Keputusan Siasatan TPR',
+        'ulasan_keseluruhan_pegawai_pemeriksa' => 'Ulasan Keseluruhan Pegawai Pemeriksa',
+        
+        // BAHAGIAN 4: Barang Kes
+        'adakah_barang_kes_didaftarkan' => 'Barang Kes Didaftarkan',
+        'no_daftar_barang_kes_am' => 'No. Daftar Barang Kes Am',
+        'no_daftar_barang_kes_berharga' => 'No. Daftar Barang Kes Berharga',
+        'no_daftar_barang_kes_kenderaan' => 'No. Daftar Barang Kes Kenderaan',
+        'no_daftar_botol_spesimen_urin' => 'No. Daftar Botol Spesimen Urin',
+        'jenis_barang_kes_am' => 'Jenis Barang Kes Am',
+        'jenis_barang_kes_berharga' => 'Jenis Barang Kes Berharga',
+        'jenis_barang_kes_kenderaan' => 'Jenis Barang Kes Kenderaan',
+        'status_pergerakan_barang_kes' => 'Status Pergerakan Barang Kes',
+        'status_barang_kes_selesai_siasatan' => 'Status Barang Kes Selesai Siasatan',
+        'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan' => 'Kaedah Pelupusan Barang Kes',
+        'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => 'Arahan Pelupusan ke Perbendaharaan',
+        'resit_kew_38e_bagi_pelupusan' => 'Resit Kew.38e Pelupusan',
+        'adakah_borang_serah_terima_pegawai_tangkapan' => 'Borang Serah Terima Pegawai Tangkapan',
+        'adakah_borang_serah_terima_pemilik_saksi' => 'Borang Serah Terima Pemilik Saksi',
+        'adakah_sijil_surat_kebenaran_ipo' => 'Sijil Surat Kebenaran IPO',
+        'adakah_gambar_pelupusan' => 'Gambar Pelupusan',
+        
+        // BAHAGIAN 5: Bukti & Rajah
+        'status_id_siasatan_dikemaskini' => 'ID Siasatan Dikemaskini',
+        'status_rajah_kasar_tempat_kejadian' => 'Rajah Kasar Tempat Kejadian',
+        'status_gambar_tempat_kejadian' => 'Gambar Tempat Kejadian',
+        'status_gambar_barang_kes_am' => 'Gambar Barang Kes Am',
+        'status_gambar_barang_kes_berharga' => 'Gambar Barang Kes Berharga',
+        'status_gambar_barang_kes_kenderaan' => 'Gambar Barang Kes Kenderaan',
+        'status_gambar_barang_kes_darah' => 'Gambar Barang Kes Darah',
+        'status_gambar_barang_kes_kontraban' => 'Gambar Barang Kes Kontraban',
+        
+        // BAHAGIAN 6: Laporan RJ & Semboyan
+        'status_pem' => 'Status PEM',
+        'status_rj2' => 'Status RJ2',
+        'tarikh_rj2' => 'Tarikh RJ2',
+        'status_rj2b' => 'Status RJ2B',
+        'tarikh_rj2b' => 'Tarikh RJ2B',
+        'status_rj9' => 'Status RJ9',
+        'tarikh_rj9' => 'Tarikh RJ9',
+        'status_rj99' => 'Status RJ99',
+        'tarikh_rj99' => 'Tarikh RJ99',
+        'status_rj10a' => 'Status RJ10A',
+        'tarikh_rj10a' => 'Tarikh RJ10A',
+        'status_rj10b' => 'Status RJ10B',
+        'tarikh_rj10b' => 'Tarikh RJ10B',
+        'lain_lain_rj_dikesan' => 'Lain-lain RJ Dikesan',
+        'status_semboyan_pertama_wanted_person' => 'Semboyan Pertama Wanted Person',
+        'tarikh_semboyan_pertama_wanted_person' => 'Tarikh Semboyan Pertama',
+        'status_semboyan_kedua_wanted_person' => 'Semboyan Kedua Wanted Person',
+        'tarikh_semboyan_kedua_wanted_person' => 'Tarikh Semboyan Kedua',
+        'status_semboyan_ketiga_wanted_person' => 'Semboyan Ketiga Wanted Person',
+        'tarikh_semboyan_ketiga_wanted_person' => 'Tarikh Semboyan Ketiga',
+        'ulasan_keseluruhan_pegawai_pemeriksa_borang' => 'Ulasan Pegawai Pemeriksa (Borang)',
+        'status_penandaan_kelas_warna' => 'Penandaan Kelas Warna',
+        
+        // BAHAGIAN 7: Permohonan Laporan Agensi Luar
+        'status_permohonan_E_FSA_1_oleh_IO_AIO' => 'Permohonan E-FSA (BANK) - 1',
+        'nama_bank_permohonan_E_FSA_1' => 'Nama Bank E-FSA 1',
+        'status_laporan_penuh_E_FSA_1_oleh_IO_AIO' => 'Laporan Penuh E-FSA (BANK) - 1',
+        'nama_bank_laporan_E_FSA_1_oleh_IO_AIO' => 'Nama Bank Laporan E-FSA 1',
+        'tarikh_laporan_penuh_E_FSA_1_oleh_IO_AIO' => 'Tarikh Laporan E-FSA 1',
+        'status_permohonan_E_FSA_2_oleh_IO_AIO' => 'Permohonan E-FSA (BANK) - 2',
+        'nama_bank_permohonan_E_FSA_2_BANK' => 'Nama Bank E-FSA 2',
+        'status_laporan_penuh_E_FSA_2_oleh_IO_AIO' => 'Laporan Penuh E-FSA (BANK) - 2',
+        'nama_bank_laporan_E_FSA_2_oleh_IO_AIO' => 'Nama Bank Laporan E-FSA 2',
+        'tarikh_laporan_penuh_E_FSA_2_oleh_IO_AIO' => 'Tarikh Laporan E-FSA 2',
+        'status_permohonan_E_FSA_3_oleh_IO_AIO' => 'Permohonan E-FSA (BANK) - 3',
+        'nama_bank_permohonan_E_FSA_3_BANK' => 'Nama Bank E-FSA 3',
+        'status_laporan_penuh_E_FSA_3_oleh_IO_AIO' => 'Laporan Penuh E-FSA (BANK) - 3',
+        'status_permohonan_E_FSA_4_oleh_IO_AIO' => 'Permohonan E-FSA (BANK) - 4',
+        'nama_bank_permohonan_E_FSA_4_BANK' => 'Nama Bank E-FSA 4',
+        'status_laporan_penuh_E_FSA_4_oleh_IO_AIO' => 'Laporan Penuh E-FSA (BANK) - 4',
+        'status_permohonan_E_FSA_5_oleh_IO_AIO' => 'Permohonan E-FSA (BANK) - 5',
+        'status_laporan_penuh_E_FSA_5_oleh_IO_AIO' => 'Laporan Penuh E-FSA (BANK) - 5',
+        'status_permohonan_E_FSA_1_telco_oleh_IO_AIO' => 'Permohonan E-FSA (TELCO) - 1',
+        'status_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO' => 'Laporan Penuh E-FSA (TELCO) - 1',
+        
+        // Date columns
+        'created_at' => 'Tarikh Dicipta',
+        'updated_at' => 'Tarikh Dikemaskini',
+    ];
 @endphp
 
 <x-app-layout>
@@ -510,6 +781,11 @@
                                                 @foreach($narkotikColumns as $column => $label)
                                                     <th scope="col" class="px-4 py-3">{{ $label }}</th>
                                                 @endforeach
+                                            @elseif($key === 'Komersil')
+                                                {{-- Use custom columns for Komersil --}}
+                                                @foreach($komersilColumns as $column => $label)
+                                                    <th scope="col" class="px-4 py-3">{{ $label }}</th>
+                                                @endforeach
                                             @elseif($key === 'OrangHilang')
                                                 {{-- Use custom columns for OrangHilang --}}
                                                 @foreach($orangHilangColumns as $column => $label)
@@ -518,6 +794,16 @@
                                             @elseif($key === 'LaporanMatiMengejut')
                                                 {{-- Use custom columns for LaporanMatiMengejut --}}
                                                 @foreach($laporanMatiMengejutColumns as $column => $label)
+                                                    <th scope="col" class="px-4 py-3">{{ $label }}</th>
+                                                @endforeach
+                                            @elseif($key === 'TrafikSeksyen')
+                                                {{-- Use custom columns for TrafikSeksyen --}}
+                                                @foreach($trafikSeksyenColumns as $column => $label)
+                                                    <th scope="col" class="px-4 py-3">{{ $label }}</th>
+                                                @endforeach
+                                            @elseif($key === 'TrafikRule')
+                                                {{-- Use custom columns for TrafikRule --}}
+                                                @foreach($trafikRuleColumns as $column => $label)
                                                     <th scope="col" class="px-4 py-3">{{ $label }}</th>
                                                 @endforeach
                                             @else
@@ -759,6 +1045,57 @@
             });
             initializedTables[tabName] = true;
 
+        @elseif($key === 'Komersil')
+            {{-- Use custom columns for Komersil --}}
+            @php
+                $dtColumns = [
+                    ['data' => 'action', 'name' => 'action', 'orderable' => false, 'searchable' => false, 'title' => 'Tindakan', 'width' => '100px'],
+                    ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'title' => 'No.']
+                ];
+                
+                foreach($komersilColumns as $column => $label) {
+                    $dtColumns[] = [
+                        'data' => $column,
+                        'name' => $column,
+                        'title' => $label,
+                        'defaultContent' => '-',
+                        'orderable' => true,
+                        'searchable' => true
+                    ];
+                }
+            @endphp
+
+            // Initialize the DataTable with custom Komersil columns
+            $(tableId).DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: "{{ route($config['route'], $project->id) }}",
+                    type: "POST",
+                    data: { _token: '{{ csrf_token() }}' }
+                },
+                columns: @json($dtColumns),
+                order: [[2, 'desc']],
+                columnDefs: [{
+                    targets: 0,
+                    className: "sticky left-0 bg-gray-50 dark:text-white dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600"
+                }],
+                fixedColumns: { left: 1 },
+                language: {
+                    search: "Cari:",
+                    lengthMenu: "Tunjukkan _MENU_ entri",
+                    info: "Menunjukkan _START_ hingga _END_ daripada _TOTAL_ entri",
+                    infoEmpty: "Menunjukkan 0 hingga 0 daripada 0 entri",
+                    emptyTable: "Tiada data tersedia dalam jadual"
+                },
+                "drawCallback": function( settings ) {
+                    if (panel.length) {
+                        panel.removeClass('datatable-container-loading');
+                    }
+                }
+            });
+            initializedTables[tabName] = true;
+
         @elseif($key === 'LaporanMatiMengejut')
             {{-- Use custom columns for LaporanMatiMengejut --}}
             @php
@@ -780,6 +1117,108 @@
             @endphp
 
             // Initialize the DataTable with custom LaporanMatiMengejut columns
+            $(tableId).DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: "{{ route($config['route'], $project->id) }}",
+                    type: "POST",
+                    data: { _token: '{{ csrf_token() }}' }
+                },
+                columns: @json($dtColumns),
+                order: [[2, 'desc']],
+                columnDefs: [{
+                    targets: 0,
+                    className: "sticky left-0 bg-gray-50 dark:text-white dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600"
+                }],
+                fixedColumns: { left: 1 },
+                language: {
+                    search: "Cari:",
+                    lengthMenu: "Tunjukkan _MENU_ entri",
+                    info: "Menunjukkan _START_ hingga _END_ daripada _TOTAL_ entri",
+                    infoEmpty: "Menunjukkan 0 hingga 0 daripada 0 entri",
+                    emptyTable: "Tiada data tersedia dalam jadual"
+                },
+                "drawCallback": function( settings ) {
+                    if (panel.length) {
+                        panel.removeClass('datatable-container-loading');
+                    }
+                }
+            });
+            initializedTables[tabName] = true;
+
+        @elseif($key === 'TrafikSeksyen')
+            {{-- Use custom columns for TrafikSeksyen --}}
+            @php
+                $dtColumns = [
+                    ['data' => 'action', 'name' => 'action', 'orderable' => false, 'searchable' => false, 'title' => 'Tindakan', 'width' => '100px'],
+                    ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'title' => 'No.']
+                ];
+                
+                foreach($trafikSeksyenColumns as $column => $label) {
+                    $dtColumns[] = [
+                        'data' => $column,
+                        'name' => $column,
+                        'title' => $label,
+                        'defaultContent' => '-',
+                        'orderable' => true,
+                        'searchable' => true
+                    ];
+                }
+            @endphp
+
+            // Initialize the DataTable with custom TrafikSeksyen columns
+            $(tableId).DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: "{{ route($config['route'], $project->id) }}",
+                    type: "POST",
+                    data: { _token: '{{ csrf_token() }}' }
+                },
+                columns: @json($dtColumns),
+                order: [[2, 'desc']],
+                columnDefs: [{
+                    targets: 0,
+                    className: "sticky left-0 bg-gray-50 dark:text-white dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600"
+                }],
+                fixedColumns: { left: 1 },
+                language: {
+                    search: "Cari:",
+                    lengthMenu: "Tunjukkan _MENU_ entri",
+                    info: "Menunjukkan _START_ hingga _END_ daripada _TOTAL_ entri",
+                    infoEmpty: "Menunjukkan 0 hingga 0 daripada 0 entri",
+                    emptyTable: "Tiada data tersedia dalam jadual"
+                },
+                "drawCallback": function( settings ) {
+                    if (panel.length) {
+                        panel.removeClass('datatable-container-loading');
+                    }
+                }
+            });
+            initializedTables[tabName] = true;
+
+        @elseif($key === 'TrafikRule')
+            {{-- Use custom columns for TrafikRule --}}
+            @php
+                $dtColumns = [
+                    ['data' => 'action', 'name' => 'action', 'orderable' => false, 'searchable' => false, 'title' => 'Tindakan', 'width' => '100px'],
+                    ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'title' => 'No.']
+                ];
+                
+                foreach($trafikRuleColumns as $column => $label) {
+                    $dtColumns[] = [
+                        'data' => $column,
+                        'name' => $column,
+                        'title' => $label,
+                        'defaultContent' => '-',
+                        'orderable' => true,
+                        'searchable' => true
+                    ];
+                }
+            @endphp
+
+            // Initialize the DataTable with custom TrafikRule columns
             $(tableId).DataTable({
                 processing: true,
                 serverSide: true,
