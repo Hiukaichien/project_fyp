@@ -493,7 +493,17 @@ public function exportPapers(Request $request, Project $project)
     public function getJenayahData(Project $project) {
         Gate::authorize('access-project', $project);
         $query = Jenayah::where('project_id', $project->id);
-        return DataTables::of($query)->addIndexColumn()->addColumn('action', fn($row) => $this->buildActionButtons($row, 'Jenayah'))->rawColumns(['action'])->make(true);
+        return DataTables::of($query)
+            ->addIndexColumn()
+            ->editColumn('created_at', function ($row) {
+                return optional($row->created_at)->format('d/m/Y H:i:s') ?? '-';
+            })
+            ->editColumn('updated_at', function ($row) {
+                return optional($row->updated_at)->format('d/m/Y H:i:s') ?? '-';
+            })
+            ->addColumn('action', fn($row) => $this->buildActionButtons($row, 'Jenayah'))
+            ->rawColumns(['action'])
+            ->make(true);
     }
  public function getNarkotikData(Project $project)
     {
@@ -603,6 +613,12 @@ public function exportPapers(Request $request, Project $project)
             })
             ->editColumn('tarikh_laporan_penuh_forensik_pdrm', function ($row) {
                 return optional($row->tarikh_laporan_penuh_forensik_pdrm)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('created_at', function ($row) {
+                return optional($row->created_at)->format('d/m/Y H:i:s') ?? '-';
+            })
+            ->editColumn('updated_at', function ($row) {
+                return optional($row->updated_at)->format('d/m/Y H:i:s') ?? '-';
             })
 
             // boolean formatting
@@ -868,7 +884,17 @@ public function exportPapers(Request $request, Project $project)
     public function getKomersilData(Project $project) {
         Gate::authorize('access-project', $project);
         $query = Komersil::where('project_id', $project->id);
-        return DataTables::of($query)->addIndexColumn()->addColumn('action', fn($row) => $this->buildActionButtons($row, 'Komersil'))->rawColumns(['action'])->make(true);
+        return DataTables::of($query)
+            ->addIndexColumn()
+            ->editColumn('created_at', function ($row) {
+                return optional($row->created_at)->format('d/m/Y H:i:s') ?? '-';
+            })
+            ->editColumn('updated_at', function ($row) {
+                return optional($row->updated_at)->format('d/m/Y H:i:s') ?? '-';
+            })
+            ->addColumn('action', fn($row) => $this->buildActionButtons($row, 'Komersil'))
+            ->rawColumns(['action'])
+            ->make(true);
     }
 
     public function getTrafikSeksyenData(Project $project) {
@@ -1232,8 +1258,16 @@ public function exportPapers(Request $request, Project $project)
                 'keputusan_akhir_mahkamah', // Now a string
                 'lain_lain_permohonan_laporan', // String, ensuring it's in rawColumns if special chars might exist
             ]))
+            ->editColumn('created_at', function ($row) {
+                return optional($row->created_at)->format('d/m/Y H:i:s') ?? '-';
+            })
+            ->editColumn('updated_at', function ($row) {
+                return optional($row->updated_at)->format('d/m/Y H:i:s') ?? '-';
+            })
             ->make(true);
-    }public function getTrafikRuleData(Project $project) {
+    }
+    
+    public function getTrafikRuleData(Project $project) {
         Gate::authorize('access-project', $project);
         $query = TrafikRule::where('project_id', $project->id);
         
@@ -1367,8 +1401,15 @@ public function exportPapers(Request $request, Project $project)
                 'adakah_ks_kus_fail_selesai',
                 'adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan'
             ])
+            ->editColumn('created_at', function ($row) {
+                return optional($row->created_at)->format('d/m/Y H:i:s') ?? '-';
+            })
+            ->editColumn('updated_at', function ($row) {
+                return optional($row->updated_at)->format('d/m/Y H:i:s') ?? '-';
+            })
             ->make(true);
     }
+    
     public function getOrangHilangData(Project $project) {
         Gate::authorize('access-project', $project);
         $query = OrangHilang::where('project_id', $project->id);
@@ -1520,6 +1561,12 @@ public function exportPapers(Request $request, Project $project)
                 'orang_hilang_dijumpai_mati_mengejut_bukan_jenayah',
                 'orang_hilang_dijumpai_mati_mengejut_jenayah'
             ])
+            ->editColumn('created_at', function ($row) {
+                return optional($row->created_at)->format('d/m/Y H:i:s') ?? '-';
+            })
+            ->editColumn('updated_at', function ($row) {
+                return optional($row->updated_at)->format('d/m/Y H:i:s') ?? '-';
+            })
             ->make(true);
     }
     public function getLaporanMatiMengejutData(Project $project) {
@@ -1679,6 +1726,12 @@ public function exportPapers(Request $request, Project $project)
                 'status_pem',
                 'arahan_pelupusan_barang_kes'
             ])
+            ->editColumn('created_at', function ($row) {
+                return optional($row->created_at)->format('d/m/Y H:i:s') ?? '-';
+            })
+            ->editColumn('updated_at', function ($row) {
+                return optional($row->updated_at)->format('d/m/Y H:i:s') ?? '-';
+            })
             ->make(true);
     }
 

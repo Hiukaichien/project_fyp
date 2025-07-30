@@ -23,7 +23,7 @@
         'LaporanMatiMengejut' => ['model' => new LaporanMatiMengejut(), 'route' => 'projects.laporan_mati_mengejut_data', 'title' => 'JP(LMM)'],
     ];
 
-    $ignoreColumns = ['id', 'user_id', 'project_id', 'created_at', 'updated_at'];
+    $ignoreColumns = ['id', 'user_id', 'project_id'];
     // Define custom columns for Narkotik based on actual form fields in edit.blade.php
     $narkotikColumns = [
     // BAHAGIAN 1: Maklumat Asas
@@ -163,6 +163,10 @@
     'status_kus_fail' => 'Status KUS/FAIL',
     'keputusan_akhir_mahkamah' => 'Keputusan Akhir Mahkamah',
     'ulasan_keseluruhan_pegawai_pemeriksa_fail' => 'Ulasan Pegawai Pemeriksa Fail',
+    
+    // Date columns
+    'created_at' => 'Tarikh Dicipta',
+    'updated_at' => 'Tarikh Dikemaskini',
     ];
     // Define custom columns for OrangHilang based on actual form fields in edit.blade.php
     $orangHilangColumns = [
@@ -236,6 +240,10 @@
         'adakah_ks_kus_fail_selesai' => 'KS KUS/FAIL Selesai',
         'keputusan_akhir_mahkamah' => 'Keputusan Akhir Mahkamah',
         'ulasan_keseluruhan_pegawai_pemeriksa_fail' => 'Ulasan Keseluruhan Pegawai Pemeriksa (Fail)',
+        
+        // Date columns
+        'created_at' => 'Tarikh Dicipta',
+        'updated_at' => 'Tarikh Dikemaskini',
     ];
 
     // Define custom columns for LaporanMatiMengejut based on BAHAGIAN 1-8 order from show.blade.php
@@ -343,6 +351,10 @@
         'adakah_ks_kus_fail_selesai' => 'KS KUS/FAIL Selesai',
         'keputusan_akhir_mahkamah' => 'Keputusan Akhir Mahkamah',
         'ulasan_keseluruhan_pegawai_pemeriksa_fail' => 'Ulasan Pegawai Pemeriksa (Fail)',
+        
+        // Date columns
+        'created_at' => 'Tarikh Dicipta',
+        'updated_at' => 'Tarikh Dikemaskini',
     ];
 @endphp
 
@@ -835,7 +847,7 @@
                 ];
 
                 foreach($rawDbColumns as $column) {
-                    if (in_array($column, ['id', 'project_id', 'created_at', 'updated_at'])) continue;
+                    if (in_array($column, ['id', 'project_id'])) continue;
 
                     $columnConfig = ['name' => $column, 'defaultContent' => '-', 'orderable' => true, 'searchable' => true];
 
