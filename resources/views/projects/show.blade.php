@@ -994,7 +994,57 @@
 
 @foreach($paperTypes as $key => $config)
     if (tabName === '{{ $key }}') {
-        @if($key === 'OrangHilang')
+        @if($key === 'Narkotik')
+            {{-- Use custom columns for Narkotik --}}
+            @php
+                $dtColumns = [
+                    ['data' => 'action', 'name' => 'action', 'orderable' => false, 'searchable' => false, 'title' => 'Tindakan', 'width' => '100px'],
+                    ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'title' => 'No.']
+                ];
+                
+                foreach($narkotikColumns as $column => $label) {
+                    $dtColumns[] = [
+                        'data' => $column,
+                        'name' => $column,
+                        'title' => $label,
+                        'defaultContent' => '-',
+                        'orderable' => true,
+                        'searchable' => true
+                    ];
+                }
+            @endphp
+
+            // Initialize the DataTable with custom Narkotik columns
+            $(tableId).DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: "{{ route($config['route'], $project->id) }}",
+                    type: "POST",
+                    data: { _token: '{{ csrf_token() }}' }
+                },
+                columns: @json($dtColumns),
+                order: [[2, 'desc']],
+                columnDefs: [{
+                    targets: 0,
+                    className: "sticky left-0 bg-gray-50 dark:text-white dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600"
+                }],
+                fixedColumns: { left: 1 },
+                language: {
+                    search: "Cari:",
+                    lengthMenu: "Tunjukkan _MENU_ entri",
+                    info: "Menunjukkan _START_ hingga _END_ daripada _TOTAL_ entri",
+                    infoEmpty: "Menunjukkan 0 hingga 0 daripada 0 entri",
+                    emptyTable: "Tiada data tersedia dalam jadual"
+                },
+                "drawCallback": function( settings ) {
+                    if (panel.length) {
+                        panel.removeClass('datatable-container-loading');
+                    }
+                }
+            });
+            initializedTables[tabName] = true;
+        @elseif($key === 'OrangHilang')
             {{-- Use custom columns for OrangHilang --}}
             @php
                 $dtColumns = [
