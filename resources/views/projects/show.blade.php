@@ -564,22 +564,77 @@
                 <label for="excel_file_modal" class="block text-sm font-medium text-gray-700 dark:text-black-300">Pilih Fail Excel</label>
                 <div class="mt-1 flex items-center">
                     <input type="file" name="excel_file" id="excel_file_modal" required accept=".xlsx,.xls,.csv" class="hidden">
-                    <button type="button" onclick="document.getElementById('excel_file_modal').click()" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-500 active:bg-blue-700 focus:outline-none focus:border-blue-700 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
+                    <button type="button" id="file-select-btn" disabled class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-500 active:bg-blue-700 focus:outline-none focus:border-blue-700 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150 opacity-50 cursor-not-allowed">
                         <i class="fas fa-file-upload mr-2"></i>Pilih Fail
                     </button>
-                    <span id="file-name" class="ml-3 text-sm text-gray-500">Tiada fail dipilih</span>
+                    <span id="file-name" class="ml-3 text-sm text-gray-500">Sila pilih kategori kertas dahulu</span>
                 </div>
-                <script>
-                    document.getElementById('excel_file_modal').addEventListener('change', function(e) {
-                        const fileName = e.target.files[0] ? e.target.files[0].name : 'Tiada fail dipilih';
-                        document.getElementById('file-name').textContent = fileName;
-                    });
-                </script>
             </div>
             <div class="mt-6 flex justify-end">
                 <x-secondary-button x-on:click="$dispatch('close')">{{ __('Batal') }}</x-secondary-button>
-                <x-primary-button class="ms-3">{{ __('Muat Naik Fail') }}</x-primary-button>
+                <x-primary-button id="import-submit-btn" class="ms-3" disabled>{{ __('Muat Naik Fail') }}</x-primary-button>
             </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const paperTypeSelect = document.getElementById('paper_type_modal');
+                    const fileInput = document.getElementById('excel_file_modal');
+                    const fileName = document.getElementById('file-name');
+                    const submitBtn = document.getElementById('import-submit-btn');
+                    const fileSelectBtn = document.getElementById('file-select-btn');
+
+                    function updateFileSelectButton() {
+                        const paperTypeSelected = paperTypeSelect.value !== '';
+                        
+                        if (paperTypeSelected) {
+                            fileSelectBtn.disabled = false;
+                            fileSelectBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                            fileSelectBtn.classList.add('hover:bg-blue-500', 'active:bg-blue-700');
+                            fileSelectBtn.onclick = function() {
+                                document.getElementById('excel_file_modal').click();
+                            };
+                            fileName.textContent = fileInput.files.length > 0 ? fileInput.files[0].name : 'Tiada fail dipilih';
+                        } else {
+                            fileSelectBtn.disabled = true;
+                            fileSelectBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                            fileSelectBtn.classList.remove('hover:bg-blue-500', 'active:bg-blue-700');
+                            fileSelectBtn.onclick = null;
+                            fileName.textContent = 'Sila pilih kategori kertas dahulu';
+                            // Clear file selection if paper type is cleared
+                            fileInput.value = '';
+                        }
+                    }
+
+                    function checkFormValidity() {
+                        const paperTypeSelected = paperTypeSelect.value !== '';
+                        const fileSelected = fileInput.files.length > 0;
+                        
+                        if (paperTypeSelected && fileSelected) {
+                            submitBtn.disabled = false;
+                            submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                            submitBtn.classList.add('hover:bg-gray-700', 'focus:bg-gray-700', 'active:bg-gray-900');
+                        } else {
+                            submitBtn.disabled = true;
+                            submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                            submitBtn.classList.remove('hover:bg-gray-700', 'focus:bg-gray-700', 'active:bg-gray-900');
+                        }
+                    }
+
+                    paperTypeSelect.addEventListener('change', function() {
+                        updateFileSelectButton();
+                        checkFormValidity();
+                    });
+                    
+                    fileInput.addEventListener('change', function(e) {
+                        const selectedFileName = e.target.files[0] ? e.target.files[0].name : 'Tiada fail dipilih';
+                        fileName.textContent = selectedFileName;
+                        checkFormValidity();
+                    });
+
+                    // Initial check
+                    updateFileSelectButton();
+                    checkFormValidity();
+                });
+            </script>
         </form>
     </x-modal>
 
