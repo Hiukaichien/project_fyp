@@ -88,7 +88,7 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
         ],
         'LaporanMatiMengejut' => [
             'model'       => \App\Models\LaporanMatiMengejut::class,
-            'unique_by'   => 'no_sdr_lmm',
+            'unique_by'   => 'no_fail_lmm_sdr',
             'column_map'  => [
                 // BAHAGIAN 1: Maklumat Asas
                 'no_kertas_siasatan' => 'no_kertas_siasatan',
@@ -121,7 +121,7 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
                 $actualHeaders = array_map(fn($h) => Str::snake(trim($h)), $event->getReader()->getActiveSheet()->toArray()[0]);
                 $foundHeaders = array_intersect($expectedHeaders, $actualHeaders);
                 if (empty($foundHeaders)) {
-                    $message = 'Import failed. Please ensure the Excel file has the required columns.';
+                    $message = 'Import gagal. Sila pastikan fail Excel mempunyai kolum yang diperlukan.';
                     throw ValidationException::withMessages(['excel_file' => $message]);
                 }
             },
@@ -134,7 +134,8 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
         $uniqueExcelHeaderSnake = array_search($uniqueDbColumn, $this->config['column_map']);
         
         if (!$uniqueExcelHeaderSnake) {
-             throw new \Exception("Configuration error for {$this->paperType}.");
+            $availableColumns = implode(', ', array_keys($this->config['column_map']));
+            throw new \Exception("Ralat konfigurasi untuk {$this->paperType}: Pengenal unik '{$uniqueDbColumn}' tidak dijumpai dalam pemetaan kolum. Kolum yang tersedia: {$availableColumns}");
         }
 
         // Get all existing unique keys for this user to check against in memory
@@ -150,14 +151,14 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
             $uniqueValue = $row[$uniqueExcelHeaderSnake] ?? null;
 
             if (empty($uniqueValue)) {
-                $this->skippedRows[] = "Row {$rowNumber}: Skipped because the unique identifier is missing.";
+                $this->skippedRows[] = "Baris {$rowNumber}: Dilangkau kerana pengenal unik tiada.";
                 $rowNumber++;
                 continue;
             }
 
             // Check against both DB records and records in the current file to prevent duplicates
             if (in_array($uniqueValue, $existingKeys)) {
-                $this->skippedRows[] = "Row {$rowNumber}: Skipped because record '{$uniqueValue}' already exists in your projects.";
+                $this->skippedRows[] = "Baris {$rowNumber}: Dilangkau kerana rekod '{$uniqueValue}' sudah wujud dalam projek anda.";
                 $rowNumber++;
                 continue;
             }
