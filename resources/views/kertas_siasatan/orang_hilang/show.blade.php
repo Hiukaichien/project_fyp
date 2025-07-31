@@ -349,12 +349,12 @@
                     <dl>
                         <div class="bg-yellow-50 px-4 py-5 grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-6">
                             <div>
-                                <dt class="text-sm font-medium text-yellow-800">Status Lewat Edaran (>48 Jam)</dt>
-                                <dd class="mt-1 text-sm font-bold text-gray-900">{{ $paper->edar_lebih_24_jam_status ?? 'TIDAK DIKIRA' }}</dd>
+                                <dt class="text-sm font-medium text-yellow-800">Status Lewat Edaran (>24 Jam)</dt>
+                                <dd class="mt-1 text-sm font-bold text-gray-900">{{ $paper->lewat_edaran_status ?? 'TIDAK DIKIRA' }}</dd>
                             </div>
                             <div>
                                 <dt class="text-sm font-medium text-yellow-800">Status Terbengkalai (>3 Bulan)</dt>
-                                <dd class="mt-1 text-sm font-bold text-gray-900">{{ $paper->terbengkalai_3_bulan_status ?? 'TIDAK DIKIRA' }}</dd>
+                                <dd class="mt-1 text-sm font-bold text-gray-900">{{ $paper->terbengkalai_status ?? 'TIDAK DIKIRA' }}</dd>
                             </div>
                             <div>
                                 <dt class="text-sm font-medium text-yellow-800">Status Kemaskini</dt>
