@@ -114,6 +114,7 @@ return new class extends Migration
             $table->boolean('status_semboyan_ketiga_wanted_person')->nullable()->comment('status_semboyan_ketiga_wanted_person: BOOLEAN');
             $table->date('tarikh_semboyan_ketiga_wanted_person')->nullable()->comment('tarikh_semboyan_ketiga_wanted_person: DATE');
             $table->boolean('status_penandaan_kelas_warna')->nullable()->comment('status_penandaan_kelas_warna: BOOLEAN');
+            $table->text('ulasan_keseluruhan_pegawai_pemeriksa_bahagian_6')->nullable()->comment('B6: ULASAN KESELURUHAN PEGAWAI PEMERIKSA (JIKA ADA)');
             
             // BAHAGIAN 7: Permohonan Laporan Agensi Luar (B7)
             $table->boolean('status_permohonan_laporan_post_mortem_mayat')->nullable()->comment('B7: status_permohonan_laporan_post_mortem_mayat');

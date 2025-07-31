@@ -468,6 +468,11 @@
                             <dt class="text-sm font-medium text-gray-500">Adakah Penandaan Kelas Warna Pada Kulit Kertas Siasatan Dibuat</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_boolean_badge($paper->status_penandaan_kelas_warna) !!}</dd>
                         </div>
+                        
+                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt class="text-sm font-medium text-gray-500">Ulasan Keseluruhan Pegawai Pemeriksa (Jika Ada)</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->ulasan_keseluruhan_pegawai_pemeriksa_bahagian_6 ?? '-' }}</dd>
+                        </div>
                     </dl>
                 </div>
             </div>

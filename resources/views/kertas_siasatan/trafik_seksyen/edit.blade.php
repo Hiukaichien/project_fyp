@@ -571,6 +571,11 @@
                             <label class="block text-sm font-medium text-gray-700">Adakah Penandaan Kelas Warna Pada Kulit Kertas Siasatan Dibuat</label>
                             {!! render_boolean_radio('status_penandaan_kelas_warna', $paper->status_penandaan_kelas_warna, 'Ya', 'Tidak') !!}
                         </div>
+
+                        <div>
+                            <label for="ulasan_keseluruhan_pegawai_pemeriksa_bahagian_6" class="block text-sm font-medium text-gray-700">Ulasan Keseluruhan Pegawai Pemeriksa (Jika Ada)</label>
+                            <textarea name="ulasan_keseluruhan_pegawai_pemeriksa_bahagian_6" id="ulasan_keseluruhan_pegawai_pemeriksa_bahagian_6" rows="3" class="mt-1 block w-full form-textarea">{{ old('ulasan_keseluruhan_pegawai_pemeriksa_bahagian_6', $paper->ulasan_keseluruhan_pegawai_pemeriksa_bahagian_6) }}</textarea>
+                        </div>
                     </div>
                 </div>
 
