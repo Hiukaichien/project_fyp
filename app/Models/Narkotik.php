@@ -230,17 +230,29 @@ class Narkotik extends Model
         return null;
     }
 
-    public function getTerbengkalaiStatusAttribute(): ?string
-    {
-        $tarikhA = $this->tarikh_edaran_minit_ks_pertama;
-        $tarikhD = $this->tarikh_edaran_minit_ks_akhir;
+public function getTerbengkalaiStatusAttribute(): string
+{
+    $tarikhA = $this->tarikh_edaran_minit_ks_pertama;
+    $tarikhC = $this->tarikh_edaran_minit_ks_sebelum_akhir;
+    $tarikhD = $this->tarikh_edaran_minit_ks_akhir;
+    $isTerbengkalai = false;
 
-        if ($tarikhA && !$tarikhD) {
-            return $tarikhA->diffInMonths(Carbon::now()) > 3 ? 'TERBENGKALAI MELEBIHI 3 BULAN' : 'TIDAK TERBENGKALAI';
+    // Rule 1: Check the gap between the last two updates.
+    if ($tarikhD && $tarikhC) {
+        if ($tarikhD->diffInMonths($tarikhC) >= 3) {
+            $isTerbengkalai = true;
         }
-
-        return 'TIDAK BERKENAAN';
     }
+
+    // Rule 2: Check the total gap from start to finish.
+    if (!$isTerbengkalai && $tarikhD && $tarikhA) {
+        if ($tarikhD->diffInMonths($tarikhA) >= 3) {
+            $isTerbengkalai = true;
+        }
+    }
+    
+    return $isTerbengkalai ? 'TERBENGKALAI MELEBIHI 3 BULAN' : 'TIDAK TERBENGKALAI';
+}
 
     public function getBaruDikemaskiniStatusAttribute(): string
     {
