@@ -252,7 +252,12 @@
                             <dt class="text-sm font-medium text-gray-500">Status Pergerakan Barang Kes</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                 {{ $paper->status_pergerakan_barang_kes ?? '-' }}
-                                @if($paper->status_pergerakan_barang_kes === 'Lain-Lain' && !empty($paper->status_pergerakan_barang_kes_lain))
+
+                                @if($paper->status_pergerakan_barang_kes === 'Ujian Makmal' && !empty($paper->status_pergerakan_barang_kes_makmal))
+                                <div class="text-xs text-gray-600 mt-1 pl-2 border-l-2 border-gray-300">
+                                    <span class="font-semibold">Nyatakan:</span> {{ $paper->status_pergerakan_barang_kes_makmal }}
+                                </div>
+                                @elseif($paper->status_pergerakan_barang_kes === 'Lain-Lain' && !empty($paper->status_pergerakan_barang_kes_lain))
                                 <div class="text-xs text-gray-600 mt-1 pl-2 border-l-2 border-gray-300">
                                     <span class="font-semibold">Nyatakan:</span> {{ $paper->status_pergerakan_barang_kes_lain }}
                                 </div>
@@ -265,7 +270,12 @@
                             <dt class="text-sm font-medium text-gray-500">Status Barang Kes Selesai Siasatan</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                 {{ $paper->status_barang_kes_selesai_siasatan ?? '-' }}
-                                @if($paper->status_barang_kes_selesai_siasatan === 'Lain-Lain' && !empty($paper->status_barang_kes_selesai_siasatan_lain))
+
+                                @if($paper->status_barang_kes_selesai_siasatan === 'Dilupuskan ke Perbendaharaan' && !empty($paper->status_barang_kes_selesai_siasatan_RM))
+                                <div class="text-xs text-gray-600 mt-1 pl-2 border-l-2 border-gray-300">
+                                    <span class="font-semibold">RM:</span> {{ $paper->status_barang_kes_selesai_siasatan_RM }}
+                                </div>
+                                @elseif($paper->status_barang_kes_selesai_siasatan === 'Lain-Lain' && !empty($paper->status_barang_kes_selesai_siasatan_lain))
                                 <div class="text-xs text-gray-600 mt-1 pl-2 border-l-2 border-gray-300">
                                     <span class="font-semibold">Nyatakan:</span> {{ $paper->status_barang_kes_selesai_siasatan_lain }}
                                 </div>

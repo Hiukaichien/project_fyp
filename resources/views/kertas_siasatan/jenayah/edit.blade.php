@@ -232,7 +232,7 @@
                                 <label for="no_daftar_spesimen_darah" class="block text-sm font-medium text-gray-700">No. Daftar Spesimen Darah</label>
                                 <input type="text" name="no_daftar_spesimen_darah" id="no_daftar_spesimen_darah" value="{{ old('no_daftar_spesimen_darah', $paper->no_daftar_spesimen_darah) }}" class="mt-1 block w-full form-input">
                             </div>
-                             <div>
+                            <div>
                                 <label for="no_daftar_kontraban" class="block text-sm font-medium text-gray-700">No. Daftar Kontraban</label>
                                 <input type="text" name="no_daftar_kontraban" id="no_daftar_kontraban" value="{{ old('no_daftar_kontraban', $paper->no_daftar_kontraban) }}" class="mt-1 block w-full form-input">
                             </div>
@@ -266,10 +266,15 @@
                                     <input type="radio" name="status_pergerakan_barang_kes" value="Simpanan Stor Ekshibit" {{ $currentPergerakan == 'Simpanan Stor Ekshibit' ? 'checked' : '' }} class="form-radio h-4 w-4 text-blue-600">
                                     <span class="ml-2 text-gray-700">Simpanan Stor Ekshibit</span>
                                 </label>
-                                <label class="flex items-center">
-                                    <input type="radio" name="status_pergerakan_barang_kes" value="Ujian Makmal" {{ $currentPergerakan == 'Ujian Makmal' ? 'checked' : '' }} class="form-radio h-4 w-4 text-blue-600">
-                                    <span class="ml-2 text-gray-700">Ujian Makmal</span>
-                                </label>
+
+                                <div class="flex items-start">
+                                    <label class="flex items-center mt-2">
+                                        <input type="radio" name="status_pergerakan_barang_kes" value="Ujian Makmal" id="radio_pergerakan_makmal_jenayah" {{ $currentPergerakan == 'Ujian Makmal' ? 'checked' : '' }} class="form-radio h-4 w-4 text-blue-600">
+                                        <span class="ml-2 text-gray-700">Ujian Makmal (Nyatakan):</span>
+                                    </label>
+                                    <input type="text" name="status_pergerakan_barang_kes_makmal" id="pergerakan_makmal_jenayah" value="{{ old('status_pergerakan_barang_kes_makmal', $paper->status_pergerakan_barang_kes_makmal) }}" class="ml-2 form-input text-sm w-64">
+                                </div>
+                                
                                 <label class="flex items-center">
                                     <input type="radio" name="status_pergerakan_barang_kes" value="Di Mahkamah" {{ $currentPergerakan == 'Di Mahkamah' ? 'checked' : '' }} class="form-radio h-4 w-4 text-blue-600">
                                     <span class="ml-2 text-gray-700">Di Mahkamah</span>
@@ -283,7 +288,7 @@
                                         <input type="radio" name="status_pergerakan_barang_kes" value="Lain-Lain" id="pergerakan_lain_jenayah" {{ $currentPergerakan == 'Lain-Lain' ? 'checked' : '' }} class="form-radio h-4 w-4 text-blue-600">
                                         <span class="ml-2 text-gray-700">Lain-lain:</span>
                                     </label>
-                                    <input type="text" name="status_pergerakan_barang_kes_lain" id="status_pergerakan_barang_kes_lain_jenayah" value="{{ old('status_pergerakan_barang_kes_lain', $paper->status_pergerakan_barang_kes_lain) }}" class="ml-2 form-input text-sm w-64" disabled>
+                                    <input type="text" name="status_pergerakan_barang_kes_lain" id="status_pergerakan_barang_kes_lain_jenayah" value="{{ old('status_pergerakan_barang_kes_lain', $paper->status_pergerakan_barang_kes_lain) }}" class="ml-2 form-input text-sm w-64">
                                 </div>
                             </div>
                         </div>
@@ -293,10 +298,15 @@
                             <label class="block text-sm font-medium text-gray-700 mb-2">Status Barang Kes Selesai Siasatan</label>
                             <div class="space-y-2 pl-4">
                                 @php $currentSelesai = old('status_barang_kes_selesai_siasatan', $paper->status_barang_kes_selesai_siasatan); @endphp
-                                <label class="flex items-center">
-                                    <input type="radio" name="status_barang_kes_selesai_siasatan" value="Dilupuskan ke Perbendaharaan" {{ $currentSelesai == 'Dilupuskan ke Perbendaharaan' ? 'checked' : '' }} class="form-radio h-4 w-4 text-blue-600">
-                                    <span class="ml-2 text-gray-700">Dilupuskan ke Perbendaharaan</span>
-                                </label>
+                                
+                                <div class="flex items-start">
+                                    <label class="flex items-center mt-2">
+                                        <input type="radio" name="status_barang_kes_selesai_siasatan" value="Dilupuskan ke Perbendaharaan" id="radio_selesai_siasatan_RM_jenayah" {{ $currentSelesai == 'Dilupuskan ke Perbendaharaan' ? 'checked' : '' }} class="form-radio h-4 w-4 text-blue-600">
+                                        <span class="ml-2 text-gray-700">Dilupuskan ke Perbendaharaan</span>
+                                    </label>
+                                    <input type="text" name="status_barang_kes_selesai_siasatan_RM" id="selesai_siasatan_RM_jenayah" value="{{ old('status_barang_kes_selesai_siasatan_RM', $paper->status_barang_kes_selesai_siasatan_RM) }}" class="ml-2 form-input text-sm w-64" placeholder="RM">
+                                </div>
+
                                 <label class="flex items-center">
                                     <input type="radio" name="status_barang_kes_selesai_siasatan" value="Dikembalikan Kepada Pemilik" {{ $currentSelesai == 'Dikembalikan Kepada Pemilik' ? 'checked' : '' }} class="form-radio h-4 w-4 text-blue-600">
                                     <span class="ml-2 text-gray-700">Dikembalikan Kepada Pemilik</span>
@@ -310,7 +320,7 @@
                                         <input type="radio" name="status_barang_kes_selesai_siasatan" value="Lain-Lain" id="selesai_lain_jenayah" {{ $currentSelesai == 'Lain-Lain' ? 'checked' : '' }} class="form-radio h-4 w-4 text-blue-600">
                                         <span class="ml-2 text-gray-700">Lain-lain:</span>
                                     </label>
-                                    <input type="text" name="status_barang_kes_selesai_siasatan_lain" id="status_barang_kes_selesai_siasatan_lain_jenayah" value="{{ old('status_barang_kes_selesai_siasatan_lain', $paper->status_barang_kes_selesai_siasatan_lain) }}" class="ml-2 form-input text-sm w-64" disabled>
+                                    <input type="text" name="status_barang_kes_selesai_siasatan_lain" id="status_barang_kes_selesai_siasatan_lain_jenayah" value="{{ old('status_barang_kes_selesai_siasatan_lain', $paper->status_barang_kes_selesai_siasatan_lain) }}" class="ml-2 form-input text-sm w-64">
                                 </div>
                             </div>
                         </div>
@@ -341,7 +351,7 @@
                                         <input type="radio" name="barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan" value="Lain-Lain" id="kaedah_lain_jenayah" {{ $currentKaedah == 'Lain-Lain' ? 'checked' : '' }} class="form-radio h-4 w-4 text-blue-600">
                                         <span class="ml-2 text-gray-700">Lain-lain</span>
                                     </label>
-                                    <input type="text" name="kaedah_pelupusan_barang_kes_lain" id="kaedah_pelupusan_barang_kes_lain_jenayah" value="{{ old('kaedah_pelupusan_barang_kes_lain', $paper->kaedah_pelupusan_barang_kes_lain) }}" class="ml-2 form-input text-sm w-64" disabled>
+                                    <input type="text" name="kaedah_pelupusan_barang_kes_lain" id="kaedah_pelupusan_barang_kes_lain_jenayah" value="{{ old('kaedah_pelupusan_barang_kes_lain', $paper->kaedah_pelupusan_barang_kes_lain) }}" class="ml-2 form-input text-sm w-64">
                                 </div>
                             </div>
                         </div>
@@ -822,11 +832,25 @@ document.addEventListener('DOMContentLoaded', function () {
     // --- Initialize All Toggles for the Jenayah Form ---
 
     // Section 4: Barang Kes
+    // Handles the "Ujian Makmal" input for Status Pergerakan
+    setupSpecialInputToggle(
+        'status_pergerakan_barang_kes',
+        'radio_pergerakan_makmal_jenayah',
+        'pergerakan_makmal_jenayah'
+    );
+
     // Handles the "Lain-Lain" input for Status Pergerakan
     setupSpecialInputToggle(
         'status_pergerakan_barang_kes',
         'pergerakan_lain_jenayah',
         'status_pergerakan_barang_kes_lain_jenayah'
+    );
+
+    // Handles the "Dilupuskan ke Perbendaharaan (RM)" input for Status Selesai Siasatan
+    setupSpecialInputToggle(
+        'status_barang_kes_selesai_siasatan',
+        'radio_selesai_siasatan_RM_jenayah',
+        'selesai_siasatan_RM_jenayah'
     );
 
     // Handles the "Lain-Lain" input for Status Selesai Siasatan

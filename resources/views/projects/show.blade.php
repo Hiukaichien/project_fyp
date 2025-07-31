@@ -68,11 +68,8 @@
         'jenis_barang_kes_kenderaan' => 'Jenis BK Kenderaan',
         'jenis_barang_kes_kontraban' => 'Jenis BK Kontraban',
         'status_pergerakan_barang_kes' => 'Status Pergerakan BK',
-        'status_pergerakan_barang_kes_lain' => 'Status Pergerakan BK (Lain-lain)',
         'status_barang_kes_selesai_siasatan' => 'Status BK Selesai Siasatan',
-        'status_barang_kes_selesai_siasatan_lain' => 'Status BK Selesai Siasatan (Lain-lain)',
         'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan' => 'Kaedah Pelupusan BK',
-        'kaedah_pelupusan_barang_kes_lain' => 'Kaedah Pelupusan BK (Lain-lain)',
         'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => 'Arahan Pelupusan Wang Tunai',
         'resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => 'Resit Kew.38e',
         'adakah_borang_serah_terima_pegawai_tangkapan' => 'Borang Serah/Terima (Pegawai Tangkapan)',
@@ -1189,8 +1186,15 @@
                         ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'title' => 'No.']
                     ];
                     
+                    // Columns that need a special combined render function
+                    $combinedRenderFields = [
+                        'status_pergerakan_barang_kes',
+                        'status_barang_kes_selesai_siasatan',
+                        'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan'
+                    ];
+
                     foreach($jenayahColumns as $columnKey => $label) {
-                        $dtColumns[] = [
+                        $columnConfig = [
                             'data' => $columnKey,
                             'name' => $columnKey,
                             'title' => $label,
@@ -1198,8 +1202,54 @@
                             'orderable' => true,
                             'searchable' => true
                         ];
+                        
+                        // Add a placeholder for columns that need the combined renderer
+                        if (in_array($columnKey, $combinedRenderFields)) {
+                            $columnConfig['render'] = '%%COMBINED_RENDER%%';
+                        }
+                        
+                        $dtColumns[] = $columnConfig;
                     }
                 @endphp
+
+                let dtColumnsConfig = @json($dtColumns);
+
+                // Define the combined render function in JavaScript
+                const combinedRenderFunction = function(data, type, row, meta) {
+                    if (!data) return '-';
+
+                    let details = '';
+                    const colName = meta.settings.aoColumns[meta.col].name;
+
+                    if (colName === 'status_pergerakan_barang_kes') {
+                        if (data === 'Ujian Makmal' && row.status_pergerakan_barang_kes_makmal) {
+                            details = `: ${row.status_pergerakan_barang_kes_makmal}`;
+                        } else if (data === 'Lain-Lain' && row.status_pergerakan_barang_kes_lain) {
+                            details = `: ${row.status_pergerakan_barang_kes_lain}`;
+                        }
+                    } 
+                    else if (colName === 'status_barang_kes_selesai_siasatan') {
+                        if (data === 'Dilupuskan ke Perbendaharaan' && row.status_barang_kes_selesai_siasatan_RM) {
+                            details = ` (${row.status_barang_kes_selesai_siasatan_RM})`;
+                        } else if (data === 'Lain-Lain' && row.status_barang_kes_selesai_siasatan_lain) {
+                            details = `: ${row.status_barang_kes_selesai_siasatan_lain}`;
+                        }
+                    }
+                    else if (colName === 'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan') {
+                        if (data === 'Lain-Lain' && row.kaedah_pelupusan_barang_kes_lain) {
+                            details = `: ${row.kaedah_pelupusan_barang_kes_lain}`;
+                        }
+                    }
+                    
+                    return data + details;
+                };
+
+                // Loop through the config and replace the placeholders
+                dtColumnsConfig.forEach(function(column) {
+                    if (column.render === '%%COMBINED_RENDER%%') {
+                        column.render = combinedRenderFunction;
+                    }
+                });
 
                 $(tableId).DataTable({
                     processing: true,
@@ -1209,8 +1259,8 @@
                         type: "POST",
                         data: { _token: '{{ csrf_token() }}' }
                     },
-                    columns: @json($dtColumns), // Use the custom columns defined above
-                    order: [[2, 'desc']], // Order by 'No. Kertas Siasatan' descending
+                    columns: dtColumnsConfig, // Use the processed configuration
+                    order: [[2, 'desc']], 
                     columnDefs: [{
                         targets: 0,
                         className: "sticky left-0 bg-gray-50 dark:text-white dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600"
