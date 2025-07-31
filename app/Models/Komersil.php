@@ -85,13 +85,63 @@ class Komersil extends Model
         'status_penandaan_kelas_warna' => 'boolean',
 
         // B7 - E-FSA & Agensi Luar
-        // ... (all other boolean and date casts are correct) ...
         'status_permohonan_laporan_post_mortem_mayat' => 'boolean',
         'tarikh_permohonan_laporan_post_mortem_mayat' => 'date:Y-m-d',
-        'status_permohonan_E_FSA_1_oleh_IO_AIO' => 'boolean',
-        'status_laporan_penuh_E_FSA_1_oleh_IO_AIO' => 'boolean',
+        
+        // E-FSA fields are now strings, but dates still need casting
         'tarikh_laporan_penuh_E_FSA_1_oleh_IO_AIO' => 'date:Y-m-d',
-        // ... etc.
+        'tarikh_laporan_penuh_E_FSA_2_oleh_IO_AIO' => 'date:Y-m-d',
+        'tarikh_laporan_penuh_E_FSA_3_oleh_IO_AIO' => 'date:Y-m-d',
+        'tarikh_laporan_penuh_E_FSA_4_oleh_IO_AIO' => 'date:Y-m-d',
+        'tarikh_laporan_penuh_E_FSA_5_oleh_IO_AIO' => 'date:Y-m-d',
+        'tarikh_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO' => 'date:Y-m-d',
+        'tarikh_laporan_penuh_E_FSA_2_telco_oleh_IO_AIO' => 'date:Y-m-d',
+        'tarikh_laporan_penuh_E_FSA_3_telco_oleh_IO_AIO' => 'date:Y-m-d',
+        'tarikh_laporan_penuh_E_FSA_4_telco_oleh_IO_AIO' => 'date:Y-m-d',
+        'tarikh_laporan_penuh_E_FSA_5_telco_oleh_IO_AIO' => 'date:Y-m-d',
+        
+        // Puspakom
+        'status_permohonan_laporan_puspakom' => 'boolean',
+        'tarikh_permohonan_laporan_puspakom' => 'date:Y-m-d',
+        'status_laporan_penuh_puspakom' => 'boolean',
+        'tarikh_laporan_penuh_puspakom' => 'date:Y-m-d',
+        
+        // JKR
+        'status_permohonan_laporan_jkr' => 'boolean',
+        'tarikh_permohonan_laporan_jkr' => 'date:Y-m-d',
+        'status_laporan_penuh_jkr' => 'boolean',
+        'tarikh_laporan_penuh_jkr' => 'date:Y-m-d',
+        
+        // JPJ
+        'status_permohonan_laporan_jpj' => 'boolean',
+        'tarikh_permohonan_laporan_jpj' => 'date:Y-m-d',
+        'status_laporan_penuh_jpj' => 'boolean',
+        'tarikh_laporan_penuh_jpj' => 'date:Y-m-d',
+        
+        // Imigresen
+        'status_permohonan_laporan_imigresen' => 'boolean',
+        'tarikh_permohonan_laporan_imigresen' => 'date:Y-m-d',
+        'status_laporan_penuh_imigresen' => 'boolean',
+        'tarikh_laporan_penuh_imigresen' => 'date:Y-m-d',
+        
+        // Kastam
+        'status_permohonan_laporan_kastam' => 'boolean',
+        'tarikh_permohonan_laporan_kastam' => 'date:Y-m-d',
+        'status_laporan_penuh_kastam' => 'boolean',
+        'tarikh_laporan_penuh_kastam' => 'date:Y-m-d',
+        
+        // Forensik PDRM
+        'status_permohonan_laporan_forensik_pdrm' => 'boolean',
+        'tarikh_permohonan_laporan_forensik_pdrm' => 'date:Y-m-d',
+        'status_laporan_penuh_forensik_pdrm' => 'boolean',
+        'tarikh_laporan_penuh_forensik_pdrm' => 'date:Y-m-d',
+        
+        // B8 - Status Fail
+        'muka_surat_4_barang_kes_ditulis' => 'boolean',
+        'muka_surat_4_dengan_arahan_tpr' => 'boolean',
+        'muka_surat_4_keputusan_kes_dicatat' => 'boolean',
+        'fail_lmm_ada_keputusan_koroner' => 'boolean',
+        'status_kus_fail' => 'boolean',
 
         // Common timestamps
         'created_at' => 'datetime',
@@ -172,6 +222,18 @@ class Komersil extends Model
         'status_permohonan_laporan_jpj_text',
         'status_laporan_penuh_jpj_text',
         'status_permohonan_laporan_imigresen_text',
+        'status_laporan_penuh_imigresen_text',
+        'status_permohonan_laporan_kastam_text',
+        'status_laporan_penuh_kastam_text',
+        'status_permohonan_laporan_forensik_pdrm_text',
+        'status_laporan_penuh_forensik_pdrm_text',
+        
+        // B8 - Status Fail text versions
+        'muka_surat_4_barang_kes_ditulis_text',
+        'muka_surat_4_dengan_arahan_tpr_text',
+        'muka_surat_4_keputusan_kes_dicatat_text',
+        'fail_lmm_ada_keputusan_koroner_text',
+        'status_kus_fail_text',
     ];
 
     public function project()
@@ -186,6 +248,21 @@ class Komersil extends Model
             return $nullText;
         }
         return $value ? $trueText : $falseText;
+    }
+
+    private function formatStringToMalay(?string $value, string $trueText = 'Ya', string $falseText = 'Tidak', string $nullText = '-'): string
+    {
+        if (is_null($value) || $value === '') {
+            return $nullText;
+        }
+        
+        // Check if the value indicates a positive status
+        $positiveValues = ['Dibuat', 'Diterima', 'Ya', 'Ada', 'Cipta', 'Dicipta', '1', 'true', 'YES'];
+        $isPositive = in_array(strtolower($value), array_map('strtolower', $positiveValues)) || 
+                      in_array($value, $positiveValues) ||
+                      (is_numeric($value) && $value > 0);
+        
+        return $isPositive ? $trueText : $falseText;
     }
 
     private function formatStringValue(?string $value, string $nullText = '-'): string
@@ -424,102 +501,102 @@ class Komersil extends Model
 
     public function getStatusPermohonanEFSA1OlehIOAIOTextAttribute(): string 
     {
-        return $this->formatBooleanToMalay($this->status_permohonan_E_FSA_1_oleh_IO_AIO, 'Permohonan Dibuat', 'Tiada Permohonan');
+        return $this->formatStringToMalay($this->status_permohonan_E_FSA_1_oleh_IO_AIO, 'Permohonan Dibuat', 'Tiada Permohonan');
     }
 
     public function getStatusLaporanPenuhEFSA1OlehIOAIOTextAttribute(): string 
     {
-        return $this->formatBooleanToMalay($this->status_laporan_penuh_E_FSA_1_oleh_IO_AIO, 'Dilampirkan', 'Tidak Dilampirkan');
+        return $this->formatStringToMalay($this->status_laporan_penuh_E_FSA_1_oleh_IO_AIO, 'Dilampirkan', 'Tidak Dilampirkan');
     }
 
     public function getStatusPermohonanEFSA2OlehIOAIOTextAttribute(): string 
     {
-        return $this->formatBooleanToMalay($this->status_permohonan_E_FSA_2_oleh_IO_AIO, 'Permohonan Dibuat', 'Tiada Permohonan');
+        return $this->formatStringToMalay($this->status_permohonan_E_FSA_2_oleh_IO_AIO, 'Permohonan Dibuat', 'Tiada Permohonan');
     }
 
     public function getStatusLaporanPenuhEFSA2OlehIOAIOTextAttribute(): string 
     {
-        return $this->formatBooleanToMalay($this->status_laporan_penuh_E_FSA_2_oleh_IO_AIO, 'Dilampirkan', 'Tidak Dilampirkan');
+        return $this->formatStringToMalay($this->status_laporan_penuh_E_FSA_2_oleh_IO_AIO, 'Dilampirkan', 'Tidak Dilampirkan');
     }
 
     public function getStatusPermohonanEFSA3OlehIOAIOTextAttribute(): string 
     {
-        return $this->formatBooleanToMalay($this->status_permohonan_E_FSA_3_oleh_IO_AIO, 'Permohonan Dibuat', 'Tiada Permohonan');
+        return $this->formatStringToMalay($this->status_permohonan_E_FSA_3_oleh_IO_AIO, 'Permohonan Dibuat', 'Tiada Permohonan');
     }
 
     public function getStatusLaporanPenuhEFSA3OlehIOAIOTextAttribute(): string 
     {
-        return $this->formatBooleanToMalay($this->status_laporan_penuh_E_FSA_3_oleh_IO_AIO, 'Dilampirkan', 'Tidak Dilampirkan');
+        return $this->formatStringToMalay($this->status_laporan_penuh_E_FSA_3_oleh_IO_AIO, 'Dilampirkan', 'Tidak Dilampirkan');
     }
 
     public function getStatusPermohonanEFSA4OlehIOAIOTextAttribute(): string 
     {
-        return $this->formatBooleanToMalay($this->status_permohonan_E_FSA_4_oleh_IO_AIO, 'Permohonan Dibuat', 'Tiada Permohonan');
+        return $this->formatStringToMalay($this->status_permohonan_E_FSA_4_oleh_IO_AIO, 'Permohonan Dibuat', 'Tiada Permohonan');
     }
 
     public function getStatusLaporanPenuhEFSA4OlehIOAIOTextAttribute(): string 
     {
-        return $this->formatBooleanToMalay($this->status_laporan_penuh_E_FSA_4_oleh_IO_AIO, 'Dilampirkan', 'Tidak Dilampirkan');
+        return $this->formatStringToMalay($this->status_laporan_penuh_E_FSA_4_oleh_IO_AIO, 'Dilampirkan', 'Tidak Dilampirkan');
     }
 
     public function getStatusPermohonanEFSA5OlehIOAIOTextAttribute(): string 
     {
-        return $this->formatBooleanToMalay($this->status_permohonan_E_FSA_5_oleh_IO_AIO, 'Permohonan Dibuat', 'Tiada Permohonan');
+        return $this->formatStringToMalay($this->status_permohonan_E_FSA_5_oleh_IO_AIO, 'Permohonan Dibuat', 'Tiada Permohonan');
     }
 
     public function getStatusLaporanPenuhEFSA5OlehIOAIOTextAttribute(): string 
     {
-        return $this->formatBooleanToMalay($this->status_laporan_penuh_E_FSA_5_oleh_IO_AIO, 'Dilampirkan', 'Tidak Dilampirkan');
+        return $this->formatStringToMalay($this->status_laporan_penuh_E_FSA_5_oleh_IO_AIO, 'Dilampirkan', 'Tidak Dilampirkan');
     }
 
     public function getStatusPermohonanEFSA1TelcoOlehIOAIOTextAttribute(): string 
     {
-        return $this->formatBooleanToMalay($this->status_permohonan_E_FSA_1_telco_oleh_IO_AIO, 'Permohonan Dibuat', 'Tiada Permohonan');
+        return $this->formatStringToMalay($this->status_permohonan_E_FSA_1_telco_oleh_IO_AIO, 'Permohonan Dibuat', 'Tiada Permohonan');
     }
 
     public function getStatusLaporanPenuhEFSA1TelcoOlehIOAIOTextAttribute(): string 
     {
-        return $this->formatBooleanToMalay($this->status_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO, 'Dilampirkan', 'Tidak Dilampirkan');
+        return $this->formatStringToMalay($this->status_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO, 'Dilampirkan', 'Tidak Dilampirkan');
     }
 
     public function getStatusPermohonanEFSA2TelcoOlehIOAIOTextAttribute(): string 
     {
-        return $this->formatBooleanToMalay($this->status_permohonan_E_FSA_2_telco_oleh_IO_AIO, 'Permohonan Dibuat', 'Tiada Permohonan');
+        return $this->formatStringToMalay($this->status_permohonan_E_FSA_2_telco_oleh_IO_AIO, 'Permohonan Dibuat', 'Tiada Permohonan');
     }
 
     public function getStatusLaporanPenuhEFSA2TelcoOlehIOAIOTextAttribute(): string 
     {
-        return $this->formatBooleanToMalay($this->status_laporan_penuh_E_FSA_2_telco_oleh_IO_AIO, 'Dilampirkan', 'Tidak Dilampirkan');
+        return $this->formatStringToMalay($this->status_laporan_penuh_E_FSA_2_telco_oleh_IO_AIO, 'Dilampirkan', 'Tidak Dilampirkan');
     }
 
     public function getStatusPermohonanEFSA3TelcoOlehIOAIOTextAttribute(): string 
     {
-        return $this->formatBooleanToMalay($this->status_permohonan_E_FSA_3_telco_oleh_IO_AIO, 'Permohonan Dibuat', 'Tiada Permohonan');
+        return $this->formatStringToMalay($this->status_permohonan_E_FSA_3_telco_oleh_IO_AIO, 'Permohonan Dibuat', 'Tiada Permohonan');
     }
 
     public function getStatusLaporanPenuhEFSA3TelcoOlehIOAIOTextAttribute(): string 
     {
-        return $this->formatBooleanToMalay($this->status_laporan_penuh_E_FSA_3_telco_oleh_IO_AIO, 'Dilampirkan', 'Tidak Dilampirkan');
+        return $this->formatStringToMalay($this->status_laporan_penuh_E_FSA_3_telco_oleh_IO_AIO, 'Dilampirkan', 'Tidak Dilampirkan');
     }
 
     public function getStatusPermohonanEFSA4TelcoOlehIOAIOTextAttribute(): string 
     {
-        return $this->formatBooleanToMalay($this->status_permohonan_E_FSA_4_telco_oleh_IO_AIO, 'Permohonan Dibuat', 'Tiada Permohonan');
+        return $this->formatStringToMalay($this->status_permohonan_E_FSA_4_telco_oleh_IO_AIO, 'Permohonan Dibuat', 'Tiada Permohonan');
     }
 
     public function getStatusLaporanPenuhEFSA4TelcoOlehIOAIOTextAttribute(): string 
     {
-        return $this->formatBooleanToMalay($this->status_laporan_penuh_E_FSA_4_telco_oleh_IO_AIO, 'Dilampirkan', 'Tidak Dilampirkan');
+        return $this->formatStringToMalay($this->status_laporan_penuh_E_FSA_4_telco_oleh_IO_AIO, 'Dilampirkan', 'Tidak Dilampirkan');
     }
 
     public function getStatusPermohonanEFSA5TelcoOlehIOAIOTextAttribute(): string 
     {
-        return $this->formatBooleanToMalay($this->status_permohonan_E_FSA_5_telco_oleh_IO_AIO, 'Permohonan Dibuat', 'Tiada Permohonan');
+        return $this->formatStringToMalay($this->status_permohonan_E_FSA_5_telco_oleh_IO_AIO, 'Permohonan Dibuat', 'Tiada Permohonan');
     }
 
     public function getStatusLaporanPenuhEFSA5TelcoOlehIOAIOTextAttribute(): string 
     {
-        return $this->formatBooleanToMalay($this->status_laporan_penuh_E_FSA_5_telco_oleh_IO_AIO, 'Dilampirkan', 'Tidak Dilampirkan');
+        return $this->formatStringToMalay($this->status_laporan_penuh_E_FSA_5_telco_oleh_IO_AIO, 'Dilampirkan', 'Tidak Dilampirkan');
     }
 
     public function getStatusPermohonanLaporanPuspakomTextAttribute(): string 
@@ -555,5 +632,56 @@ class Komersil extends Model
     public function getStatusPermohonanLaporanImigresenTextAttribute(): string 
     {
         return $this->formatBooleanToMalay($this->status_permohonan_laporan_imigresen, 'Permohonan Dibuat', 'Tiada Permohonan');
+    }
+
+    public function getStatusLaporanPenuhImigresenTextAttribute(): string 
+    {
+        return $this->formatBooleanToMalay($this->status_laporan_penuh_imigresen, 'Dilampirkan', 'Tidak Dilampirkan');
+    }
+
+    public function getStatusPermohonanLaporanKastamTextAttribute(): string 
+    {
+        return $this->formatBooleanToMalay($this->status_permohonan_laporan_kastam, 'Permohonan Dibuat', 'Tiada Permohonan');
+    }
+
+    public function getStatusLaporanPenuhKastamTextAttribute(): string 
+    {
+        return $this->formatBooleanToMalay($this->status_laporan_penuh_kastam, 'Dilampirkan', 'Tidak Dilampirkan');
+    }
+
+    public function getStatusPermohonanLaporanForensikPdrmTextAttribute(): string 
+    {
+        return $this->formatBooleanToMalay($this->status_permohonan_laporan_forensik_pdrm, 'Permohonan Dibuat', 'Tiada Permohonan');
+    }
+
+    public function getStatusLaporanPenuhForensikPdrmTextAttribute(): string 
+    {
+        return $this->formatBooleanToMalay($this->status_laporan_penuh_forensik_pdrm, 'Dilampirkan', 'Tidak Dilampirkan');
+    }
+
+    // B8 - Status Fail Accessors
+    public function getMukaSurat4BarangKesDitulisTextAttribute(): string 
+    {
+        return $this->formatBooleanToMalay($this->muka_surat_4_barang_kes_ditulis, 'Ya', 'Tidak');
+    }
+
+    public function getMukaSurat4DenganArahanTprTextAttribute(): string 
+    {
+        return $this->formatBooleanToMalay($this->muka_surat_4_dengan_arahan_tpr, 'Ya', 'Tidak');
+    }
+
+    public function getMukaSurat4KeputusanKesDicatatTextAttribute(): string 
+    {
+        return $this->formatBooleanToMalay($this->muka_surat_4_keputusan_kes_dicatat, 'Ya', 'Tidak');
+    }
+
+    public function getFailLmmAdaKeputusanKoronerTextAttribute(): string 
+    {
+        return $this->formatBooleanToMalay($this->fail_lmm_ada_keputusan_koroner, 'Ya', 'Tidak');
+    }
+
+    public function getStatusKusFailTextAttribute(): string 
+    {
+        return $this->formatBooleanToMalay($this->status_kus_fail, 'Ya', 'Tidak');
     }
 }

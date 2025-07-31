@@ -114,64 +114,64 @@ return new class extends Migration
             $table->boolean('status_permohonan_laporan_post_mortem_mayat')->nullable()->comment('B7 - Post mortem request status');
             $table->date('tarikh_permohonan_laporan_post_mortem_mayat')->nullable()->comment('B7 - Post mortem request date');
             // BANK
-            $table->boolean('status_permohonan_E_FSA_1_oleh_IO_AIO')->nullable(); // B7
+            $table->string('status_permohonan_E_FSA_1_oleh_IO_AIO')->nullable(); // B7
             $table->string('nama_bank_permohonan_E_FSA_1')->nullable(); // B7
-            $table->boolean('status_laporan_penuh_E_FSA_1_oleh_IO_AIO')->nullable(); // B7
+            $table->string('status_laporan_penuh_E_FSA_1_oleh_IO_AIO')->nullable(); // B7
             $table->string('nama_bank_laporan_E_FSA_1_oleh_IO_AIO')->nullable(); // B7
             $table->date('tarikh_laporan_penuh_E_FSA_1_oleh_IO_AIO')->nullable(); // B7
 
-            $table->boolean('status_permohonan_E_FSA_2_oleh_IO_AIO')->nullable(); // B7
+            $table->string('status_permohonan_E_FSA_2_oleh_IO_AIO')->nullable(); // B7
             $table->string('nama_bank_permohonan_E_FSA_2_BANK')->nullable(); // B7
-            $table->boolean('status_laporan_penuh_E_FSA_2_oleh_IO_AIO')->nullable(); // B7
+            $table->string('status_laporan_penuh_E_FSA_2_oleh_IO_AIO')->nullable(); // B7
             $table->string('nama_bank_laporan_E_FSA_2_oleh_IO_AIO')->nullable(); // B7
             $table->date('tarikh_laporan_penuh_E_FSA_2_oleh_IO_AIO')->nullable(); // B7
 
-            $table->boolean('status_permohonan_E_FSA_3_oleh_IO_AIO')->nullable(); // B7
+            $table->string('status_permohonan_E_FSA_3_oleh_IO_AIO')->nullable(); // B7
             $table->string('nama_bank_permohonan_E_FSA_3_BANK')->nullable(); // B7
-            $table->boolean('status_laporan_penuh_E_FSA_3_oleh_IO_AIO')->nullable(); // B7
+            $table->string('status_laporan_penuh_E_FSA_3_oleh_IO_AIO')->nullable(); // B7
             $table->string('nama_bank_laporan_E_FSA_3_oleh_IO_AIO')->nullable(); // B7
             $table->date('tarikh_laporan_penuh_E_FSA_3_oleh_IO_AIO')->nullable(); // B7
 
-            $table->boolean('status_permohonan_E_FSA_4_oleh_IO_AIO')->nullable(); // B7
+            $table->string('status_permohonan_E_FSA_4_oleh_IO_AIO')->nullable(); // B7
             $table->string('nama_bank_permohonan_E_FSA_4_BANK')->nullable(); // B7
-            $table->boolean('status_laporan_penuh_E_FSA_4_oleh_IO_AIO')->nullable(); // B7
+            $table->string('status_laporan_penuh_E_FSA_4_oleh_IO_AIO')->nullable(); // B7
             $table->string('nama_bank_laporan_E_FSA_4_oleh_IO_AIO')->nullable(); // B7
             $table->date('tarikh_laporan_penuh_E_FSA_4_oleh_IO_AIO')->nullable(); // B7
 
-            $table->boolean('status_permohonan_E_FSA_5_oleh_IO_AIO')->nullable(); // B7
+            $table->string('status_permohonan_E_FSA_5_oleh_IO_AIO')->nullable(); // B7
             $table->string('nama_bank_permohonan_E_FSA_5_BANK')->nullable(); // B7
-            $table->boolean('status_laporan_penuh_E_FSA_5_oleh_IO_AIO')->nullable(); // B7
+            $table->string('status_laporan_penuh_E_FSA_5_oleh_IO_AIO')->nullable(); // B7
             $table->string('nama_bank_laporan_E_FSA_5_oleh_IO_AIO')->nullable(); // B7
             $table->date('tarikh_laporan_penuh_E_FSA_5_oleh_IO_AIO')->nullable(); // B7
 
             // TELCO
-            $table->boolean('status_permohonan_E_FSA_1_telco_oleh_IO_AIO')->nullable(); // B7
+            $table->string('status_permohonan_E_FSA_1_telco_oleh_IO_AIO')->nullable(); // B7
             $table->string('nama_telco_permohonan_E_FSA_1_oleh_IO_AIO')->nullable(); // B7
-            $table->boolean('status_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO')->nullable(); // B7
+            $table->string('status_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO')->nullable(); // B7
             $table->string('nama_telco_laporan_E_FSA_1_oleh_IO_AIO')->nullable(); // B7
             $table->date('tarikh_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO')->nullable(); // B7
 
-            $table->boolean('status_permohonan_E_FSA_2_telco_oleh_IO_AIO')->nullable(); // B7
+            $table->string('status_permohonan_E_FSA_2_telco_oleh_IO_AIO')->nullable(); // B7
             $table->string('nama_telco_permohonan_E_FSA_2_oleh_IO_AIO')->nullable(); // B7
-            $table->boolean('status_laporan_penuh_E_FSA_2_telco_oleh_IO_AIO')->nullable(); // B7
+            $table->string('status_laporan_penuh_E_FSA_2_telco_oleh_IO_AIO')->nullable(); // B7
             $table->string('nama_telco_laporan_E_FSA_2_oleh_IO_AIO')->nullable(); // B7
             $table->date('tarikh_laporan_penuh_E_FSA_2_telco_oleh_IO_AIO')->nullable(); // B7
 
-            $table->boolean('status_permohonan_E_FSA_3_telco_oleh_IO_AIO')->nullable(); // B7
+            $table->string('status_permohonan_E_FSA_3_telco_oleh_IO_AIO')->nullable(); // B7
             $table->string('nama_telco_permohonan_E_FSA_3_oleh_IO_AIO')->nullable(); // B7
-            $table->boolean('status_laporan_penuh_E_FSA_3_telco_oleh_IO_AIO')->nullable(); // B7
+            $table->string('status_laporan_penuh_E_FSA_3_telco_oleh_IO_AIO')->nullable(); // B7
             $table->string('nama_telco_laporan_E_FSA_3_oleh_IO_AIO')->nullable(); // B7
             $table->date('tarikh_laporan_penuh_E_FSA_3_telco_oleh_IO_AIO')->nullable(); // B7
 
-            $table->boolean('status_permohonan_E_FSA_4_telco_oleh_IO_AIO')->nullable(); // B7
+            $table->string('status_permohonan_E_FSA_4_telco_oleh_IO_AIO')->nullable(); // B7
             $table->string('nama_telco_permohonan_E_FSA_4_oleh_IO_AIO')->nullable(); // B7
-            $table->boolean('status_laporan_penuh_E_FSA_4_telco_oleh_IO_AIO')->nullable(); // B7
+            $table->string('status_laporan_penuh_E_FSA_4_telco_oleh_IO_AIO')->nullable(); // B7
             $table->string('nama_telco_laporan_E_FSA_4_oleh_IO_AIO')->nullable(); // B7
             $table->date('tarikh_laporan_penuh_E_FSA_4_telco_oleh_IO_AIO')->nullable(); // B7
 
-            $table->boolean('status_permohonan_E_FSA_5_telco_oleh_IO_AIO')->nullable(); // B7
+            $table->string('status_permohonan_E_FSA_5_telco_oleh_IO_AIO')->nullable(); // B7
             $table->string('nama_telco_permohonan_E_FSA_5_oleh_IO_AIO')->nullable(); // B7
-            $table->boolean('status_laporan_penuh_E_FSA_5_telco_oleh_IO_AIO')->nullable(); // B7
+            $table->string('status_laporan_penuh_E_FSA_5_telco_oleh_IO_AIO')->nullable(); // B7
             $table->string('nama_telco_laporan_E_FSA_5_oleh_IO_AIO')->nullable(); // B7
             $table->date('tarikh_laporan_penuh_E_FSA_5_telco_oleh_IO_AIO')->nullable(); // B7
 

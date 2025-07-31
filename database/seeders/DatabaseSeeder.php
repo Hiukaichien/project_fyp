@@ -196,25 +196,67 @@ class DatabaseSeeder extends Seeder
                     'status_permohonan_laporan_post_mortem_mayat' => rand(0, 1),
                     'tarikh_permohonan_laporan_post_mortem_mayat' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 90)) : null,
                     
-                    // E-FSA Bank Records
-                    'status_permohonan_E_FSA_1_oleh_IO_AIO' => rand(0, 1),
+                    // E-FSA Bank Records (Now using string values)
+                    'status_permohonan_E_FSA_1_oleh_IO_AIO' => ['Dibuat', 'Tidak', null][array_rand(['Dibuat', 'Tidak', null])],
                     'nama_bank_permohonan_E_FSA_1' => rand(0, 1) ? $bankNames[array_rand($bankNames)] : null,
-                    'status_laporan_penuh_E_FSA_1_oleh_IO_AIO' => rand(0, 1),
+                    'status_laporan_penuh_E_FSA_1_oleh_IO_AIO' => ['Diterima', 'Tidak', null][array_rand(['Diterima', 'Tidak', null])],
                     'nama_bank_laporan_E_FSA_1_oleh_IO_AIO' => rand(0, 1) ? $bankNames[array_rand($bankNames)] : null,
                     'tarikh_laporan_penuh_E_FSA_1_oleh_IO_AIO' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 60)) : null,
 
-                    'status_permohonan_E_FSA_2_oleh_IO_AIO' => rand(0, 1),
+                    'status_permohonan_E_FSA_2_oleh_IO_AIO' => ['Dibuat', 'Tidak', null][array_rand(['Dibuat', 'Tidak', null])],
                     'nama_bank_permohonan_E_FSA_2_BANK' => rand(0, 1) ? $bankNames[array_rand($bankNames)] : null,
-                    'status_laporan_penuh_E_FSA_2_oleh_IO_AIO' => rand(0, 1),
+                    'status_laporan_penuh_E_FSA_2_oleh_IO_AIO' => ['Diterima', 'Tidak', null][array_rand(['Diterima', 'Tidak', null])],
                     'nama_bank_laporan_E_FSA_2_oleh_IO_AIO' => rand(0, 1) ? $bankNames[array_rand($bankNames)] : null,
                     'tarikh_laporan_penuh_E_FSA_2_oleh_IO_AIO' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 55)) : null,
 
-                    // E-FSA Telco Records
-                    'status_permohonan_E_FSA_1_telco_oleh_IO_AIO' => rand(0, 1),
+                    'status_permohonan_E_FSA_3_oleh_IO_AIO' => ['Dibuat', 'Tidak', null][array_rand(['Dibuat', 'Tidak', null])],
+                    'nama_bank_permohonan_E_FSA_3_BANK' => rand(0, 1) ? $bankNames[array_rand($bankNames)] : null,
+                    'status_laporan_penuh_E_FSA_3_oleh_IO_AIO' => ['Diterima', 'Tidak', null][array_rand(['Diterima', 'Tidak', null])],
+                    'nama_bank_laporan_E_FSA_3_oleh_IO_AIO' => rand(0, 1) ? $bankNames[array_rand($bankNames)] : null,
+                    'tarikh_laporan_penuh_E_FSA_3_oleh_IO_AIO' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 52)) : null,
+
+                    'status_permohonan_E_FSA_4_oleh_IO_AIO' => ['Dibuat', 'Tidak', null][array_rand(['Dibuat', 'Tidak', null])],
+                    'nama_bank_permohonan_E_FSA_4_BANK' => rand(0, 1) ? $bankNames[array_rand($bankNames)] : null,
+                    'status_laporan_penuh_E_FSA_4_oleh_IO_AIO' => ['Diterima', 'Tidak', null][array_rand(['Diterima', 'Tidak', null])],
+                    'nama_bank_laporan_E_FSA_4_oleh_IO_AIO' => rand(0, 1) ? $bankNames[array_rand($bankNames)] : null,
+                    'tarikh_laporan_penuh_E_FSA_4_oleh_IO_AIO' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 48)) : null,
+
+                    'status_permohonan_E_FSA_5_oleh_IO_AIO' => ['Dibuat', 'Tidak', null][array_rand(['Dibuat', 'Tidak', null])],
+                    'nama_bank_permohonan_E_FSA_5_BANK' => rand(0, 1) ? $bankNames[array_rand($bankNames)] : null,
+                    'status_laporan_penuh_E_FSA_5_oleh_IO_AIO' => ['Diterima', 'Tidak', null][array_rand(['Diterima', 'Tidak', null])],
+                    'nama_bank_laporan_E_FSA_5_oleh_IO_AIO' => rand(0, 1) ? $bankNames[array_rand($bankNames)] : null,
+                    'tarikh_laporan_penuh_E_FSA_5_oleh_IO_AIO' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 45)) : null,
+
+                    // E-FSA Telco Records (Now using string values)
+                    'status_permohonan_E_FSA_1_telco_oleh_IO_AIO' => ['Dibuat', 'Tidak', null][array_rand(['Dibuat', 'Tidak', null])],
                     'nama_telco_permohonan_E_FSA_1_oleh_IO_AIO' => rand(0, 1) ? $telcoNames[array_rand($telcoNames)] : null,
-                    'status_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO' => rand(0, 1),
+                    'status_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO' => ['Diterima', 'Tidak', null][array_rand(['Diterima', 'Tidak', null])],
                     'nama_telco_laporan_E_FSA_1_oleh_IO_AIO' => rand(0, 1) ? $telcoNames[array_rand($telcoNames)] : null,
                     'tarikh_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 50)) : null,
+
+                    'status_permohonan_E_FSA_2_telco_oleh_IO_AIO' => ['Dibuat', 'Tidak', null][array_rand(['Dibuat', 'Tidak', null])],
+                    'nama_telco_permohonan_E_FSA_2_oleh_IO_AIO' => rand(0, 1) ? $telcoNames[array_rand($telcoNames)] : null,
+                    'status_laporan_penuh_E_FSA_2_telco_oleh_IO_AIO' => ['Diterima', 'Tidak', null][array_rand(['Diterima', 'Tidak', null])],
+                    'nama_telco_laporan_E_FSA_2_oleh_IO_AIO' => rand(0, 1) ? $telcoNames[array_rand($telcoNames)] : null,
+                    'tarikh_laporan_penuh_E_FSA_2_telco_oleh_IO_AIO' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 47)) : null,
+
+                    'status_permohonan_E_FSA_3_telco_oleh_IO_AIO' => ['Dibuat', 'Tidak', null][array_rand(['Dibuat', 'Tidak', null])],
+                    'nama_telco_permohonan_E_FSA_3_oleh_IO_AIO' => rand(0, 1) ? $telcoNames[array_rand($telcoNames)] : null,
+                    'status_laporan_penuh_E_FSA_3_telco_oleh_IO_AIO' => ['Diterima', 'Tidak', null][array_rand(['Diterima', 'Tidak', null])],
+                    'nama_telco_laporan_E_FSA_3_oleh_IO_AIO' => rand(0, 1) ? $telcoNames[array_rand($telcoNames)] : null,
+                    'tarikh_laporan_penuh_E_FSA_3_telco_oleh_IO_AIO' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 44)) : null,
+
+                    'status_permohonan_E_FSA_4_telco_oleh_IO_AIO' => ['Dibuat', 'Tidak', null][array_rand(['Dibuat', 'Tidak', null])],
+                    'nama_telco_permohonan_E_FSA_4_oleh_IO_AIO' => rand(0, 1) ? $telcoNames[array_rand($telcoNames)] : null,
+                    'status_laporan_penuh_E_FSA_4_telco_oleh_IO_AIO' => ['Diterima', 'Tidak', null][array_rand(['Diterima', 'Tidak', null])],
+                    'nama_telco_laporan_E_FSA_4_oleh_IO_AIO' => rand(0, 1) ? $telcoNames[array_rand($telcoNames)] : null,
+                    'tarikh_laporan_penuh_E_FSA_4_telco_oleh_IO_AIO' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 41)) : null,
+
+                    'status_permohonan_E_FSA_5_telco_oleh_IO_AIO' => ['Dibuat', 'Tidak', null][array_rand(['Dibuat', 'Tidak', null])],
+                    'nama_telco_permohonan_E_FSA_5_oleh_IO_AIO' => rand(0, 1) ? $telcoNames[array_rand($telcoNames)] : null,
+                    'status_laporan_penuh_E_FSA_5_telco_oleh_IO_AIO' => ['Diterima', 'Tidak', null][array_rand(['Diterima', 'Tidak', null])],
+                    'nama_telco_laporan_E_FSA_5_oleh_IO_AIO' => rand(0, 1) ? $telcoNames[array_rand($telcoNames)] : null,
+                    'tarikh_laporan_penuh_E_FSA_5_telco_oleh_IO_AIO' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 38)) : null,
 
                     // Other Agency Reports
                     'status_permohonan_laporan_puspakom' => rand(0, 1),

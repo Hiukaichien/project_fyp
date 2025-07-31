@@ -650,22 +650,24 @@ public function getJenayahData(Project $project)
         ->make(true);
 }
 
-    public function getKomersilData(Project $project)
+// FILE: app/Http/Controllers/ProjectController.php
+
+public function getKomersilData(Project $project)
 {
     Gate::authorize('access-project', $project);
     $query = Komersil::where('project_id', $project->id);
-    
+
     return DataTables::of($query)
         ->addIndexColumn()
         ->addColumn('action', fn($row) => $this->buildActionButtons($row, 'Komersil'))
+        ->editColumn('updated_at', function ($row) {
+            return optional($row->created_at)->format('d/m/Y H:i:s') ?? '-';
+        })
         ->editColumn('created_at', function ($row) {
             return optional($row->created_at)->format('d/m/Y H:i:s') ?? '-';
         })
-        ->editColumn('updated_at', function ($row) {
-            return optional($row->updated_at)->format('d/m/Y H:i:s') ?? '-';
-        })
 
-        // --- EXPLICIT DATE FORMATTING ---
+        // --- EXPLICIT DATE FORMATTING for all Komersil date columns ---
         ->editColumn('tarikh_laporan_polis_dibuka', fn($r) => optional($r->tarikh_laporan_polis_dibuka)->format('d/m/Y') ?? '-')
         ->editColumn('tarikh_edaran_minit_ks_pertama', fn($r) => optional($r->tarikh_edaran_minit_ks_pertama)->format('d/m/Y') ?? '-')
         ->editColumn('tarikh_edaran_minit_ks_kedua', fn($r) => optional($r->tarikh_edaran_minit_ks_kedua)->format('d/m/Y') ?? '-')
@@ -708,8 +710,8 @@ public function getJenayahData(Project $project)
         ->editColumn('tarikh_laporan_penuh_kastam', fn($r) => optional($r->tarikh_laporan_penuh_kastam)->format('d/m/Y') ?? '-')
         ->editColumn('tarikh_permohonan_laporan_forensik_pdrm', fn($r) => optional($r->tarikh_permohonan_laporan_forensik_pdrm)->format('d/m/Y') ?? '-')
         ->editColumn('tarikh_laporan_penuh_forensik_pdrm', fn($r) => optional($r->tarikh_laporan_penuh_forensik_pdrm)->format('d/m/Y') ?? '-')
-        
-        // --- BOOLEAN & SPECIAL TEXT FORMATTING ---
+
+        // --- BOOLEAN FORMATTING ---
         ->editColumn('arahan_minit_oleh_sio_status', fn($row) => $this->formatBoolean($row->arahan_minit_oleh_sio_status, 'Ada', 'Tiada'))
         ->editColumn('arahan_minit_ketua_bahagian_status', fn($row) => $this->formatBoolean($row->arahan_minit_ketua_bahagian_status, 'Ada', 'Tiada'))
         ->editColumn('arahan_minit_ketua_jabatan_status', fn($row) => $this->formatBoolean($row->arahan_minit_ketua_jabatan_status, 'Ada', 'Tiada'))
@@ -737,26 +739,26 @@ public function getJenayahData(Project $project)
         ->editColumn('status_saman_pdrm_s_257', fn($row) => $this->formatBoolean($row->status_saman_pdrm_s_257, 'Dicipta', 'Tidak'))
         ->editColumn('status_saman_pdrm_s_167', fn($row) => $this->formatBoolean($row->status_saman_pdrm_s_167, 'Dicipta', 'Tidak'))
         ->editColumn('status_permohonan_laporan_post_mortem_mayat', fn($row) => $this->formatBoolean($row->status_permohonan_laporan_post_mortem_mayat, 'Dibuat', 'Tidak'))
-        ->editColumn('status_permohonan_E_FSA_1_oleh_IO_AIO', fn($row) => $this->formatBoolean($row->status_permohonan_E_FSA_1_oleh_IO_AIO, 'Dibuat', 'Tidak'))
-        ->editColumn('status_laporan_penuh_E_FSA_1_oleh_IO_AIO', fn($row) => $this->formatBoolean($row->status_laporan_penuh_E_FSA_1_oleh_IO_AIO, 'Diterima', 'Tidak'))
-        ->editColumn('status_permohonan_E_FSA_2_oleh_IO_AIO', fn($row) => $this->formatBoolean($row->status_permohonan_E_FSA_2_oleh_IO_AIO, 'Dibuat', 'Tidak'))
-        ->editColumn('status_laporan_penuh_E_FSA_2_oleh_IO_AIO', fn($row) => $this->formatBoolean($row->status_laporan_penuh_E_FSA_2_oleh_IO_AIO, 'Diterima', 'Tidak'))
-        ->editColumn('status_permohonan_E_FSA_3_oleh_IO_AIO', fn($row) => $this->formatBoolean($row->status_permohonan_E_FSA_3_oleh_IO_AIO, 'Dibuat', 'Tidak'))
-        ->editColumn('status_laporan_penuh_E_FSA_3_oleh_IO_AIO', fn($row) => $this->formatBoolean($row->status_laporan_penuh_E_FSA_3_oleh_IO_AIO, 'Diterima', 'Tidak'))
-        ->editColumn('status_permohonan_E_FSA_4_oleh_IO_AIO', fn($row) => $this->formatBoolean($row->status_permohonan_E_FSA_4_oleh_IO_AIO, 'Dibuat', 'Tidak'))
-        ->editColumn('status_laporan_penuh_E_FSA_4_oleh_IO_AIO', fn($row) => $this->formatBoolean($row->status_laporan_penuh_E_FSA_4_oleh_IO_AIO, 'Diterima', 'Tidak'))
-        ->editColumn('status_permohonan_E_FSA_5_oleh_IO_AIO', fn($row) => $this->formatBoolean($row->status_permohonan_E_FSA_5_oleh_IO_AIO, 'Dibuat', 'Tidak'))
-        ->editColumn('status_laporan_penuh_E_FSA_5_oleh_IO_AIO', fn($row) => $this->formatBoolean($row->status_laporan_penuh_E_FSA_5_oleh_IO_AIO, 'Diterima', 'Tidak'))
-        ->editColumn('status_permohonan_E_FSA_1_telco_oleh_IO_AIO', fn($row) => $this->formatBoolean($row->status_permohonan_E_FSA_1_telco_oleh_IO_AIO, 'Dibuat', 'Tidak'))
-        ->editColumn('status_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO', fn($row) => $this->formatBoolean($row->status_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO, 'Diterima', 'Tidak'))
-        ->editColumn('status_permohonan_E_FSA_2_telco_oleh_IO_AIO', fn($row) => $this->formatBoolean($row->status_permohonan_E_FSA_2_telco_oleh_IO_AIO, 'Dibuat', 'Tidak'))
-        ->editColumn('status_laporan_penuh_E_FSA_2_telco_oleh_IO_AIO', fn($row) => $this->formatBoolean($row->status_laporan_penuh_E_FSA_2_telco_oleh_IO_AIO, 'Diterima', 'Tidak'))
-        ->editColumn('status_permohonan_E_FSA_3_telco_oleh_IO_AIO', fn($row) => $this->formatBoolean($row->status_permohonan_E_FSA_3_telco_oleh_IO_AIO, 'Dibuat', 'Tidak'))
-        ->editColumn('status_laporan_penuh_E_FSA_3_telco_oleh_IO_AIO', fn($row) => $this->formatBoolean($row->status_laporan_penuh_E_FSA_3_telco_oleh_IO_AIO, 'Diterima', 'Tidak'))
-        ->editColumn('status_permohonan_E_FSA_4_telco_oleh_IO_AIO', fn($row) => $this->formatBoolean($row->status_permohonan_E_FSA_4_telco_oleh_IO_AIO, 'Dibuat', 'Tidak'))
-        ->editColumn('status_laporan_penuh_E_FSA_4_telco_oleh_IO_AIO', fn($row) => $this->formatBoolean($row->status_laporan_penuh_E_FSA_4_telco_oleh_IO_AIO, 'Diterima', 'Tidak'))
-        ->editColumn('status_permohonan_E_FSA_5_telco_oleh_IO_AIO', fn($row) => $this->formatBoolean($row->status_permohonan_E_FSA_5_telco_oleh_IO_AIO, 'Dibuat', 'Tidak'))
-        ->editColumn('status_laporan_penuh_E_FSA_5_telco_oleh_IO_AIO', fn($row) => $this->formatBoolean($row->status_laporan_penuh_E_FSA_5_telco_oleh_IO_AIO, 'Diterima', 'Tidak'))
+        ->editColumn('status_permohonan_E_FSA_1_oleh_IO_AIO', fn($row) => $this->formatString($row->status_permohonan_E_FSA_1_oleh_IO_AIO, 'Dibuat', 'Tidak'))
+        ->editColumn('status_laporan_penuh_E_FSA_1_oleh_IO_AIO', fn($row) => $this->formatString($row->status_laporan_penuh_E_FSA_1_oleh_IO_AIO, 'Diterima', 'Tidak'))
+        ->editColumn('status_permohonan_E_FSA_2_oleh_IO_AIO', fn($row) => $this->formatString($row->status_permohonan_E_FSA_2_oleh_IO_AIO, 'Dibuat', 'Tidak'))
+        ->editColumn('status_laporan_penuh_E_FSA_2_oleh_IO_AIO', fn($row) => $this->formatString($row->status_laporan_penuh_E_FSA_2_oleh_IO_AIO, 'Diterima', 'Tidak'))
+        ->editColumn('status_permohonan_E_FSA_3_oleh_IO_AIO', fn($row) => $this->formatString($row->status_permohonan_E_FSA_3_oleh_IO_AIO, 'Dibuat', 'Tidak'))
+        ->editColumn('status_laporan_penuh_E_FSA_3_oleh_IO_AIO', fn($row) => $this->formatString($row->status_laporan_penuh_E_FSA_3_oleh_IO_AIO, 'Diterima', 'Tidak'))
+        ->editColumn('status_permohonan_E_FSA_4_oleh_IO_AIO', fn($row) => $this->formatString($row->status_permohonan_E_FSA_4_oleh_IO_AIO, 'Dibuat', 'Tidak'))
+        ->editColumn('status_laporan_penuh_E_FSA_4_oleh_IO_AIO', fn($row) => $this->formatString($row->status_laporan_penuh_E_FSA_4_oleh_IO_AIO, 'Diterima', 'Tidak'))
+        ->editColumn('status_permohonan_E_FSA_5_oleh_IO_AIO', fn($row) => $this->formatString($row->status_permohonan_E_FSA_5_oleh_IO_AIO, 'Dibuat', 'Tidak'))
+        ->editColumn('status_laporan_penuh_E_FSA_5_oleh_IO_AIO', fn($row) => $this->formatString($row->status_laporan_penuh_E_FSA_5_oleh_IO_AIO, 'Diterima', 'Tidak'))
+        ->editColumn('status_permohonan_E_FSA_1_telco_oleh_IO_AIO', fn($row) => $this->formatString($row->status_permohonan_E_FSA_1_telco_oleh_IO_AIO, 'Dibuat', 'Tidak'))
+        ->editColumn('status_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO', fn($row) => $this->formatString($row->status_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO, 'Diterima', 'Tidak'))
+        ->editColumn('status_permohonan_E_FSA_2_telco_oleh_IO_AIO', fn($row) => $this->formatString($row->status_permohonan_E_FSA_2_telco_oleh_IO_AIO, 'Dibuat', 'Tidak'))
+        ->editColumn('status_laporan_penuh_E_FSA_2_telco_oleh_IO_AIO', fn($row) => $this->formatString($row->status_laporan_penuh_E_FSA_2_telco_oleh_IO_AIO, 'Diterima', 'Tidak'))
+        ->editColumn('status_permohonan_E_FSA_3_telco_oleh_IO_AIO', fn($row) => $this->formatString($row->status_permohonan_E_FSA_3_telco_oleh_IO_AIO, 'Dibuat', 'Tidak'))
+        ->editColumn('status_laporan_penuh_E_FSA_3_telco_oleh_IO_AIO', fn($row) => $this->formatString($row->status_laporan_penuh_E_FSA_3_telco_oleh_IO_AIO, 'Diterima', 'Tidak'))
+        ->editColumn('status_permohonan_E_FSA_4_telco_oleh_IO_AIO', fn($row) => $this->formatString($row->status_permohonan_E_FSA_4_telco_oleh_IO_AIO, 'Dibuat', 'Tidak'))
+        ->editColumn('status_laporan_penuh_E_FSA_4_telco_oleh_IO_AIO', fn($row) => $this->formatString($row->status_laporan_penuh_E_FSA_4_telco_oleh_IO_AIO, 'Diterima', 'Tidak'))
+        ->editColumn('status_permohonan_E_FSA_5_telco_oleh_IO_AIO', fn($row) => $this->formatString($row->status_permohonan_E_FSA_5_telco_oleh_IO_AIO, 'Dibuat', 'Tidak'))
+        ->editColumn('status_laporan_penuh_E_FSA_5_telco_oleh_IO_AIO', fn($row) => $this->formatString($row->status_laporan_penuh_E_FSA_5_telco_oleh_IO_AIO, 'Diterima', 'Tidak'))
         ->editColumn('status_permohonan_laporan_puspakom', fn($row) => $this->formatBoolean($row->status_permohonan_laporan_puspakom, 'Dibuat', 'Tidak'))
         ->editColumn('status_laporan_penuh_puspakom', fn($row) => $this->formatBoolean($row->status_laporan_penuh_puspakom, 'Diterima', 'Tidak'))
         ->editColumn('status_permohonan_laporan_jkr', fn($row) => $this->formatBoolean($row->status_permohonan_laporan_jkr, 'Dibuat', 'Tidak'))
@@ -785,9 +787,25 @@ public function getJenayahData(Project $project)
         ->editColumn('resit_kew_38e_bagi_pelupusan', fn($row) => $this->formatArrayField($row->resit_kew_38e_bagi_pelupusan))
         ->editColumn('adakah_borang_serah_terima_pegawai_tangkapan', fn($row) => $this->formatArrayField($row->adakah_borang_serah_terima_pegawai_tangkapan))
 
-        // --- RAW COLUMNS for HTML rendering ---
+        // --- RawColumns must include all columns with HTML ---
         ->rawColumns(array_merge(
-            ['action', 'status_pem', 'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan', 'status_pergerakan_barang_kes', 'status_barang_kes_selesai_siasatan', 'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan', 'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan', 'resit_kew_38e_bagi_pelupusan', 'adakah_borang_serah_terima_pegawai_tangkapan'],
+            [
+                'action', 'status_pem', 'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan', 'status_pergerakan_barang_kes', 
+                'status_barang_kes_selesai_siasatan', 'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan', 
+                'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan', 'resit_kew_38e_bagi_pelupusan', 
+                'adakah_borang_serah_terima_pegawai_tangkapan',
+                // E-FSA string fields that use formatString method
+                'status_permohonan_E_FSA_1_oleh_IO_AIO', 'status_laporan_penuh_E_FSA_1_oleh_IO_AIO',
+                'status_permohonan_E_FSA_2_oleh_IO_AIO', 'status_laporan_penuh_E_FSA_2_oleh_IO_AIO',
+                'status_permohonan_E_FSA_3_oleh_IO_AIO', 'status_laporan_penuh_E_FSA_3_oleh_IO_AIO',
+                'status_permohonan_E_FSA_4_oleh_IO_AIO', 'status_laporan_penuh_E_FSA_4_oleh_IO_AIO',
+                'status_permohonan_E_FSA_5_oleh_IO_AIO', 'status_laporan_penuh_E_FSA_5_oleh_IO_AIO',
+                'status_permohonan_E_FSA_1_telco_oleh_IO_AIO', 'status_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO',
+                'status_permohonan_E_FSA_2_telco_oleh_IO_AIO', 'status_laporan_penuh_E_FSA_2_telco_oleh_IO_AIO',
+                'status_permohonan_E_FSA_3_telco_oleh_IO_AIO', 'status_laporan_penuh_E_FSA_3_telco_oleh_IO_AIO',
+                'status_permohonan_E_FSA_4_telco_oleh_IO_AIO', 'status_laporan_penuh_E_FSA_4_telco_oleh_IO_AIO',
+                'status_permohonan_E_FSA_5_telco_oleh_IO_AIO', 'status_laporan_penuh_E_FSA_5_telco_oleh_IO_AIO'
+            ],
             collect((new Komersil)->getCasts())->filter(fn($type) => $type === 'boolean')->keys()->all()
         ))
         ->make(true);
@@ -1961,6 +1979,48 @@ public function getLaporanMatiMengejutData(Project $project) {
         return $value 
             ? '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">' . $trueText . '</span>'
             : '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">' . $falseText . '</span>';
+    }
+
+    /**
+     * Format string status values for display in DataTables (specifically for E-FSA fields)
+     */
+    private function formatStringStatus($value, $trueText = 'Dibuat', $falseText = 'Tidak')
+    {
+        if (is_null($value) || $value === '') {
+            return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">-</span>';
+        }
+        
+        // Check if the value indicates a positive status
+        $positiveValues = ['Dibuat', 'Diterima', 'Ya', 'Ada', 'Cipta', 'Dicipta', '1', 'true', 'YES'];
+        $isPositive = in_array(strtolower($value), array_map('strtolower', $positiveValues)) || 
+                      in_array($value, $positiveValues);
+        
+        return $isPositive 
+            ? '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">' . $trueText . '</span>'
+            : '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">' . $falseText . '</span>';
+    }
+
+    /**
+     * Format string values for display in DataTables (specifically for E-FSA fields)
+     */
+    private function formatString($value, $trueText = 'Dibuat', $falseText = 'Tidak')
+    {
+        if (is_null($value) || $value === '') {
+            return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">-</span>';
+        }
+        
+        // Check if the value indicates a positive status
+        $positiveValues = ['Dibuat', 'Diterima', 'Ya', 'Ada', 'Cipta', 'Dicipta', '1', 'true', 'YES'];
+        $isPositive = in_array(strtolower($value), array_map('strtolower', $positiveValues)) || 
+                      in_array($value, $positiveValues) ||
+                      (is_numeric($value) && $value > 0);
+        
+        // Display the actual value, not the parameter text
+        $displayText = $value;
+        
+        return $isPositive 
+            ? '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">' . $displayText . '</span>'
+            : '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">' . $displayText . '</span>';
     }
 
     /**
