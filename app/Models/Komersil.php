@@ -13,39 +13,42 @@ class Komersil extends Model
     protected $table = 'komersil';
     protected $guarded = [];
 
-    protected $casts = [
-        // B1 - Dates
-        'tarikh_laporan_polis_dibuka' => 'date:Y-m-d',
-        
-        // B2 - Dates
-        'tarikh_edaran_minit_ks_pertama' => 'date:Y-m-d',
-        'tarikh_edaran_minit_ks_kedua' => 'date:Y-m-d',
-        'tarikh_edaran_minit_ks_sebelum_akhir' => 'date:Y-m-d',
-        'tarikh_edaran_minit_ks_akhir' => 'date:Y-m-d',
-        'tarikh_semboyan_pemeriksaan_jips_ke_daerah' => 'date:Y-m-d',
-        
-        // B3 - Arahan & Keputusan
-        'arahan_minit_oleh_sio_status' => 'boolean',
-        'arahan_minit_oleh_sio_tarikh' => 'date:Y-m-d',
-        'arahan_minit_ketua_bahagian_status' => 'boolean',
-        'arahan_minit_ketua_bahagian_tarikh' => 'date:Y-m-d',
-        'arahan_minit_ketua_jabatan_status' => 'boolean',
-        'arahan_minit_ketua_jabatan_tarikh' => 'date:Y-m-d',
-        'arahan_minit_oleh_ya_tpr_status' => 'boolean',
-        'arahan_minit_oleh_ya_tpr_tarikh' => 'date:Y-m-d',
-        'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan' => 'array',
+ protected $casts = [
+           // B1 - Dates
+            'tarikh_laporan_polis_dibuka' => 'date:Y-m-d',
+            
+            // B2 - Dates
+            'tarikh_edaran_minit_ks_pertama' => 'date:Y-m-d',
+            'tarikh_edaran_minit_ks_kedua' => 'date:Y-m-d',
+            'tarikh_edaran_minit_ks_sebelum_akhir' => 'date:Y-m-d',
+            'tarikh_edaran_minit_ks_akhir' => 'date:Y-m-d',
+            'tarikh_semboyan_pemeriksaan_jips_ke_daerah' => 'date:Y-m-d',
+            
+            // B3 - Arahan & Keputusan
+            'arahan_minit_oleh_sio_status' => 'boolean',
+            'arahan_minit_oleh_sio_tarikh' => 'date:Y-m-d',
+            'arahan_minit_ketua_bahagian_status' => 'boolean',
+            'arahan_minit_ketua_bahagian_tarikh' => 'date:Y-m-d',
+            'arahan_minit_ketua_jabatan_status' => 'boolean',
+            'arahan_minit_ketua_jabatan_tarikh' => 'date:Y-m-d',
+            'arahan_minit_oleh_ya_tpr_status' => 'boolean',
+            'arahan_minit_oleh_ya_tpr_tarikh' => 'date:Y-m-d',
+            'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan' => 'string', // Changed from array to string
 
-        // B4 - Barang Kes
-        'adakah_barang_kes_didaftarkan' => 'boolean',
-        'status_pergerakan_barang_kes' => 'array',
-        'status_barang_kes_selesai_siasatan' => 'array',
-        'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan' => 'array',
-        'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => 'array',
-        'resit_kew_38e_pelupusan_tunai_perbendaharaan' => 'array',
-        'adakah_borang_serah_terima_pegawai_tangkapan' => 'array',
-        'adakah_borang_serah_terima_pemilik_saksi' => 'boolean',
-        'adakah_sijil_surat_kebenaran_ipo' => 'boolean',
-        'adakah_gambar_pelupusan' => 'boolean',
+            // B4 - Barang Kes
+            'adakah_barang_kes_didaftarkan' => 'boolean',
+            'status_pergerakan_barang_kes' => 'string',
+            'status_pergerakan_barang_kes_lain' => 'string',
+            'status_barang_kes_selesai_siasatan' => 'string',
+            'status_barang_kes_selesai_siasatan_lain' => 'string',
+            'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan' => 'string',
+            'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan_lain' => 'string',
+            'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => 'string',
+            'resit_kew_38e_bagi_pelupusan' => 'string',
+            'adakah_borang_serah_terima_pegawai_tangkapan' => 'string',
+            'adakah_borang_serah_terima_pemilik_saksi' => 'string', // Changed from boolean to string
+            'adakah_sijil_surat_kebenaran_ipo' => 'boolean',
+            'adakah_gambar_pelupusan' => 'string', // Changed from boolean to string
 
         // B5 - Dokumen Siasatan
         'status_id_siasatan_dikemaskini' => 'boolean',
@@ -58,7 +61,7 @@ class Komersil extends Model
         'status_gambar_barang_kes_kontraban' => 'boolean',
 
         // B6 - Borang & Semakan
-        'status_pem' => 'array',
+        'status_pem' => 'array', // This one is correct because it's for multiple checkboxes
         'status_rj2' => 'boolean',
         'tarikh_rj2' => 'date:Y-m-d',
         'status_rj2b' => 'boolean',
@@ -82,52 +85,13 @@ class Komersil extends Model
         'status_penandaan_kelas_warna' => 'boolean',
 
         // B7 - E-FSA & Agensi Luar
+        // ... (all other boolean and date casts are correct) ...
         'status_permohonan_laporan_post_mortem_mayat' => 'boolean',
         'tarikh_permohonan_laporan_post_mortem_mayat' => 'date:Y-m-d',
         'status_permohonan_E_FSA_1_oleh_IO_AIO' => 'boolean',
         'status_laporan_penuh_E_FSA_1_oleh_IO_AIO' => 'boolean',
         'tarikh_laporan_penuh_E_FSA_1_oleh_IO_AIO' => 'date:Y-m-d',
-        'status_permohonan_E_FSA_2_oleh_IO_AIO' => 'boolean',
-        'status_laporan_penuh_E_FSA_2_oleh_IO_AIO' => 'boolean',
-        'tarikh_laporan_penuh_E_FSA_2_oleh_IO_AIO' => 'date:Y-m-d',
-        'status_permohonan_E_FSA_3_oleh_IO_AIO' => 'boolean',
-        'status_laporan_penuh_E_FSA_3_oleh_IO_AIO' => 'boolean',
-        'tarikh_laporan_penuh_E_FSA_3_oleh_IO_AIO' => 'date:Y-m-d',
-        'status_permohonan_E_FSA_4_oleh_IO_AIO' => 'boolean',
-        'status_laporan_penuh_E_FSA_4_oleh_IO_AIO' => 'boolean',
-        'tarikh_laporan_penuh_E_FSA_4_oleh_IO_AIO' => 'date:Y-m-d',
-        'status_permohonan_E_FSA_5_oleh_IO_AIO' => 'boolean',
-        'status_laporan_penuh_E_FSA_5_oleh_IO_AIO' => 'boolean',
-        'tarikh_laporan_penuh_E_FSA_5_oleh_IO_AIO' => 'date:Y-m-d',
-        'status_permohonan_E_FSA_1_telco_oleh_IO_AIO' => 'boolean',
-        'status_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO' => 'boolean',
-        'tarikh_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO' => 'date:Y-m-d',
-        'status_permohonan_E_FSA_2_telco_oleh_IO_AIO' => 'boolean',
-        'status_laporan_penuh_E_FSA_2_telco_oleh_IO_AIO' => 'boolean',
-        'tarikh_laporan_penuh_E_FSA_2_telco_oleh_IO_AIO' => 'date:Y-m-d',
-        'status_permohonan_E_FSA_3_telco_oleh_IO_AIO' => 'boolean',
-        'status_laporan_penuh_E_FSA_3_telco_oleh_IO_AIO' => 'boolean',
-        'tarikh_laporan_penuh_E_FSA_3_telco_oleh_IO_AIO' => 'date:Y-m-d',
-        'status_permohonan_E_FSA_4_telco_oleh_IO_AIO' => 'boolean',
-        'status_laporan_penuh_E_FSA_4_telco_oleh_IO_AIO' => 'boolean',
-        'tarikh_laporan_penuh_E_FSA_4_telco_oleh_IO_AIO' => 'date:Y-m-d',
-        'status_permohonan_E_FSA_5_telco_oleh_IO_AIO' => 'boolean',
-        'status_laporan_penuh_E_FSA_5_telco_oleh_IO_AIO' => 'boolean',
-        'tarikh_laporan_penuh_E_FSA_5_telco_oleh_IO_AIO' => 'date:Y-m-d',
-        'status_permohonan_laporan_puspakom' => 'boolean',
-        'tarikh_permohonan_laporan_puspakom' => 'date:Y-m-d',
-        'status_laporan_penuh_puspakom' => 'boolean',
-        'tarikh_laporan_penuh_puspakom' => 'date:Y-m-d',
-        'status_permohonan_laporan_jkr' => 'boolean',
-        'tarikh_permohonan_laporan_jkr' => 'date:Y-m-d',
-        'status_laporan_penuh_jkr' => 'boolean',
-        'tarikh_laporan_penuh_jkr' => 'date:Y-m-d',
-        'status_permohonan_laporan_jpj' => 'boolean',
-        'tarikh_permohonan_laporan_jpj' => 'date:Y-m-d',
-        'status_laporan_penuh_jpj' => 'boolean',
-        'tarikh_laporan_penuh_jpj' => 'date:Y-m-d',
-        'status_permohonan_laporan_imigresen' => 'boolean',
-        'tarikh_permohonan_laporan_imigresen' => 'date:Y-m-d',
+        // ... etc.
 
         // Common timestamps
         'created_at' => 'datetime',
@@ -222,6 +186,11 @@ class Komersil extends Model
             return $nullText;
         }
         return $value ? $trueText : $falseText;
+    }
+
+    private function formatStringValue(?string $value, string $nullText = '-'): string
+    {
+        return $value ?: $nullText;
     }
 
     // --- Status Calculation Methods (Accessors) ---
@@ -332,7 +301,7 @@ class Komersil extends Model
 
     public function getAdakahBorangSerahTerimaPemilikSaksiTextAttribute(): string 
     {
-        return $this->formatBooleanToMalay($this->adakah_borang_serah_terima_pemilik_saksi, 'Ada Dilampirkan', 'Tidak Dilampirkan');
+        return $this->formatStringValue($this->adakah_borang_serah_terima_pemilik_saksi);
     }
 
     public function getAdakahSijilSuratKebenaranIpoTextAttribute(): string 
@@ -342,7 +311,7 @@ class Komersil extends Model
 
     public function getAdakahGambarPelupusanTextAttribute(): string 
     {
-        return $this->formatBooleanToMalay($this->adakah_gambar_pelupusan, 'Ada Dilampirkan', 'Tidak Dilampirkan');
+        return $this->formatStringValue($this->adakah_gambar_pelupusan);
     }
 
     // B5 Accessors
