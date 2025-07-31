@@ -57,38 +57,24 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // 3. Seed Jenayah Papers (20 records) - Basic fields only from actual migration
-        for ($i = 1; $i <= 20; $i++) {
+            // 3. Seed Jenayah Papers (20 records) - Updated to follow TrafikSeksyen structure
+                for ($i = 1; $i <= 10; $i++) {
             Jenayah::updateOrCreate(
-                ['no_ks' => 'JNY/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '/24'],
+                [
+                    // This is the unique key used to find the record
+                    'no_kertas_siasatan' => 'JNY/KS/' . str_pad($i, 4, '0', STR_PAD_LEFT) . '/24'
+                ],
                 [
                     'project_id' => $project->id,
-                    'pegawai_penyiasat' => ['INSP ALI', 'SGT AHMAD', 'INSP FATIMAH', 'ASP ZAITON', 'SGT BAHARUDDIN'][array_rand(['INSP ALI', 'SGT AHMAD', 'INSP FATIMAH', 'ASP ZAITON', 'SGT BAHARUDDIN'])],
-                    'seksyen' => ['302 KK', '39B ADB', '420 KK', '376 KK', '457 KK'][array_rand(['302 KK', '39B ADB', '420 KK', '376 KK', '457 KK'])],
-                    'tarikh_laporan_polis' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30)),
-                    'pegawai_pemeriksa_jips' => ['INSP NORAIDAH', 'ASP SALLEH', 'SGT FAIZAH'][array_rand(['INSP NORAIDAH', 'ASP SALLEH', 'SGT FAIZAH'])],
-                    'tarikh_minit_pertama' => Carbon::now()->subMonths(rand(1, 6))->subDays(rand(1, 15)),
-                    'tarikh_minit_akhir' => Carbon::now()->subMonths(rand(1, 3))->subDays(rand(1, 5)),
-                    'terbengkalai_tb' => ['Ya', 'Tidak'][array_rand(['Ya', 'Tidak'])],
-                    'no_ext_brg_kes' => 'BK/EXT/' . str_pad(rand(1, 999), 3, '0', STR_PAD_LEFT) . '/24',
-                    'brg_kes_tak_daftar' => ['Ya', 'Tidak'][array_rand(['Ya', 'Tidak'])],
-                    'gambar_brg_kes' => ['Ada', 'Tiada'][array_rand(['Ada', 'Tiada'])],
-                    'wang_tunai_lucut_hak_judi' => rand(0, 1) ? rand(100, 50000) : null,
-                    'ulasan_barang_kes' => 'Barang kes telah didaftarkan dan disimpan mengikut prosedur.',
-                    'pem_1_2_3_4' => ['PEM 1', 'PEM 2', 'PEM 3', 'PEM 4'][array_rand(['PEM 1', 'PEM 2', 'PEM 3', 'PEM 4'])],
-                    'rj9' => ['Ada', 'Tiada'][array_rand(['Ada', 'Tiada'])],
-                    'rj99' => ['Ada', 'Tiada'][array_rand(['Ada', 'Tiada'])],
-                    'rj10a' => ['Ada', 'Tiada'][array_rand(['Ada', 'Tiada'])],
-                    'rj10b' => ['Ada', 'Tiada'][array_rand(['Ada', 'Tiada'])],
-                    'rj21' => ['Ada', 'Tiada'][array_rand(['Ada', 'Tiada'])],
-                    'pdrma43_jamin_polis' => ['Ada', 'Tiada'][array_rand(['Ada', 'Tiada'])],
-                    'laporan_pakar' => ['Ada', 'Tiada'][array_rand(['Ada', 'Tiada'])],
-                    'arahan_ya_tpr' => ['Tuduh', 'Tidak Tuduh', 'Siasatan Lanjut'][array_rand(['Tuduh', 'Tidak Tuduh', 'Siasatan Lanjut'])],
-                    'arahan_tuduh_ya_tpr' => ['Ya', 'Tidak'][array_rand(['Ya', 'Tidak'])],
-                    'ulasan_keseluruhan_ks' => 'Siasatan telah dijalankan dengan teliti mengikut prosedur yang ditetapkan.',
+                    'no_repot_polis' => 'IPD/CRIME/' . str_pad(1000 + $i, 5, '0', STR_PAD_LEFT) . '/24',
+                    'pegawai_penyiasat' => 'INSPEKTOR KAMAL',
+                    'tarikh_laporan_polis_dibuka' => Carbon::now()->subWeeks($i),
+                    'seksyen' => '420 Kanun Keseksaan', // A static example for Cheating
+                    'pegawai_pemeriksa' => 'ASP ROHANI', // From Bahagian 2, but good to have a name
                 ]
             );
         }
+
 
         // 4. Seed Narkotik Papers (20 records) - Basic fields from actual migration
         for ($i = 1; $i <= 20; $i++) {
@@ -147,7 +133,7 @@ class DatabaseSeeder extends Seeder
                     'arahan_minit_oleh_ya_tpr_status' => rand(0, 1),
                     'arahan_minit_oleh_ya_tpr_tarikh' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 15)) : null,
                     'keputusan_siasatan_oleh_ya_tpr' => ['Tuduh', 'Tidak Tuduh', 'Siasatan Lanjut'][array_rand(['Tuduh', 'Tidak Tuduh', 'Siasatan Lanjut'])],
-                    'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan' => json_encode(['Ya']),
+                    'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan' => 'Ya',
                     'ulasan_keputusan_siasatan_tpr' => 'Siasatan telah dilakukan dengan teliti dan mengikut prosedur yang betul.',
                     'ulasan_keseluruhan_pegawai_pemeriksa' => 'Kertas siasatan lengkap dan mengikut format yang ditetapkan.',
 
@@ -159,12 +145,12 @@ class DatabaseSeeder extends Seeder
                     'jenis_barang_kes_am' => $barangKesTypes[array_rand($barangKesTypes)],
                     'jenis_barang_kes_berharga' => rand(0, 1) ? $barangKesTypes[array_rand($barangKesTypes)] : null,
                     'jenis_barang_kes_kenderaan' => rand(0, 1) ? 'Kereta/Motosikal/Lori' : null,
-                    'status_pergerakan_barang_kes' => json_encode(['Simpanan Stor Ekshibit']),
-                    'status_barang_kes_selesai_siasatan' => json_encode(['Dikembalikan Kepada Pemilik']),
-                    'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan' => json_encode(['Dilelong']),
-                    'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => json_encode(['Ya']),
-                    'resit_kew_38e_bagi_pelupusan' => json_encode(['Ada Dilampirkan']),
-                    'adakah_borang_serah_terima_pegawai_tangkapan' => json_encode(['Ada Dilampirkan']),
+                    'status_pergerakan_barang_kes' => 'Simpanan Stor Ekshibit',
+                    'status_barang_kes_selesai_siasatan' => 'Dikembalikan Kepada Pemilik',
+                    'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan' => 'Dilelong',
+                    'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => 'Ya',
+                    'resit_kew_38e_bagi_pelupusan' => 'Ada Dilampirkan',
+                    'adakah_borang_serah_terima_pegawai_tangkapan' => 'Ada Dilampirkan',
                     'adakah_borang_serah_terima_pemilik_saksi' => 'Ada Dilampirkan',
                     'adakah_sijil_surat_kebenaran_ipo' => rand(0, 1),
                     'adakah_gambar_pelupusan' => 'Ada Dilampirkan',

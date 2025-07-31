@@ -24,6 +24,158 @@
     ];
 
     $ignoreColumns = ['id', 'user_id', 'project_id'];
+
+    $jenayahColumns = [
+        // BAHAGIAN 1: Maklumat Asas
+        'no_kertas_siasatan' => 'No. Kertas Siasatan',
+        'no_repot_polis' => 'No. Repot Polis',
+        'pegawai_penyiasat' => 'Pegawai Penyiasat',
+        'tarikh_laporan_polis_dibuka' => 'Tarikh Laporan Polis Dibuka',
+        'seksyen' => 'Seksyen',
+        
+        // BAHAGIAN 2: Pemeriksaan & Status
+        'pegawai_pemeriksa' => 'Pegawai Pemeriksa',
+        'tarikh_edaran_minit_ks_pertama' => 'Tarikh Minit KS Pertama (A)',
+        'tarikh_edaran_minit_ks_kedua' => 'Tarikh Minit KS Kedua (B)',
+        'tarikh_edaran_minit_ks_sebelum_akhir' => 'Tarikh Minit KS Sebelum Akhir (C)',
+        'tarikh_edaran_minit_ks_akhir' => 'Tarikh Minit KS Akhir (D)',
+        'tarikh_semboyan_pemeriksaan_jips_ke_daerah' => 'Tarikh Semboyan JIPS (E)',
+        
+        // BAHAGIAN 3: Arahan & Keputusan
+        'arahan_minit_oleh_sio_status' => 'Arahan Minit SIO',
+        'arahan_minit_oleh_sio_tarikh' => 'Tarikh Arahan SIO',
+        'arahan_minit_ketua_bahagian_status' => 'Arahan Minit Ketua Bahagian',
+        'arahan_minit_ketua_bahagian_tarikh' => 'Tarikh Arahan Ketua Bahagian',
+        'arahan_minit_ketua_jabatan_status' => 'Arahan Minit Ketua Jabatan',
+        'arahan_minit_ketua_jabatan_tarikh' => 'Tarikh Arahan Ketua Jabatan',
+        'arahan_minit_oleh_ya_tpr_status' => 'Arahan Minit YA TPR',
+        'arahan_minit_oleh_ya_tpr_tarikh' => 'Tarikh Arahan YA TPR',
+        'keputusan_siasatan_oleh_ya_tpr' => 'Keputusan Siasatan YA TPR',
+        'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan' => 'Arahan Tuduh Diambil Tindakan',
+        'ulasan_keputusan_siasatan_tpr' => 'Ulasan Keputusan TPR',
+        'ulasan_keseluruhan_pegawai_pemeriksa' => 'Ulasan Pemeriksa (B3)',
+        
+        // BAHAGIAN 4: Barang Kes
+        'adakah_barang_kes_didaftarkan' => 'Barang Kes Didaftarkan',
+        'no_daftar_barang_kes_am' => 'No. Daftar BK Am',
+        'no_daftar_barang_kes_berharga' => 'No. Daftar BK Berharga',
+        'no_daftar_barang_kes_kenderaan' => 'No. Daftar BK Kenderaan',
+        'no_daftar_botol_spesimen_urin' => 'No. Daftar Spesimen Urin',
+        'no_daftar_spesimen_darah' => 'No. Daftar Spesimen Darah',
+        'no_daftar_kontraban' => 'No. Daftar Kontraban',
+        'jenis_barang_kes_am' => 'Jenis BK Am',
+        'jenis_barang_kes_berharga' => 'Jenis BK Berharga',
+        'jenis_barang_kes_kenderaan' => 'Jenis BK Kenderaan',
+        'jenis_barang_kes_kontraban' => 'Jenis BK Kontraban',
+        'status_pergerakan_barang_kes' => 'Status Pergerakan BK',
+        'status_pergerakan_barang_kes_lain' => 'Status Pergerakan BK (Lain-lain)',
+        'status_barang_kes_selesai_siasatan' => 'Status BK Selesai Siasatan',
+        'status_barang_kes_selesai_siasatan_lain' => 'Status BK Selesai Siasatan (Lain-lain)',
+        'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan' => 'Kaedah Pelupusan BK',
+        'kaedah_pelupusan_barang_kes_lain' => 'Kaedah Pelupusan BK (Lain-lain)',
+        'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => 'Arahan Pelupusan Wang Tunai',
+        'resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => 'Resit Kew.38e',
+        'adakah_borang_serah_terima_pegawai_tangkapan' => 'Borang Serah/Terima (Pegawai Tangkapan)',
+        'adakah_borang_serah_terima_pemilik_saksi' => 'Borang Serah/Terima (Pemilik/Saksi)',
+        'adakah_sijil_surat_kebenaran_ipo' => 'Sijil/Surat Kebenaran IPD',
+        'adakah_gambar_pelupusan' => 'Gambar Pelupusan',
+        'ulasan_keseluruhan_pegawai_pemeriksa_barang_kes' => 'Ulasan Pemeriksa (Barang Kes)',
+        
+        // BAHAGIAN 5: Dokumen Siasatan
+        'status_id_siasatan_dikemaskini' => 'ID Siasatan Dikemaskini',
+        'status_rajah_kasar_tempat_kejadian' => 'Rajah Kasar',
+        'status_gambar_tempat_kejadian' => 'Gambar Tempat Kejadian',
+        'status_gambar_post_mortem_mayat_di_hospital' => 'Gambar Post Mortem',
+        'status_gambar_barang_kes_am' => 'Gambar BK Am',
+        'status_gambar_barang_kes_berharga' => 'Gambar BK Berharga',
+        'status_gambar_barang_kes_kenderaan' => 'Gambar BK Kenderaan',
+        'status_gambar_barang_kes_darah' => 'Gambar BK Darah',
+        'status_gambar_barang_kes_kontraban' => 'Gambar BK Kontraban',
+        
+        // BAHAGIAN 6: Borang & Semakan
+        'status_pem' => 'Borang PEM',
+        'status_rj2' => 'Status RJ2',
+        'tarikh_rj2' => 'Tarikh RJ2',
+        'status_rj2b' => 'Status RJ2B',
+        'tarikh_rj2b' => 'Tarikh RJ2B',
+        'status_rj9' => 'Status RJ9',
+        'tarikh_rj9' => 'Tarikh RJ9',
+        'status_rj99' => 'Status RJ99',
+        'tarikh_rj99' => 'Tarikh RJ99',
+        'status_rj10a' => 'Status RJ10A',
+        'tarikh_rj10a' => 'Tarikh RJ10A',
+        'status_rj10b' => 'Status RJ10B',
+        'tarikh_rj10b' => 'Tarikh RJ10B',
+        'lain_lain_rj_dikesan' => 'Lain-lain RJ Dikesan',
+        'status_semboyan_pertama_wanted_person' => 'Semboyan WP 1',
+        'tarikh_semboyan_pertama_wanted_person' => 'Tarikh Semboyan WP 1',
+        'status_semboyan_kedua_wanted_person' => 'Semboyan WP 2',
+        'tarikh_semboyan_kedua_wanted_person' => 'Tarikh Semboyan WP 2',
+        'status_semboyan_ketiga_wanted_person' => 'Semboyan WP 3',
+        'tarikh_semboyan_ketiga_wanted_person' => 'Tarikh Semboyan WP 3',
+        'ulasan_keseluruhan_pegawai_pemeriksa_borang' => 'Ulasan Pemeriksa (Borang)',
+        'status_penandaan_kelas_warna' => 'Penandaan Kelas Warna',
+        
+        // BAHAGIAN 7: Permohonan Laporan Agensi Luar
+        'status_permohonan_laporan_pakar_judi' => 'Mohon Laporan Pakar Judi',
+        'tarikh_permohonan_laporan_pakar_judi' => 'Tarikh Mohon Pakar Judi',
+        'status_laporan_penuh_pakar_judi' => 'Laporan Penuh Pakar Judi',
+        'tarikh_laporan_penuh_pakar_judi' => 'Tarikh Laporan Pakar Judi',
+        'status_permohonan_laporan_post_mortem_mayat' => 'Mohon Laporan Post Mortem',
+        'tarikh_permohonan_laporan_post_mortem_mayat' => 'Tarikh Mohon Post Mortem',
+        'status_laporan_penuh_bedah_siasat' => 'Laporan Penuh Bedah Siasat',
+        'tarikh_laporan_penuh_bedah_siasat' => 'Tarikh Laporan Bedah Siasat',
+        'status_permohonan_laporan_jabatan_kimia' => 'Mohon Laporan Kimia',
+        'tarikh_permohonan_laporan_jabatan_kimia' => 'Tarikh Mohon Kimia',
+        'status_laporan_penuh_jabatan_kimia' => 'Laporan Penuh Kimia',
+        'tarikh_laporan_penuh_jabatan_kimia' => 'Tarikh Laporan Kimia',
+        'keputusan_laporan_jabatan_kimia' => 'Keputusan Laporan Kimia',
+        'status_permohonan_laporan_jabatan_patalogi' => 'Mohon Laporan Patalogi',
+        'tarikh_permohonan_laporan_jabatan_patalogi' => 'Tarikh Mohon Patalogi',
+        'status_laporan_penuh_jabatan_patalogi' => 'Laporan Penuh Patalogi',
+        'tarikh_laporan_penuh_jabatan_patalogi' => 'Tarikh Laporan Patalogi',
+        'keputusan_laporan_jabatan_patalogi' => 'Keputusan Laporan Patalogi',
+        'status_permohonan_laporan_puspakom' => 'Mohon Laporan Puspakom',
+        'tarikh_permohonan_laporan_puspakom' => 'Tarikh Mohon Puspakom',
+        'status_laporan_penuh_puspakom' => 'Laporan Penuh Puspakom',
+        'tarikh_laporan_penuh_puspakom' => 'Tarikh Laporan Puspakom',
+        'status_permohonan_laporan_jpj' => 'Mohon Laporan JPJ',
+        'tarikh_permohonan_laporan_jpj' => 'Tarikh Mohon JPJ',
+        'status_laporan_penuh_jpj' => 'Laporan Penuh JPJ',
+        'tarikh_laporan_penuh_jpj' => 'Tarikh Laporan JPJ',
+        'status_permohonan_laporan_imigresen' => 'Mohon Laporan Imigresen',
+        'tarikh_permohonan_laporan_imigresen' => 'Tarikh Mohon Imigresen',
+        'status_laporan_penuh_imigresen' => 'Laporan Penuh Imigresen',
+        'tarikh_laporan_penuh_imigresen' => 'Tarikh Laporan Imigresen',
+        'status_permohonan_laporan_kastam' => 'Mohon Laporan Kastam',
+        'tarikh_permohonan_laporan_kastam' => 'Tarikh Mohon Kastam',
+        'status_laporan_penuh_kastam' => 'Laporan Penuh Kastam',
+        'tarikh_laporan_penuh_kastam' => 'Tarikh Laporan Kastam',
+        'status_permohonan_laporan_forensik_pdrm' => 'Mohon Laporan Forensik',
+        'tarikh_permohonan_laporan_forensik_pdrm' => 'Tarikh Mohon Forensik',
+        'status_laporan_penuh_forensik_pdrm' => 'Laporan Penuh Forensik',
+        'tarikh_laporan_penuh_forensik_pdrm' => 'Tarikh Laporan Forensik',
+        'lain_lain_permohonan_laporan' => 'Lain-lain Permohonan Laporan',
+        
+        // BAHAGIAN 8: Status Fail
+        'muka_surat_4_barang_kes_ditulis' => 'M/S 4 - BK Ditulis',
+        'muka_surat_4_dengan_arahan_tpr' => 'M/S 4 - Arahan TPR',
+        'muka_surat_4_keputusan_kes_dicatat' => 'M/S 4 - Keputusan Kes Dicatat',
+        'fail_lmm_ada_keputusan_koroner' => 'Fail LMM Ada Keputusan Koroner',
+        'status_kus_fail' => 'Status KUS/FAIL',
+        'keputusan_akhir_mahkamah' => 'Keputusan Akhir Mahkamah',
+        'ulasan_pegawai_pemeriksa_fail' => 'Ulasan Pemeriksa (Fail)',
+        
+        // Calculated Statuses
+        'lewat_edaran_status' => 'Status Lewat Edaran',
+        'terbengkalai_status' => 'Status Terbengkalai',
+        'baru_dikemaskini_status' => 'Status Kemaskini',
+
+        // Timestamps
+        'created_at' => 'Tarikh Dicipta',
+        'updated_at' => 'Terakhir Dikemaskini',
+    ];
+
     // Define custom columns for Narkotik based on actual form fields in edit.blade.php
     $narkotikColumns = [
     // BAHAGIAN 1: Maklumat Asas
@@ -755,7 +907,7 @@
                                 <div class="mb-12">
                                     @php
                                         // Define which paper types use the 24-hour rule.
-                                        $typesWith24HourRule = ['Jenayah', 'Komersil', 'TrafikSeksyen', 'OrangHilang', 'LaporanMatiMengejut'];
+                                        $typesWith24HourRule = ['Jenayah', 'TrafikRule', 'OrangHilang', 'LaporanMatiMengejut'];
 
                                         // Determine the correct title dynamically based on the current paper type ($key).
                                         $lewatTitle = in_array($key, $typesWith24HourRule) 
@@ -776,12 +928,17 @@
                                         <tr>
                                             <th class="px-4 py-3 sticky left-0 bg-gray-50 dark:bg-gray-700 z-30 border-r border-gray-200 dark:border-gray-600">Tindakan</th>
                                             <th class="px-4 py-3">No.</th>
-                                            @if($key === 'Narkotik')
-                                                {{-- Use custom columns for Narkotik --}}
-                                                @foreach($narkotikColumns as $column => $label)
-                                                    <th scope="col" class="px-4 py-3">{{ $label }}</th>
-                                                @endforeach
-                                            @elseif($key === 'Komersil')
+                                            @if($key === 'Jenayah')
+                                                    {{-- Use custom columns for Jenayah --}}
+                                                    @foreach($jenayahColumns as $column => $label)
+                                                        <th scope="col" class="px-4 py-3">{{ $label }}</th>
+                                                    @endforeach
+                                                @elseif($key === 'Narkotik')
+                                                    {{-- Use custom columns for Narkotik --}}
+                                                    @foreach($narkotikColumns as $column => $label)
+                                                        <th scope="col" class="px-4 py-3">{{ $label }}</th>
+                                                    @endforeach
+                                                @elseif($key === 'Komersil')
                                                 {{-- Use custom columns for Komersil --}}
                                                 @foreach($komersilColumns as $column => $label)
                                                     <th scope="col" class="px-4 py-3">{{ $label }}</th>
@@ -992,9 +1149,58 @@
             panel.addClass('datatable-container-loading dark:text-white');
         }
 
-@foreach($paperTypes as $key => $config)
-    if (tabName === '{{ $key }}') {
-        @if($key === 'Narkotik')
+    @foreach($paperTypes as $key => $config)
+        if (tabName === '{{ $key }}') {
+            @if($key === 'Jenayah')
+                @php
+                    // This PHP block defines the columns for DataTables JavaScript
+                    $dtColumns = [
+                        ['data' => 'action', 'name' => 'action', 'orderable' => false, 'searchable' => false, 'title' => 'Tindakan', 'width' => '100px'],
+                        ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'title' => 'No.']
+                    ];
+                    
+                    foreach($jenayahColumns as $columnKey => $label) {
+                        $dtColumns[] = [
+                            'data' => $columnKey,
+                            'name' => $columnKey,
+                            'title' => $label,
+                            'defaultContent' => '-',
+                            'orderable' => true,
+                            'searchable' => true
+                        ];
+                    }
+                @endphp
+
+                $(tableId).DataTable({
+                    processing: true,
+                    serverSide: true,
+                    ajax: {
+                        url: "{{ route($config['route'], $project->id) }}",
+                        type: "POST",
+                        data: { _token: '{{ csrf_token() }}' }
+                    },
+                    columns: @json($dtColumns), // Use the custom columns defined above
+                    order: [[2, 'desc']], // Order by 'No. Kertas Siasatan' descending
+                    columnDefs: [{
+                        targets: 0,
+                        className: "sticky left-0 bg-gray-50 dark:text-white dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600"
+                    }],
+                    fixedColumns: { left: 1 },
+                    language: {
+                        search: "Cari:",
+                        lengthMenu: "Tunjukkan _MENU_ entri",
+                        info: "Menunjukkan _START_ hingga _END_ daripada _TOTAL_ entri",
+                        infoEmpty: "Menunjukkan 0 hingga 0 daripada 0 entri",
+                        emptyTable: "Tiada data tersedia dalam jadual"
+                    },
+                    "drawCallback": function( settings ) {
+                        if (panel.length) {
+                            panel.removeClass('datatable-container-loading');
+                        }
+                    }
+                });
+                initializedTables[tabName] = true;
+        @elseif($key === 'Narkotik')
             {{-- Use custom columns for Narkotik --}}
             @php
                 $dtColumns = [
@@ -1002,8 +1208,29 @@
                     ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'title' => 'No.']
                 ];
                 
+                // List of lain_lain fields that need special rendering
+                $lainLainFields = [
+                    'lain_lain_rj_dikesan',
+                    'lain_lain_permohonan_laporan',
+                    'kaedah_pelupusan_barang_kes_lain',
+                    'status_pergerakan_barang_kes_lain',
+                    'status_barang_kes_selesai_siasatan_lain'
+                ];
+                
+                // List of JSON fields that need special rendering
+                $jsonFields = [
+                    'status_pergerakan_barang_kes',
+                    'status_barang_kes_selesai_siasatan',
+                    'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan',
+                    'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan',
+                    'resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan',
+                    'adakah_borang_serah_terima_pegawai_tangkapan',
+                    'adakah_borang_serah_terima_pemilik_saksi',
+                    'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan'
+                ];
+                
                 foreach($narkotikColumns as $column => $label) {
-                    $dtColumns[] = [
+                    $columnConfig = [
                         'data' => $column,
                         'name' => $column,
                         'title' => $label,
@@ -1011,10 +1238,63 @@
                         'orderable' => true,
                         'searchable' => true
                     ];
+                    
+                    // Add custom render function for lain_lain fields
+                    if (in_array($column, $lainLainFields)) {
+                        $columnConfig['render'] = '%%LAIN_LAIN_RENDER%%';
+                    }
+                    // Add custom render function for JSON fields
+                    elseif (in_array($column, $jsonFields)) {
+                        $columnConfig['render'] = '%%JSON_RENDER%%';
+                        $columnConfig['orderable'] = false;
+                        $columnConfig['searchable'] = false;
+                    }
+                    
+                    $dtColumns[] = $columnConfig;
                 }
             @endphp
 
-            // Initialize the DataTable with custom Narkotik columns
+            // Step 1: Get the column configuration from PHP
+            let dtColumnsConfig = @json($dtColumns);
+
+            // Step 2: Define the render functions in JavaScript
+            const lainLainRenderFunction = function(data, type, row) {
+                if (data === null || data === undefined || data === '' || data === '-') {
+                    return '-';
+                }
+                // For lain_lain fields, show "Lain-lain ; [actual text]"
+                return 'Lain-lain ; ' + data;
+            };
+
+            const jsonRenderFunction = function(data, type, row) {
+                if (data === null || data === undefined) return "-";
+                let parsedData = data;
+                // Check if data is a string that looks like a JSON array
+                if (typeof data === "string" && data.startsWith('[') && data.endsWith(']')) {
+                    try {
+                        parsedData = JSON.parse(data);
+                    } catch (e) {
+                        return data; // Return original string if it's not valid JSON
+                    }
+                }
+                // Check if we now have a valid array
+                if (Array.isArray(parsedData)) {
+                    return parsedData.length > 0 ? parsedData.join(", ") : "-";
+                }
+                // If not an array or parsable string, return it as is
+                return parsedData;
+            };
+
+            // Step 3: Loop through the config and replace the placeholders
+            dtColumnsConfig.forEach(function(column) {
+                if (column.render === '%%LAIN_LAIN_RENDER%%') {
+                    column.render = lainLainRenderFunction;
+                } else if (column.render === '%%JSON_RENDER%%') {
+                    column.render = jsonRenderFunction;
+                }
+            });
+
+            // Step 4: Initialize the DataTable with the corrected configuration
             $(tableId).DataTable({
                 processing: true,
                 serverSide: true,
@@ -1023,7 +1303,7 @@
                     type: "POST",
                     data: { _token: '{{ csrf_token() }}' }
                 },
-                columns: @json($dtColumns),
+                columns: dtColumnsConfig, // Use the processed JavaScript variable
                 order: [[2, 'desc']],
                 columnDefs: [{
                     targets: 0,
@@ -1052,8 +1332,14 @@
                     ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'title' => 'No.']
                 ];
                 
+                // List of lain_lain fields that need special rendering
+                $lainLainFields = [
+                    'alasan_orang_hilang_dijumpai_mati_mengejut_bukan_jenayah',
+                    'alasan_orang_hilang_dijumpai_mati_mengejut_jenayah'
+                ];
+                
                 foreach($orangHilangColumns as $column => $label) {
-                    $dtColumns[] = [
+                    $columnConfig = [
                         'data' => $column,
                         'name' => $column,
                         'title' => $label,
@@ -1061,10 +1347,36 @@
                         'orderable' => true,
                         'searchable' => true
                     ];
+                    
+                    // Add custom render function for lain_lain fields
+                    if (in_array($column, $lainLainFields)) {
+                        $columnConfig['render'] = '%%LAIN_LAIN_RENDER%%';
+                    }
+                    
+                    $dtColumns[] = $columnConfig;
                 }
             @endphp
 
-            // Initialize the DataTable with custom OrangHilang columns
+            // Step 1: Get the column configuration from PHP
+            let dtColumnsConfig = @json($dtColumns);
+
+            // Step 2: Define the lain_lain render function in JavaScript
+            const lainLainRenderFunction = function(data, type, row) {
+                if (data === null || data === undefined || data === '' || data === '-') {
+                    return '-';
+                }
+                // For lain_lain fields, show "Lain-lain ; [actual text]"
+                return 'Lain-lain ; ' + data;
+            };
+
+            // Step 3: Loop through the config and replace the placeholder
+            dtColumnsConfig.forEach(function(column) {
+                if (column.render === '%%LAIN_LAIN_RENDER%%') {
+                    column.render = lainLainRenderFunction;
+                }
+            });
+
+            // Step 4: Initialize the DataTable with the corrected configuration
             $(tableId).DataTable({
                 processing: true,
                 serverSide: true,
@@ -1073,7 +1385,7 @@
                     type: "POST",
                     data: { _token: '{{ csrf_token() }}' }
                 },
-                columns: @json($dtColumns),
+                columns: dtColumnsConfig, // Use the processed JavaScript variable
                 order: [[2, 'desc']],
                 columnDefs: [{
                     targets: 0,
@@ -1103,8 +1415,24 @@
                     ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'title' => 'No.']
                 ];
                 
+                // List of lain_lain fields that need special rendering
+                $lainLainFields = [
+                    'lain_lain_rj_dikesan'
+                ];
+                
+                // List of JSON fields that need special rendering
+                $jsonFields = [
+                    'status_pergerakan_barang_kes',
+                    'status_barang_kes_selesai_siasatan',
+                    'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan',
+                    'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan',
+                    'adakah_borang_serah_terima_pegawai_tangkapan',
+                    'adakah_borang_serah_terima_pemilik_saksi',
+                    'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan'
+                ];
+                
                 foreach($komersilColumns as $column => $label) {
-                    $dtColumns[] = [
+                    $columnConfig = [
                         'data' => $column,
                         'name' => $column,
                         'title' => $label,
@@ -1112,10 +1440,63 @@
                         'orderable' => true,
                         'searchable' => true
                     ];
+                    
+                    // Add custom render function for lain_lain fields
+                    if (in_array($column, $lainLainFields)) {
+                        $columnConfig['render'] = '%%LAIN_LAIN_RENDER%%';
+                    }
+                    // Add custom render function for JSON fields
+                    elseif (in_array($column, $jsonFields)) {
+                        $columnConfig['render'] = '%%JSON_RENDER%%';
+                        $columnConfig['orderable'] = false;
+                        $columnConfig['searchable'] = false;
+                    }
+                    
+                    $dtColumns[] = $columnConfig;
                 }
             @endphp
 
-            // Initialize the DataTable with custom Komersil columns
+            // Step 1: Get the column configuration from PHP
+            let dtColumnsConfig = @json($dtColumns);
+
+            // Step 2: Define the render functions in JavaScript
+            const lainLainRenderFunction = function(data, type, row) {
+                if (data === null || data === undefined || data === '' || data === '-') {
+                    return '-';
+                }
+                // For lain_lain fields, show "Lain-lain ; [actual text]"
+                return 'Lain-lain ; ' + data;
+            };
+
+            const jsonRenderFunction = function(data, type, row) {
+                if (data === null || data === undefined) return "-";
+                let parsedData = data;
+                // Check if data is a string that looks like a JSON array
+                if (typeof data === "string" && data.startsWith('[') && data.endsWith(']')) {
+                    try {
+                        parsedData = JSON.parse(data);
+                    } catch (e) {
+                        return data; // Return original string if it's not valid JSON
+                    }
+                }
+                // Check if we now have a valid array
+                if (Array.isArray(parsedData)) {
+                    return parsedData.length > 0 ? parsedData.join(", ") : "-";
+                }
+                // If not an array or parsable string, return it as is
+                return parsedData;
+            };
+
+            // Step 3: Loop through the config and replace the placeholders
+            dtColumnsConfig.forEach(function(column) {
+                if (column.render === '%%LAIN_LAIN_RENDER%%') {
+                    column.render = lainLainRenderFunction;
+                } else if (column.render === '%%JSON_RENDER%%') {
+                    column.render = jsonRenderFunction;
+                }
+            });
+
+            // Step 4: Initialize the DataTable with the corrected configuration
             $(tableId).DataTable({
                 processing: true,
                 serverSide: true,
@@ -1124,7 +1505,7 @@
                     type: "POST",
                     data: { _token: '{{ csrf_token() }}' }
                 },
-                columns: @json($dtColumns),
+                columns: dtColumnsConfig, // Use the processed JavaScript variable
                 order: [[2, 'desc']],
                 columnDefs: [{
                     targets: 0,
@@ -1154,8 +1535,13 @@
                     ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'title' => 'No.']
                 ];
                 
+                // List of lain_lain fields that need special rendering
+                $lainLainFields = [
+                    'lain_lain_permohonan_laporan'
+                ];
+                
                 foreach($laporanMatiMengejutColumns as $column => $label) {
-                    $dtColumns[] = [
+                    $columnConfig = [
                         'data' => $column,
                         'name' => $column,
                         'title' => $label,
@@ -1163,10 +1549,36 @@
                         'orderable' => true,
                         'searchable' => true
                     ];
+                    
+                    // Add custom render function for lain_lain fields
+                    if (in_array($column, $lainLainFields)) {
+                        $columnConfig['render'] = '%%LAIN_LAIN_RENDER%%';
+                    }
+                    
+                    $dtColumns[] = $columnConfig;
                 }
             @endphp
 
-            // Initialize the DataTable with custom LaporanMatiMengejut columns
+            // Step 1: Get the column configuration from PHP
+            let dtColumnsConfig = @json($dtColumns);
+
+            // Step 2: Define the lain_lain render function in JavaScript
+            const lainLainRenderFunction = function(data, type, row) {
+                if (data === null || data === undefined || data === '' || data === '-') {
+                    return '-';
+                }
+                // For lain_lain fields, show "Lain-lain ; [actual text]"
+                return 'Lain-lain ; ' + data;
+            };
+
+            // Step 3: Loop through the config and replace the placeholder
+            dtColumnsConfig.forEach(function(column) {
+                if (column.render === '%%LAIN_LAIN_RENDER%%') {
+                    column.render = lainLainRenderFunction;
+                }
+            });
+
+            // Step 4: Initialize the DataTable with the corrected configuration
             $(tableId).DataTable({
                 processing: true,
                 serverSide: true,
@@ -1175,7 +1587,7 @@
                     type: "POST",
                     data: { _token: '{{ csrf_token() }}' }
                 },
-                columns: @json($dtColumns),
+                columns: dtColumnsConfig, // Use the processed JavaScript variable
                 order: [[2, 'desc']],
                 columnDefs: [{
                     targets: 0,
@@ -1205,8 +1617,15 @@
                     ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'title' => 'No.']
                 ];
                 
+                // List of lain_lain fields that need special rendering
+                $lainLainFields = [
+                    'lain_lain_rj_dikesan',
+                    'lain_lain_permohonan_laporan',
+                    'status_pergerakan_barang_kes'
+                ];
+                
                 foreach($trafikSeksyenColumns as $column => $label) {
-                    $dtColumns[] = [
+                    $columnConfig = [
                         'data' => $column,
                         'name' => $column,
                         'title' => $label,
@@ -1214,10 +1633,36 @@
                         'orderable' => true,
                         'searchable' => true
                     ];
+                    
+                    // Add custom render function for lain_lain fields
+                    if (in_array($column, $lainLainFields)) {
+                        $columnConfig['render'] = '%%LAIN_LAIN_RENDER%%';
+                    }
+                    
+                    $dtColumns[] = $columnConfig;
                 }
             @endphp
 
-            // Initialize the DataTable with custom TrafikSeksyen columns
+            // Step 1: Get the column configuration from PHP
+            let dtColumnsConfig = @json($dtColumns);
+
+            // Step 2: Define the lain_lain render function in JavaScript
+            const lainLainRenderFunction = function(data, type, row) {
+                if (data === null || data === undefined || data === '' || data === '-') {
+                    return '-';
+                }
+                // For lain_lain fields, show "Lain-lain ; [actual text]"
+                return 'Lain-lain ; ' + data;
+            };
+
+            // Step 3: Loop through the config and replace the placeholder
+            dtColumnsConfig.forEach(function(column) {
+                if (column.render === '%%LAIN_LAIN_RENDER%%') {
+                    column.render = lainLainRenderFunction;
+                }
+            });
+
+            // Step 4: Initialize the DataTable with the corrected configuration
             $(tableId).DataTable({
                 processing: true,
                 serverSide: true,
@@ -1226,7 +1671,7 @@
                     type: "POST",
                     data: { _token: '{{ csrf_token() }}' }
                 },
-                columns: @json($dtColumns),
+                columns: dtColumnsConfig, // Use the processed JavaScript variable
                 order: [[2, 'desc']],
                 columnDefs: [{
                     targets: 0,
@@ -1256,8 +1701,14 @@
                     ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'title' => 'No.']
                 ];
                 
+                // List of lain_lain fields that need special rendering
+                $lainLainFields = [
+                    'lain_lain_rj_dikesan',
+                    'lain_lain_permohonan_laporan'
+                ];
+                
                 foreach($trafikRuleColumns as $column => $label) {
-                    $dtColumns[] = [
+                    $columnConfig = [
                         'data' => $column,
                         'name' => $column,
                         'title' => $label,
@@ -1265,10 +1716,36 @@
                         'orderable' => true,
                         'searchable' => true
                     ];
+                    
+                    // Add custom render function for lain_lain fields
+                    if (in_array($column, $lainLainFields)) {
+                        $columnConfig['render'] = '%%LAIN_LAIN_RENDER%%';
+                    }
+                    
+                    $dtColumns[] = $columnConfig;
                 }
             @endphp
 
-            // Initialize the DataTable with custom TrafikRule columns
+            // Step 1: Get the column configuration from PHP
+            let dtColumnsConfig = @json($dtColumns);
+
+            // Step 2: Define the lain_lain render function in JavaScript
+            const lainLainRenderFunction = function(data, type, row) {
+                if (data === null || data === undefined || data === '' || data === '-') {
+                    return '-';
+                }
+                // For lain_lain fields, show "Lain-lain ; [actual text]"
+                return 'Lain-lain ; ' + data;
+            };
+
+            // Step 3: Loop through the config and replace the placeholder
+            dtColumnsConfig.forEach(function(column) {
+                if (column.render === '%%LAIN_LAIN_RENDER%%') {
+                    column.render = lainLainRenderFunction;
+                }
+            });
+
+            // Step 4: Initialize the DataTable with the corrected configuration
             $(tableId).DataTable({
                 processing: true,
                 serverSide: true,
@@ -1277,7 +1754,7 @@
                     type: "POST",
                     data: { _token: '{{ csrf_token() }}' }
                 },
-                columns: @json($dtColumns),
+                columns: dtColumnsConfig, // Use the processed JavaScript variable
                 order: [[2, 'desc']],
                 columnDefs: [{
                     targets: 0,
