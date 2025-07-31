@@ -223,7 +223,7 @@ class TrafikSeksyen extends Model
             return null; // Cannot calculate if dates are missing
         }
 
-        return $tarikhA->diffInHours($tarikhB) > 48 ? 'YA, LEWAT' : 'DALAM TEMPOH';
+        return $tarikhA->diffInHours($tarikhB) > 48 ? 'LEWAT' : 'DALAM TEMPOH';
     }
 
     public function getTempohLewatEdaranDikesanAttribute(): ?string
@@ -260,7 +260,7 @@ class TrafikSeksyen extends Model
             }
         }
         
-        return $isTerbengkalai ? 'YA, TERBENGKALAI MELEBIHI 3 BULAN' : 'TIDAK TERBENGKALAI';
+        return $isTerbengkalai ? 'TERBENGKALAI MELEBIHI 3 BULAN' : 'TIDAK TERBENGKALAI';
     }
 
     public function getBaruDikemaskiniStatusAttribute(): string

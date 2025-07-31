@@ -132,7 +132,7 @@ class OrangHilang extends Model
             return null; // Cannot calculate if dates are missing
         }
 
-        return $tarikhA->diffInHours($tarikhB) > $limitInHours ? 'YA, LEWAT' : 'DALAM TEMPOH';
+        return $tarikhA->diffInHours($tarikhB) > $limitInHours ? 'LEWAT' : 'DALAM TEMPOH';
     }
 
     public function getTempohLewatEdaranDikesanAttribute(): ?string
@@ -169,7 +169,7 @@ class OrangHilang extends Model
             }
         }
         
-        return $isTerbengkalai ? 'YA, TERBENGKALAI MELEBIHI 3 BULAN' : 'TIDAK TERBENGKALAI';
+        return $isTerbengkalai ? 'TERBENGKALAI MELEBIHI 3 BULAN' : 'TIDAK TERBENGKALAI';
     }
 
     public function getBaruDikemaskiniStatusAttribute(): string
@@ -179,6 +179,11 @@ class OrangHilang extends Model
 
         if ($tarikhE && $tarikhD && $tarikhE->isAfter($tarikhD)) {
             return 'TERBENGKALAI / KS BARU DIKEMASKINI';
+        }
+
+        // Fallback for general updates not related to JIPS
+        if ($this->updated_at && $this->updated_at->isAfter(Carbon::now()->subDays(7))) {
+            return 'BARU DIKEMASKINI';
         }
 
         return 'TIADA PERGERAKAN BARU';

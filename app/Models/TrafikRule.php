@@ -120,7 +120,7 @@ class TrafikRule extends Model
             return null; // Cannot calculate if dates are missing
         }
 
-        return $tarikhA->diffInHours($tarikhB) > 24 ? 'YA, LEWAT' : 'DALAM TEMPOH';
+        return $tarikhA->diffInHours($tarikhB) > 24 ? 'LEWAT' : 'DALAM TEMPOH';
     }
 
     public function getTempohLewatEdaranDikesanAttribute(): ?string
@@ -142,7 +142,7 @@ class TrafikRule extends Model
         $tarikhD = $this->tarikh_edaran_minit_ks_akhir;
 
         if ($tarikhA && !$tarikhD) {
-            return $tarikhA->diffInMonths(Carbon::now()) > 3 ? 'YA, TERBENGKALAI' : 'TIDAK TERBENGKALAI';
+            return $tarikhA->diffInMonths(Carbon::now()) > 3 ? 'TERBENGKALAI MELEBIHI 3 BULAN' : 'TIDAK TERBENGKALAI';
         }
         
         return 'TIDAK BERKENAAN'; // Not considered abandoned if it has an end date or never started
@@ -156,7 +156,7 @@ class TrafikRule extends Model
         if ($tarikhE && $tarikhD && $tarikhE->isAfter($tarikhD)) {
             return 'TERBENGKALAI / KS BARU DIKEMASKINI';
         }
-        
+
         // Fallback for general updates not related to JIPS
         if ($this->updated_at && $this->updated_at->isAfter(Carbon::now()->subDays(7))) {
             return 'BARU DIKEMASKINI';
@@ -164,7 +164,6 @@ class TrafikRule extends Model
 
         return 'TIADA PERGERAKAN BARU';
     }
-
     public function getTempohDikemaskiniAttribute(): ?string
     {
         $tarikhD = $this->tarikh_edaran_minit_ks_akhir;

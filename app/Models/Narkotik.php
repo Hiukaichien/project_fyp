@@ -214,7 +214,7 @@ class Narkotik extends Model
             return null;
         }
 
-        return $tarikhA->diffInHours($tarikhB) > 48 ? 'YA, LEWAT' : 'DALAM TEMPOH';
+        return $tarikhA->diffInHours($tarikhB) > 48 ? 'LEWAT' : 'DALAM TEMPOH';
     }
 
     public function getTempohLewatEdaranDikesanAttribute(): ?string
@@ -236,7 +236,7 @@ class Narkotik extends Model
         $tarikhD = $this->tarikh_edaran_minit_ks_akhir;
 
         if ($tarikhA && !$tarikhD) {
-            return $tarikhA->diffInMonths(Carbon::now()) > 3 ? 'YA, TERBENGKALAI' : 'TIDAK TERBENGKALAI';
+            return $tarikhA->diffInMonths(Carbon::now()) > 3 ? 'TERBENGKALAI MELEBIHI 3 BULAN' : 'TIDAK TERBENGKALAI';
         }
 
         return 'TIDAK BERKENAAN';

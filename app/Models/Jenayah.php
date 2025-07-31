@@ -187,17 +187,17 @@ class Jenayah extends Model
 
     // --- ACCESSORS FOR DYNAMIC CALCULATION ---
 
-    public function getLewatEdaranStatusAttribute(): string
+    public function getLewatEdaranStatusAttribute(): ?string
     {
         $dateA = $this->tarikh_edaran_minit_ks_pertama;
         $dateB = $this->tarikh_edaran_minit_ks_kedua;
 
         if (!$dateA || !$dateB) {
-            return 'TIDAK LENGKAP';
+            return null;
         }
 
         // Jenayah rule is > 24 hours
-        return $dateA->diffInHours($dateB) > 24 ? 'YA, LEWAT' : 'TIDAK';
+        return $dateA->diffInHours($dateB) > 24 ? 'LEWAT' : 'DALAM TEMPOH';
     }
 
     public function getTerbengkalaiStatusAttribute(): string
@@ -216,20 +216,24 @@ class Jenayah extends Model
             $isTerbengkalai = true;
         }
         
-        return $isTerbengkalai ? 'YA, TERBENGKALAI MELEBIHI 3 BULAN' : 'TIDAK';
+        return $isTerbengkalai ? 'TERBENGKALAI MELEBIHI 3 BULAN' : 'TIDAK';
     }
 
     public function getBaruDikemaskiniStatusAttribute(): string
     {
-        $dateD = $this->tarikh_edaran_minit_ks_akhir;
-        $dateE = $this->tarikh_semboyan_pemeriksaan_jips_ke_daerah;
+        $tarikhD = $this->tarikh_edaran_minit_ks_akhir;
+        $tarikhE = $this->tarikh_semboyan_pemeriksaan_jips_ke_daerah;
 
-        if (!$dateD || !$dateE) {
-            return 'TIDAK LENGKAP';
+        if ($tarikhE && $tarikhD && $tarikhE->isAfter($tarikhD)) {
+            return 'TERBENGKALAI / KS BARU DIKEMASKINI';
         }
-        
-        // If date E is more than 3 months after date D
-        return $dateD->diffInMonths($dateE) > 3 ? 'TERBENGKALAI / KS BARU DIKEMASKINI' : 'TIDAK';
+
+        // Fallback for general updates not related to JIPS
+        if ($this->updated_at && $this->updated_at->isAfter(Carbon::now()->subDays(7))) {
+            return 'BARU DIKEMASKINI';
+        }
+
+        return 'TIADA PERGERAKAN BARU';
     }
 
     // --- HELPER & TEXT ACCESSORS ---
