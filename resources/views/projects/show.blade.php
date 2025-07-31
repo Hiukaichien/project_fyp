@@ -316,6 +316,11 @@
     'keputusan_akhir_mahkamah' => 'Keputusan Akhir Mahkamah',
     'ulasan_keseluruhan_pegawai_pemeriksa_fail' => 'Ulasan Pegawai Pemeriksa Fail',
     
+    // Calculated Statuses
+    'lewat_edaran_status' => 'Status Lewat Edaran',
+    'terbengkalai_status' => 'Status Terbengkalai',
+    'baru_dikemaskini_status' => 'Status Kemaskini',
+
     // Date columns
     'created_at' => 'Tarikh Dicipta',
     'updated_at' => 'Tarikh Dikemaskini',
@@ -393,6 +398,11 @@
         'keputusan_akhir_mahkamah' => 'Keputusan Akhir Mahkamah',
         'ulasan_keseluruhan_pegawai_pemeriksa_fail' => 'Ulasan Keseluruhan Pegawai Pemeriksa (Fail)',
         
+        // Calculated Statuses
+        'lewat_edaran_status' => 'Status Lewat Edaran',
+        'terbengkalai_status' => 'Status Terbengkalai',
+        'baru_dikemaskini_status' => 'Status Kemaskini',
+
         // Date columns
         'created_at' => 'Tarikh Dicipta',
         'updated_at' => 'Tarikh Dikemaskini',
@@ -504,6 +514,11 @@
         'keputusan_akhir_mahkamah' => 'Keputusan Akhir Mahkamah',
         'ulasan_keseluruhan_pegawai_pemeriksa_fail' => 'Ulasan Pegawai Pemeriksa (Fail)',
         
+        // Calculated Statuses
+        'lewat_edaran_status' => 'Status Lewat Edaran',
+        'terbengkalai_status' => 'Status Terbengkalai',
+        'baru_dikemaskini_status' => 'Status Kemaskini',
+
         // Date columns
         'created_at' => 'Tarikh Dicipta',
         'updated_at' => 'Tarikh Dikemaskini',
@@ -596,6 +611,11 @@
         'keputusan_akhir_mahkamah' => 'Keputusan Akhir Mahkamah',
         'ulasan_keseluruhan_pegawai_pemeriksa_fail' => 'Ulasan Pegawai Pemeriksa (Fail)',
         
+        // Calculated Statuses
+        'lewat_edaran_status' => 'Status Lewat Edaran',
+        'terbengkalai_status' => 'Status Terbengkalai',
+        'baru_dikemaskini_status' => 'Status Kemaskini',
+
         // Date columns
         'created_at' => 'Tarikh Dicipta',
         'updated_at' => 'Tarikh Dikemaskini',
@@ -664,6 +684,11 @@
         'keputusan_akhir_mahkamah' => 'Keputusan Akhir Mahkamah',
         'ulasan_keseluruhan_pegawai_pemeriksa_fail' => 'Ulasan Pegawai Pemeriksa (Fail)',
         
+        // Calculated Statuses
+        'lewat_edaran_status' => 'Status Lewat Edaran',
+        'terbengkalai_status' => 'Status Terbengkalai',
+        'baru_dikemaskini_status' => 'Status Kemaskini',
+
         // Date columns
         'created_at' => 'Tarikh Dicipta',
         'updated_at' => 'Tarikh Dikemaskini',
@@ -775,6 +800,11 @@
         'status_permohonan_E_FSA_1_telco_oleh_IO_AIO' => 'Permohonan E-FSA (TELCO) - 1',
         'status_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO' => 'Laporan Penuh E-FSA (TELCO) - 1',
         
+        // Calculated Statuses
+        'lewat_edaran_status' => 'Status Lewat Edaran',
+        'terbengkalai_status' => 'Status Terbengkalai',
+        'baru_dikemaskini_status' => 'Status Kemaskini',
+
         // Date columns
         'created_at' => 'Tarikh Dicipta',
         'updated_at' => 'Tarikh Dikemaskini',
