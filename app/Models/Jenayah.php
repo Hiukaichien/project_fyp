@@ -128,6 +128,8 @@ class Jenayah extends Model
         'terbengkalai_status_dc',
         'terbengkalai_status_da',
         'baru_dikemaskini_status',
+        'tempoh_lewat_edaran_dikesan',
+        'tempoh_dikemaskini',
 
         // Text Accessors for Boolean Fields
         'arahan_minit_oleh_sio_status_text',
@@ -191,15 +193,29 @@ class Jenayah extends Model
 
     public function getLewatEdaranStatusAttribute(): ?string
     {
-        $dateA = $this->tarikh_edaran_minit_ks_pertama;
-        $dateB = $this->tarikh_edaran_minit_ks_kedua;
+        $tarikhA = $this->tarikh_edaran_minit_ks_pertama;
+        $tarikhB = $this->tarikh_edaran_minit_ks_kedua;
+        $limitInHours = 48;
 
-        if (!$dateA || !$dateB) {
+        if (!$tarikhA || !$tarikhB) {
             return null;
         }
 
-        // Jenayah rule is > 24 hours
-        return $dateA->diffInHours($dateB) > 24 ? 'LEWAT' : 'DALAM TEMPOH';
+        return $tarikhA->diffInHours($tarikhB) > $limitInHours 
+            ? 'LEWAT' 
+            : 'DALAM TEMPOH';
+    }
+    
+    public function getTempohLewatEdaranDikesanAttribute(): ?string
+    {
+        $tarikhA = $this->tarikh_edaran_minit_ks_pertama;
+        $tarikhB = $this->tarikh_edaran_minit_ks_kedua;
+
+        if ($tarikhA && $tarikhB) {
+            $days = $tarikhA->diffInDays($tarikhB);
+            return "{$days} HARI";
+        }
+        return null;
     }
 
 public function getTerbengkalaiStatusDcAttribute(): string
@@ -237,20 +253,29 @@ public function getTerbengkalaiStatusDcAttribute(): string
     }
 
     public function getBaruDikemaskiniStatusAttribute(): string
+{
+    $tarikhD = $this->tarikh_edaran_minit_ks_akhir;
+    $tarikhE = $this->tarikh_semboyan_pemeriksaan_jips_ke_daerah;
+
+    if ($tarikhE && $tarikhD && $tarikhE->isAfter($tarikhD)) {
+        return 'TERBENGKALAI / KS BARU DIKEMASKINI';
+    }
+
+    // The only other possibility is 'TIDAK' (or 'TIADA PERGERAKAN BARU')
+    return 'TIDAK'; 
+}
+
+    public function getTempohDikemaskiniAttribute(): ?string
     {
         $tarikhD = $this->tarikh_edaran_minit_ks_akhir;
         $tarikhE = $this->tarikh_semboyan_pemeriksaan_jips_ke_daerah;
 
-        if ($tarikhE && $tarikhD && $tarikhE->isAfter($tarikhD)) {
-            return 'TERBENGKALAI / KS BARU DIKEMASKINI';
+        if ($tarikhD && $tarikhE) {
+            $days = $tarikhD->diffInDays($tarikhE);
+            return "{$days} HARI";
         }
 
-        // Fallback for general updates not related to JIPS
-        if ($this->updated_at && $this->updated_at->isAfter(Carbon::now()->subDays(7))) {
-            return 'BARU DIKEMASKINI';
-        }
-
-        return 'TIADA PERGERAKAN BARU';
+        return null;
     }
 
     // --- HELPER & TEXT ACCESSORS ---

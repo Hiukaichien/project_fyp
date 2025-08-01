@@ -150,26 +150,6 @@
                         </div>
                     </dl>
                 </div>
-                <!-- Status Terkira -->
-                <div class="px-4 py-5 sm:px-6 bg-yellow-50 border-t border-gray-200">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900">Status Terkira</h3>
-                </div>
-                <div class="border-t border-gray-200">
-                    <dl class="sm:divide-y sm:divide-gray-200">
-                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-yellow-800">Status Lewat Edaran (>24 Jam)</dt>
-                            <dd class="mt-1 text-sm font-bold text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->lewat_edaran_status ?? 'Tidak Terkira' }}</dd>
-                        </div>
-                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-yellow-800">Status Terbengkalai (>3 Bulan)</dt>
-                            <dd class="mt-1 text-sm font-bold text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->terbengkalai_status ?? 'Tidak Terkira' }}</dd>
-                        </div>
-                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-yellow-800">Status Kemaskini</dt>
-                            <dd class="mt-1 text-sm font-bold text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->baru_dikemaskini_status ?? 'Tidak Terkira' }}</dd>
-                        </div>
-                    </dl>
-                </div>
             </div>
 
             <!-- BAHAGIAN 3: Arahan & Keputusan -->

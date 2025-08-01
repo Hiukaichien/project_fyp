@@ -186,7 +186,7 @@ class TrafikRule extends Model
         return 'TIDAK';
     }
 
-    public function getBaruDikemaskiniStatusAttribute(): string
+        public function getBaruDikemaskiniStatusAttribute(): string
     {
         $tarikhD = $this->tarikh_edaran_minit_ks_akhir;
         $tarikhE = $this->tarikh_semboyan_pemeriksaan_jips_ke_daerah;
@@ -195,12 +195,10 @@ class TrafikRule extends Model
             return 'TERBENGKALAI / KS BARU DIKEMASKINI';
         }
 
-        if ($this->updated_at && $this->updated_at->isAfter(Carbon::now()->subDays(7))) {
-            return 'BARU DIKEMASKINI';
-        }
-
-        return 'TIADA PERGERAKAN BARU';
+        // The only other possibility is 'TIDAK' (or 'TIADA PERGERAKAN BARU')
+        return 'TIDAK'; 
     }
+    
     public function getTempohDikemaskiniAttribute(): ?string
     {
         $tarikhD = $this->tarikh_edaran_minit_ks_akhir;

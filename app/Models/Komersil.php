@@ -335,21 +335,17 @@ public function getTerbengkalaiStatusDcAttribute(): string
     }
 
     public function getBaruDikemaskiniStatusAttribute(): string
-    {
-        $tarikhD = $this->tarikh_edaran_minit_ks_akhir;
-        $tarikhE = $this->tarikh_semboyan_pemeriksaan_jips_ke_daerah;
+{
+    $tarikhD = $this->tarikh_edaran_minit_ks_akhir;
+    $tarikhE = $this->tarikh_semboyan_pemeriksaan_jips_ke_daerah;
 
-        if ($tarikhE && $tarikhD && $tarikhE->isAfter($tarikhD)) {
-            return 'TERBENGKALAI / KS BARU DIKEMASKINI';
-        }
-
-        // Fallback for general updates not related to JIPS
-        if ($this->updated_at && $this->updated_at->isAfter(Carbon::now()->subDays(7))) {
-            return 'BARU DIKEMASKINI';
-        }
-
-        return 'TIADA PERGERAKAN BARU';
+    if ($tarikhE && $tarikhD && $tarikhE->isAfter($tarikhD)) {
+        return 'TERBENGKALAI / KS BARU DIKEMASKINI';
     }
+
+    // The only other possibility is 'TIDAK' (or 'TIADA PERGERAKAN BARU')
+    return 'TIDAK'; 
+}
 
     public function getTempohDikemaskiniAttribute(): ?string
     {

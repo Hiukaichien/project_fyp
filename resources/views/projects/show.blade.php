@@ -165,10 +165,7 @@
         'fail_lmm_ada_keputusan_koroner' => 'Fail LMM Ada Keputusan Koroner',
         'status_kus_fail' => 'Status KUS/FAIL',
         'keputusan_akhir_mahkamah' => 'Keputusan Akhir Mahkamah',
-        'ulasan_pegawai_pemeriksa_fail' => 'Ulasan Pemeriksa (Fail)',
-        
-        // Calculated Statuses
-        'terbengkalai_status' => 'Status Terbengkalai',
+        'ulasan_pegawai_pemeriksa_fail' => 'Ulasan Pemeriksa (Fail)',    
 
         // Timestamps
         'created_at' => 'Tarikh Dicipta',

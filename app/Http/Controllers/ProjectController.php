@@ -100,7 +100,9 @@ class ProjectController extends Controller
                     $paper->terbengkalai_status_da === 'TERBENGKALAI MELEBIHI 3 BULAN';
             })->values();
             
-            $kemaskiniItems = $allPapers->filter(fn ($paper) => $paper->baru_dikemaskini_status === 'TERBENGKALAI / KS BARU DIKEMASKINI')->values();
+            $kemaskiniItems = $allPapers->filter(
+                fn ($paper) => $paper->baru_dikemaskini_status === 'TERBENGKALAI / KS BARU DIKEMASKINI'
+            )->values();
 
             // Create Paginators for this department
             $lewatPage = $request->get($type . '_lewat_page', 1);
@@ -503,9 +505,24 @@ public function getJenayahData(Project $project)
     Gate::authorize('access-project', $project);
     $query = Jenayah::where('project_id', $project->id);
 
-    return DataTables::of($query)
+        return DataTables::of($query)
         ->addIndexColumn()
         ->addColumn('action', fn($row) => $this->buildActionButtons($row, 'Jenayah'))
+
+        // VIRTUAL COLUMNS TO PREVENT ERROR WHEN SEARCHING
+        ->addColumn('lewat_edaran_status', function($row) {
+            return $row->lewat_edaran_status;
+        })
+        ->addColumn('terbengkalai_status_dc', function($row) {
+            return $row->terbengkalai_status_dc;
+        })
+        ->addColumn('terbengkalai_status_da', function($row) {
+            return $row->terbengkalai_status_da;
+        })
+        ->addColumn('baru_dikemaskini_status', function($row) {
+            return $row->baru_dikemaskini_status;
+        })
+
         ->editColumn('updated_at', function ($row) {
             return optional($row->updated_at)->format('d/m/Y H:i:s') ?? '-';
         })
@@ -666,6 +683,21 @@ public function getKomersilData(Project $project)
     return DataTables::of($query)
         ->addIndexColumn()
         ->addColumn('action', fn($row) => $this->buildActionButtons($row, 'Komersil'))
+
+        // VIRTUAL COLUMNS TO PREVENT ERROR WHEN SEARCHING
+        ->addColumn('lewat_edaran_status', function($row) {
+            return $row->lewat_edaran_status;
+        })
+        ->addColumn('terbengkalai_status_dc', function($row) {
+            return $row->terbengkalai_status_dc;
+        })
+        ->addColumn('terbengkalai_status_da', function($row) {
+            return $row->terbengkalai_status_da;
+        })
+        ->addColumn('baru_dikemaskini_status', function($row) {
+            return $row->baru_dikemaskini_status;
+        })
+
         ->editColumn('updated_at', function ($row) {
             return optional($row->created_at)->format('d/m/Y H:i:s') ?? '-';
         })
@@ -825,6 +857,20 @@ public function getKomersilData(Project $project)
         return DataTables::of($query)
             ->addIndexColumn()
             ->addColumn('action', fn($row) => $this->buildActionButtons($row, 'Narkotik'))
+            
+            // VIRTUAL COLUMNS TO PREVENT ERROR WHEN SEARCHING
+            ->addColumn('lewat_edaran_status', function($row) {
+                return $row->lewat_edaran_status;
+            })
+            ->addColumn('terbengkalai_status_dc', function($row) {
+                return $row->terbengkalai_status_dc;
+            })
+            ->addColumn('terbengkalai_status_da', function($row) {
+                return $row->terbengkalai_status_da;
+            })
+            ->addColumn('baru_dikemaskini_status', function($row) {
+                return $row->baru_dikemaskini_status;
+            })
 
             // date formatting
             ->editColumn('tarikh_laporan_polis_dibuka', function ($row) {
@@ -1204,6 +1250,20 @@ public function getKomersilData(Project $project)
             ->addIndexColumn()
             ->addColumn('action', fn($row) => $this->buildActionButtons($row, 'TrafikSeksyen'))
             
+            // VIRTUAL COLUMNS TO PREVENT ERROR WHEN SEARCHING
+            ->addColumn('lewat_edaran_status', function($row) {
+                return $row->lewat_edaran_status;
+            })
+            ->addColumn('terbengkalai_status_dc', function($row) {
+                return $row->terbengkalai_status_dc;
+            })
+            ->addColumn('terbengkalai_status_da', function($row) {
+                return $row->terbengkalai_status_da;
+            })
+            ->addColumn('baru_dikemaskini_status', function($row) {
+                return $row->baru_dikemaskini_status;
+            })
+
             // Format Date fields
             ->editColumn('tarikh_laporan_polis_dibuka', function($row) {
                 return optional($row->tarikh_laporan_polis_dibuka)->format('d/m/Y') ?? '-';
@@ -1574,6 +1634,20 @@ public function getKomersilData(Project $project)
             ->addIndexColumn()
             ->addColumn('action', fn($row) => $this->buildActionButtons($row, 'TrafikRule'))
             
+            // VIRTUAL COLUMNS TO PREVENT ERROR WHEN SEARCHING
+            ->addColumn('lewat_edaran_status', function($row) {
+                return $row->lewat_edaran_status;
+            })
+            ->addColumn('terbengkalai_status_dc', function($row) {
+                return $row->terbengkalai_status_dc;
+            })
+            ->addColumn('terbengkalai_status_da', function($row) {
+                return $row->terbengkalai_status_da;
+            })
+            ->addColumn('baru_dikemaskini_status', function($row) {
+                return $row->baru_dikemaskini_status;
+            })
+
             // Format Date fields
             ->editColumn('tarikh_laporan_polis_dibuka', function($row) {
                 return optional($row->tarikh_laporan_polis_dibuka)->format('d/m/Y') ?? '-';
@@ -1629,7 +1703,7 @@ public function getKomersilData(Project $project)
             ->editColumn('tarikh_permohonan_laporan_jpj', function($row) {
                 return optional($row->tarikh_permohonan_laporan_jpj)->format('d/m/Y') ?? '-';
             })
-            // --- ADDED: Format new date columns ---
+            // --- Format new date columns ---
             ->editColumn('tarikh_laporan_penuh_jpj', function($row) {
                 return optional($row->tarikh_laporan_penuh_jpj)->format('d/m/Y') ?? '-';
             })
@@ -1750,7 +1824,28 @@ public function getKomersilData(Project $project)
         return DataTables::of($query)
             ->addIndexColumn()
             ->addColumn('action', fn($row) => $this->buildActionButtons($row, 'OrangHilang'))
-            
+
+            // VIRTUAL COLUMNS TO PREVENT ERROR WHEN SEARCHING
+            ->addColumn('lewat_edaran_status', function($row) {
+                return $row->lewat_edaran_status;
+            })
+            ->addColumn('terbengkalai_status_dc', function($row) {
+                return $row->terbengkalai_status_dc;
+            })
+            ->addColumn('terbengkalai_status_da', function($row) {
+                return $row->terbengkalai_status_da;
+            })
+            ->addColumn('baru_dikemaskini_status', function($row) {
+                return $row->baru_dikemaskini_status;
+            })
+
+            ->editColumn('updated_at', function ($row) {
+                return optional($row->updated_at)->format('d/m/Y H:i:s') ?? '-';
+            })
+            ->editColumn('created_at', function ($row) {
+                return optional($row->created_at)->format('d/m/Y H:i:s') ?? '-';
+            })
+
             // Format date fields
             ->editColumn('tarikh_laporan_polis_dibuka', function($row) {
                 return $row->tarikh_laporan_polis_dibuka ? $row->tarikh_laporan_polis_dibuka->format('d/m/Y') : '-';
@@ -1911,6 +2006,21 @@ public function getLaporanMatiMengejutData(Project $project) {
     return DataTables::of($query)
         ->addIndexColumn()
         ->addColumn('action', fn($row) => $this->buildActionButtons($row, 'LaporanMatiMengejut'))
+
+        // VIRTUAL COLUMNS TO PREVENT ERROR WHEN SEARCHING
+        ->addColumn('lewat_edaran_status', function($row) {
+            return $row->lewat_edaran_status;
+        })
+        ->addColumn('terbengkalai_status_dc', function($row) {
+            return $row->terbengkalai_status_dc;
+        })
+        ->addColumn('terbengkalai_status_da', function($row) {
+            return $row->terbengkalai_status_da;
+        })
+        ->addColumn('baru_dikemaskini_status', function($row) {
+            return $row->baru_dikemaskini_status;
+        })
+
         ->editColumn('created_at', function ($row) {
             return optional($row->created_at)->format('d/m/Y H:i:s') ?? '-';
         })

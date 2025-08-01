@@ -31,7 +31,7 @@
                 <thead class="bg-gray-100">
                     <tr>
                         <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bil</th>
-                        <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No. Siasatan</th>
+                        <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NO. KERTAS SIASATAN</th>
                         <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">IO/AIO</th>
                         <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Seksyen</th>
                         
@@ -39,15 +39,15 @@
                         @if ($issueType === 'lewat')
                             <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tarikh Edaran Pertama</th>
                             <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tarikh Edaran Kedua</th>
-                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tempoh Lewat</th>
+                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">TEMPOH LEWAT EDARAN DIKESAN </th>
                         @elseif ($issueType === 'terbengkalai')
                             <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tarikh Edaran Sebelum Akhir</th>
                             <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tarikh Edaran Akhir</th>
-                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">STATUS KERTAS SIASATAN </th>
                         @elseif ($issueType === 'kemaskini')
                             <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tarikh Edaran Akhir</th>
-                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tarikh Semboyan</th>
-                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tempoh Dikemaskini</th>
+                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">TARIKH SEMBOYAN PEMERIKSAAN</th>
+                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">TEMPOH DIKEMASKINI</th>
                         @endif
 
                         <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tindakan</th>
@@ -65,27 +65,33 @@
                             @if ($issueType === 'lewat')
                                 <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">{{ optional($item->tarikh_edaran_minit_ks_pertama)->format('d/m/Y') ?? '-' }}</td>
                                 <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">{{ optional($item->tarikh_edaran_minit_ks_kedua)->format('d/m/Y') ?? '-' }}</td>
-                                <td class="px-3 py-2 whitespace-nowrap text-sm font-semibold text-red-600">{{ $item->tempoh_lewat_edaran_dikesan }}</td>
+                                <td class="px-3 py-2 whitespace-nowrap text-sm font-semibold text-gray-500">{{ $item->tempoh_lewat_edaran_dikesan }}</td>
                             @elseif ($issueType === 'terbengkalai')
                                 <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">{{ optional($item->tarikh_edaran_minit_ks_sebelum_akhir)->format('d/m/Y') ?? '-' }}</td>
                                 <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">{{ optional($item->tarikh_edaran_minit_ks_akhir)->format('d/m/Y') ?? '-' }}</td>
-                                <td class="px-3 py-2 whitespace-nowrap text-sm font-semibold text-yellow-600">
-                                    @if(class_basename($item) === 'TrafikRule')
-                                        @if($item->terbengkalai_status_dc === 'TERBENGKALAI MELEBIHI 3 BULAN')
-                                            {{ $item->terbengkalai_status_dc }} (D-C)
-                                        @elseif($item->terbengkalai_status_da === 'TERBENGKALAI MELEBIHI 3 BULAN')
-                                            {{ $item->terbengkalai_status_da }} (D-A)
-                                        @else
-                                            TIDAK
-                                        @endif
+                                <td class="px-3 py-2 whitespace-nowrap text-sm font-semibold text-gray-500">
+                                    @php
+                                        // Create a small array to hold the status parts to display.
+                                        $statuses = [];
+                                        if ($item->terbengkalai_status_dc === 'TERBENGKALAI MELEBIHI 3 BULAN') {
+                                            $statuses[] = 'D-C';
+                                        }
+                                        if ($item->terbengkalai_status_da === 'TERBENGKALAI MELEBIHI 3 BULAN') {
+                                            $statuses[] = 'D-A';
+                                        }
+                                    @endphp
+
+                                    {{-- Check if any status was found and display them, otherwise show TIDAK --}}
+                                    @if (!empty($statuses))
+                                        TERBENGKALAI MELEBIHI 3 BULAN ({{ implode(' & ', $statuses) }})
                                     @else
-                                        {{ $item->terbengkalai_status }}
+                                        TIDAK
                                     @endif
                                 </td>
                             @elseif ($issueType === 'kemaskini')
                                 <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">{{ optional($item->tarikh_edaran_minit_ks_akhir)->format('d/m/Y') ?? '-' }}</td>
                                 <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">{{ optional($item->tarikh_semboyan_pemeriksaan_jips_ke_daerah)->format('d/m/Y') ?? '-' }}</td>
-                                <td class="px-3 py-2 whitespace-nowrap text-sm font-semibold text-green-600">{{ $item->tempoh_dikemaskini }}</td>
+                                <td class="px-3 py-2 whitespace-nowrap text-sm font-semibold text-gray-500">{{ $item->tempoh_dikemaskini }}</td>
                             @endif
 
                             <td class="px-3 py-2 whitespace-nowrap text-sm font-medium space-x-2">

@@ -359,33 +359,7 @@
                     </dl>
                 </div>
             </div>
-
-            <!-- Status Terkira -->
-            <div class="bg-white shadow overflow-hidden sm:rounded-lg">
-                <div class="px-4 py-5 sm:px-6 bg-yellow-50">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900">Status Terkira</h3>
-                </div>
-                <div class="border-t border-gray-200">
-                    <dl>
-                        <div class="bg-yellow-50 px-4 py-5 grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-6">
-                            <div>
-                                <dt class="text-sm font-medium text-yellow-800">Status Lewat Edaran (>24 Jam)</dt>
-                                <dd class="mt-1 text-sm font-bold text-gray-900">{{ $paper->lewat_edaran_status ?? 'TIDAK DIKIRA' }}</dd>
-                            </div>
-                            <div>
-                                <dt class="text-sm font-medium text-yellow-800">Status Terbengkalai (>3 Bulan)</dt>
-                                <dd class="mt-1 text-sm font-bold text-gray-900">{{ $paper->terbengkalai_status ?? 'TIDAK DIKIRA' }}</dd>
-                            </div>
-                            <div>
-                                <dt class="text-sm font-medium text-yellow-800">Status Kemaskini</dt>
-                                <dd class="mt-1 text-sm font-bold text-gray-900">{{ $paper->baru_kemaskini_status ?? 'TIDAK DIKIRA' }}</dd>
-                            </div>
-                        </div>
-                    </dl>
-                </div>
-            </div>
-
-                        <!-- Maklumat Rekod -->
+                     <!-- Maklumat Rekod -->
             <div class="bg-white shadow overflow-hidden sm:rounded-lg">
                 <div class="px-4 py-5 sm:px-6 bg-gray-50">
                     <h3 class="text-lg leading-6 font-medium text-gray-900">
