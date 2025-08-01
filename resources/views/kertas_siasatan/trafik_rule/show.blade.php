@@ -167,7 +167,7 @@
                             <dd class="mt-1 text-sm font-bold text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->terbengkalai_status_da ?? 'Tidak Terkira' }}</dd>
                         </div>
                         
-                        {{-- ADDED: L.M.M (T) Section --}}
+                        {{-- L.M.M (T) Section --}}
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 border-t-2 border-green-200">
                             <dt class="text-sm font-medium text-gray-500">Tarikh Edaran Minit Fail L.M.M (T) Pertama</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ optional($paper->tarikh_edaran_minit_fail_lmm_t_pertama)->format('d/m/Y') ?? '-' }}</dd>

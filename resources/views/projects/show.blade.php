@@ -37,9 +37,13 @@
         'pegawai_pemeriksa' => 'Pegawai Pemeriksa',
         'tarikh_edaran_minit_ks_pertama' => 'Tarikh Minit KS Pertama (A)',
         'tarikh_edaran_minit_ks_kedua' => 'Tarikh Minit KS Kedua (B)',
+        'lewat_edaran_status' => 'Sistem Calculate (B - A): KS Lewat Edaran 24 Jam',
         'tarikh_edaran_minit_ks_sebelum_akhir' => 'Tarikh Minit KS Sebelum Akhir (C)',
         'tarikh_edaran_minit_ks_akhir' => 'Tarikh Minit KS Akhir (D)',
         'tarikh_semboyan_pemeriksaan_jips_ke_daerah' => 'Tarikh Semboyan JIPS (E)',
+        'terbengkalai_status_dc' => 'Sistem Calculate (D - C): Terbengkalai Melebihi 3 Bulan',
+        'baru_dikemaskini_status' => 'Sistem Calculate (E - D): Terbengkalai / Baru Dikemaskini',
+        'terbengkalai_status_da' => 'Sistem Calculate (D - A): Terbengkalai Melebihi 3 Bulan',
         
         // BAHAGIAN 3: Arahan & Keputusan
         'arahan_minit_oleh_sio_status' => 'Arahan Minit SIO',
@@ -164,9 +168,7 @@
         'ulasan_pegawai_pemeriksa_fail' => 'Ulasan Pemeriksa (Fail)',
         
         // Calculated Statuses
-        'lewat_edaran_status' => 'Status Lewat Edaran',
         'terbengkalai_status' => 'Status Terbengkalai',
-        'baru_dikemaskini_status' => 'Status Kemaskini',
 
         // Timestamps
         'created_at' => 'Tarikh Dicipta',
@@ -186,9 +188,13 @@
     'pegawai_pemeriksa' => 'Pegawai Pemeriksa',
     'tarikh_edaran_minit_ks_pertama' => 'Tarikh Minit KS Pertama (A)',
     'tarikh_edaran_minit_ks_kedua' => 'Tarikh Minit KS Kedua (B)',
+    'lewat_edaran_status' => 'Sistem Calculate (B - A): KS Lewat Edaran 24 Jam',
     'tarikh_edaran_minit_ks_sebelum_akhir' => 'Tarikh Minit KS Sebelum Akhir (C)',
     'tarikh_edaran_minit_ks_akhir' => 'Tarikh Minit KS Akhir (D)',
     'tarikh_semboyan_pemeriksaan_jips_ke_daerah' => 'Tarikh Semboyan JIPS ke Daerah (E)',
+    'terbengkalai_status_dc' => 'Sistem Calculate (D - C): Terbengkalai Melebihi 3 Bulan',
+    'baru_dikemaskini_status' => 'Sistem Calculate (E - D): Terbengkalai / Baru Dikemaskini',
+    'terbengkalai_status_da' => 'Sistem Calculate (D - A): Terbengkalai Melebihi 3 Bulan',
 
     // BAHAGIAN 3: Arahan & Keputusan
     'arahan_minit_oleh_sio_status' => 'Arahan Minit SIO',
@@ -335,9 +341,13 @@
         'pegawai_pemeriksa' => 'Pegawai Pemeriksa',
         'tarikh_edaran_minit_ks_pertama' => 'Tarikh Edaran Minit KS Pertama (A)',
         'tarikh_edaran_minit_ks_kedua' => 'Tarikh Edaran Minit KS Kedua (B)',
+        'lewat_edaran_status' => 'Sistem Calculate (B - A): KS Lewat Edaran 24 Jam',
         'tarikh_edaran_minit_ks_sebelum_akhir' => 'Tarikh Edaran Minit KS Sebelum Akhir (C)',
         'tarikh_edaran_minit_ks_akhir' => 'Tarikh Edaran Minit KS Akhir (D)',
         'tarikh_semboyan_pemeriksaan_jips_ke_daerah' => 'Tarikh Semboyan Pemeriksaan JIPS ke Daerah (E)',
+        'terbengkalai_status_dc' => 'Sistem Calculate (D - C): Terbengkalai Melebihi 3 Bulan',
+        'baru_dikemaskini_status' => 'Sistem Calculate (E - D): Terbengkalai / Baru Dikemaskini',
+        'terbengkalai_status_da' => 'Sistem Calculate (D - A): Terbengkalai Melebihi 3 Bulan',
         
         // BAHAGIAN 3: Arahan & Keputusan
         'arahan_minit_oleh_sio_status' => 'Arahan Minit Oleh SIO',
@@ -394,11 +404,6 @@
         'adakah_ks_kus_fail_selesai' => 'KS KUS/FAIL Selesai',
         'keputusan_akhir_mahkamah' => 'Keputusan Akhir Mahkamah',
         'ulasan_keseluruhan_pegawai_pemeriksa_fail' => 'Ulasan Keseluruhan Pegawai Pemeriksa (Fail)',
-        
-        // Calculated Statuses
-        'lewat_edaran_status' => 'Status Lewat Edaran',
-        'terbengkalai_status' => 'Status Terbengkalai',
-        'baru_dikemaskini_status' => 'Status Kemaskini',
 
         // Date columns
         'created_at' => 'Tarikh Dicipta',
@@ -419,9 +424,13 @@
         'pegawai_pemeriksa' => 'Pegawai Pemeriksa',
         'tarikh_edaran_minit_ks_pertama' => 'Tarikh Minit KS Pertama (A)',
         'tarikh_edaran_minit_ks_kedua' => 'Tarikh Minit KS Kedua (B)',
+        'lewat_edaran_status' => 'Sistem Calculate (B - A): KS Lewat Edaran 24 Jam',
         'tarikh_edaran_minit_ks_sebelum_akhir' => 'Tarikh Minit KS Sebelum Akhir (C)',
         'tarikh_edaran_minit_ks_akhir' => 'Tarikh Minit KS Akhir (D)',
         'tarikh_semboyan_pemeriksaan_jips_ke_daerah' => 'Tarikh Semboyan JIPS (E)',
+        'terbengkalai_status_dc' => 'Sistem Calculate (D - C): Terbengkalai Melebihi 3 Bulan',
+        'baru_dikemaskini_status' => 'Sistem Calculate (E - D): Terbengkalai / Baru Dikemaskini',
+        'terbengkalai_status_da' => 'Sistem Calculate (D - A): Terbengkalai Melebihi 3 Bulan',
         'tarikh_edaran_minit_fail_lmm_t_pertama' => 'Tarikh Minit LMM(T) Pertama',
         'tarikh_edaran_minit_fail_lmm_t_kedua' => 'Tarikh Minit LMM(T) Kedua',
         'tarikh_edaran_minit_fail_lmm_t_sebelum_minit_akhir' => 'Tarikh Minit LMM(T) Sebelum Akhir',
@@ -510,11 +519,6 @@
         'adakah_ks_kus_fail_selesai' => 'KS KUS/FAIL Selesai',
         'keputusan_akhir_mahkamah' => 'Keputusan Akhir Mahkamah',
         'ulasan_keseluruhan_pegawai_pemeriksa_fail' => 'Ulasan Pegawai Pemeriksa (Fail)',
-        
-        // Calculated Statuses
-        'lewat_edaran_status' => 'Status Lewat Edaran',
-        'terbengkalai_status' => 'Status Terbengkalai',
-        'baru_dikemaskini_status' => 'Status Kemaskini',
 
         // Date columns
         'created_at' => 'Tarikh Dicipta',
@@ -534,9 +538,13 @@
         'pegawai_pemeriksa' => 'Pegawai Pemeriksa',
         'tarikh_edaran_minit_ks_pertama' => 'Tarikh Edaran Minit KS Pertama (A)',
         'tarikh_edaran_minit_ks_kedua' => 'Tarikh Edaran Minit KS Kedua (B)',
+        'lewat_edaran_status' => 'Sistem Calculate (B - A): KS Lewat Edaran 24 Jam',
         'tarikh_edaran_minit_ks_sebelum_akhir' => 'Tarikh Edaran Minit KS Sebelum Akhir (C)',
         'tarikh_edaran_minit_ks_akhir' => 'Tarikh Edaran Minit KS Akhir (D)',
         'tarikh_semboyan_pemeriksaan_jips_ke_daerah' => 'Tarikh Semboyan Pemeriksaan JIPS ke Daerah (E)',
+        'terbengkalai_status_dc' => 'Sistem Calculate (D - C): Terbengkalai Melebihi 3 Bulan',
+        'baru_dikemaskini_status' => 'Sistem Calculate (E - D): Terbengkalai / Baru Dikemaskini',
+        'terbengkalai_status_da' => 'Sistem Calculate (D - A): Terbengkalai Melebihi 3 Bulan',
         
         // BAHAGIAN 3: Arahan & Keputusan
         'arahan_minit_oleh_sio_status' => 'Arahan Minit Oleh SIO',
@@ -608,10 +616,6 @@
         'keputusan_akhir_mahkamah' => 'Keputusan Akhir Mahkamah',
         'ulasan_keseluruhan_pegawai_pemeriksa_fail' => 'Ulasan Pegawai Pemeriksa (Fail)',
         
-        // Calculated Statuses
-        'lewat_edaran_status' => 'Status Lewat Edaran',
-        'baru_dikemaskini_status' => 'Status Kemaskini',
-
         // Date columns
         'created_at' => 'Tarikh Dicipta',
         'updated_at' => 'Tarikh Dikemaskini',
@@ -714,9 +718,13 @@
         'pegawai_pemeriksa' => 'Pegawai Pemeriksa',
         'tarikh_edaran_minit_ks_pertama' => 'Tarikh Edaran Minit KS Pertama (A)',
         'tarikh_edaran_minit_ks_kedua' => 'Tarikh Edaran Minit KS Kedua (B)',
+        'lewat_edaran_status' => 'Sistem Calculate (B - A): KS Lewat Edaran 24 Jam',
         'tarikh_edaran_minit_ks_sebelum_akhir' => 'Tarikh Edaran Minit KS Sebelum Akhir (C)',
         'tarikh_edaran_minit_ks_akhir' => 'Tarikh Edaran Minit KS Akhir (D)',
         'tarikh_semboyan_pemeriksaan_jips_ke_daerah' => 'Tarikh Semboyan Pemeriksaan JIPS ke Daerah (E)',
+        'terbengkalai_status_dc' => 'Sistem Calculate (D - C): Terbengkalai Melebihi 3 Bulan',
+        'baru_dikemaskini_status' => 'Sistem Calculate (E - D): Terbengkalai / Baru Dikemaskini',
+        'terbengkalai_status_da' => 'Sistem Calculate (D - A): Terbengkalai Melebihi 3 Bulan',
         
         // BAHAGIAN 3: Arahan SIO & Ketua
         'arahan_minit_oleh_sio_status' => 'Arahan Minit Oleh SIO',
@@ -806,11 +814,6 @@
         'status_laporan_penuh_E_FSA_5_oleh_IO_AIO' => 'Laporan Penuh E-FSA (BANK) - 5',
         'status_permohonan_E_FSA_1_telco_oleh_IO_AIO' => 'Permohonan E-FSA (TELCO) - 1',
         'status_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO' => 'Laporan Penuh E-FSA (TELCO) - 1',
-        
-        // Calculated Statuses
-        'lewat_edaran_status' => 'Status Lewat Edaran',
-        'terbengkalai_status' => 'Status Terbengkalai',
-        'baru_dikemaskini_status' => 'Status Kemaskini',
 
         // Date columns
         'created_at' => 'Tarikh Dicipta',
@@ -1287,7 +1290,17 @@
                         if (panel.length) {
                             panel.removeClass('datatable-container-loading');
                         }
+                    },
+                                    // Logic to read URL and apply search filter on initialization
+                "initComplete": function(settings, json) {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const statusFilter = urlParams.get('status');
+
+                    if (statusFilter === 'terbengkalai') {
+                        // The keyword to search for across all columns
+                        this.api().search('TERBENGKALAI MELEBIHI 3 BULAN').draw();
                     }
+                }
                 });
                 initializedTables[tabName] = true;
         @elseif($key === 'Narkotik')
@@ -1411,6 +1424,16 @@
                     if (panel.length) {
                         panel.removeClass('datatable-container-loading');
                     }
+                },
+                                // Logic to read URL and apply search filter on initialization
+                "initComplete": function(settings, json) {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const statusFilter = urlParams.get('status');
+
+                    if (statusFilter === 'terbengkalai') {
+                        // The keyword to search for across all columns
+                        this.api().search('TERBENGKALAI MELEBIHI 3 BULAN').draw();
+                    }
                 }
             });
             initializedTables[tabName] = true;
@@ -1492,6 +1515,16 @@
                 "drawCallback": function( settings ) {
                     if (panel.length) {
                         panel.removeClass('datatable-container-loading');
+                    }
+                },
+                                // Logic to read URL and apply search filter on initialization
+                "initComplete": function(settings, json) {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const statusFilter = urlParams.get('status');
+
+                    if (statusFilter === 'terbengkalai') {
+                        // The keyword to search for across all columns
+                        this.api().search('TERBENGKALAI MELEBIHI 3 BULAN').draw();
                     }
                 }
             });
@@ -1613,6 +1646,16 @@
                     if (panel.length) {
                         panel.removeClass('datatable-container-loading');
                     }
+                },
+                                // Logic to read URL and apply search filter on initialization
+                "initComplete": function(settings, json) {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const statusFilter = urlParams.get('status');
+
+                    if (statusFilter === 'terbengkalai') {
+                        // The keyword to search for across all columns
+                        this.api().search('TERBENGKALAI MELEBIHI 3 BULAN').draw();
+                    }
                 }
             });
             initializedTables[tabName] = true;
@@ -1694,6 +1737,16 @@
                 "drawCallback": function( settings ) {
                     if (panel.length) {
                         panel.removeClass('datatable-container-loading');
+                    }
+                },
+                                // Logic to read URL and apply search filter on initialization
+                "initComplete": function(settings, json) {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const statusFilter = urlParams.get('status');
+
+                    if (statusFilter === 'terbengkalai') {
+                        // The keyword to search for across all columns
+                        this.api().search('TERBENGKALAI MELEBIHI 3 BULAN').draw();
                     }
                 }
             });
@@ -1779,6 +1832,16 @@
                     if (panel.length) {
                         panel.removeClass('datatable-container-loading');
                     }
+                },
+                                // Logic to read URL and apply search filter on initialization
+                "initComplete": function(settings, json) {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const statusFilter = urlParams.get('status');
+
+                    if (statusFilter === 'terbengkalai') {
+                        // The keyword to search for across all columns
+                        this.api().search('TERBENGKALAI MELEBIHI 3 BULAN').draw();
+                    }
                 }
             });
             initializedTables[tabName] = true;
@@ -1829,7 +1892,7 @@
                         panel.removeClass('datatable-container-loading');
                     }
                 },
-                // ADDED: Logic to read URL and apply search filter on initialization
+                // Logic to read URL and apply search filter on initialization
                 "initComplete": function(settings, json) {
                     const urlParams = new URLSearchParams(window.location.search);
                     const statusFilter = urlParams.get('status');

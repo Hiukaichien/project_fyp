@@ -95,14 +95,10 @@ class ProjectController extends Controller
             $lewatItems = $allPapers->filter(fn ($paper) => $paper->lewat_edaran_status === 'LEWAT')->values();
             
             // Handle terbengkalai status differently for TrafikRule
-            if ($type === 'TrafikRule') {
-                $terbengkalaiItems = $allPapers->filter(fn ($paper) => 
-                    $paper->terbengkalai_status_dc === 'TERBENGKALAI MELEBIHI 3 BULAN' || 
-                    $paper->terbengkalai_status_da === 'TERBENGKALAI MELEBIHI 3 BULAN'
-                )->values();
-            } else {
-                $terbengkalaiItems = $allPapers->filter(fn ($paper) => $paper->terbengkalai_status === 'TERBENGKALAI MELEBIHI 3 BULAN')->values();
-            }
+            $terbengkalaiItems = $allPapers->filter(function ($paper) {
+                return $paper->terbengkalai_status_dc === 'TERBENGKALAI MELEBIHI 3 BULAN' || 
+                    $paper->terbengkalai_status_da === 'TERBENGKALAI MELEBIHI 3 BULAN';
+            })->values();
             
             $kemaskiniItems = $allPapers->filter(fn ($paper) => $paper->baru_dikemaskini_status === 'TERBENGKALAI / KS BARU DIKEMASKINI')->values();
 

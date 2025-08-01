@@ -124,7 +124,9 @@ class Jenayah extends Model
     protected $appends = [
         // Calculated Statuses for Dashboard
         'lewat_edaran_status',
-        'terbengkalai_status',
+        //'terbengkalai_status',
+        'terbengkalai_status_dc',
+        'terbengkalai_status_da',
         'baru_dikemaskini_status',
 
         // Text Accessors for Boolean Fields
@@ -200,23 +202,38 @@ class Jenayah extends Model
         return $dateA->diffInHours($dateB) > 24 ? 'LEWAT' : 'DALAM TEMPOH';
     }
 
-    public function getTerbengkalaiStatusAttribute(): string
+public function getTerbengkalaiStatusDcAttribute(): string
     {
-        $dateA = $this->tarikh_edaran_minit_ks_pertama;
-        $dateC = $this->tarikh_edaran_minit_ks_sebelum_akhir;
-        $dateD = $this->tarikh_edaran_minit_ks_akhir;
-        $isTerbengkalai = false;
+        $tarikhC = $this->tarikh_edaran_minit_ks_sebelum_akhir;
+        $tarikhD = $this->tarikh_edaran_minit_ks_akhir;
 
-        // Rule 1: Check (D - C) if both dates exist.
-        if ($dateD && $dateC && $dateC->diffInMonths($dateD) >= 3) {
-            $isTerbengkalai = true;
-        }
-        // Rule 2: If not flagged, check (D - A) if both dates exist.
-        elseif ($dateD && $dateA && $dateA->diffInMonths($dateD) >= 3) {
-            $isTerbengkalai = true;
+        // Check if both dates exist to perform the calculation.
+        if ($tarikhD && $tarikhC) {
+            // If D is 3 or more months after C, it is terbengkalai.
+            if ($tarikhD->gte($tarikhC->copy()->addMonths(3))) {
+                return 'TERBENGKALAI MELEBIHI 3 BULAN';
+            }
         }
         
-        return $isTerbengkalai ? 'TERBENGKALAI MELEBIHI 3 BULAN' : 'TIDAK';
+        // Otherwise, it is not considered terbengkalai by this specific rule.
+        return 'TIDAK';
+    }
+
+    public function getTerbengkalaiStatusDaAttribute(): string
+    {
+        $tarikhA = $this->tarikh_edaran_minit_ks_pertama;
+        $tarikhD = $this->tarikh_edaran_minit_ks_akhir;
+
+        // Check if both dates exist to perform the calculation.
+        if ($tarikhD && $tarikhA) {
+            // If D is 3 or more months after A, it is terbengkalai.
+            if ($tarikhD->gte($tarikhA->copy()->addMonths(3))) {
+                return 'TERBENGKALAI MELEBIHI 3 BULAN';
+            }
+        }
+        
+        // Otherwise, it is not considered terbengkalai by this specific rule.
+        return 'TIDAK';
     }
 
     public function getBaruDikemaskiniStatusAttribute(): string
