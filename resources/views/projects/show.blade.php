@@ -610,7 +610,6 @@
         
         // Calculated Statuses
         'lewat_edaran_status' => 'Status Lewat Edaran',
-        'terbengkalai_status' => 'Status Terbengkalai',
         'baru_dikemaskini_status' => 'Status Kemaskini',
 
         // Date columns
@@ -632,10 +631,19 @@
         'pegawai_pemeriksa' => 'Pegawai Pemeriksa',
         'tarikh_edaran_minit_ks_pertama' => 'Tarikh Edaran Minit KS Pertama (A)',
         'tarikh_edaran_minit_ks_kedua' => 'Tarikh Edaran Minit KS Kedua (B)',
+        'lewat_edaran_status' => 'Sistem Calculate (B - A): KS Lewat Edaran 24 Jam',
         'tarikh_edaran_minit_ks_sebelum_akhir' => 'Tarikh Edaran Minit KS Sebelum Akhir (C)',
         'tarikh_edaran_minit_ks_akhir' => 'Tarikh Edaran Minit KS Akhir (D)',
         'tarikh_semboyan_pemeriksaan_jips_ke_daerah' => 'Tarikh Semboyan Pemeriksaan JIPS ke Daerah (E)',
-        
+        'terbengkalai_status_dc' => 'Sistem Calculate (D - C): Terbengkalai Melebihi 3 Bulan',
+        'baru_dikemaskini_status' => 'Sistem Calculate (E - D): Terbengkalai / Baru Dikemaskini',
+        'terbengkalai_status_da' => 'Sistem Calculate (D - A): Terbengkalai Melebihi 3 Bulan',
+        'tarikh_edaran_minit_fail_lmm_t_pertama' => 'Tarikh Minit LMM(T) Pertama',
+        'tarikh_edaran_minit_fail_lmm_t_kedua' => 'Tarikh Minit LMM(T) Kedua',
+        'tarikh_edaran_minit_fail_lmm_t_sebelum_minit_akhir' => 'Tarikh Minit LMM(T) Sebelum Akhir',
+        'tarikh_edaran_minit_fail_lmm_t_akhir' => 'Tarikh Minit LMM(T) Akhir',
+        'fail_lmm_t_muka_surat_2_disahkan_kpd' => 'Fail LMM(T) Disahkan KPD',
+
         // BAHAGIAN 3: Arahan & Keputusan
         'arahan_minit_oleh_sio_status' => 'Arahan Minit Oleh SIO',
         'arahan_minit_oleh_sio_tarikh' => 'Tarikh Arahan Minit SIO',
@@ -654,38 +662,40 @@
         'status_id_siasatan_dikemaskini' => 'ID Siasatan Dikemaskini',
         'status_rajah_kasar_tempat_kejadian' => 'Rajah Kasar Tempat Kejadian',
         'status_gambar_tempat_kejadian' => 'Gambar Tempat Kejadian',
-        'status_gambar_barang_kes_kenderaan' => 'Gambar Barang Kes Kenderaan',
-        'status_gambar_barang_kes_darah' => 'Gambar Barang Kes Darah',
         
         // BAHAGIAN 6: Borang & Semakan
+        'status_pem' => 'Borang PEM',
+        'status_rj10b' => 'Status RJ10B',
+        'tarikh_rj10b' => 'Tarikh RJ10B',
+        'lain_lain_rj_dikesan' => 'Lain-lain RJ Dikesan',
         'status_saman_pdrm_s_257' => 'Status Saman PDRM S.257',
-        'tarikh_saman_pdrm_s_257' => 'Tarikh Saman PDRM S.257',
+        'no_saman_pdrm_s_257' => 'No Saman PDRM S.257',
         'status_saman_pdrm_s_167' => 'Status Saman PDRM S.167',
-        'tarikh_saman_pdrm_s_167' => 'Tarikh Saman PDRM S.167',
-        'status_penandaan_kelas_warna' => 'Penandaan Kelas Warna',
+        'no_saman_pdrm_s_167' => 'No Saman PDRM S.167',
+        'ulasan_keseluruhan_pegawai_pemeriksa_borang' => 'Ulasan Pemeriksa (Borang)',
         
         // BAHAGIAN 7: Permohonan Laporan Agensi Luar
-        'status_permohonan_laporan_puspakom' => 'Permohonan Laporan PUSPAKOM',
-        'tarikh_permohonan_laporan_puspakom' => 'Tarikh Permohonan PUSPAKOM',
-        'status_laporan_penuh_puspakom' => 'Laporan Penuh PUSPAKOM',
-        'tarikh_laporan_penuh_puspakom' => 'Tarikh Laporan Penuh PUSPAKOM',
+        'status_permohonan_laporan_jkr' => 'Permohonan Laporan JKR',
+        'tarikh_permohonan_laporan_jkr' => 'Tarikh Permohonan JKR',
+        'status_laporan_penuh_jkr' => 'Laporan Penuh JKR',
+        'tarikh_laporan_penuh_jkr' => 'Tarikh Laporan Penuh JKR',
         'status_permohonan_laporan_jpj' => 'Permohonan Laporan JPJ',
         'tarikh_permohonan_laporan_jpj' => 'Tarikh Permohonan JPJ',
         'status_laporan_penuh_jpj' => 'Laporan Penuh JPJ',
         'tarikh_laporan_penuh_jpj' => 'Tarikh Laporan Penuh JPJ',
+        'status_permohonan_laporan_jkjr' => 'Permohonan Laporan JKJR',
+        'tarikh_permohonan_laporan_jkjr' => 'Tarikh Permohonan JKJR',
+        'status_laporan_penuh_jkjr' => 'Laporan Penuh JKJR',
+        'tarikh_laporan_penuh_jkjr' => 'Tarikh Laporan Penuh JKJR',
         'lain_lain_permohonan_laporan' => 'Lain-lain Permohonan Laporan',
         
         // BAHAGIAN 8: Status Fail
         'adakah_muka_surat_4_keputusan_kes_dicatat' => 'M/S 4 - Keputusan Kes Dicatat',
         'adakah_ks_kus_fail_selesai' => 'KS KUS/FAIL Selesai',
+        'adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan' => 'Fail LMM(T) Ada Keputusan',
         'keputusan_akhir_mahkamah' => 'Keputusan Akhir Mahkamah',
         'ulasan_keseluruhan_pegawai_pemeriksa_fail' => 'Ulasan Pegawai Pemeriksa (Fail)',
         
-        // Calculated Statuses
-        'lewat_edaran_status' => 'Status Lewat Edaran',
-        'terbengkalai_status' => 'Status Terbengkalai',
-        'baru_dikemaskini_status' => 'Status Kemaskini',
-
         // Date columns
         'created_at' => 'Tarikh Dicipta',
         'updated_at' => 'Tarikh Dikemaskini',
@@ -1773,22 +1783,15 @@
             });
             initializedTables[tabName] = true;
 
-        @elseif($key === 'TrafikRule')
-            {{-- Use custom columns for TrafikRule --}}
+@elseif($key === 'TrafikRule')
             @php
                 $dtColumns = [
                     ['data' => 'action', 'name' => 'action', 'orderable' => false, 'searchable' => false, 'title' => 'Tindakan', 'width' => '100px'],
                     ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'title' => 'No.']
                 ];
                 
-                // List of lain_lain fields that need special rendering
-                $lainLainFields = [
-                    'lain_lain_rj_dikesan',
-                    'lain_lain_permohonan_laporan'
-                ];
-                
                 foreach($trafikRuleColumns as $column => $label) {
-                    $columnConfig = [
+                    $dtColumns[] = [
                         'data' => $column,
                         'name' => $column,
                         'title' => $label,
@@ -1796,37 +1799,10 @@
                         'orderable' => true,
                         'searchable' => true
                     ];
-                    
-                    // Add custom render function for lain_lain fields
-                    if (in_array($column, $lainLainFields)) {
-                        $columnConfig['render'] = '%%LAIN_LAIN_RENDER%%';
-                    }
-                    
-                    $dtColumns[] = $columnConfig;
                 }
             @endphp
 
-            // Step 1: Get the column configuration from PHP
-            let dtColumnsConfig = @json($dtColumns);
-
-            // Step 2: Define the lain_lain render function in JavaScript
-            const lainLainRenderFunction = function(data, type, row) {
-                if (data === null || data === undefined || data === '' || data === '-') {
-                    return '-';
-                }
-                // For lain_lain fields, show "Lain-lain ; [actual text]"
-                return 'Lain-lain ; ' + data;
-            };
-
-            // Step 3: Loop through the config and replace the placeholder
-            dtColumnsConfig.forEach(function(column) {
-                if (column.render === '%%LAIN_LAIN_RENDER%%') {
-                    column.render = lainLainRenderFunction;
-                }
-            });
-
-            // Step 4: Initialize the DataTable with the corrected configuration
-            $(tableId).DataTable({
+            let table = $(tableId).DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: {
@@ -1834,7 +1810,7 @@
                     type: "POST",
                     data: { _token: '{{ csrf_token() }}' }
                 },
-                columns: dtColumnsConfig, // Use the processed JavaScript variable
+                columns: @json($dtColumns),
                 order: [[2, 'desc']],
                 columnDefs: [{
                     targets: 0,
@@ -1851,6 +1827,16 @@
                 "drawCallback": function( settings ) {
                     if (panel.length) {
                         panel.removeClass('datatable-container-loading');
+                    }
+                },
+                // ADDED: Logic to read URL and apply search filter on initialization
+                "initComplete": function(settings, json) {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const statusFilter = urlParams.get('status');
+
+                    if (statusFilter === 'terbengkalai') {
+                        // The keyword to search for across all columns
+                        this.api().search('TERBENGKALAI MELEBIHI 3 BULAN').draw();
                     }
                 }
             });

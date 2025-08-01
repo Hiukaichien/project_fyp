@@ -98,7 +98,7 @@
                 </div>
 
                 <!-- BAHAGIAN 2: Pemeriksaan & Status -->
-                <div>
+<div>
                     <h3 class="text-lg font-bold mb-4 text-gray-800 border-b pb-2">BAHAGIAN 2: Pemeriksaan & Status</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <div>
@@ -125,13 +125,41 @@
                             <label for="tarikh_semboyan_pemeriksaan_jips_ke_daerah" class="block text-sm font-medium text-gray-700">Tarikh Semboyan Pemeriksaan JIPS ke Daerah (E)</label>
                             <input type="date" name="tarikh_semboyan_pemeriksaan_jips_ke_daerah" id="tarikh_semboyan_pemeriksaan_jips_ke_daerah" value="{{ old('tarikh_semboyan_pemeriksaan_jips_ke_daerah', optional($paper->tarikh_semboyan_pemeriksaan_jips_ke_daerah)->format('Y-m-d')) }}" class="mt-1 block w-full form-input">
                         </div>
-                        <div class="md:col-span-2 lg:col-span-3 mt-4 p-3 bg-gray-100 rounded-md">
-                            <h4 class="font-semibold text-sm text-gray-600">Sistem Kalkulasi Status</h4>
-                            <div class="mt-2 text-sm text-gray-800 space-y-1">
-                                <p><span class="font-medium">KS Lewat Edaran 24 Jam (B-A):</span> Status akan dikira secara automatik semasa simpan.</p>
-                                <p><span class="font-medium">Terbengkalai Melebihi 3 Bulan (D-C) atau (D-A):</span> Status akan dikira secara automatik semasa simpan.</p>
-                                <p><span class="font-medium">Terbengkalai / Baru Dikemaskini (E-D):</span> Status akan dikira secara automatik semasa simpan.</p>
+                    </div>
+
+                    {{-- ADDED: L.M.M (T) Section --}}
+                    <div class="mt-8 pt-6 border-t">
+                        <h4 class="text-md font-semibold mb-4 text-gray-700">Maklumat Fail L.M.M (T)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div>
+                                <label for="tarikh_edaran_minit_fail_lmm_t_pertama" class="block text-sm font-medium text-gray-700">Tarikh Edaran Minit Fail L.M.M (T) Pertama</label>
+                                <input type="date" name="tarikh_edaran_minit_fail_lmm_t_pertama" id="tarikh_edaran_minit_fail_lmm_t_pertama" value="{{ old('tarikh_edaran_minit_fail_lmm_t_pertama', optional($paper->tarikh_edaran_minit_fail_lmm_t_pertama)->format('Y-m-d')) }}" class="mt-1 block w-full form-input">
                             </div>
+                             <div>
+                                <label for="tarikh_edaran_minit_fail_lmm_t_kedua" class="block text-sm font-medium text-gray-700">Tarikh Edaran Minit Fail L.M.M (T) Kedua</label>
+                                <input type="date" name="tarikh_edaran_minit_fail_lmm_t_kedua" id="tarikh_edaran_minit_fail_lmm_t_kedua" value="{{ old('tarikh_edaran_minit_fail_lmm_t_kedua', optional($paper->tarikh_edaran_minit_fail_lmm_t_kedua)->format('Y-m-d')) }}" class="mt-1 block w-full form-input">
+                            </div>
+                             <div>
+                                <label for="tarikh_edaran_minit_fail_lmm_t_sebelum_minit_akhir" class="block text-sm font-medium text-gray-700">Tarikh Edaran Minit Fail L.M.M (T) Sebelum Minit Akhir</label>
+                                <input type="date" name="tarikh_edaran_minit_fail_lmm_t_sebelum_minit_akhir" id="tarikh_edaran_minit_fail_lmm_t_sebelum_minit_akhir" value="{{ old('tarikh_edaran_minit_fail_lmm_t_sebelum_minit_akhir', optional($paper->tarikh_edaran_minit_fail_lmm_t_sebelum_minit_akhir)->format('Y-m-d')) }}" class="mt-1 block w-full form-input">
+                            </div>
+                             <div>
+                                <label for="tarikh_edaran_minit_fail_lmm_t_akhir" class="block text-sm font-medium text-gray-700">Tarikh Edaran Minit Fail L.M.M (T) Akhir</label>
+                                <input type="date" name="tarikh_edaran_minit_fail_lmm_t_akhir" id="tarikh_edaran_minit_fail_lmm_t_akhir" value="{{ old('tarikh_edaran_minit_fail_lmm_t_akhir', optional($paper->tarikh_edaran_minit_fail_lmm_t_akhir)->format('Y-m-d')) }}" class="mt-1 block w-full form-input">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium text-gray-700">Fail L.M.M (T) Pada Muka Surat 2 Telah Disahkan dan Ditandatangani Oleh KPD</label>
+                                {!! render_boolean_radio('fail_lmm_t_muka_surat_2_disahkan_kpd', $paper->fail_lmm_t_muka_surat_2_disahkan_kpd, 'Telah Disahkan Oleh KPD', 'Belum Disahkan Oleh KPD') !!}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="md:col-span-2 lg:col-span-3 mt-8 pt-6 border-t">
+                        <h4 class="font-semibold text-sm text-gray-600">Sistem Kalkulasi Status</h4>
+                        <div class="mt-2 text-sm text-gray-800 space-y-1">
+                            <p><span class="font-medium">KS Lewat Edaran 24 Jam (B-A):</span> Status akan dikira secara automatik semasa simpan.</p>
+                            <p><span class="font-medium">Terbengkalai Melebihi 3 Bulan (D-C) atau (D-A):</span> Status akan dikira secara automatik semasa simpan.</p>
+                            <p><span class="font-medium">Terbengkalai / Baru Dikemaskini (E-D):</span> Status akan dikira secara automatik semasa simpan.</p>
                         </div>
                     </div>
                 </div>
@@ -281,29 +309,55 @@
                 <!-- BAHAGIAN 7: Laporan Agensi Luar -->
                 <div>
                     <h3 class="text-lg font-bold mb-4 text-gray-800 border-b pb-2">BAHAGIAN 7: Laporan Agensi Luar</h3>
-                    <div class="space-y-8"> {{-- Changed from space-y-4 to space-y-8 for consistency with TrafikSeksyen's B7 --}}
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 border rounded-md">
-                             <div>
-                                <label class="block text-sm font-medium text-gray-700">Permohonan Laporan JKR</label>
-                                {!! render_status_with_date_radio('jkr_permohonan', 'status_permohonan_laporan_jkr', 'tarikh_permohonan_laporan_jkr', $paper->status_permohonan_laporan_jkr, $paper->tarikh_permohonan_laporan_jkr, 'Ya', 'Tidak') !!}
-                            </div>
-                             <div>
-                                <label class="block text-sm font-medium text-gray-700">Laporan Penuh JKR</label>
-                                {!! render_status_with_date_radio('jkr_penuh', 'status_laporan_penuh_jkr', 'tarikh_laporan_penuh_jkr', $paper->status_laporan_penuh_jkr, $paper->tarikh_laporan_penuh_jkr, 'Dilampirkan', 'Tidak') !!}
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 border rounded-md">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">Permohonan Laporan JPJ</label>
-                                {!! render_status_with_date_radio('jpj_permohonan', 'status_permohonan_laporan_jpj', 'tarikh_permohonan_laporan_jpj', $paper->status_permohonan_laporan_jpj, $paper->tarikh_permohonan_laporan_jpj, 'Ya', 'Tidak') !!}
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">Laporan Penuh JKJR</label>
-                                {!! render_status_with_date_radio('jkjr_penuh', 'status_laporan_penuh_jkjr', 'tarikh_laporan_penuh_jkjr', $paper->status_laporan_penuh_jkjr, $paper->tarikh_laporan_penuh_jkjr, 'Dilampirkan', 'Tidak') !!}
+                    <div class="space-y-8">
+                        {{-- JKR Section --}}
+                        <div class="p-4 border rounded-md">
+                            <h4 class="font-semibold text-md text-gray-700">Laporan JKR</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Permohonan Laporan JKR</label>
+                                    {!! render_status_with_date_radio('jkr_permohonan', 'status_permohonan_laporan_jkr', 'tarikh_permohonan_laporan_jkr', $paper->status_permohonan_laporan_jkr, $paper->tarikh_permohonan_laporan_jkr, 'Ada', 'Tiada') !!}
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Laporan Penuh JKR</label>
+                                    {!! render_status_with_date_radio('jkr_penuh', 'status_laporan_penuh_jkr', 'tarikh_laporan_penuh_jkr', $paper->status_laporan_penuh_jkr, $paper->tarikh_laporan_penuh_jkr, 'Dilampirkan', 'Tiada') !!}
+                                </div>
                             </div>
                         </div>
-                         <div>
-                            <label for="lain_lain_permohonan_laporan" class="block text-sm font-medium text-gray-700">Lain-lain Permohonan Laporan</label>
+
+                        {{-- JPJ Section --}}
+                        <div class="p-4 border rounded-md">
+                            <h4 class="font-semibold text-md text-gray-700">Laporan JPJ</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Permohonan Laporan JPJ</label>
+                                    {!! render_status_with_date_radio('jpj_permohonan', 'status_permohonan_laporan_jpj', 'tarikh_permohonan_laporan_jpj', $paper->status_permohonan_laporan_jpj, $paper->tarikh_permohonan_laporan_jpj, 'Ada', 'Tiada') !!}
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Laporan Penuh JPJ</label>
+                                    {!! render_status_with_date_radio('jpj_penuh', 'status_laporan_penuh_jpj', 'tarikh_laporan_penuh_jpj', $paper->status_laporan_penuh_jpj, $paper->tarikh_laporan_penuh_jpj, 'Dilampirkan', 'Tiada') !!}
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- JKJR Section --}}
+                        <div class="p-4 border rounded-md">
+                            <h4 class="font-semibold text-md text-gray-700">Laporan JKJR</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Permohonan Laporan JKJR</label>
+                                    {!! render_status_with_date_radio('jkjr_permohonan', 'status_permohonan_laporan_jkjr', 'tarikh_permohonan_laporan_jkjr', $paper->status_permohonan_laporan_jkjr, $paper->tarikh_permohonan_laporan_jkjr, 'Ada', 'Tiada') !!}
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Laporan Penuh JKJR</label>
+                                    {!! render_status_with_date_radio('jkjr_penuh', 'status_laporan_penuh_jkjr', 'tarikh_laporan_penuh_jkjr', $paper->status_laporan_penuh_jkjr, $paper->tarikh_laporan_penuh_jkjr, 'Dilampirkan', 'Tiada') !!}
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Lain-lain Section --}}
+                        <div class="p-4 border rounded-md">
+                             <label for="lain_lain_permohonan_laporan" class="block text-sm font-medium text-gray-700">Lain-lain Permohonan Laporan</label>
                             <input type="text" name="lain_lain_permohonan_laporan" id="lain_lain_permohonan_laporan" value="{{ old('lain_lain_permohonan_laporan', $paper->lain_lain_permohonan_laporan) }}" class="mt-1 block w-full form-input">
                         </div>
                     </div>

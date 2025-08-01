@@ -30,6 +30,11 @@ return new class extends Migration
             $table->date('tarikh_edaran_minit_ks_sebelum_akhir')->nullable()->comment('B2');
             $table->date('tarikh_edaran_minit_ks_akhir')->nullable()->comment('B2');
             $table->date('tarikh_semboyan_pemeriksaan_jips_ke_daerah')->nullable()->comment('B2');
+            $table->date('tarikh_edaran_minit_fail_lmm_t_pertama')->nullable()->comment('B2: LMM(T)');
+            $table->date('tarikh_edaran_minit_fail_lmm_t_kedua')->nullable()->comment('B2: LMM(T)');
+            $table->date('tarikh_edaran_minit_fail_lmm_t_sebelum_minit_akhir')->nullable()->comment('B2: LMM(T)');
+            $table->date('tarikh_edaran_minit_fail_lmm_t_akhir')->nullable()->comment('B2: LMM(T)');
+            $table->boolean('fail_lmm_t_muka_surat_2_disahkan_kpd')->nullable()->comment('B2: LMM(T)');
             
             // BAHAGIAN 3: Arahan & Keputusan (B3)
             $table->boolean('arahan_minit_oleh_sio_status')->nullable()->comment('B3');
@@ -44,6 +49,7 @@ return new class extends Migration
             $table->string('adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan')->nullable()->comment('B3');
             $table->text('ulasan_keputusan_siasatan_tpr')->nullable()->comment('B3');
             $table->text('ulasan_keseluruhan_pegawai_pemeriksa')->nullable()->comment('B3');
+
 
             // BAHAGIAN 5: Dokumen Siasatan (B5)
             $table->boolean('status_id_siasatan_dikemaskini')->nullable()->comment('B5');
@@ -66,10 +72,18 @@ return new class extends Migration
             $table->date('tarikh_permohonan_laporan_jkr')->nullable()->comment('B7');
             $table->boolean('status_laporan_penuh_jkr')->nullable()->comment('B7');
             $table->date('tarikh_laporan_penuh_jkr')->nullable()->comment('B7');
+
             $table->boolean('status_permohonan_laporan_jpj')->nullable()->comment('B7');
             $table->date('tarikh_permohonan_laporan_jpj')->nullable()->comment('B7');
+            $table->boolean('status_laporan_penuh_jpj')->nullable()->comment('B7'); 
+            $table->date('tarikh_laporan_penuh_jpj')->nullable()->comment('B7'); 
+            
+            $table->boolean('status_permohonan_laporan_jkjr')->nullable()->comment('B7');
+            $table->date('tarikh_permohonan_laporan_jkjr')->nullable()->comment('B7');
+            
             $table->boolean('status_laporan_penuh_jkjr')->nullable()->comment('B7'); 
             $table->date('tarikh_laporan_penuh_jkjr')->nullable()->comment('B7'); 
+            
             $table->string('lain_lain_permohonan_laporan')->nullable()->comment('B7');
 
             // BAHAGIAN 8: Status Fail (B8)

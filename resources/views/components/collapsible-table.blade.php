@@ -69,7 +69,19 @@
                             @elseif ($issueType === 'terbengkalai')
                                 <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">{{ optional($item->tarikh_edaran_minit_ks_sebelum_akhir)->format('d/m/Y') ?? '-' }}</td>
                                 <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">{{ optional($item->tarikh_edaran_minit_ks_akhir)->format('d/m/Y') ?? '-' }}</td>
-                                <td class="px-3 py-2 whitespace-nowrap text-sm font-semibold text-yellow-600">{{ $item->terbengkalai_status }}</td>
+                                <td class="px-3 py-2 whitespace-nowrap text-sm font-semibold text-yellow-600">
+                                    @if(class_basename($item) === 'TrafikRule')
+                                        @if($item->terbengkalai_status_dc === 'TERBENGKALAI MELEBIHI 3 BULAN')
+                                            {{ $item->terbengkalai_status_dc }} (D-C)
+                                        @elseif($item->terbengkalai_status_da === 'TERBENGKALAI MELEBIHI 3 BULAN')
+                                            {{ $item->terbengkalai_status_da }} (D-A)
+                                        @else
+                                            TIDAK
+                                        @endif
+                                    @else
+                                        {{ $item->terbengkalai_status }}
+                                    @endif
+                                </td>
                             @elseif ($issueType === 'kemaskini')
                                 <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">{{ optional($item->tarikh_edaran_minit_ks_akhir)->format('d/m/Y') ?? '-' }}</td>
                                 <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">{{ optional($item->tarikh_semboyan_pemeriksaan_jips_ke_daerah)->format('d/m/Y') ?? '-' }}</td>

@@ -25,7 +25,12 @@ class TrafikRule extends Model
         'tarikh_edaran_minit_ks_sebelum_akhir' => 'date:Y-m-d',
         'tarikh_edaran_minit_ks_akhir' => 'date:Y-m-d',
         'tarikh_semboyan_pemeriksaan_jips_ke_daerah' => 'date:Y-m-d',
-        
+        'tarikh_edaran_minit_fail_lmm_t_pertama' => 'date:Y-m-d',
+        'tarikh_edaran_minit_fail_lmm_t_kedua' => 'date:Y-m-d',
+        'tarikh_edaran_minit_fail_lmm_t_sebelum_minit_akhir' => 'date:Y-m-d',
+        'tarikh_edaran_minit_fail_lmm_t_akhir' => 'date:Y-m-d',
+        'fail_lmm_t_muka_surat_2_disahkan_kpd' => 'boolean',
+
         // B3
         'arahan_minit_oleh_sio_status' => 'boolean',
         'arahan_minit_oleh_sio_tarikh' => 'date:Y-m-d',
@@ -35,7 +40,7 @@ class TrafikRule extends Model
         'arahan_minit_ketua_jabatan_tarikh' => 'date:Y-m-d',
         'arahan_minit_oleh_ya_tpr_status' => 'boolean',
         'arahan_minit_oleh_ya_tpr_tarikh' => 'date:Y-m-d',
-        'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan' => 'string', // Corrected from array
+        'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan' => 'string',
 
         // B5
         'status_id_siasatan_dikemaskini' => 'boolean',
@@ -56,33 +61,39 @@ class TrafikRule extends Model
         'tarikh_laporan_penuh_jkr' => 'date:Y-m-d',
         'status_permohonan_laporan_jpj' => 'boolean',
         'tarikh_permohonan_laporan_jpj' => 'date:Y-m-d',
+        // --- ADDED: Casts for new B7 fields ---
+        'status_laporan_penuh_jpj' => 'boolean',
+        'tarikh_laporan_penuh_jpj' => 'date:Y-m-d',
+        'status_permohonan_laporan_jkjr' => 'boolean',
+        'tarikh_permohonan_laporan_jkjr' => 'date:Y-m-d',
         'status_laporan_penuh_jkjr' => 'boolean',
         'tarikh_laporan_penuh_jkjr' => 'date:Y-m-d',
 
         // B8
-        'adakah_muka_surat_4_keputusan_kes_dicatat' => 'boolean', // Corrected from string
-        'adakah_ks_kus_fail_selesai' => 'boolean', // Corrected from string
-        'adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan' => 'boolean', // Corrected from string
-        'keputusan_akhir_mahkamah' => 'string', // Corrected from array
+        'adakah_muka_surat_4_keputusan_kes_dicatat' => 'boolean',
+        'adakah_ks_kus_fail_selesai' => 'boolean',
+        'adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan' => 'boolean',
+        'keputusan_akhir_mahkamah' => 'string',
         
         // Common Timestamps
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-        'project_id' => 'integer',
+       
     ];
 
     
      /**
      * The accessors to append to the model's array form.
-     * This makes the calculated values available in DataTables and exports.
      */
     protected $appends = [
         // Calculated statuses
         'lewat_edaran_status',
-        'terbengkalai_status',
+        // 'terbengkalai_status', // This is now removed
         'baru_dikemaskini_status',
         'tempoh_lewat_edaran_dikesan', 
         'tempoh_dikemaskini',
+        'terbengkalai_status_dc',
+        'terbengkalai_status_da',
 
         // Text versions of boolean fields for display
         'arahan_minit_oleh_sio_status_text',
@@ -102,6 +113,9 @@ class TrafikRule extends Model
         'adakah_muka_surat_4_keputusan_kes_dicatat_text',
         'adakah_ks_kus_fail_selesai_text',
         'adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan_text',
+        'fail_lmm_t_muka_surat_2_disahkan_kpd_text',
+        'status_laporan_penuh_jpj_text',
+        'status_permohonan_laporan_jkjr_text',
     ];
 
     public function project()
@@ -117,7 +131,7 @@ class TrafikRule extends Model
         $tarikhB = $this->tarikh_edaran_minit_ks_kedua;
 
         if (!$tarikhA || !$tarikhB) {
-            return null; // Cannot calculate if dates are missing
+            return null;
         }
 
         return $tarikhA->diffInHours($tarikhB) > 24 ? 'LEWAT' : 'DALAM TEMPOH';
@@ -136,29 +150,33 @@ class TrafikRule extends Model
         return null;
     }
 
-public function getTerbengkalaiStatusAttribute(): string
-{
-    $tarikhA = $this->tarikh_edaran_minit_ks_pertama;
-    $tarikhC = $this->tarikh_edaran_minit_ks_sebelum_akhir;
-    $tarikhD = $this->tarikh_edaran_minit_ks_akhir;
-    $isTerbengkalai = false;
+    public function getTerbengkalaiStatusDcAttribute(): string
+    {
+        $tarikhC = $this->tarikh_edaran_minit_ks_sebelum_akhir;
+        $tarikhD = $this->tarikh_edaran_minit_ks_akhir;
 
-    // Rule 1: Check the gap between the last two updates.
-    if ($tarikhD && $tarikhC) {
-        if ($tarikhD->diffInMonths($tarikhC) >= 3) {
-            $isTerbengkalai = true;
+        if ($tarikhD && $tarikhC) {
+            if ($tarikhD->diffInMonths($tarikhC) >= 3) {
+                return 'TERBENGKALAI MELEBIHI 3 BULAN';
+            }
         }
+        
+        return 'TIDAK';
     }
 
-    // Rule 2: Check the total gap from start to finish.
-    if (!$isTerbengkalai && $tarikhD && $tarikhA) {
-        if ($tarikhD->diffInMonths($tarikhA) >= 3) {
-            $isTerbengkalai = true;
+    public function getTerbengkalaiStatusDaAttribute(): string
+    {
+        $tarikhA = $this->tarikh_edaran_minit_ks_pertama;
+        $tarikhD = $this->tarikh_edaran_minit_ks_akhir;
+
+        if ($tarikhD && $tarikhA) {
+            if ($tarikhD->diffInMonths($tarikhA) >= 3) {
+                return 'TERBENGKALAI MELEBIHI 3 BULAN';
+            }
         }
+        
+        return 'TIDAK';
     }
-    
-    return $isTerbengkalai ? 'TERBENGKALAI MELEBIHI 3 BULAN' : 'TIDAK TERBENGKALAI';
-}
 
     public function getBaruDikemaskiniStatusAttribute(): string
     {
@@ -169,7 +187,6 @@ public function getTerbengkalaiStatusAttribute(): string
             return 'TERBENGKALAI / KS BARU DIKEMASKINI';
         }
 
-        // Fallback for general updates not related to JIPS
         if ($this->updated_at && $this->updated_at->isAfter(Carbon::now()->subDays(7))) {
             return 'BARU DIKEMASKINI';
         }
@@ -201,6 +218,11 @@ public function getTerbengkalaiStatusAttribute(): string
     }
 
     // --- Accessors for Boolean Fields to display Malay Text ---
+    
+    // --- ADDED: New B2 Accessor ---
+    public function getFailLmmTMukaSurat2DisahkanKpdTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->fail_lmm_t_muka_surat_2_disahkan_kpd, 'Telah Disahkan', 'Belum Disahkan');
+    }
 
     // B3 Accessors
     public function getArahanMinitOlehSioStatusTextAttribute(): string {
@@ -239,17 +261,24 @@ public function getTerbengkalaiStatusAttribute(): string
     }
 
     // B7 Accessors
-    public function getStatusPermohonanLaporanJkrTextAttribute(): string {
-        return $this->formatBooleanToMalay($this->status_permohonan_laporan_jkr);
+ public function getStatusPermohonanLaporanJkrTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->status_permohonan_laporan_jkr, 'Ada', 'Tiada');
     }
     public function getStatusLaporanPenuhJkrTextAttribute(): string {
-        return $this->formatBooleanToMalay($this->status_laporan_penuh_jkr, 'Dilampirkan', 'Tidak');
+        return $this->formatBooleanToMalay($this->status_laporan_penuh_jkr, 'Dilampirkan', 'Tiada');
     }
     public function getStatusPermohonanLaporanJpjTextAttribute(): string {
-        return $this->formatBooleanToMalay($this->status_permohonan_laporan_jpj);
+        return $this->formatBooleanToMalay($this->status_permohonan_laporan_jpj, 'Ada', 'Tiada');
+    }
+    // --- ADDED: Text accessors for new B7 fields ---
+    public function getStatusLaporanPenuhJpjTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->status_laporan_penuh_jpj, 'Dilampirkan', 'Tiada');
+    }
+    public function getStatusPermohonanLaporanJkjrTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->status_permohonan_laporan_jkjr, 'Ada', 'Tiada');
     }
     public function getStatusLaporanPenuhJkjrTextAttribute(): string {
-        return $this->formatBooleanToMalay($this->status_laporan_penuh_jkjr, 'Dilampirkan', 'Tidak');
+        return $this->formatBooleanToMalay($this->status_laporan_penuh_jkjr, 'Dilampirkan', 'Tiada');
     }
 
     // B8 Accessors

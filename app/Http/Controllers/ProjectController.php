@@ -93,7 +93,17 @@ class ProjectController extends Controller
             // Filter for issue lists for this department
             // Access the properties directly. Laravel's accessors will handle them.
             $lewatItems = $allPapers->filter(fn ($paper) => $paper->lewat_edaran_status === 'LEWAT')->values();
-            $terbengkalaiItems = $allPapers->filter(fn ($paper) => $paper->terbengkalai_status === 'TERBENGKALAI MELEBIHI 3 BULAN')->values();
+            
+            // Handle terbengkalai status differently for TrafikRule
+            if ($type === 'TrafikRule') {
+                $terbengkalaiItems = $allPapers->filter(fn ($paper) => 
+                    $paper->terbengkalai_status_dc === 'TERBENGKALAI MELEBIHI 3 BULAN' || 
+                    $paper->terbengkalai_status_da === 'TERBENGKALAI MELEBIHI 3 BULAN'
+                )->values();
+            } else {
+                $terbengkalaiItems = $allPapers->filter(fn ($paper) => $paper->terbengkalai_status === 'TERBENGKALAI MELEBIHI 3 BULAN')->values();
+            }
+            
             $kemaskiniItems = $allPapers->filter(fn ($paper) => $paper->baru_dikemaskini_status === 'TERBENGKALAI / KS BARU DIKEMASKINI')->values();
 
             // Create Paginators for this department
@@ -1587,6 +1597,18 @@ public function getKomersilData(Project $project)
             ->editColumn('tarikh_semboyan_pemeriksaan_jips_ke_daerah', function($row) {
                 return optional($row->tarikh_semboyan_pemeriksaan_jips_ke_daerah)->format('d/m/Y') ?? '-';
             })
+            ->editColumn('tarikh_edaran_minit_fail_lmm_t_pertama', function($row) {
+                return optional($row->tarikh_edaran_minit_fail_lmm_t_pertama)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('tarikh_edaran_minit_fail_lmm_t_kedua', function($row) {
+                return optional($row->tarikh_edaran_minit_fail_lmm_t_kedua)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('tarikh_edaran_minit_fail_lmm_t_sebelum_minit_akhir', function($row) {
+                return optional($row->tarikh_edaran_minit_fail_lmm_t_sebelum_minit_akhir)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('tarikh_edaran_minit_fail_lmm_t_akhir', function($row) {
+                return optional($row->tarikh_edaran_minit_fail_lmm_t_akhir)->format('d/m/Y') ?? '-';
+            })
             ->editColumn('arahan_minit_oleh_sio_tarikh', function($row) {
                 return optional($row->arahan_minit_oleh_sio_tarikh)->format('d/m/Y') ?? '-';
             })
@@ -1611,6 +1633,14 @@ public function getKomersilData(Project $project)
             ->editColumn('tarikh_permohonan_laporan_jpj', function($row) {
                 return optional($row->tarikh_permohonan_laporan_jpj)->format('d/m/Y') ?? '-';
             })
+            // --- ADDED: Format new date columns ---
+            ->editColumn('tarikh_laporan_penuh_jpj', function($row) {
+                return optional($row->tarikh_laporan_penuh_jpj)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('tarikh_permohonan_laporan_jkjr', function($row) {
+                return optional($row->tarikh_permohonan_laporan_jkjr)->format('d/m/Y') ?? '-';
+            })
+            // --- END of new date columns ---
             ->editColumn('tarikh_laporan_penuh_jkjr', function($row) {
                 return optional($row->tarikh_laporan_penuh_jkjr)->format('d/m/Y') ?? '-';
             })
@@ -1655,6 +1685,14 @@ public function getKomersilData(Project $project)
             ->editColumn('status_permohonan_laporan_jpj', function($row) {
                 return $this->formatBoolean($row->status_permohonan_laporan_jpj);
             })
+             // --- ADDED: Format new boolean columns ---
+            ->editColumn('status_laporan_penuh_jpj', function($row) {
+                return $this->formatBoolean($row->status_laporan_penuh_jpj, 'Dilampirkan', 'Tidak');
+            })
+            ->editColumn('status_permohonan_laporan_jkjr', function($row) {
+                return $this->formatBoolean($row->status_permohonan_laporan_jkjr);
+            })
+            // --- END of new boolean columns ---
             ->editColumn('status_laporan_penuh_jkjr', function($row) {
                 return $this->formatBoolean($row->status_laporan_penuh_jkjr, 'Dilampirkan', 'Tidak');
             })
@@ -1666,6 +1704,9 @@ public function getKomersilData(Project $project)
             })
             ->editColumn('adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan', function($row) {
                 return $this->formatBoolean($row->adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan);
+            })
+            ->editColumn('fail_lmm_t_muka_surat_2_disahkan_kpd', function($row) {
+                return $this->formatBoolean($row->fail_lmm_t_muka_surat_2_disahkan_kpd, 'Telah Disahkan', 'Belum Disahkan');
             })
 
             // Format JSON array fields (status_pem)
@@ -1692,7 +1733,10 @@ public function getKomersilData(Project $project)
                 'status_laporan_penuh_jkjr',
                 'adakah_muka_surat_4_keputusan_kes_dicatat',
                 'adakah_ks_kus_fail_selesai',
-                'adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan'
+                'adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan',
+                'fail_lmm_t_muka_surat_2_disahkan_kpd',
+                'status_laporan_penuh_jpj',
+                'status_permohonan_laporan_jkjr',
             ])
             ->editColumn('created_at', function ($row) {
                 return optional($row->created_at)->format('d/m/Y H:i:s') ?? '-';
