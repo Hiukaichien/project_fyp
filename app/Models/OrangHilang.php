@@ -131,7 +131,7 @@ class OrangHilang extends Model
         $limitInHours = 24;
 
         if (!$tarikhA || !$tarikhB) {
-            return null; // Cannot calculate if dates are missing
+            return 'TIDAK'; // Cannot calculate if dates are missing
         }
 
         return $tarikhA->diffInHours($tarikhB) > $limitInHours ? 'LEWAT' : 'DALAM TEMPOH';

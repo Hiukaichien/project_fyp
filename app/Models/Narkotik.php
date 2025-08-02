@@ -213,7 +213,7 @@ class Narkotik extends Model
         $tarikhB = $this->tarikh_edaran_minit_ks_kedua;
 
         if (!$tarikhA || !$tarikhB) {
-            return null;
+            return 'TIDAK';
         }
 
         return $tarikhA->diffInHours($tarikhB) > 48 ? 'LEWAT' : 'DALAM TEMPOH';

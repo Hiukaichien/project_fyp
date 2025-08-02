@@ -280,7 +280,7 @@ class Komersil extends Model
         $limitInHours = 48;
 
         if (!$tarikhA || !$tarikhB) {
-            return null;
+            return 'TIDAK';
         }
 
         return $tarikhA->diffInHours($tarikhB) > $limitInHours 
