@@ -313,7 +313,7 @@
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">Resit Kew.38e Bagi Pelupusan Wang Tunai</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_boolean_badge($paper->resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan, 'Ada Dilampirkan', 'Tidak Dilampirkan') !!}</dd>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_boolean_badge($paper->resit_kew38e_pelupusan_wang_tunai, 'Ada Dilampirkan', 'Tidak Dilampirkan') !!}</dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">Borang Serah/Terima (Pegawai Tangkapan & IO/AIO)</dt>
@@ -360,11 +360,11 @@
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">Gambar Botol Spesimen Urin 3 Dimensi dan Berseal Merah</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_boolean_badge($paper->status_gambar_botol_spesimen_urin_3_dimensi_dan_berseal_merah, 'Ada', 'Tiada') !!}</dd>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_boolean_badge($paper->gambar_botol_urin_3d_berseal, 'Ada', 'Tiada') !!}</dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">Gambar Pembalut Botol Spesimen Urin Bernombor Siri dan Test Strip Dadah Positif</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_boolean_badge($paper->status_gambar_pembalut_botol_spesimen_urin_bernombor_siri_dan_test_strip_dadah_positif, 'Ada', 'Tiada') !!}</dd>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_boolean_badge($paper->gambar_pembalut_urin_dan_test_strip, 'Ada', 'Tiada') !!}</dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">Gambar Barang Kes Am</dt>

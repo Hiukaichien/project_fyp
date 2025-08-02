@@ -673,6 +673,15 @@ public function getJenayahData(Project $project)
             }
             return htmlspecialchars($row->barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan ?? '-');
         })
+        ->editColumn('adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan', function ($row) {
+            return htmlspecialchars($row->adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan ?? '-');
+        })
+        ->editColumn('resit_kew38e_pelupusan_wang_tunai', function ($row) {
+            return htmlspecialchars($row->resit_kew38e_pelupusan_wang_tunai ?? '-');
+        })
+        ->editColumn('adakah_borang_serah_terima_pegawai_tangkapan', function ($row) {
+            return htmlspecialchars($row->adakah_borang_serah_terima_pegawai_tangkapan ?? '-');
+        })
         ->editColumn('adakah_borang_serah_terima_pemilik_saksi', fn($row) => $this->formatBoolean($row->adakah_borang_serah_terima_pemilik_saksi, 'Ada Dilampirkan', 'Tidak'))
         ->editColumn('adakah_sijil_surat_kebenaran_ipo', fn($row) => $this->formatBoolean($row->adakah_sijil_surat_kebenaran_ipo, 'Ada Dilampirkan', 'Tidak'))
         ->editColumn('adakah_gambar_pelupusan', fn($row) => $this->formatBoolean($row->adakah_gambar_pelupusan, 'Ada Dilampirkan', 'Tidak'))
@@ -1098,8 +1107,8 @@ public function getKomersilData(Project $project)
             ->editColumn('adakah_barang_kes_didaftarkan', function ($row) {
                 return $this->formatBoolean($row->adakah_barang_kes_didaftarkan);
             })
-            ->editColumn('resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan', function ($row) {
-                return $this->formatBoolean($row->resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan, 'Ada Dilampirkan', 'Tidak Dilampirkan');
+            ->editColumn('resit_kew38e_pelupusan_wang_tunai', function ($row) {
+                return $this->formatBoolean($row->resit_kew38e_pelupusan_wang_tunai, 'Ada Dilampirkan', 'Tidak Dilampirkan');
             })
             ->editColumn('adakah_borang_serah_terima_pegawai_tangkapan', function ($row) {
                 return $this->formatBoolean($row->adakah_borang_serah_terima_pegawai_tangkapan, 'Ada Dilampirkan', 'Tidak Dilampirkan');
@@ -1122,11 +1131,11 @@ public function getKomersilData(Project $project)
             ->editColumn('status_gambar_tempat_kejadian', function ($row) {
                 return $this->formatBoolean($row->status_gambar_tempat_kejadian, 'Ada', 'Tiada');
             })
-            ->editColumn('status_gambar_botol_spesimen_urin_3_dimensi_dan_berseal_merah', function ($row) {
-                return $this->formatBoolean($row->status_gambar_botol_spesimen_urin_3_dimensi_dan_berseal_merah, 'Ada', 'Tiada');
+            ->editColumn('gambar_botol_urin_3d_berseal', function ($row) {
+                return $this->formatBoolean($row->gambar_botol_urin_3d_berseal, 'Ada', 'Tiada');
             })
-            ->editColumn('status_gambar_pembalut_botol_spesimen_urin_bernombor_siri_dan_test_strip_dadah_positif', function ($row) {
-                return $this->formatBoolean($row->status_gambar_pembalut_botol_spesimen_urin_bernombor_siri_dan_test_strip_dadah_positif, 'Ada', 'Tiada');
+            ->editColumn('gambar_pembalut_urin_dan_test_strip', function ($row) {
+                return $this->formatBoolean($row->gambar_pembalut_urin_dan_test_strip, 'Ada', 'Tiada');
             })
             ->editColumn('status_gambar_barang_kes_am', function ($row) {
                 return $this->formatBoolean($row->status_gambar_barang_kes_am, 'Ada', 'Tiada');
@@ -1285,7 +1294,7 @@ public function getKomersilData(Project $project)
                 'arahan_minit_ketua_jabatan_status',
                 'arahan_minit_oleh_ya_tpr_status',
                 'adakah_barang_kes_didaftarkan',
-                'resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan',
+                'resit_kew38e_pelupusan_wang_tunai',
                 'adakah_borang_serah_terima_pegawai_tangkapan',
                 'adakah_borang_serah_terima_pemilik_saksi',
                 'adakah_sijil_surat_kebenaran_ipo',
@@ -1293,8 +1302,8 @@ public function getKomersilData(Project $project)
                 'status_id_siasatan_dikemaskini',
                 'status_rajah_kasar_tempat_kejadian',
                 'status_gambar_tempat_kejadian',
-                'status_gambar_botol_spesimen_urin_3_dimensi_dan_berseal_merah',
-                'status_gambar_pembalut_botol_spesimen_urin_bernombor_siri_dan_test_strip_dadah_positif',
+                'gambar_botol_urin_3d_berseal',
+                'gambar_pembalut_urin_dan_test_strip',
                 'status_gambar_barang_kes_am',
                 'status_gambar_barang_kes_berharga',
                 'status_gambar_barang_kes_kenderaan',
@@ -1644,8 +1653,8 @@ public function getKomersilData(Project $project)
             ->editColumn('adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan', function($row) {
                 return htmlspecialchars($row->adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan ?? '-');
             })
-            ->editColumn('resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan', function($row) {
-                return htmlspecialchars($row->resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan ?? '-');
+            ->editColumn('resit_kew38e_pelupusan_wang_tunai', function($row) {
+                return htmlspecialchars($row->resit_kew38e_pelupusan_wang_tunai ?? '-');
             })
             ->editColumn('adakah_borang_serah_terima_pegawai_tangkapan', function($row) {
                 return htmlspecialchars($row->adakah_borang_serah_terima_pegawai_tangkapan ?? '-');
@@ -1715,7 +1724,7 @@ public function getKomersilData(Project $project)
                 'status_barang_kes_selesai_siasatan', // Now a string
                 'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan', // Now a string
                 'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan', // Now a string
-                'resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan', // Now a string
+                'resit_kew38e_pelupusan_wang_tunai', // Now a string
                 'adakah_borang_serah_terima_pegawai_tangkapan', // Now a string
                 'keputusan_akhir_mahkamah', // Now a string
                 'lain_lain_permohonan_laporan', // String, ensuring it's in rawColumns if special chars might exist

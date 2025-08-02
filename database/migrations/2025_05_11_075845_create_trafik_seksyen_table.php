@@ -58,15 +58,15 @@ return new class extends Migration
             $table->string('jenis_barang_kes_berharga')->nullable()->comment('jenis_barang_kes_berharga: VARCHAR(255)');
             $table->string('jenis_barang_kes_kenderaan')->nullable()->comment('jenis_barang_kes_kenderaan: VARCHAR(255)');
             $table->string('status_pergerakan_barang_kes')->nullable()->comment('status_pergerakan_barang_kes: VARCHAR(255)');
-            $table->string('status_pergerakan_barang_kes_makmal')->nullable()->after('status_pergerakan_barang_kes');
+            $table->string('status_pergerakan_barang_kes_makmal')->nullable()->comment('status_pergerakan_barang_kes');
             $table->string('status_pergerakan_barang_kes_lain')->nullable()->comment('status_pergerakan_barang_kes_lain: VARCHAR(255)');
             $table->string('status_barang_kes_selesai_siasatan')->nullable()->comment('status_barang_kes_selesai_siasatan: VARCHAR(255)');
-            $table->string('status_barang_kes_selesai_siasatan_RM')->nullable()->after('status_barang_kes_selesai_siasatan_lain');
+            $table->string('status_barang_kes_selesai_siasatan_RM')->nullable()->comment('status_barang_kes_selesai_siasatan_lain');
             $table->string('status_barang_kes_selesai_siasatan_lain')->nullable()->comment('status_barang_kes_selesai_siasatan_lain: VARCHAR(255)');
             $table->string('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan')->nullable()->comment('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan: VARCHAR(255)');
             $table->string('kaedah_pelupusan_barang_kes_lain')->nullable()->comment('kaedah_pelupusan_barang_kes_lain: VARCHAR(255)'); // Named as per Blade for consistency
             $table->string('adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan')->nullable()->comment('adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan: VARCHAR(255)');
-            $table->string('resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan')->nullable()->comment('resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan: VARCHAR(255)');
+            $table->string('resit_kew38e_pelupusan_wang_tunai')->nullable()->comment('resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan: VARCHAR(255)');
             $table->string('adakah_borang_serah_terima_pegawai_tangkapan')->nullable()->comment('adakah_borang_serah_terima_pegawai_tangkapan: VARCHAR(255)');
             $table->boolean('adakah_borang_serah_terima_pemilik_saksi')->nullable()->comment('adakah_borang_serah_terima_pemilik_saksi: BOOLEAN');
             $table->boolean('adakah_sijil_surat_kebenaran_ipo')->nullable()->comment('adakah_sijil_surat_kebenaran_ipo: BOOLEAN');

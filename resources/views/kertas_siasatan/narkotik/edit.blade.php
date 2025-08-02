@@ -439,7 +439,7 @@
                             <!-- Resit Kew.38e -->
                             <div>
                                 <label class="block text-sm font-medium text-gray-700">Resit Kew.38e Bagi Pelupusan Barang Kes Wang Tunai Ke Perbendaharaan</label>
-                                {!! render_boolean_radio('resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan', $paper->resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan, 'Ada Dilampirkan', 'Tidak Dilampirkan') !!}
+                                {!! render_boolean_radio('resit_kew38e_pelupusan_wang_tunai', $paper->resit_kew38e_pelupusan_wang_tunai, 'Ada Dilampirkan', 'Tidak Dilampirkan') !!}
                             </div>
 
                             <!-- Borang Serah/Terima Barang Kes Antara Pegawai Tangkapan dan IO/AIO -->
@@ -490,11 +490,11 @@
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700">Gambar Botol Spesimen Urin 3 Dimensi Dan Berseal Merah</label>
-                                {!! render_boolean_radio('status_gambar_botol_spesimen_urin_3_dimensi_dan_berseal_merah', $paper->status_gambar_botol_spesimen_urin_3_dimensi_dan_berseal_merah, 'Ada', 'Tiada') !!}
+                                {!! render_boolean_radio('gambar_botol_urin_3d_berseal', $paper->gambar_botol_urin_3d_berseal, 'Ada', 'Tiada') !!}
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700">Gambar Pembalut Botol Spesimen Urin Bernombor Siri Dan Test Strip Dadah Positif</label>
-                                {!! render_boolean_radio('status_gambar_pembalut_botol_spesimen_urin_bernombor_siri_dan_test_strip_dadah_positif', $paper->status_gambar_pembalut_botol_spesimen_urin_bernombor_siri_dan_test_strip_dadah_positif, 'Ada', 'Tiada') !!}
+                                {!! render_boolean_radio('gambar_pembalut_urin_dan_test_strip', $paper->gambar_pembalut_urin_dan_test_strip, 'Ada', 'Tiada') !!}
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700">Gambar Barang Kes Am</label>

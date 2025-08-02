@@ -75,7 +75,7 @@
         'status_barang_kes_selesai_siasatan' => 'Status BK Selesai Siasatan',
         'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan' => 'Kaedah Pelupusan BK',
         'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => 'Arahan Pelupusan Wang Tunai',
-        'resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => 'Resit Kew.38e',
+        'resit_kew38e_pelupusan_wang_tunai' => 'Resit Kew.38e',
         'adakah_borang_serah_terima_pegawai_tangkapan' => 'Borang Serah/Terima (Pegawai Tangkapan)',
         'adakah_borang_serah_terima_pemilik_saksi' => 'Borang Serah/Terima (Pemilik/Saksi)',
         'adakah_sijil_surat_kebenaran_ipo' => 'Sijil/Surat Kebenaran IPD',
@@ -228,7 +228,7 @@
     'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan' => 'Kaedah Pelupusan',
     'kaedah_pelupusan_barang_kes_lain' => 'Kaedah Pelupusan Lain',
     'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => 'Arahan Pelupusan',
-    'resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => 'Resit Kew.38e',
+    'resit_kew38e_pelupusan_wang_tunai' => 'Resit Kew.38e',
     'adakah_borang_serah_terima_pegawai_tangkapan' => 'Borang Serah Terima Pegawai Tangkapan',
     'adakah_borang_serah_terima_pemilik_saksi' => 'Borang Serah Terima Pemilik Saksi',
     'adakah_sijil_surat_kebenaran_ipo' => 'Sijil Surat Kebenaran IPO',
@@ -239,8 +239,8 @@
     'status_id_siasatan_dikemaskini' => 'ID Siasatan Dikemaskini',
     'status_rajah_kasar_tempat_kejadian' => 'Rajah Kasar Tempat Kejadian',
     'status_gambar_tempat_kejadian' => 'Gambar Tempat Kejadian',
-    'status_gambar_botol_spesimen_urin_3_dimensi_dan_berseal_merah' => 'Gambar Botol Spesimen Urin 3D',
-    'status_gambar_pembalut_botol_spesimen_urin_bernombor_siri_dan_test_strip_dadah_positif' => 'Gambar Pembalut Botol Spesimen',
+    'gambar_botol_urin_3d_berseal' => 'Gambar Botol Spesimen Urin 3D',
+    'gambar_pembalut_urin_dan_test_strip' => 'Gambar Pembalut Urin dan Test Strip Dadah Positif',
     'status_gambar_barang_kes_am' => 'Gambar Barang Kes Am',
     'status_gambar_barang_kes_berharga' => 'Gambar Barang Kes Berharga',
     'status_gambar_barang_kes_kenderaan' => 'Gambar Barang Kes Kenderaan',
@@ -565,8 +565,9 @@
         'jenis_barang_kes_kenderaan' => 'Jenis Barang Kes Kenderaan',
         'status_pergerakan_barang_kes' => 'Status Pergerakan Barang Kes',
         'status_barang_kes_selesai_siasatan' => 'Status Barang Kes Selesai Siasatan',
-        'kaedah_pelupusan_barang_kes' => 'Kaedah Pelupusan Barang Kes',
-        'arahan_pelupusan_barang_kes' => 'Arahan Pelupusan Barang Kes',
+        'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan' => 'Kaedah Pelupusan Barang Kes',
+        'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => 'Arahan Pelupusan ke Perbendaharaan',
+        'resit_kew38e_pelupusan_wang_tunai' => 'Resit Kew.38e Pelupusan',
         'adakah_borang_serah_terima_pegawai_tangkapan' => 'Borang Serah Terima Pegawai Tangkapan',
         'adakah_borang_serah_terima_pemilik_saksi' => 'Borang Serah Terima Pemilik Saksi',
         'adakah_sijil_surat_kebenaran_ipo' => 'Sijil Surat Kebenaran IPO',
@@ -1493,7 +1494,7 @@
                     'status_barang_kes_selesai_siasatan',
                     'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan',
                     'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan',
-                    'resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan',
+                    'resit_kew38e_pelupusan_wang_tunai',
                     'adakah_borang_serah_terima_pegawai_tangkapan',
                     'adakah_borang_serah_terima_pemilik_saksi',
                     'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan'
@@ -1989,11 +1990,18 @@
                     ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'title' => 'No.']
                 ];
                 
-                // List of lain_lain fields that need special rendering
-                $lainLainFields = [
-                    'lain_lain_rj_dikesan',
-                    'lain_lain_permohonan_laporan',
-                    'status_pergerakan_barang_kes'
+                // List of fields that need special combined rendering
+                $combinedRenderFields = [
+                    'status_pergerakan_barang_kes',
+                    'status_barang_kes_selesai_siasatan',
+                    'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan'
+                ];
+                
+                // List of string fields that should be displayed as-is
+                $stringFields = [
+                    'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan',
+                    'resit_kew38e_pelupusan_wang_tunai',
+                    'adakah_borang_serah_terima_pegawai_tangkapan'
                 ];
                 
                 foreach($trafikSeksyenColumns as $column => $label) {
@@ -2006,9 +2014,13 @@
                         'searchable' => true
                     ];
                     
-                    // Add custom render function for lain_lain fields
-                    if (in_array($column, $lainLainFields)) {
-                        $columnConfig['render'] = '%%LAIN_LAIN_RENDER%%';
+                    // Add custom render function for combined fields
+                    if (in_array($column, $combinedRenderFields)) {
+                        $columnConfig['render'] = '%%COMBINED_RENDER%%';
+                    }
+                    // Add custom render function for string fields
+                    elseif (in_array($column, $stringFields)) {
+                        $columnConfig['render'] = '%%STRING_RENDER%%';
                     }
                     
                     $dtColumns[] = $columnConfig;
@@ -2018,19 +2030,46 @@
             // Step 1: Get the column configuration from PHP
             let dtColumnsConfig = @json($dtColumns);
 
-            // Step 2: Define the lain_lain render function in JavaScript
-            const lainLainRenderFunction = function(data, type, row) {
+            // Step 2: Define the render functions in JavaScript
+            const stringRenderFunction = function(data, type, row) {
                 if (data === null || data === undefined || data === '' || data === '-') {
                     return '-';
                 }
-                // For lain_lain fields, show "Lain-lain ; [actual text]"
-                return 'Lain-lain ; ' + data;
+                return data;
             };
 
-            // Step 3: Loop through the config and replace the placeholder
+            // Define the combined render function for special fields
+            const combinedRenderFunction = function(data, type, row, meta) {
+                if (!data || data === '-') return '-';
+
+                let details = '';
+                const colName = meta.settings.aoColumns[meta.col].name;
+
+                if (colName === 'status_pergerakan_barang_kes') {
+                    if (data === 'Lain-Lain' && row.status_pergerakan_barang_kes_lain) {
+                        details = ` : ${row.status_pergerakan_barang_kes_lain}`;
+                    }
+                } 
+                else if (colName === 'status_barang_kes_selesai_siasatan') {
+                    if (data === 'Lain-Lain' && row.status_barang_kes_selesai_siasatan_lain) {
+                        details = ` : ${row.status_barang_kes_selesai_siasatan_lain}`;
+                    }
+                }
+                else if (colName === 'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan') {
+                    if (data === 'Lain-Lain' && row.kaedah_pelupusan_barang_kes_lain) {
+                        details = ` : ${row.kaedah_pelupusan_barang_kes_lain}`;
+                    }
+                }
+                
+                return data + details;
+            };
+
+            // Step 3: Loop through the config and replace the placeholders
             dtColumnsConfig.forEach(function(column) {
-                if (column.render === '%%LAIN_LAIN_RENDER%%') {
-                    column.render = lainLainRenderFunction;
+                if (column.render === '%%STRING_RENDER%%') {
+                    column.render = stringRenderFunction;
+                } else if (column.render === '%%COMBINED_RENDER%%') {
+                    column.render = combinedRenderFunction;
                 }
             });
 

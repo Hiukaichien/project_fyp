@@ -51,7 +51,7 @@ class Narkotik extends Model
         'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan' => 'string',
         'kaedah_pelupusan_barang_kes_lain' => 'string',
         'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => 'string',
-        'resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => 'boolean',
+        'resit_kew38e_pelupusan_wang_tunai' => 'boolean',
         'adakah_borang_serah_terima_pegawai_tangkapan' => 'boolean',
         'adakah_borang_serah_terima_pemilik_saksi' => 'boolean',
         'adakah_sijil_surat_kebenaran_ipo' => 'boolean',
@@ -60,8 +60,8 @@ class Narkotik extends Model
         'status_id_siasatan_dikemaskini' => 'boolean',
         'status_rajah_kasar_tempat_kejadian' => 'boolean',
         'status_gambar_tempat_kejadian' => 'boolean',
-        'status_gambar_botol_spesimen_urin_3_dimensi_dan_berseal_merah' => 'boolean',
-        'status_gambar_pembalut_botol_spesimen_urin_bernombor_siri_dan_test_strip_dadah_positif' => 'boolean',
+        'gambar_botol_urin_3d_berseal' => 'boolean',
+        'gambar_pembalut_urin_dan_test_strip' => 'boolean',
         'status_gambar_barang_kes_am' => 'boolean',
         'status_gambar_barang_kes_berharga' => 'boolean',
         'status_gambar_barang_kes_kenderaan' => 'boolean',
@@ -153,7 +153,7 @@ class Narkotik extends Model
         'arahan_minit_ketua_jabatan_status_text',
         'arahan_minit_oleh_ya_tpr_status_text',
         'adakah_barang_kes_didaftarkan_text',
-        'resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan_text',
+        'resit_kew38e_pelupusan_wang_tunai_text',
         'adakah_borang_serah_terima_pegawai_tangkapan_text',
         'adakah_borang_serah_terima_pemilik_saksi_text',
         'adakah_sijil_surat_kebenaran_ipo_text',
@@ -161,8 +161,8 @@ class Narkotik extends Model
         'status_id_siasatan_dikemaskini_text',
         'status_rajah_kasar_tempat_kejadian_text',
         'status_gambar_tempat_kejadian_text',
-        'status_gambar_botol_spesimen_urin_3_dimensi_dan_berseal_merah_text',
-        'status_gambar_pembalut_botol_spesimen_urin_bernombor_siri_dan_test_strip_dadah_positif_text',
+        'gambar_botol_urin_3d_berseal_text',
+        'gambar_pembalut_urin_dan_test_strip_text',
         'status_gambar_barang_kes_am_text',
         'status_gambar_barang_kes_berharga_text',
         'status_gambar_barang_kes_kenderaan_text',
@@ -334,7 +334,7 @@ public function getTerbengkalaiStatusDcAttribute(): string
     }
     public function getResitKew38eBagiPelupusanBarangKesWangTunaiKePerbendaharaanTextAttribute(): string
     {
-        return $this->formatBooleanToMalay($this->resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan, 'Ada Dilampirkan', 'Tidak Dilampirkan');
+        return $this->formatBooleanToMalay($this->resit_kew38e_pelupusan_wang_tunai, 'Ada Dilampirkan', 'Tidak Dilampirkan');
     }
     public function getAdakahBorangSerahTerimaPegawaiTangkapanTextAttribute(): string
     {
@@ -366,13 +366,14 @@ public function getTerbengkalaiStatusDcAttribute(): string
     {
         return $this->formatBooleanToMalay($this->status_gambar_tempat_kejadian, 'Ada', 'Tiada');
     }
-    public function getStatusGambarBotolSpesimenUrin3DimensiDanBersealMerahTextAttribute(): string
+    public function getGambarBotolUrin3dBersealTextAttribute(): string
     {
-        return $this->formatBooleanToMalay($this->status_gambar_botol_spesimen_urin_3_dimensi_dan_berseal_merah, 'Ada', 'Tiada');
+        return $this->formatBooleanToMalay($this->gambar_botol_urin_3d_berseal, 'Ada', 'Tiada');
     }
-    public function getStatusGambarPembalutBotolSpesimenUrinBernomborSiriDanTestStripDadahPositifTextAttribute(): string
+
+    public function getGambarPembalutUrinDanTestStripTextAttribute(): string
     {
-        return $this->formatBooleanToMalay($this->status_gambar_pembalut_botol_spesimen_urin_bernombor_siri_dan_test_strip_dadah_positif, 'Ada', 'Tiada');
+        return $this->formatBooleanToMalay($this->gambar_pembalut_urin_dan_test_strip, 'Ada', 'Tiada');
     }
     public function getStatusGambarBarangKesAmTextAttribute(): string
     {

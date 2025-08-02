@@ -40,7 +40,6 @@ return new class extends Migration
             $table->boolean('arahan_minit_oleh_ya_tpr_status')->nullable()->comment('arahan_minit_oleh_ya_tpr_status: BOOLEAN');
             $table->date('arahan_minit_oleh_ya_tpr_tarikh')->nullable()->comment('arahan_minit_oleh_ya_tpr_tarikh: DATE');
             $table->string('keputusan_siasatan_oleh_ya_tpr')->nullable()->comment('keputusan_siasatan_oleh_ya_tpr: VARCHAR(255)');
-            #$table->json('adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan')->nullable()->comment('adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan: JSON');
             $table->string('adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan')->nullable()->comment('adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan: VARCHAR(255)');
             $table->text('ulasan_keputusan_siasatan_tpr')->nullable()->comment('ulasan_keputusan_siasatan_tpr: TEXT');
             $table->text('ulasan_keseluruhan_pegawai_pemeriksa_b3')->nullable()->comment('ulasan_keseluruhan_pegawai_pemeriksa: TEXT');
@@ -57,7 +56,6 @@ return new class extends Migration
             $table->string('jenis_barang_kes_berharga')->nullable()->comment('jenis_barang_kes_berharga: VARCHAR(255)');
             $table->string('jenis_barang_kes_kenderaan')->nullable()->comment('jenis_barang_kes_kenderaan: VARCHAR(255)');
             $table->string('jenis_barang_kes_dadah')->nullable()->comment('jenis_barang_kes_dadah: VARCHAR(255)');
-          
             $table->string('status_pergerakan_barang_kes')->nullable()->comment('status_pergerakan_barang_kes: VARCHAR(255)');
             $table->string('status_pergerakan_barang_kes_makmal')->nullable()->comment('status_pergerakan_barang_kes_lain: VARCHAR(255)');
             $table->string('status_pergerakan_barang_kes_lain')->nullable()->comment('status_pergerakan_barang_kes_lain: VARCHAR(255)');
@@ -65,11 +63,13 @@ return new class extends Migration
             $table->string('status_barang_kes_selesai_siasatan_RM')->nullable()->comment('status_barang_kes_selesai_siasatan_lain: VARCHAR(255)');
             $table->string('status_barang_kes_selesai_siasatan_lain')->nullable()->comment('status_barang_kes_selesai_siasatan_lain: VARCHAR(255)');
             $table->string('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan')->nullable()->comment('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan: VARCHAR(255)');
-            $table->string('kaedah_pelupusan_barang_kes_lain')->nullable()->comment('kaedah_pelupusan_barang_kes_lain: VARCHAR(255)'); // Named as per Blade for consistency
+            $table->string('kaedah_pelupusan_barang_kes_lain')->nullable()->comment('kaedah_pelupusan_barang_kes_lain: VARCHAR(255)');
             $table->string('adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan')->nullable()->comment('adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan: VARCHAR(255)');
-            $table->boolean('resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan')->nullable()->comment('resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan: BOOLEAN');
+            
+            // +++ RENAMED THIS COLUMN +++
+            $table->boolean('resit_kew38e_pelupusan_wang_tunai')->nullable()->comment('Resit Kew.38e bagi pelupusan wang tunai');
+            
             $table->boolean('adakah_borang_serah_terima_pegawai_tangkapan')->nullable()->comment('adakah_borang_serah_terima_pegawai_tangkapan: BOOLEAN');
-
             $table->boolean('adakah_borang_serah_terima_pemilik_saksi')->nullable()->comment('adakah_borang_serah_terima_pemilik_saksi: BOOLEAN');
             $table->boolean('adakah_sijil_surat_kebenaran_ipo')->nullable()->comment('adakah_sijil_surat_kebenaran_ipo: BOOLEAN');
             $table->boolean('adakah_gambar_pelupusan')->nullable()->comment('adakah_gambar_pelupusan: BOOLEAN');
@@ -79,8 +79,9 @@ return new class extends Migration
             $table->boolean('status_id_siasatan_dikemaskini')->nullable()->comment('status_id_siasatan_dikemaskini: BOOLEAN');
             $table->boolean('status_rajah_kasar_tempat_kejadian')->nullable()->comment('status_rajah_kasar_tempat_kejadian: BOOLEAN');
             $table->boolean('status_gambar_tempat_kejadian')->nullable()->comment('status_gambar_tempat_kejadian: BOOLEAN');
-            $table->boolean('status_gambar_botol_spesimen_urin_3_dimensi_dan_berseal_merah')->nullable()->comment('status_gambar_botol_spesimen_urin_3_dimensi_dan_berseal_merah: BOOLEAN');
-            $table->boolean('status_gambar_pembalut_botol_spesimen_urin_bernombor_siri_dan_test_strip_dadah_positif')->nullable()->comment('status_gambar_pembalut_botol_spesimen_urin_bernombor_siri_dan_test_strip_dadah_positif: BOOLEAN');
+
+            $table->boolean('gambar_botol_urin_3d_berseal')->nullable()->comment('gambar_botol_urin_3d_berseal');
+            $table->boolean('gambar_pembalut_urin_dan_test_strip')->nullable()->comment('gambar_pembalut_urin_dan_test_strip');
             $table->boolean('status_gambar_barang_kes_am')->nullable()->comment('status_gambar_barang_kes_am: BOOLEAN');
             $table->boolean('status_gambar_barang_kes_berharga')->nullable()->comment('status_gambar_barang_kes_berharga: BOOLEAN');
             $table->boolean('status_gambar_barang_kes_kenderaan')->nullable()->comment('status_gambar_barang_kes_kenderaan: BOOLEAN');

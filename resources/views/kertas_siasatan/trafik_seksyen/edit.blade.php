@@ -390,16 +390,16 @@
                             <label class="block text-sm font-medium text-gray-700 mb-2">Resit Kew.38e Bagi Pelupusan Barang Kes Wang Tunai Ke Perbendaharaan</label>
                             <div class="flex flex-col space-y-2 pl-4">
                                 @php
-                                    $currentResit = old('resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan', is_array($paper->resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan) ? ($paper->resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan[0] ?? '') : $paper->resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan);
+                                    $currentResit = old('resit_kew38e_pelupusan_wang_tunai', is_array($paper->resit_kew38e_pelupusan_wang_tunai) ? ($paper->resit_kew38e_pelupusan_wang_tunai[0] ?? '') : $paper->resit_kew38e_pelupusan_wang_tunai);
                                 @endphp
                                 <label class="inline-flex items-center">
-                                    <input type="radio" name="resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan" value="Ada Dilampirkan" 
+                                    <input type="radio" name="resit_kew38e_pelupusan_wang_tunai" value="Ada Dilampirkan" 
                                         {{ $currentResit == 'Ada Dilampirkan' ? 'checked' : '' }} 
                                         class="form-radio h-4 w-4 text-blue-600">
                                     <span class="ml-2 text-gray-700">Ada Dilampirkan</span>
                                 </label>
                                 <label class="inline-flex items-center">
-                                    <input type="radio" name="resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan" value="Tidak Dilampirkan" 
+                                    <input type="radio" name="resit_kew38e_pelupusan_wang_tunai" value="Tidak Dilampirkan" 
                                         {{ $currentResit == 'Tidak Dilampirkan' ? 'checked' : '' }} 
                                         class="form-radio h-4 w-4 text-blue-600">
                                     <span class="ml-2 text-gray-700">Tidak Dilampirkan</span>

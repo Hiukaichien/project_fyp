@@ -49,7 +49,7 @@ class TrafikSeksyen extends Model
         'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan' => 'string',
         'kaedah_pelupusan_barang_kes_lain' => 'string',
         'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => 'string',
-        'resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => 'string',
+        'resit_kew38e_pelupusan_wang_tunai' => 'string',
         'adakah_borang_serah_terima_pegawai_tangkapan' => 'string',
         'adakah_borang_serah_terima_pemilik_saksi' => 'boolean',
         'adakah_sijil_surat_kebenaran_ipo' => 'boolean',
@@ -206,8 +206,7 @@ class TrafikSeksyen extends Model
         'muka_surat_4_dengan_arahan_tpr_text',
         'muka_surat_4_keputusan_kes_dicatat_text',
         'fail_lmm_ada_keputusan_koroner_text',
-        'status_kus_fail_text', // ADDED
-        // 'keputusan_akhir_mahkamah_text' - REMOVED, now direct string
+        'status_kus_fail_text',
     ];
 
     public function project()
