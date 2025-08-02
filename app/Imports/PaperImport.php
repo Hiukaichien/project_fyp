@@ -121,7 +121,7 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
                 $actualHeaders = array_map(fn($h) => Str::snake(trim($h)), $event->getReader()->getActiveSheet()->toArray()[0]);
                 $foundHeaders = array_intersect($expectedHeaders, $actualHeaders);
                 if (empty($foundHeaders)) {
-                    $message = 'Import gagal. Sila pastikan fail Excel mempunyai kolum yang diperlukan.';
+                    $message = 'Import gagal. Sila pastikan fail Excel mempunyai lajur yang diperlukan.';
                     throw ValidationException::withMessages(['excel_file' => $message]);
                 }
             },
@@ -135,7 +135,7 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
         
         if (!$uniqueExcelHeaderSnake) {
             $availableColumns = implode(', ', array_keys($this->config['column_map']));
-            throw new \Exception("Ralat konfigurasi untuk {$this->paperType}: Pengenal unik '{$uniqueDbColumn}' tidak dijumpai dalam pemetaan kolum. Kolum yang tersedia: {$availableColumns}");
+            throw new \Exception("Ralat konfigurasi untuk {$this->paperType}: Pengenal unik '{$uniqueDbColumn}' tidak dijumpai dalam pemetaan lajur. Lajur yang tersedia: {$availableColumns}");
         }
 
         // Get all existing unique keys for this user to check against in memory
