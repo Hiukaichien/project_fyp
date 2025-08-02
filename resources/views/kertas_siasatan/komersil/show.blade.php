@@ -348,9 +348,9 @@
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                 {{ $paper->barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan ?? '-' }}
 
-                                @if($paper->barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan === 'Lain-Lain' && !empty($paper->barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan_lain))
+                                @if($paper->barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan === 'Lain-Lain' && !empty($paper->kaedah_pelupusan_lain))
                                     <div class="text-xs text-gray-600 mt-1">
-                                        Nyatakan: {{  $paper->barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan_lain }}
+                                        Nyatakan: {{  $paper->kaedah_pelupusan_lain }}
                                     </div>
                                 @endif
                             </dd>

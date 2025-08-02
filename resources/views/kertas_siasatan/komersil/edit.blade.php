@@ -491,9 +491,9 @@
                                         <span class="ml-2 text-gray-700">Lain-lain</span>
                                     </label>
                                     <input type="text"
-                                        name="barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan_lain"
+                                        name="kaedah_pelupusan_lain"
                                         id="kaedah_pelupusan_barang_kes_lain_komersil"
-                                        value="{{ old('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan_lain', $paper->barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan_lain) }}"
+                                        value="{{ old('kaedah_pelupusan_lain', $paper->kaedah_pelupusan_lain) }}"
                                         class="ml-2 form-input text-sm w-64" {{ $currentKaedah != 'Lain-Lain' ? 'disabled' : '' }}>
                                 </div>
                             </div>

@@ -368,7 +368,7 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
                 'adakah_gambar_pelupusan' => 'adakah_gambar_pelupusan',
                 'status_pergerakan_barang_kes_lain' => 'status_pergerakan_barang_kes_lain',
                 'status_barang_kes_selesai_siasatan_lain' => 'status_barang_kes_selesai_siasatan_lain',
-                'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan_lain' => 'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan_lain',
+                'kaedah_pelupusan_lain' => 'kaedah_pelupusan_lain',
                 'ulasan_keseluruhan_pegawai_pemeriksa_barang_kes' => 'ulasan_keseluruhan_pegawai_pemeriksa_barang_kes',
 
                 // BAHAGIAN 5: Bukti & Rajah

@@ -1808,8 +1808,8 @@
                     }
                 }
                 else if (colName === 'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan') {
-                    if (data === 'Lain-Lain' && row.barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan_lain) {
-                        details = ` : ${row.barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan_lain}`;
+                    if (data === 'Lain-Lain' && row.kaedah_pelupusan_lain) {
+                        details = ` : ${row.kaedah_pelupusan_lain}`;
                     }
                 }
                 

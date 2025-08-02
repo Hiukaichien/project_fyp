@@ -42,7 +42,7 @@ class Komersil extends Model
             'status_barang_kes_selesai_siasatan' => 'string',
             'status_barang_kes_selesai_siasatan_lain' => 'string',
             'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan' => 'string',
-            'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan_lain' => 'string',
+            'kaedah_pelupusan_lain' => 'string',
             'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => 'string',
             'resit_kew_38e_bagi_pelupusan' => 'string',
             'adakah_borang_serah_terima_pegawai_tangkapan' => 'string',
