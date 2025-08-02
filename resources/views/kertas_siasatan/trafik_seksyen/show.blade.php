@@ -269,11 +269,11 @@
 
                                 @if($paper->status_pergerakan_barang_kes === 'Ujian Makmal' && !empty($paper->status_pergerakan_barang_kes_makmal))
                                 <div class="text-xs text-gray-600 mt-1 pl-2 border-l-2 border-gray-300">
-                                    <span class="font-semibold">Nyatakan:</span> {{ $paper->status_pergerakan_barang_kes_makmal }}
+                                    <span class="font-semibold"></span> {{ $paper->status_pergerakan_barang_kes_makmal }}
                                 </div>
                                 @elseif($paper->status_pergerakan_barang_kes === 'Lain-Lain' && !empty($paper->status_pergerakan_barang_kes_lain))
                                 <div class="text-xs text-gray-600 mt-1 pl-2 border-l-2 border-gray-300">
-                                    <span class="font-semibold">Nyatakan:</span> {{ $paper->status_pergerakan_barang_kes_lain }}
+                                    <span class="font-semibold"></span> {{ $paper->status_pergerakan_barang_kes_lain }}
                                 </div>
                                 @endif
                             </dd>
@@ -291,7 +291,7 @@
                                 </div>
                                 @elseif($paper->status_barang_kes_selesai_siasatan === 'Lain-Lain' && !empty($paper->status_barang_kes_selesai_siasatan_lain))
                                 <div class="text-xs text-gray-600 mt-1 pl-2 border-l-2 border-gray-300">
-                                    <span class="font-semibold">Nyatakan:</span> {{ $paper->status_barang_kes_selesai_siasatan_lain }}
+                                    <span class="font-semibold"></span> {{ $paper->status_barang_kes_selesai_siasatan_lain }}
                                 </div>
                                 @endif
                             </dd>
@@ -305,7 +305,7 @@
 
                                 @if($paper->barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan === 'Lain-Lain' && !empty($paper->kaedah_pelupusan_barang_kes_lain))
                                 <div class="text-xs text-gray-600 mt-1 pl-2 border-l-2 border-gray-300">
-                                    <span class="font-semibold">Nyatakan:</span> {{ $paper->kaedah_pelupusan_barang_kes_lain }}
+                                    <span class="font-semibold"></span> {{ $paper->kaedah_pelupusan_barang_kes_lain }}
                                 </div>
                                 @endif
                             </dd>

@@ -304,7 +304,7 @@
 
                     @if(!empty($paper->status_pergerakan_barang_kes_lain))
                     <div class="text-xs text-gray-600 mt-1 pl-2 border-l-2 border-gray-300">
-                        <span class="font-semibold">Nyatakan:</span> {{ $paper->status_pergerakan_barang_kes_lain }}
+                        <span class="font-semibold"></span> {{ $paper->status_pergerakan_barang_kes_lain }}
                     </div>
                     @endif
                 </dd>
@@ -329,7 +329,7 @@
 
                     @if(!empty($paper->status_barang_kes_selesai_siasatan_lain))
                     <div class="text-xs text-gray-600 mt-1 pl-2 border-l-2 border-gray-300">
-                        <span class="font-semibold">Nyatakan:</span> {{ $paper->status_barang_kes_selesai_siasatan_lain }}
+                        <span class="font-semibold"></span> {{ $paper->status_barang_kes_selesai_siasatan_lain }}
                     </div>
                     @endif
                 </dd>
@@ -343,7 +343,7 @@
 
                     @if(!empty($paper->kaedah_pelupusan_barang_kes_lain))
                     <div class="text-xs text-gray-600 mt-1 pl-2 border-l-2 border-gray-300">
-                        <span class="font-semibold">Nyatakan:</span> {{ $paper->kaedah_pelupusan_barang_kes_lain }}
+                        <span class="font-semibold"></span> {{ $paper->kaedah_pelupusan_barang_kes_lain }}
                     </div>
                     @endif
                 </dd>
@@ -534,7 +534,7 @@
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">M/S 4 - Dengan Arahan TPR</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_boolean_badge($paper->status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar_dan_telah_ada_arahan_ya_tpr) !!}</dd>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_boolean_badge($paper->status_barang_kes_arahan_tpr) !!}</dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">M/S 4 - Keputusan Kes Dicatat</dt>

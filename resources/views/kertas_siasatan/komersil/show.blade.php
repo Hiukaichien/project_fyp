@@ -315,14 +315,14 @@
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                 {{ $paper->status_pergerakan_barang_kes ?? '-' }}
 
-                                @if($paper->status_pergerakan_barang_kes === 'Ujian Makmal' && !empty($paper->status_pergerakan_barang_kes_lain))
-                                    <div class="text-xs text-gray-600 mt-1">
-                                        Nyatakan: {{ $paper->status_pergerakan_barang_kes_ujian_makmal }}
-                                    </div>
+                                @if($paper->status_pergerakan_barang_kes === 'Ujian Makmal' && !empty($paper->status_pergerakan_barang_kes_makmal))
+                                <div class="text-xs text-gray-600 mt-1 pl-2 border-l-2 border-gray-300">
+                                    <span class="font-semibold"></span> {{ $paper->status_pergerakan_barang_kes_makmal }}
+                                </div>
                                 @elseif($paper->status_pergerakan_barang_kes === 'Lain-Lain' && !empty($paper->status_pergerakan_barang_kes_lain))
-                                    <div class="text-xs text-gray-600 mt-1">
-                                        Nyatakan: {{ $paper->status_pergerakan_barang_kes_lain }}
-                                    </div>
+                                <div class="text-xs text-gray-600 mt-1 pl-2 border-l-2 border-gray-300">
+                                    <span class="font-semibold"></span> {{ $paper->status_pergerakan_barang_kes_lain }}
+                                </div>
                                 @endif
                             </dd>
                         </div>
@@ -331,14 +331,14 @@
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                 {{ $paper->status_barang_kes_selesai_siasatan ?? '-' }}
 
-                                @if($paper->status_barang_kes_selesai_siasatan === 'Dilupuskan ke Perbendaharaan' && !empty($paper->status_barang_kes_selesai_siasatan_lain))
-                                    <div class="text-xs text-gray-600 mt-1">
-                                        RM: {{ $paper->status_barang_kes_selesai_siasatan_lain }}
-                                    </div>
+                                @if($paper->status_barang_kes_selesai_siasatan === 'Dilupuskan ke Perbendaharaan' && !empty($paper->status_barang_kes_selesai_siasatan_RM))
+                                <div class="text-xs text-gray-600 mt-1 pl-2 border-l-2 border-gray-300">
+                                    <span class="font-semibold">RM:</span> {{ $paper->status_barang_kes_selesai_siasatan_RM }}
+                                </div>
                                 @elseif($paper->status_barang_kes_selesai_siasatan === 'Lain-Lain' && !empty($paper->status_barang_kes_selesai_siasatan_lain))
-                                    <div class="text-xs text-gray-600 mt-1">
-                                        Nyatakan: {{ $paper->status_barang_kes_selesai_siasatan_lain }}
-                                    </div>
+                                <div class="text-xs text-gray-600 mt-1 pl-2 border-l-2 border-gray-300">
+                                    <span class="font-semibold"></span> {{ $paper->status_barang_kes_selesai_siasatan_lain }}
+                                </div>
                                 @endif
                             </dd>
                         </div>
@@ -347,11 +347,10 @@
                             <dt class="text-sm font-medium text-gray-500">Kaedah Pelupusan Dilaksanakan</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                 {{ $paper->barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan ?? '-' }}
-
-                                @if($paper->barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan === 'Lain-Lain' && !empty($paper->kaedah_pelupusan_lain))
-                                    <div class="text-xs text-gray-600 mt-1">
-                                        Nyatakan: {{  $paper->kaedah_pelupusan_lain }}
-                                    </div>
+                                @if($paper->barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan === 'Lain-Lain' && !empty($paper->kaedah_pelupusan_barang_kes_lain))
+                                <div class="text-xs text-gray-600 mt-1 pl-2 border-l-2 border-gray-300">
+                                    <span class="font-semibold"></span> {{ $paper->kaedah_pelupusan_barang_kes_lain }}
+                                </div>
                                 @endif
                             </dd>
                         </div>
