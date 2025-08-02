@@ -1573,14 +1573,11 @@
 
                 // Logic for 'status_pergerakan_barang_kes'
                 if (colName === 'status_pergerakan_barang_kes') {
-                    // CHECK FOR UJIAN MAKMAL
+                    // CHECK FOR UJIAN MAKMAL (this field is available in DataTable)
                     if (data === 'Ujian Makmal' && row.status_pergerakan_barang_kes_makmal) {
                         details = ` : ${row.status_pergerakan_barang_kes_makmal}`;
                     } 
-                    // CHECK FOR LAIN-LAIN
-                    else if (data === 'Lain-Lain' && row.status_pergerakan_barang_kes_lain) {
-                        details = ` : ${row.status_pergerakan_barang_kes_lain}`;
-                    }
+                    // Note: status_pergerakan_barang_kes_lain is not included in DataTable columns for Narkotik
                 } 
                 // Logic for 'status_barang_kes_selesai_siasatan'
                 else if (colName === 'status_barang_kes_selesai_siasatan') {
@@ -1588,16 +1585,11 @@
                     if (data === 'Dilupuskan ke Perbendaharaan' && row.status_barang_kes_selesai_siasatan_RM) {
                         details = ` (RM ${row.status_barang_kes_selesai_siasatan_RM})`;
                     } 
-                    // CHECK FOR LAIN-LAIN
-                    else if (data === 'Lain-Lain' && row.status_barang_kes_selesai_siasatan_lain) {
-                        details = ` : ${row.status_barang_kes_selesai_siasatan_lain}`;
-                    }
+                    // Note: status_barang_kes_selesai_siasatan_lain is not included in DataTable columns for Narkotik
                 }
                 // Logic for 'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan'
                 else if (colName === 'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan') {
-                    if (data === 'Lain-Lain' && row.kaedah_pelupusan_barang_kes_lain) {
-                        details = ` : ${row.kaedah_pelupusan_barang_kes_lain}`;
-                    }
+                    // Note: kaedah_pelupusan_barang_kes_lain is not included in DataTable columns for Narkotik
                 }
                 
                 return data + details;
