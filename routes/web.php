@@ -28,6 +28,14 @@ Route::middleware('auth')->group(function () {
     ->name('projects.destroy_all_papers')
     ->middleware(['auth']);
 
+    Route::get('/projects/{project}/get-papers-for-destroy', [ProjectController::class, 'getPapersForDestroy'])
+    ->name('projects.get_papers_for_destroy')
+    ->middleware(['auth']);
+
+    Route::post('/projects/{project}/destroy-selected-papers', [ProjectController::class, 'destroySelectedPapers'])
+    ->name('projects.destroy_selected_papers')
+    ->middleware(['auth']);
+
     // --- STEP 1: Update all DataTables routes ---
     Route::post('/projects/{project}/jenayah-data', [ProjectController::class, 'getJenayahData'])->name('projects.jenayah_data');
     Route::post('/projects/{project}/narkotik-data', [ProjectController::class, 'getNarkotikData'])->name('projects.narkotik_data');

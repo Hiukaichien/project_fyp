@@ -178,6 +178,21 @@
                             <dt class="text-sm font-medium text-gray-500">Tarikh Semboyan Pemeriksaan JIPS (E)</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ optional($paper->tarikh_semboyan_pemeriksaan_jips_ke_daerah)->format('d/m/Y') ?? '-' }}</dd>
                         </div>
+                        {{-- Calculated Field 2 --}}
+                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-yellow-50">
+                            <dt class="text-sm font-medium text-yellow-800">Sistem Calculate (D - C): Terbengkalai Melebihi 3 Bulan</dt>
+                            <dd class="mt-1 text-sm font-bold text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->terbengkalai_status_dc ?? 'Tidak Terkira' }}</dd>
+                        </div>
+                        {{-- Calculated Field 3 --}}
+                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-yellow-50">
+                            <dt class="text-sm font-medium text-yellow-800">Sistem Calculate (E - D): Terbengkalai / Baru Dikemaskini</dt>
+                            <dd class="mt-1 text-sm font-bold text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->baru_dikemaskini_status ?? 'Tidak Terkira' }}</dd>
+                        </div>
+                        {{-- Calculated Field 4 --}}
+                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-yellow-50">
+                            <dt class="text-sm font-medium text-yellow-800">Sistem Calculate (D - A): Terbengkalai Melebihi 3 Bulan</dt>
+                            <dd class="mt-1 text-sm font-bold text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->terbengkalai_status_da ?? 'Tidak Terkira' }}</dd>
+                        </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 border-t border-gray-200">
                             <dt class="text-sm font-medium text-gray-500">Tarikh Edaran Minit LMM(T) Pertama</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ optional($paper->tarikh_edaran_minit_fail_lmm_t_pertama)->format('d/m/Y') ?? '-' }}</dd>
@@ -253,96 +268,114 @@
                 </div>
             </div>
 
-            <!-- BAHAGIAN 4: Barang Kes -->
-            <div class="bg-white shadow overflow-hidden sm:rounded-lg">
-                <div class="px-4 py-5 sm:px-6 bg-orange-50">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900">BAHAGIAN 4: Barang Kes</h3>
-                </div>
-                <div class="border-t border-gray-200">
-                    <dl class="sm:divide-y sm:divide-gray-200">
-                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">Adakah Barang Kes Didaftarkan</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_boolean_badge($paper->adakah_barang_kes_didaftarkan) !!}</dd>
-                        </div>
-                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">No. Daftar Barang Kes Am</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->no_daftar_barang_kes_am ?? '-' }}</dd>
-                        </div>
-                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">No. Daftar Barang Kes Berharga</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->no_daftar_barang_kes_berharga ?? '-' }}</dd>
-                        </div>
-                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">Jenis Barang Kes Am</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->jenis_barang_kes_am ?? '-' }}</dd>
-                        </div>
-                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">Jenis Barang Kes Berharga</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->jenis_barang_kes_berharga ?? '-' }}</dd>
-                        </div>
-                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">Status Pergerakan Barang Kes</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_lain_lain_value($paper->status_pergerakan_barang_kes, $paper->status_pergerakan_barang_kes_lain, 'status_pergerakan_barang_kes') !!}</dd>
-                        </div>
-                        @if($paper->status_pergerakan_barang_kes === 'Ujian Makmal' && $paper->ujian_makmal_details)
-                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50">
-                            <dt class="text-sm font-medium text-gray-500">Ujian Makmal</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 whitespace-pre-wrap">{{ $paper->ujian_makmal_details }}</dd>
-                        </div>
-                        @endif
-                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">Status Barang Kes Selesai Siasatan</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_lain_lain_value($paper->status_barang_kes_selesai_siasatan, $paper->status_barang_kes_selesai_siasatan_lain, 'status_barang_kes_selesai_siasatan') !!}</dd>
-                        </div>
-                        @if($paper->status_barang_kes_selesai_siasatan === 'Dilupuskan ke Perbendaharaan' && $paper->dilupuskan_perbendaharaan_amount)
-                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50">
-                            <dt class="text-sm font-medium text-gray-500">Dilupuskan ke Perbendaharaan</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">RM {{ number_format($paper->dilupuskan_perbendaharaan_amount, 2) }}</dd>
-                        </div>
-                        @endif
-                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">Kaedah Pelupusan Barang Kes</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                @if(in_array($paper->kaedah_pelupusan_barang_kes, ['Dibakar', 'Ditanam', 'Dihancurkan', 'Dilelong']))
-                                    {{ $paper->kaedah_pelupusan_barang_kes }}
-                                @else
-                                    Lain-lain
-                                @endif
-                            </dd>
-                        </div>
-                        @if(!in_array($paper->kaedah_pelupusan_barang_kes, ['Dibakar', 'Ditanam', 'Dihancurkan', 'Dilelong']) && $paper->kaedah_pelupusan_barang_kes_lain)
-                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50">
-                            <dt class="text-sm font-medium text-gray-500">Lain-lain</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 whitespace-pre-wrap">{{ $paper->kaedah_pelupusan_barang_kes_lain }}</dd>
-                        </div>
-                        @endif
-                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">Arahan Pelupusan Barang Kes</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_json_list($paper->arahan_pelupusan_barang_kes) !!}</dd>
-                        </div>
-                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">Borang Serah/Terima (Pegawai Tangkapan dan IO/AIO)</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_boolean_badge($paper->adakah_borang_serah_terima_pegawai_tangkapan_io) !!}</dd>
-                        </div>
-                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">Borang Serah/Terima (Penyiasat/Pemilik/Saksi)</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_boolean_badge($paper->adakah_borang_serah_terima_penyiasat_pemilik_saksi) !!}</dd>
-                        </div>
-                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">Sijil/Surat Kebenaran IPD</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_boolean_badge($paper->adakah_sijil_surat_kebenaran_ipd) !!}</dd>
-                        </div>
-                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">Gambar Pelupusan</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_boolean_badge($paper->adakah_gambar_pelupusan) !!}</dd>
-                        </div>
-                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">Ulasan Keseluruhan Pegawai Pemeriksa (Barang Kes)</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 whitespace-pre-wrap">{{ $paper->ulasan_keseluruhan_pegawai_pemeriksa_barang_kes ?? '-' }}</dd>
-                        </div>
-                    </dl>
-                </div>
+<!-- BAHAGIAN 4: Barang Kes -->
+<div class="bg-white shadow overflow-hidden sm:rounded-lg">
+    <div class="px-4 py-5 sm:px-6 bg-orange-50">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">BAHAGIAN 4: Barang Kes</h3>
+    </div>
+    <div class="border-t border-gray-200">
+        <dl class="sm:divide-y sm:divide-gray-200">
+            <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Adakah Barang Kes Didaftarkan</dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_boolean_badge($paper->adakah_barang_kes_didaftarkan) !!}</dd>
             </div>
+            <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">No. Daftar Barang Kes Am</dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->no_daftar_barang_kes_am ?? '-' }}</dd>
+            </div>
+            <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">No. Daftar Barang Kes Berharga</dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->no_daftar_barang_kes_berharga ?? '-' }}</dd>
+            </div>
+            <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Jenis Barang Kes Am</dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->jenis_barang_kes_am ?? '-' }}</dd>
+            </div>
+            <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Jenis Barang Kes Berharga</dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->jenis_barang_kes_berharga ?? '-' }}</dd>
+            </div>
+
+            <!-- Status Pergerakan Barang Kes -->
+            <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Status Pergerakan Barang Kes</dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ $paper->status_pergerakan_barang_kes ?? '-' }}
+
+                    @if(!empty($paper->status_pergerakan_barang_kes_lain))
+                    <div class="text-xs text-gray-600 mt-1 pl-2 border-l-2 border-gray-300">
+                        <span class="font-semibold">Nyatakan:</span> {{ $paper->status_pergerakan_barang_kes_lain }}
+                    </div>
+                    @endif
+                </dd>
+            </div>
+            
+            <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Ujian Makmal (jika berkaitan)</dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->ujian_makmal_details ?? '-' }}</dd>
+            </div>
+
+            <!-- Status Barang Kes Selesai Siasatan -->
+            <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Status Barang Kes Selesai Siasatan</dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ $paper->status_barang_kes_selesai_siasatan ?? '-' }}
+
+                    @if($paper->status_barang_kes_selesai_siasatan === 'Dilupuskan ke Perbendaharaan' && !is_null($paper->dilupuskan_perbendaharaan_amount))
+                    <div class="text-xs text-gray-600 mt-1 pl-2 border-l-2 border-gray-300">
+                        <span class="font-semibold">Jumlah:</span> RM {{ number_format($paper->dilupuskan_perbendaharaan_amount, 2) }}
+                    </div>
+                    @endif
+
+                    @if(!empty($paper->status_barang_kes_selesai_siasatan_lain))
+                    <div class="text-xs text-gray-600 mt-1 pl-2 border-l-2 border-gray-300">
+                        <span class="font-semibold">Nyatakan:</span> {{ $paper->status_barang_kes_selesai_siasatan_lain }}
+                    </div>
+                    @endif
+                </dd>
+            </div>
+            
+            <!-- Kaedah Pelupusan Barang Kes -->
+            <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Kaedah Pelupusan Barang Kes</dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    {{ $paper->kaedah_pelupusan_barang_kes ?? '-' }}
+
+                    @if(!empty($paper->kaedah_pelupusan_barang_kes_lain))
+                    <div class="text-xs text-gray-600 mt-1 pl-2 border-l-2 border-gray-300">
+                        <span class="font-semibold">Nyatakan:</span> {{ $paper->kaedah_pelupusan_barang_kes_lain }}
+                    </div>
+                    @endif
+                </dd>
+            </div>
+            
+            <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Arahan Pelupusan Barang Kes</dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_json_list($paper->arahan_pelupusan_barang_kes) !!}</dd>
+            </div>
+            <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Borang Serah/Terima (Pegawai Tangkapan dan IO/AIO)</dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_boolean_badge($paper->adakah_borang_serah_terima_pegawai_tangkapan_io) !!}</dd>
+            </div>
+            <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Borang Serah/Terima (Penyiasat/Pemilik/Saksi)</dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_boolean_badge($paper->adakah_borang_serah_terima_penyiasat_pemilik_saksi) !!}</dd>
+            </div>
+            <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Sijil/Surat Kebenaran IPD</dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_boolean_badge($paper->adakah_sijil_surat_kebenaran_ipd) !!}</dd>
+            </div>
+            <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Gambar Pelupusan</dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_boolean_badge($paper->adakah_gambar_pelupusan) !!}</dd>
+            </div>
+            <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt class="text-sm font-medium text-gray-500">Ulasan Keseluruhan Pegawai Pemeriksa (Barang Kes)</dt>
+                <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 whitespace-pre-wrap">{{ $paper->ulasan_keseluruhan_pegawai_pemeriksa_barang_kes ?? '-' }}</dd>
+            </div>
+        </dl>
+    </div>
+</div>
 
             <!-- BAHAGIAN 5: Dokumen Siasatan -->
             <div class="bg-white shadow overflow-hidden sm:rounded-lg">

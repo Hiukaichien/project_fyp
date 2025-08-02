@@ -406,119 +406,117 @@
     ];
 
     // Define custom columns for LaporanMatiMengejut based on BAHAGIAN 1-8 order from show.blade.php
-    $laporanMatiMengejutColumns = [
-        // BAHAGIAN 1: Maklumat Asas
-        'no_kertas_siasatan' => 'No. Kertas Siasatan',
-        'no_fail_lmm_sdr' => 'No. Fail LMM/SDR',
-        'no_repot_polis' => 'No. Repot Polis',
-        'pegawai_penyiasat' => 'Pegawai Penyiasat',
-        'tarikh_laporan_polis_dibuka' => 'Tarikh Laporan Polis Dibuka',
-        'seksyen' => 'Seksyen',
+        $laporanMatiMengejutColumns = [
+            // BAHAGIAN 1: Maklumat Asas
+            'no_kertas_siasatan' => 'No. Kertas Siasatan',
+            'no_fail_lmm_sdr' => 'No. Fail LMM/SDR',
+            'no_repot_polis' => 'No. Repot Polis',
+            'pegawai_penyiasat' => 'Pegawai Penyiasat',
+            'tarikh_laporan_polis_dibuka' => 'Tarikh Laporan Polis Dibuka',
+            'seksyen' => 'Seksyen',
 
-        // BAHAGIAN 2: Pemeriksaan & Status
-        'pegawai_pemeriksa' => 'Pegawai Pemeriksa',
-        'tarikh_edaran_minit_ks_pertama' => 'Tarikh Minit KS Pertama (A)',
-        'tarikh_edaran_minit_ks_kedua' => 'Tarikh Minit KS Kedua (B)',
-        'lewat_edaran_status' => 'Sistem Calculate (B - A): KS Lewat Edaran 24 Jam',
-        'tarikh_edaran_minit_ks_sebelum_akhir' => 'Tarikh Minit KS Sebelum Akhir (C)',
-        'tarikh_edaran_minit_ks_akhir' => 'Tarikh Minit KS Akhir (D)',
-        'tarikh_semboyan_pemeriksaan_jips_ke_daerah' => 'Tarikh Semboyan JIPS (E)',
-        'terbengkalai_status_dc' => 'Sistem Calculate (D - C): Terbengkalai Melebihi 3 Bulan',
-        'baru_dikemaskini_status' => 'Sistem Calculate (E - D): Terbengkalai / Baru Dikemaskini',
-        'terbengkalai_status_da' => 'Sistem Calculate (D - A): Terbengkalai Melebihi 3 Bulan',
-        'tarikh_edaran_minit_fail_lmm_t_pertama' => 'Tarikh Minit LMM(T) Pertama',
-        'tarikh_edaran_minit_fail_lmm_t_kedua' => 'Tarikh Minit LMM(T) Kedua',
-        'tarikh_edaran_minit_fail_lmm_t_sebelum_minit_akhir' => 'Tarikh Minit LMM(T) Sebelum Akhir',
-        'tarikh_edaran_minit_fail_lmm_t_akhir' => 'Tarikh Minit LMM(T) Akhir',
-        'fail_lmm_bahagian_pengurusan_pada_muka_surat_2' => 'Fail LMM Bhg. Pengurusan M/S 2',
+            // BAHAGIAN 2: Pemeriksaan & Status
+            'pegawai_pemeriksa' => 'Pegawai Pemeriksa',
+            'tarikh_edaran_minit_ks_pertama' => 'Tarikh Minit KS Pertama (A)',
+            'tarikh_edaran_minit_ks_kedua' => 'Tarikh Minit KS Kedua (B)',
+            'lewat_edaran_status' => 'Sistem Calculate (B - A): KS Lewat Edaran 24 Jam',
+            'tarikh_edaran_minit_ks_sebelum_akhir' => 'Tarikh Minit KS Sebelum Akhir (C)',
+            'tarikh_edaran_minit_ks_akhir' => 'Tarikh Minit KS Akhir (D)',
+            'tarikh_semboyan_pemeriksaan_jips_ke_daerah' => 'Tarikh Semboyan JIPS (E)',
+            'terbengkalai_status_dc' => 'Sistem Calculate (D - C): Terbengkalai Melebihi 3 Bulan',
+            'baru_dikemaskini_status' => 'Sistem Calculate (E - D): Terbengkalai / Baru Dikemaskini',
+            'terbengkalai_status_da' => 'Sistem Calculate (D - A): Terbengkalai Melebihi 3 Bulan',
+            'tarikh_edaran_minit_fail_lmm_t_pertama' => 'Tarikh Minit LMM(T) Pertama',
+            'tarikh_edaran_minit_fail_lmm_t_kedua' => 'Tarikh Minit LMM(T) Kedua',
+            'tarikh_edaran_minit_fail_lmm_t_sebelum_minit_akhir' => 'Tarikh Minit LMM(T) Sebelum Akhir',
+            'tarikh_edaran_minit_fail_lmm_t_akhir' => 'Tarikh Minit LMM(T) Akhir',
+            'fail_lmm_bahagian_pengurusan_pada_muka_surat_2' => 'Fail LMM Bhg. Pengurusan M/S 2',
 
-        // BAHAGIAN 3: Arahan & Keputusan
-        'arahan_minit_oleh_sio_status' => 'Arahan Minit SIO',
-        'arahan_minit_oleh_sio_tarikh' => 'Tarikh Arahan SIO',
-        'arahan_minit_ketua_bahagian_status' => 'Arahan Minit Ketua Bahagian',
-        'arahan_minit_ketua_bahagian_tarikh' => 'Tarikh Arahan Ketua Bahagian',
-        'arahan_minit_ketua_jabatan_status' => 'Arahan Minit Ketua Jabatan',
-        'arahan_minit_ketua_jabatan_tarikh' => 'Tarikh Arahan Ketua Jabatan',
-        'arahan_minit_oleh_ya_tpr_status' => 'Arahan Minit YA TPR',
-        'arahan_minit_oleh_ya_tpr_tarikh' => 'Tarikh Arahan YA TPR',
-        'keputusan_siasatan_oleh_ya_tpr' => 'Keputusan Siasatan YA TPR',
-        'arahan_tuduh_oleh_ya_tpr' => 'Arahan Tuduh YA TPR',
-        'ulasan_keputusan_siasatan_tpr' => 'Ulasan Keputusan Siasatan TPR',
-        'keputusan_siasatan_oleh_ya_koroner' => 'Keputusan Siasatan YA Koroner',
-        'ulasan_keputusan_oleh_ya_koroner' => 'Ulasan Keputusan YA Koroner',
-        'ulasan_keseluruhan_pegawai_pemeriksa' => 'Ulasan Pegawai Pemeriksa',
+            // BAHAGIAN 3: Arahan & Keputusan
+            'arahan_minit_oleh_sio_status' => 'Arahan Minit SIO',
+            'arahan_minit_oleh_sio_tarikh' => 'Tarikh Arahan SIO',
+            'arahan_minit_ketua_bahagian_status' => 'Arahan Minit Ketua Bahagian',
+            'arahan_minit_ketua_bahagian_tarikh' => 'Tarikh Arahan Ketua Bahagian',
+            'arahan_minit_ketua_jabatan_status' => 'Arahan Minit Ketua Jabatan',
+            'arahan_minit_ketua_jabatan_tarikh' => 'Tarikh Arahan Ketua Jabatan',
+            'arahan_minit_oleh_ya_tpr_status' => 'Arahan Minit YA TPR',
+            'arahan_minit_oleh_ya_tpr_tarikh' => 'Tarikh Arahan YA TPR',
+            'keputusan_siasatan_oleh_ya_tpr' => 'Keputusan Siasatan YA TPR',
+            'arahan_tuduh_oleh_ya_tpr' => 'Arahan Tuduh YA TPR',
+            'ulasan_keputusan_siasatan_tpr' => 'Ulasan Keputusan Siasatan TPR',
+            'keputusan_siasatan_oleh_ya_koroner' => 'Keputusan Siasatan YA Koroner',
+            'ulasan_keputusan_oleh_ya_koroner' => 'Ulasan Keputusan YA Koroner',
+            'ulasan_keseluruhan_pegawai_pemeriksa' => 'Ulasan Pegawai Pemeriksa',
 
-        // BAHAGIAN 4: Barang Kes
-        'adakah_barang_kes_didaftarkan' => 'Barang Kes Didaftarkan',
-        'no_daftar_barang_kes_am' => 'No. Daftar Barang Kes Am',
-        'no_daftar_barang_kes_berharga' => 'No. Daftar Barang Kes Berharga',
-        'jenis_barang_kes_am' => 'Jenis Barang Kes Am',
-        'jenis_barang_kes_berharga' => 'Jenis Barang Kes Berharga',
-        'status_pergerakan_barang_kes' => 'Status Pergerakan Barang Kes',
-        'ujian_makmal_details' => 'Ujian Makmal',
-        'status_barang_kes_selesai_siasatan' => 'Status Barang Kes Selesai Siasatan',
-        'dilupuskan_perbendaharaan_amount' => 'Dilupuskan ke Perbendaharaan',
-        'kaedah_pelupusan_barang_kes' => 'Kaedah Pelupusan Barang Kes',
-        'arahan_pelupusan_barang_kes' => 'Arahan Pelupusan Barang Kes',
-        'adakah_borang_serah_terima_pegawai_tangkapan_io' => 'Borang Serah/Terima (Pegawai Tangkapan)',
-        'adakah_borang_serah_terima_penyiasat_pemilik_saksi' => 'Borang Serah/Terima (Penyiasat/Pemilik)',
-        'adakah_sijil_surat_kebenaran_ipd' => 'Sijil/Surat Kebenaran IPD',
-        'adakah_gambar_pelupusan' => 'Gambar Pelupusan',
-        'ulasan_keseluruhan_pegawai_pemeriksa_barang_kes' => 'Ulasan Pegawai Pemeriksa (Barang Kes)',
+            // BAHAGIAN 4: Barang Kes
+            'adakah_barang_kes_didaftarkan' => 'Barang Kes Didaftarkan',
+            'no_daftar_barang_kes_am' => 'No. Daftar Barang Kes Am',
+            'no_daftar_barang_kes_berharga' => 'No. Daftar Barang Kes Berharga',
+            'jenis_barang_kes_am' => 'Jenis Barang Kes Am',
+            'jenis_barang_kes_berharga' => 'Jenis Barang Kes Berharga',
+            'status_pergerakan_barang_kes' => 'Status Pergerakan Barang Kes',
+            'status_barang_kes_selesai_siasatan' => 'Status Barang Kes Selesai Siasatan',
+            'kaedah_pelupusan_barang_kes' => 'Kaedah Pelupusan Barang Kes',
+            'arahan_pelupusan_barang_kes' => 'Arahan Pelupusan Barang Kes',
+            'adakah_borang_serah_terima_pegawai_tangkapan_io' => 'Borang Serah/Terima (Pegawai Tangkapan)',
+            'adakah_borang_serah_terima_penyiasat_pemilik_saksi' => 'Borang Serah/Terima (Penyiasat/Pemilik)',
+            'adakah_sijil_surat_kebenaran_ipd' => 'Sijil/Surat Kebenaran IPD',
+            'adakah_gambar_pelupusan' => 'Gambar Pelupusan',
+            'ulasan_keseluruhan_pegawai_pemeriksa_barang_kes' => 'Ulasan Pegawai Pemeriksa (Barang Kes)',
 
-        // BAHAGIAN 5: Dokumen Siasatan
-        'status_id_siasatan_dikemaskini' => 'ID Siasatan Dikemaskini',
-        'status_rajah_kasar_tempat_kejadian' => 'Rajah Kasar Tempat Kejadian',
-        'status_gambar_tempat_kejadian' => 'Gambar Tempat Kejadian',
-        'status_gambar_post_mortem_mayat_di_hospital' => 'Gambar Post Mortem Mayat',
-        'status_gambar_barang_kes_am' => 'Gambar Barang Kes Am',
-        'status_gambar_barang_kes_berharga' => 'Gambar Barang Kes Berharga',
-        'status_gambar_barang_kes_darah' => 'Gambar Barang Kes Darah',
+            // BAHAGIAN 5: Dokumen Siasatan
+            'status_id_siasatan_dikemaskini' => 'ID Siasatan Dikemaskini',
+            'status_rajah_kasar_tempat_kejadian' => 'Rajah Kasar Tempat Kejadian',
+            'status_gambar_tempat_kejadian' => 'Gambar Tempat Kejadian',
+            'status_gambar_post_mortem_mayat_di_hospital' => 'Gambar Post Mortem Mayat',
+            'status_gambar_barang_kes_am' => 'Gambar Barang Kes Am',
+            'status_gambar_barang_kes_berharga' => 'Gambar Barang Kes Berharga',
+            'status_gambar_barang_kes_darah' => 'Gambar Barang Kes Darah',
 
-        // BAHAGIAN 6: Borang & Semakan
-        'status_pem' => 'Status PEM',
-        'status_rj2' => 'Status RJ2',
-        'tarikh_rj2' => 'Tarikh RJ2',
-        'status_rj2b' => 'Status RJ2B',
-        'tarikh_rj2b' => 'Tarikh RJ2B',
-        'status_semboyan_pemakluman_ke_kedutaan_bagi_kes_mati' => 'Semboyan Pemakluman Kedutaan',
-        'ulasan_keseluruhan_pegawai_pemeriksa_borang' => 'Ulasan Pegawai Pemeriksa (Borang)',
+            // BAHAGIAN 6: Borang & Semakan
+            'status_pem' => 'Status PEM',
+            'status_rj2' => 'Status RJ2',
+            'tarikh_rj2' => 'Tarikh RJ2',
+            'status_rj2b' => 'Status RJ2B',
+            'tarikh_rj2b' => 'Tarikh RJ2B',
+            'status_semboyan_pemakluman_ke_kedutaan_bagi_kes_mati' => 'Semboyan Pemakluman Kedutaan',
+            'ulasan_keseluruhan_pegawai_pemeriksa_borang' => 'Ulasan Pegawai Pemeriksa (Borang)',
 
-        // BAHAGIAN 7: Permohonan Laporan Agensi Luar
-        'status_permohonan_laporan_post_mortem_mayat' => 'Permohonan Post Mortem',
-        'tarikh_permohonan_laporan_post_mortem_mayat' => 'Tarikh Permohonan Post Mortem',
-        'status_laporan_penuh_bedah_siasat' => 'Laporan Penuh Bedah Siasat',
-        'tarikh_laporan_penuh_bedah_siasat' => 'Tarikh Laporan Penuh Bedah Siasat',
-        'keputusan_laporan_post_mortem' => 'Keputusan Laporan Post Mortem',
-        'status_permohonan_laporan_jabatan_kimia' => 'Permohonan Jabatan Kimia',
-        'tarikh_permohonan_laporan_jabatan_kimia' => 'Tarikh Permohonan Jabatan Kimia',
-        'status_laporan_penuh_jabatan_kimia' => 'Laporan Penuh Jabatan Kimia',
-        'tarikh_laporan_penuh_jabatan_kimia' => 'Tarikh Laporan Penuh Jabatan Kimia',
-        'keputusan_laporan_jabatan_kimia' => 'Keputusan Laporan Jabatan Kimia',
-        'status_permohonan_laporan_jabatan_patalogi' => 'Permohonan Jabatan Patalogi',
-        'tarikh_permohonan_laporan_jabatan_patalogi' => 'Tarikh Permohonan Jabatan Patalogi',
-        'status_laporan_penuh_jabatan_patalogi' => 'Laporan Penuh Jabatan Patalogi',
-        'tarikh_laporan_penuh_jabatan_patalogi' => 'Tarikh Laporan Penuh Jabatan Patalogi',
-        'keputusan_laporan_jabatan_patalogi' => 'Keputusan Laporan Jabatan Patalogi',
-        'status_permohonan_laporan_imigresen' => 'Permohonan Laporan Imigresen',
-        'tarikh_permohonan_laporan_imigresen' => 'Tarikh Permohonan Imigresen',
-        'status_laporan_penuh_imigresen' => 'Laporan Penuh Imigresen',
-        'tarikh_laporan_penuh_imigresen' => 'Tarikh Laporan Penuh Imigresen',
-        'lain_lain_permohonan_laporan' => 'Lain-lain Permohonan Laporan',
+            // BAHAGIAN 7: Permohonan Laporan Agensi Luar
+            'status_permohonan_laporan_post_mortem_mayat' => 'Permohonan Post Mortem',
+            'tarikh_permohonan_laporan_post_mortem_mayat' => 'Tarikh Permohonan Post Mortem',
+            'status_laporan_penuh_bedah_siasat' => 'Laporan Penuh Bedah Siasat',
+            'tarikh_laporan_penuh_bedah_siasat' => 'Tarikh Laporan Penuh Bedah Siasat',
+            'keputusan_laporan_post_mortem' => 'Keputusan Laporan Post Mortem',
+            'status_permohonan_laporan_jabatan_kimia' => 'Permohonan Jabatan Kimia',
+            'tarikh_permohonan_laporan_jabatan_kimia' => 'Tarikh Permohonan Jabatan Kimia',
+            'status_laporan_penuh_jabatan_kimia' => 'Laporan Penuh Jabatan Kimia',
+            'tarikh_laporan_penuh_jabatan_kimia' => 'Tarikh Laporan Penuh Jabatan Kimia',
+            'keputusan_laporan_jabatan_kimia' => 'Keputusan Laporan Jabatan Kimia',
+            'status_permohonan_laporan_jabatan_patalogi' => 'Permohonan Jabatan Patalogi',
+            'tarikh_permohonan_laporan_jabatan_patalogi' => 'Tarikh Permohonan Jabatan Patalogi',
+            'status_laporan_penuh_jabatan_patalogi' => 'Laporan Penuh Jabatan Patalogi',
+            'tarikh_laporan_penuh_jabatan_patalogi' => 'Tarikh Laporan Penuh Jabatan Patalogi',
+            'keputusan_laporan_jabatan_patalogi' => 'Keputusan Laporan Patalogi',
+            'status_permohonan_laporan_imigresen' => 'Permohonan Laporan Imigresen',
+            'tarikh_permohonan_laporan_imigresen' => 'Tarikh Permohonan Imigresen',
+            'status_laporan_penuh_imigresen' => 'Laporan Penuh Imigresen',
+            'tarikh_laporan_penuh_imigresen' => 'Tarikh Laporan Penuh Imigresen',
+            'lain_lain_permohonan_laporan' => 'Lain-lain Permohonan Laporan',
 
-        // BAHAGIAN 8: Status Fail
-        'status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar' => 'M/S 4 - Barang Kes Ditulis',
-        'status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar_dan_telah_ada_arahan_ya_tpr' => 'M/S 4 - Dengan Arahan TPR',
-        'adakah_muka_surat_4_keputusan_kes_dicatat' => 'M/S 4 - Keputusan Kes Dicatat',
-        'adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan' => 'Fail LMM(T) Ada Keputusan',
-        'adakah_ks_kus_fail_selesai' => 'KS KUS/FAIL Selesai',
-        'keputusan_akhir_mahkamah' => 'Keputusan Akhir Mahkamah',
-        'ulasan_keseluruhan_pegawai_pemeriksa_fail' => 'Ulasan Pegawai Pemeriksa (Fail)',
+            // BAHAGIAN 8: Status Fail
+            'status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar' => 'M/S 4 - Barang Kes Ditulis',
+            'status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar_dan_telah_ada_arahan_ya_tpr' => 'M/S 4 - Dengan Arahan TPR',
+            'adakah_muka_surat_4_keputusan_kes_dicatat' => 'M/S 4 - Keputusan Kes Dicatat',
+            'adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan' => 'Fail LMM(T) Ada Keputusan',
+            'adakah_ks_kus_fail_selesai' => 'KS KUS/FAIL Selesai',
+            'keputusan_akhir_mahkamah' => 'Keputusan Akhir Mahkamah',
+            'ulasan_keseluruhan_pegawai_pemeriksa_fail' => 'Ulasan Pegawai Pemeriksa (Fail)',
 
-        // Date columns
-        'created_at' => 'Tarikh Dicipta',
-        'updated_at' => 'Tarikh Dikemaskini',
-    ];
+            // Date columns
+            'created_at' => 'Tarikh Dicipta',
+            'updated_at' => 'Tarikh Dikemaskini',
+        ];
 
     // Define custom columns for TrafikSeksyen based on migration structure
     $trafikSeksyenColumns = [
@@ -894,13 +892,9 @@
                                 <i class="fas fa-file-download mr-2"></i> {{ __('Eksport') }}
                             </button>
 
-                            <form action="{{ route('projects.destroy_all_papers', $project) }}" method="POST" onsubmit="return confirm('Anda pasti ingin memadam SEMUA kertas siasatan dalam projek ini? Tindakan ini tidak boleh diundur.');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150" title="Padam Semua Kertas Siasatan">
-                                    <i class="fas fa-trash-alt mr-2"></i> Padam Semua
-                                </button>
-                            </form>
+                            <button x-data="" x-on:click.prevent="$dispatch('open-modal', 'destroy-papers-modal')" class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150" title="Padam Kertas Siasatan">
+                                <i class="fas fa-trash-alt mr-2"></i> Padam Kertas
+                            </button>
 
                             <a href="{{ route('projects.edit', $project) }}" class="text-yellow-600 dark:text-yellow-400 hover:text-yellow-500" title="{{ __('Edit Projek') }}"><i class="fas fa-edit fa-lg"></i></a>
                         </div>
@@ -1164,6 +1158,69 @@
             </div>
         </form>
     </x-modal>
+
+    <!-- Destroy Papers Modal -->
+    <x-modal name="destroy-papers-modal" :max-width="'2xl'" focusable>
+        <div class="p-6" x-data="destroyPapersModal()" @open-modal.window="if ($event.detail === 'destroy-papers-modal') loadPapers()">
+            <h2 class="text-lg font-medium text-gray-900">Padam Kertas Siasatan dari: {{ $project->name }}</h2>
+            <p class="mt-1 text-sm text-gray-600">Sila pilih jenis kertas siasatan yang ingin dipadam. Tindakan ini tidak boleh diundur.</p>
+            
+            <div class="mt-6" x-show="loading">
+                <div class="text-center">
+                    <i class="fas fa-spinner fa-spin text-xl text-gray-500"></i>
+                    <p class="mt-2 text-sm text-gray-500">Memuat kertas siasatan...</p>
+                </div>
+            </div>
+
+            <div class="mt-6" x-show="!loading && Object.keys(paperTypes).length === 0">
+                <div class="text-center py-8">
+                    <i class="fas fa-folder-open text-4xl text-gray-400 mb-4"></i>
+                    <p class="text-gray-500">Tiada kertas siasatan dalam projek ini.</p>
+                </div>
+            </div>
+
+            <div class="mt-6" x-show="!loading && Object.keys(paperTypes).length > 0">
+                <form @submit.prevent="submitDestroy">
+                    <div class="mb-4 flex items-center justify-between">
+                        <label class="flex items-center">
+                            <input type="checkbox" @click="toggleSelectAll" x-bind:checked="allSelected" class="form-checkbox h-5 w-5 text-red-600">
+                            <span class="ml-2 text-sm font-medium text-gray-700">Pilih Semua Jenis</span>
+                        </label>
+                        <span class="text-sm text-gray-500" x-text="`${selectedTypes.length} jenis dipilih`"></span>
+                    </div>
+
+                    <div class="border border-gray-200 rounded-lg divide-y divide-gray-200">
+                        <template x-for="(count, paperType) in paperTypes" :key="paperType">
+                            <div class="p-4 hover:bg-gray-50">
+                                <label class="flex items-center cursor-pointer">
+                                    <input type="checkbox" 
+                                           :value="paperType"
+                                           @change="togglePaperType(paperType)"
+                                           x-bind:checked="selectedTypes.includes(paperType)"
+                                           class="form-checkbox h-5 w-5 text-red-600">
+                                    <div class="ml-3 flex-1">
+                                        <span class="text-sm font-medium text-gray-900" x-text="getDisplayName(paperType)"></span>
+                                        <span class="ml-2 text-sm text-gray-500" x-text="`(${count} kertas)`"></span>
+                                    </div>
+                                </label>
+                            </div>
+                        </template>
+                    </div>
+
+                    <div class="mt-6 flex justify-end">
+                        <x-secondary-button x-on:click="$dispatch('close')">{{ __('Batal') }}</x-secondary-button>
+                        <button type="submit" 
+                                x-bind:disabled="selectedTypes.length === 0" 
+                                x-bind:class="selectedTypes.length === 0 ? 'opacity-50 cursor-not-allowed' : ''"
+                                class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150 ms-3">
+                            <i class="fas fa-trash-alt mr-2"></i>
+                            <span x-text="selectedTypes.length === 0 ? 'Padam Kertas' : `Padam ${selectedTypes.length} Jenis`"></span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </x-modal>
 {{-- FILE: resources/views/projects/show.blade.php (Part 5 of 5) --}}
     @push('scripts')
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -1172,6 +1229,111 @@
     <script src="https://cdn.datatables.net/fixedcolumns/5.0.1/js/dataTables.fixedColumns.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+    // Alpine.js component for destroy papers modal
+    function destroyPapersModal() {
+        return {
+            loading: true,
+            paperTypes: {},
+            selectedTypes: [],
+            
+            // Mapping for display names
+            displayNames: {
+                'Jenayah': 'JSJ (Jenayah)',
+                'Narkotik': 'JSJN (Narkotik)', 
+                'Komersil': 'JSJK (Komersil)',
+                'TrafikSeksyen': 'JSPT (APJ 1987 - AKTA 333)',
+                'TrafikRule': 'JSPT (KKLJ 1969 - LN 166/1959)',
+                'OrangHilang': 'JP (Orang Hilang)',
+                'LaporanMatiMengejut': 'JP (Mati Mengejut)'
+            },
+            
+            get allSelected() {
+                const totalTypes = Object.keys(this.paperTypes).length;
+                return totalTypes > 0 && this.selectedTypes.length === totalTypes;
+            },
+
+            getDisplayName(paperType) {
+                return this.displayNames[paperType] || paperType;
+            },
+
+            async loadPapers() {
+                this.loading = true;
+                this.selectedTypes = [];
+                
+                try {
+                    const response = await fetch('{{ route("projects.get_papers_for_destroy", $project) }}');
+                    const data = await response.json();
+                    
+                    this.paperTypes = data;
+                } catch (error) {
+                    console.error('Error loading papers:', error);
+                    alert('Ralat memuat kertas siasatan. Sila cuba lagi.');
+                } finally {
+                    this.loading = false;
+                }
+            },
+
+            toggleSelectAll() {
+                if (this.allSelected) {
+                    this.selectedTypes = [];
+                } else {
+                    this.selectedTypes = Object.keys(this.paperTypes);
+                }
+            },
+
+            togglePaperType(paperType) {
+                const index = this.selectedTypes.indexOf(paperType);
+                
+                if (index > -1) {
+                    this.selectedTypes.splice(index, 1);
+                } else {
+                    this.selectedTypes.push(paperType);
+                }
+            },
+
+            async submitDestroy() {
+                if (this.selectedTypes.length === 0) {
+                    return;
+                }
+
+                const totalPapers = this.selectedTypes.reduce((total, type) => {
+                    return total + this.paperTypes[type];
+                }, 0);
+
+                const confirmed = confirm(`Anda pasti ingin memadam ${this.selectedTypes.length} jenis kertas siasatan (${totalPapers} kertas)? Tindakan ini tidak boleh diundur.`);
+                
+                if (!confirmed) {
+                    return;
+                }
+
+                try {
+                    const formData = new FormData();
+                    formData.append('_token', '{{ csrf_token() }}');
+                    
+                    this.selectedTypes.forEach((type, index) => {
+                        formData.append(`selected_types[${index}]`, type);
+                    });
+
+                    const response = await fetch('{{ route("projects.destroy_selected_papers", $project) }}', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (response.ok) {
+                        // Close modal and reload page
+                        this.$dispatch('close');
+                        window.location.reload();
+                    } else {
+                        alert('Ralat memadam kertas siasatan. Sila cuba lagi.');
+                    }
+                } catch (error) {
+                    console.error('Error deleting papers:', error);
+                    alert('Ralat memadam kertas siasatan. Sila cuba lagi.');
+                }
+            }
+        }
+    }
+
     // Global variable to keep track of initialized DataTables
     const initializedTables = {};
 
@@ -1705,97 +1867,119 @@
             });
             initializedTables[tabName] = true;
 
-        @elseif($key === 'LaporanMatiMengejut')
-            {{-- Use custom columns for LaporanMatiMengejut --}}
-            @php
-                $dtColumns = [
-                    ['data' => 'action', 'name' => 'action', 'orderable' => false, 'searchable' => false, 'title' => 'Tindakan', 'width' => '100px'],
-                    ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'title' => 'No.']
-                ];
-                
-                // List of lain_lain fields that need special rendering
-                $lainLainFields = [
-                    'lain_lain_permohonan_laporan'
-                ];
-                
-                foreach($laporanMatiMengejutColumns as $column => $label) {
-                    $columnConfig = [
-                        'data' => $column,
-                        'name' => $column,
-                        'title' => $label,
-                        'defaultContent' => '-',
-                        'orderable' => true,
-                        'searchable' => true
-                    ];
-                    
-                    // Add custom render function for lain_lain fields
-                    if (in_array($column, $lainLainFields)) {
-                        $columnConfig['render'] = '%%LAIN_LAIN_RENDER%%';
-                    }
-                    
-                    $dtColumns[] = $columnConfig;
-                }
-            @endphp
+@elseif($key === 'LaporanMatiMengejut')
+    {{-- Use custom columns for LaporanMatiMengejut --}}
+    @php
+        $dtColumns = [
+            ['data' => 'action', 'name' => 'action', 'orderable' => false, 'searchable' => false, 'title' => 'Tindakan', 'width' => '100px'],
+            ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'title' => 'No.']
+        ];
+        
+        // Define ALL columns that need the special combined render function
+        $combinedRenderFields = [
+            'status_pergerakan_barang_kes',
+            'status_barang_kes_selesai_siasatan',
+            'kaedah_pelupusan_barang_kes'
+        ];
+        
+        foreach($laporanMatiMengejutColumns as $columnKey => $label) {
+            $columnConfig = [
+                'data' => $columnKey,
+                'name' => $columnKey,
+                'title' => $label,
+                'defaultContent' => '-',
+                'orderable' => true,
+                'searchable' => true
+            ];
+            
+            // Assign the placeholder to any column in our list
+            if (in_array($columnKey, $combinedRenderFields)) {
+                $columnConfig['render'] = '%%COMBINED_RENDER%%';
+            }
+            
+            $dtColumns[] = $columnConfig;
+        }
+    @endphp
 
-            // Step 1: Get the column configuration from PHP
-            let dtColumnsConfig = @json($dtColumns);
+    // Step 1: Get the column configuration from PHP
+    let dtColumnsConfig = @json($dtColumns);
 
-            // Step 2: Define the lain_lain render function in JavaScript
-            const lainLainRenderFunction = function(data, type, row) {
-                if (data === null || data === undefined || data === '' || data === '-') {
-                    return '-';
-                }
-                // For lain_lain fields, show "Lain-lain ; [actual text]"
-                return 'Lain-lain ; ' + data;
-            };
+    // Step 2: Define the combined render function specifically for LMM
+    const combinedRenderFunction = function(data, type, row, meta) {
+        if (!data || data === '-') return '-';
 
-            // Step 3: Loop through the config and replace the placeholder
-            dtColumnsConfig.forEach(function(column) {
-                if (column.render === '%%LAIN_LAIN_RENDER%%') {
-                    column.render = lainLainRenderFunction;
-                }
-            });
+        let details = '';
+        const colName = meta.settings.aoColumns[meta.col].name;
 
-            // Step 4: Initialize the DataTable with the corrected configuration
-            $(tableId).DataTable({
-                processing: true,
-                serverSide: true,
+        // Logic for 'status_pergerakan_barang_kes'
+        if (colName === 'status_pergerakan_barang_kes') {
+            if (row.status_pergerakan_barang_kes_lain) {
+                details = ` : ${row.status_pergerakan_barang_kes_lain}`;
+            }
+        } 
+        // Logic for 'status_barang_kes_selesai_siasatan'
+        else if (colName === 'status_barang_kes_selesai_siasatan') {
+            if (data === 'Dilupuskan ke Perbendaharaan' && row.dilupuskan_perbendaharaan_amount) {
+                details = ` (RM ${parseFloat(row.dilupuskan_perbendaharaan_amount).toFixed(2)})`;
+            } else if (row.status_barang_kes_selesai_siasatan_lain) {
+                details = ` : ${row.status_barang_kes_selesai_siasatan_lain}`;
+            }
+        }
+        // Logic for 'kaedah_pelupusan_barang_kes'
+        else if (colName === 'kaedah_pelupusan_barang_kes') {
+            if (row.kaedah_pelupusan_barang_kes_lain) {
+                details = ` : ${row.kaedah_pelupusan_barang_kes_lain}`;
+            }
+        }
+        
+        return data + details;
+    };
+
+    // Step 3: Loop through the config and replace the placeholders
+    dtColumnsConfig.forEach(function(column) {
+        if (column.render === '%%COMBINED_RENDER%%') {
+            column.render = combinedRenderFunction;
+        }
+    });
+
+    // Step 4: Initialize the DataTable with the corrected configuration
+    $(tableId).DataTable({
+        processing: true,
+        serverSide: true,
                 ajax: {
                     url: "{{ route($config['route'], $project->id) }}",
                     type: "POST",
                     data: { _token: '{{ csrf_token() }}' }
                 },
-                columns: dtColumnsConfig, // Use the processed JavaScript variable
-                order: [[2, 'desc']],
-                columnDefs: [{
-                    targets: 0,
-                    className: "sticky left-0 bg-gray-50 dark:text-white dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600"
-                }],
-                fixedColumns: { left: 1 },
-                language: {
-                    search: "Cari:",
-                    lengthMenu: "Tunjukkan _MENU_ entri",
-                    info: "Menunjukkan _START_ hingga _END_ daripada _TOTAL_ entri",
-                    infoEmpty: "Menunjukkan 0 hingga 0 daripada 0 entri",
-                    emptyTable: "Tiada data tersedia dalam jadual"
-                },
-                "drawCallback": function( settings ) {
-                    if (panel.length) {
-                        panel.removeClass('datatable-container-loading');
-                    }
-                },
-                                // Logic to read URL and apply search filter on initialization
-                "initComplete": function(settings, json) {
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const statusFilter = urlParams.get('status');
+        columns: dtColumnsConfig,
+        order: [[2, 'desc']],
+        columnDefs: [{
+            targets: 0,
+            className: "sticky left-0 bg-gray-50 dark:text-white dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600"
+        }],
+        fixedColumns: { left: 1 },
+        language: {
+            search: "Cari:",
+            lengthMenu: "Tunjukkan _MENU_ entri",
+            info: "Menunjukkan _START_ hingga _END_ daripada _TOTAL_ entri",
+            infoEmpty: "Menunjukkan 0 hingga 0 daripada 0 entri",
+            emptyTable: "Tiada data tersedia dalam jadual"
+        },
+        "drawCallback": function( settings ) {
+            if (panel.length) {
+                panel.removeClass('datatable-container-loading');
+            }
+        },
+        "initComplete": function(settings, json) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const statusFilter = urlParams.get('status');
 
-                    if (statusFilter === 'terbengkalai') {
-                        // The keyword to search for across all columns
-                        this.api().search('TERBENGKALAI MELEBIHI 3 BULAN').draw();
-                    }
-                }
-            });
-            initializedTables[tabName] = true;
+            if (statusFilter === 'terbengkalai') {
+                this.api().search('TERBENGKALAI MELEBIHI 3 BULAN').draw();
+            }
+        }
+    });
+    initializedTables[tabName] = true;
 
         @elseif($key === 'TrafikSeksyen')
             {{-- Use custom columns for TrafikSeksyen --}}
@@ -2253,5 +2437,6 @@
         });
     })();
     </script>
+    
     @endpush
 </x-app-layout>

@@ -203,6 +203,29 @@ class ProjectController extends Controller
         }
     }
         
+        public function getPapersForDestroy(Project $project)
+    {
+        // First, ensure the authenticated user is authorized to access this project
+        Gate::authorize('access-project', $project);
+
+        $paperTypes = [
+            'Jenayah' => $project->jenayah()->count(),
+            'Narkotik' => $project->narkotik()->count(),
+            'Komersil' => $project->komersil()->count(),
+            'TrafikSeksyen' => $project->trafikSeksyen()->count(),
+            'TrafikRule' => $project->trafikRule()->count(),
+            'OrangHilang' => $project->orangHilang()->count(),
+            'LaporanMatiMengejut' => $project->laporanMatiMengejut()->count(),
+        ];
+
+        // Filter out paper types with zero count
+        $paperTypes = array_filter($paperTypes, function($count) {
+            return $count > 0;
+        });
+
+        return response()->json($paperTypes);
+    }
+        
         public function destroyAllPapers(Project $project)
     {
         // First, ensure the authenticated user is authorized to access this project
@@ -221,6 +244,59 @@ class ProjectController extends Controller
         // Redirect back to the project page with a success message
         return Redirect::route('projects.show', $project)
             ->with('success', 'Semua kertas siasatan dalam projek ini telah berjaya dipadam.');
+    }
+
+    public function destroySelectedPapers(Request $request, Project $project)
+    {
+        // First, ensure the authenticated user is authorized to access this project
+        Gate::authorize('access-project', $project);
+
+        $selectedTypes = $request->input('selected_types', []);
+        $deletedCount = 0;
+
+        foreach ($selectedTypes as $type) {
+            switch ($type) {
+                case 'Jenayah':
+                    $count = $project->jenayah()->count();
+                    $project->jenayah()->delete();
+                    $deletedCount += $count;
+                    break;
+                case 'Narkotik':
+                    $count = $project->narkotik()->count();
+                    $project->narkotik()->delete();
+                    $deletedCount += $count;
+                    break;
+                case 'Komersil':
+                    $count = $project->komersil()->count();
+                    $project->komersil()->delete();
+                    $deletedCount += $count;
+                    break;
+                case 'TrafikSeksyen':
+                    $count = $project->trafikSeksyen()->count();
+                    $project->trafikSeksyen()->delete();
+                    $deletedCount += $count;
+                    break;
+                case 'TrafikRule':
+                    $count = $project->trafikRule()->count();
+                    $project->trafikRule()->delete();
+                    $deletedCount += $count;
+                    break;
+                case 'OrangHilang':
+                    $count = $project->orangHilang()->count();
+                    $project->orangHilang()->delete();
+                    $deletedCount += $count;
+                    break;
+                case 'LaporanMatiMengejut':
+                    $count = $project->laporanMatiMengejut()->count();
+                    $project->laporanMatiMengejut()->delete();
+                    $deletedCount += $count;
+                    break;
+            }
+        }
+
+        // Redirect back to the project page with a success message
+        return Redirect::route('projects.show', $project)
+            ->with('success', "{$deletedCount} kertas siasatan telah berjaya dipadam.");
     }
     public function destroyPaper(Request $request, Project $project, $paperType, $paperId)
     {
@@ -845,35 +921,9 @@ public function getKomersilData(Project $project)
         // --- JSON/Array Field Formatting ---
         ->editColumn('status_pem', fn($row) => $this->formatArrayField($row->status_pem))
         ->editColumn('adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan', fn($row) => $this->formatArrayField($row->adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan))
-        
-        // Special handling for combined fields - keep original value but ensure additional text fields are available
-        ->editColumn('status_pergerakan_barang_kes', function($row) {
-            // Keep the original value for the render function to work
-            return $row->status_pergerakan_barang_kes;
-        })
-        ->editColumn('status_barang_kes_selesai_siasatan', function($row) {
-            // Keep the original value for the render function to work
-            return $row->status_barang_kes_selesai_siasatan;
-        })
-        ->editColumn('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan', function($row) {
-            // Keep the original value for the render function to work
-            return $row->barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan;
-        })
-        
-        // Make sure the additional text fields are included in the response
-        ->addColumn('status_pergerakan_barang_kes_ujian_makmal', function($row) {
-            return $row->status_pergerakan_barang_kes_ujian_makmal ?? '';
-        })
-        ->addColumn('status_pergerakan_barang_kes_lain', function($row) {
-            return $row->status_pergerakan_barang_kes_lain ?? '';
-        })
-        ->addColumn('status_barang_kes_selesai_siasatan_lain', function($row) {
-            return $row->status_barang_kes_selesai_siasatan_lain ?? '';
-        })
-        ->addColumn('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan_lain', function($row) {
-            return $row->barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan_lain ?? '';
-        })
-        
+        ->editColumn('status_pergerakan_barang_kes', fn($row) => $this->formatArrayField($row->status_pergerakan_barang_kes))
+        ->editColumn('status_barang_kes_selesai_siasatan', fn($row) => $this->formatArrayField($row->status_barang_kes_selesai_siasatan))
+        ->editColumn('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan', fn($row) => $this->formatArrayField($row->barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan))
         ->editColumn('adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan', fn($row) => $this->formatArrayField($row->adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan))
         ->editColumn('resit_kew_38e_bagi_pelupusan', fn($row) => $this->formatArrayField($row->resit_kew_38e_bagi_pelupusan))
         ->editColumn('adakah_borang_serah_terima_pegawai_tangkapan', fn($row) => $this->formatArrayField($row->adakah_borang_serah_terima_pegawai_tangkapan))
@@ -2144,10 +2194,25 @@ public function getLaporanMatiMengejutData(Project $project) {
         ->editColumn('adakah_ks_kus_fail_selesai', fn($row) => $this->formatBoolean($row->adakah_ks_kus_fail_selesai))
         
         // --- Custom Text & Array Formatting ---
-        ->editColumn('dilupuskan_perbendaharaan_amount', fn($row) => $row->dilupuskan_perbendaharaan_amount ? 'RM ' . number_format($row->dilupuskan_perbendaharaan_amount, 2) : '-')
-        ->editColumn('ujian_makmal_details', fn($row) => $row->ujian_makmal_details ? e($row->ujian_makmal_details) : '-')
         ->editColumn('status_pem', fn($row) => $this->formatArrayField($row->status_pem))
         ->editColumn('arahan_pelupusan_barang_kes', fn($row) => $this->formatArrayField($row->arahan_pelupusan_barang_kes))
+
+        // Add additional columns needed for combined render functions
+        ->addColumn('status_pergerakan_barang_kes_lain', function($row) {
+            return $row->status_pergerakan_barang_kes_lain ?? '';
+        })
+        ->addColumn('status_barang_kes_selesai_siasatan_lain', function($row) {
+            return $row->status_barang_kes_selesai_siasatan_lain ?? '';
+        })
+        ->addColumn('kaedah_pelupusan_barang_kes_lain', function($row) {
+            return $row->kaedah_pelupusan_barang_kes_lain ?? '';
+        })
+        ->addColumn('ujian_makmal_details', function($row) {
+            return $row->ujian_makmal_details ?? '';
+        })
+        ->addColumn('dilupuskan_perbendaharaan_amount', function($row) {
+            return $row->dilupuskan_perbendaharaan_amount ?? '';
+        })
 
         ->rawColumns([
             'action', 'status_pem', 'arahan_pelupusan_barang_kes',
