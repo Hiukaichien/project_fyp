@@ -65,11 +65,11 @@
                             @if ($issueType === 'lewat')
                                 <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">{{ optional($item->tarikh_edaran_minit_ks_pertama)->format('d/m/Y') ?? '-' }}</td>
                                 <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">{{ optional($item->tarikh_edaran_minit_ks_kedua)->format('d/m/Y') ?? '-' }}</td>
-                                <td class="px-3 py-2 whitespace-nowrap text-sm font-semibold text-gray-500">{{ $item->tempoh_lewat_edaran_dikesan }}</td>
+                                <td class="px-3 py-2 whitespace-nowrap text-sm font-semibold text-red-600">{{ $item->tempoh_lewat_edaran_dikesan }}</td>
                             @elseif ($issueType === 'terbengkalai')
                                 <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">{{ optional($item->tarikh_edaran_minit_ks_sebelum_akhir)->format('d/m/Y') ?? '-' }}</td>
                                 <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">{{ optional($item->tarikh_edaran_minit_ks_akhir)->format('d/m/Y') ?? '-' }}</td>
-                                <td class="px-3 py-2 whitespace-nowrap text-sm font-semibold text-gray-500">
+                                <td class="px-3 py-2 whitespace-nowrap text-sm font-semibold text-green-600">
                                     @php
                                         // Create a small array to hold the status parts to display.
                                         $statuses = [];
@@ -91,7 +91,7 @@
                             @elseif ($issueType === 'kemaskini')
                                 <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">{{ optional($item->tarikh_edaran_minit_ks_akhir)->format('d/m/Y') ?? '-' }}</td>
                                 <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">{{ optional($item->tarikh_semboyan_pemeriksaan_jips_ke_daerah)->format('d/m/Y') ?? '-' }}</td>
-                                <td class="px-3 py-2 whitespace-nowrap text-sm font-semibold text-gray-500">{{ $item->tempoh_dikemaskini }}</td>
+                                <td class="px-3 py-2 whitespace-nowrap text-sm font-semibold text-green-600">{{ $item->tempoh_dikemaskini }}</td>
                             @endif
 
                             <td class="px-3 py-2 whitespace-nowrap text-sm font-medium space-x-2">
