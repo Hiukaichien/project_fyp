@@ -24,10 +24,10 @@ class DatabaseSeeder extends Seeder
     {
         // 1. Create a default user and get the user object
         $user = User::updateOrCreate(
-            ['email' => 'test@example.com'],
+            ['email' => 'user@example.com'],
             [
-                'name' => 'Test User',
-                'username' => 'test',
+                'name' => 'User',
+                'username' => 'user',
                 'password' => Hash::make('password'),
                 'email_verified_at' => now(),
           'superadmin' => 'no', // Default user is not a superadmin
@@ -36,10 +36,10 @@ class DatabaseSeeder extends Seeder
         
          // Create a default superadmin user
         $superadmin = User::updateOrCreate(
-            ['email' => 'superadmin@example.com'],
+            ['email' => 'admin@example.com'],
             [
-                'name' => 'Super Admin',
-                'username' => 'superadmin',
+                'name' => 'Admin',
+                'username' => 'admin',
                 'password' => Hash::make('password'),
                 'email_verified_at' => now(),
                 'superadmin' => 'yes',
