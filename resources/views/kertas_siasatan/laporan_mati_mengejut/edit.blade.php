@@ -657,7 +657,7 @@
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700">M/S 4 - Barang Kes Ditulis Bersama No Daftar & Arahan TPR</label>
-                            {!! render_boolean_radio('status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar_dan_telah_ada_arahan_ya_tpr', $paper->status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar_dan_telah_ada_arahan_ya_tpr) !!}
+                            {!! render_boolean_radio('status_barang_kes_arahan_tpr', $paper->status_barang_kes_arahan_tpr) !!}
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700">M/S 4 - Keputusan Kes Dicatat</label>

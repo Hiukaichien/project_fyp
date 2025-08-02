@@ -50,6 +50,7 @@ class LaporanMatiMengejut extends Model
         
         // BAHAGIAN 4: Barang Kes - Boolean fields
         'adakah_barang_kes_didaftarkan' => 'boolean',
+        'ujian_makmal_details' => 'string',
         'dilupuskan_perbendaharaan_amount' => 'decimal:2',
         'arahan_pelupusan_barang_kes' => 'array',
         'adakah_borang_serah_terima_pegawai_tangkapan_io' => 'boolean',
@@ -94,7 +95,7 @@ class LaporanMatiMengejut extends Model
         
         // BAHAGIAN 8: Status Fail - Boolean fields
         'status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar' => 'boolean',
-        'status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar_dan_telah_ada_arahan_ya_tpr' => 'boolean',
+        'status_barang_kes_arahan_tpr' => 'boolean',
         'adakah_muka_surat_4_keputusan_kes_dicatat' => 'boolean',
         'adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan' => 'boolean',
         'adakah_ks_kus_fail_selesai' => 'boolean',
@@ -147,7 +148,7 @@ class LaporanMatiMengejut extends Model
         'status_permohonan_laporan_imigresen_text',
         'status_laporan_penuh_imigresen_text',
         'status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar_text',
-        'status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar_dan_telah_ada_arahan_ya_tpr_text',
+        'status_barang_kes_arahan_tpr_text',
         'adakah_muka_surat_4_keputusan_kes_dicatat_text',
         'adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan_text',
         'adakah_ks_kus_fail_selesai_text',
@@ -349,8 +350,8 @@ public function getTerbengkalaiStatusDcAttribute(): string
     public function getStatusMukaSurat4BarangKesDitulisBersamaNoDaftarTextAttribute(): string {
         return $this->formatBooleanToMalay($this->status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar);
     }
-    public function getStatusMukaSurat4BarangKesDitulisBersamaNoDaftarDanTelahAdaArahanYaTprTextAttribute(): string {
-        return $this->formatBooleanToMalay($this->status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar_dan_telah_ada_arahan_ya_tpr);
+    public function getStatusBarangKesArahanTprTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->status_barang_kes_arahan_tpr);
     }
     public function getAdakahMukaSurat4KeputusanKesDicatatTextAttribute(): string {
         return $this->formatBooleanToMalay($this->adakah_muka_surat_4_keputusan_kes_dicatat);

@@ -121,14 +121,6 @@
                             <label for="tarikh_semboyan_pemeriksaan_jips_ke_daerah" class="block text-sm font-medium text-gray-700">Tarikh Semboyan Pemeriksaan JIPS ke Daerah (E)</label>
                             <input type="date" name="tarikh_semboyan_pemeriksaan_jips_ke_daerah" id="tarikh_semboyan_pemeriksaan_jips_ke_daerah" value="{{ old('tarikh_semboyan_pemeriksaan_jips_ke_daerah', optional($paper->tarikh_semboyan_pemeriksaan_jips_ke_daerah)->format('Y-m-d')) }}" class="mt-1 block w-full form-input">
                         </div>
-                        <div class="md:col-span-2 lg:col-span-3 mt-4 p-3 bg-gray-100 rounded-md">
-                            <h4 class="font-semibold text-sm text-gray-600">Sistem Kalkulasi Status</h4>
-                            <div class="mt-2 text-sm text-gray-800 space-y-1">
-                                <p><span class="font-medium">KS Lewat Edaran 24 Jam (B-A):</span> Status akan dikira secara automatik semasa simpan.</p>
-                                <p><span class="font-medium">Terbengkalai Melebihi 3 Bulan (D-C) atau (D-A):</span> Status akan dikira secara automatik semasa simpan.</p>
-                                <p><span class="font-medium">Terbengkalai / Baru Dikemaskini (E-D):</span> Status akan dikira secara automatik semasa simpan.</p>
-                            </div>
-                        </div>
                     </div>
                 </div>
 

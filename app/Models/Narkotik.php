@@ -336,6 +336,10 @@ public function getTerbengkalaiStatusDcAttribute(): string
     {
         return $this->formatBooleanToMalay($this->resit_kew38e_pelupusan_wang_tunai, 'Ada Dilampirkan', 'Tidak Dilampirkan');
     }
+    public function getResitKew38ePelupusanWangTunaiTextAttribute(): string
+    {
+        return $this->formatBooleanToMalay($this->resit_kew38e_pelupusan_wang_tunai, 'Ada Dilampirkan', 'Tidak Dilampirkan');
+    }
     public function getAdakahBorangSerahTerimaPegawaiTangkapanTextAttribute(): string
     {
         return $this->formatBooleanToMalay($this->adakah_borang_serah_terima_pegawai_tangkapan, 'Ada Dilampirkan', 'Tidak Dilampirkan');

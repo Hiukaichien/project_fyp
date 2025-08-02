@@ -153,15 +153,6 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="md:col-span-2 lg:col-span-3 mt-8 pt-6 border-t">
-                        <h4 class="font-semibold text-sm text-gray-600">Sistem Kalkulasi Status</h4>
-                        <div class="mt-2 text-sm text-gray-800 space-y-1">
-                            <p><span class="font-medium">KS Lewat Edaran 24 Jam (B-A):</span> Status akan dikira secara automatik semasa simpan.</p>
-                            <p><span class="font-medium">Terbengkalai Melebihi 3 Bulan (D-C) atau (D-A):</span> Status akan dikira secara automatik semasa simpan.</p>
-                            <p><span class="font-medium">Terbengkalai / Baru Dikemaskini (E-D):</span> Status akan dikira secara automatik semasa simpan.</p>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- BAHAGIAN 3: Arahan & Keputusan -->

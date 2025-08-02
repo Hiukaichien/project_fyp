@@ -98,7 +98,7 @@ class DatabaseSeeder extends Seeder
             );
         }
 
-        // 5. Seed Komersil Papers (20 records) - Enhanced with comprehensive data
+        // 5. Seed Komersil Papers (20 records) - CORRECTED FOR DATA TYPES
         for ($i = 1; $i <= 20; $i++) {
             $barangKesTypes = ['Wang Tunai', 'Emas', 'Kenderaan', 'Peralatan Elektronik', 'Dokumen'];
             $bankNames = ['Bank Islam', 'Maybank', 'CIMB Bank', 'Public Bank', 'RHB Bank'];
@@ -108,14 +108,14 @@ class DatabaseSeeder extends Seeder
             Komersil::updateOrCreate(
                 ['no_kertas_siasatan' => 'KML/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '/24'],
                 [
-                    // BAHAGIAN 1: Maklumat Asas
+                    // BAHAGIAN 1: Maklumat Asas (Data types are correct)
                     'project_id' => $project->id,
                     'no_repot_polis' => 'IPD/REP/' . str_pad(rand(1000, 9999), 5, '0', STR_PAD_LEFT) . '/24',
                     'pegawai_penyiasat' => ['ASP KUMAR', 'INSP ZAINAB', 'SGT LEE', 'INSP RAHMAN', 'SGT AMINAH'][array_rand(['ASP KUMAR', 'INSP ZAINAB', 'SGT LEE', 'INSP RAHMAN', 'SGT AMINAH'])],
                     'tarikh_laporan_polis_dibuka' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30)),
                     'seksyen' => ['420 KK', '4(1) AMLA', 'Seksyen 424 KK', '409 KK', '417 KK'][array_rand(['420 KK', '4(1) AMLA', 'Seksyen 424 KK', '409 KK', '417 KK'])],
 
-                    // BAHAGIAN 2: Pemeriksaan JIPS
+                    // BAHAGIAN 2: Pemeriksaan JIPS (Data types are correct)
                     'pegawai_pemeriksa' => ['INSP NORAIDAH', 'ASP SALLEH', 'SGT FAIZAH'][array_rand(['INSP NORAIDAH', 'ASP SALLEH', 'SGT FAIZAH'])],
                     'tarikh_edaran_minit_ks_pertama' => Carbon::now()->subMonths(rand(1, 6))->subDays(rand(1, 15)),
                     'tarikh_edaran_minit_ks_kedua' => Carbon::now()->subMonths(rand(1, 5))->subDays(rand(1, 10)),
@@ -133,7 +133,7 @@ class DatabaseSeeder extends Seeder
                     'arahan_minit_oleh_ya_tpr_status' => rand(0, 1),
                     'arahan_minit_oleh_ya_tpr_tarikh' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 15)) : null,
                     'keputusan_siasatan_oleh_ya_tpr' => ['Tuduh', 'Tidak Tuduh', 'Siasatan Lanjut'][array_rand(['Tuduh', 'Tidak Tuduh', 'Siasatan Lanjut'])],
-                    'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan' => 'Ya',
+                    'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan' => json_encode(rand(0, 1) ? ['Ya'] : ['Tidak']),
                     'ulasan_keputusan_siasatan_tpr' => 'Siasatan telah dilakukan dengan teliti dan mengikut prosedur yang betul.',
                     'ulasan_keseluruhan_pegawai_pemeriksa' => 'Kertas siasatan lengkap dan mengikut format yang ditetapkan.',
 
@@ -145,12 +145,15 @@ class DatabaseSeeder extends Seeder
                     'jenis_barang_kes_am' => $barangKesTypes[array_rand($barangKesTypes)],
                     'jenis_barang_kes_berharga' => rand(0, 1) ? $barangKesTypes[array_rand($barangKesTypes)] : null,
                     'jenis_barang_kes_kenderaan' => rand(0, 1) ? 'Kereta/Motosikal/Lori' : null,
+                    // OK: This column is STRING in the migration
                     'status_pergerakan_barang_kes' => 'Simpanan Stor Ekshibit',
-                    'status_barang_kes_selesai_siasatan' => 'Dikembalikan Kepada Pemilik',
-                    'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan' => 'Dilelong',
-                    'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => 'Ya',
-                    'resit_kew_38e_bagi_pelupusan' => 'Ada Dilampirkan',
-                    'adakah_borang_serah_terima_pegawai_tangkapan' => 'Ada Dilampirkan',
+                    // CORRECTED: These columns are JSON in the migration
+                    'status_barang_kes_selesai_siasatan' => json_encode('Dikembalikan Kepada Pemilik'),
+                    'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan' => json_encode('Dilelong'),
+                    'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => json_encode('Ya'),
+                    'resit_kew_38e_bagi_pelupusan' => json_encode('Ada Dilampirkan'),
+                    'adakah_borang_serah_terima_pegawai_tangkapan' => json_encode('Ada Dilampirkan'),
+                    // OK: These columns are STRING and BOOLEAN
                     'adakah_borang_serah_terima_pemilik_saksi' => 'Ada Dilampirkan',
                     'adakah_sijil_surat_kebenaran_ipo' => rand(0, 1),
                     'adakah_gambar_pelupusan' => 'Ada Dilampirkan',
@@ -159,7 +162,7 @@ class DatabaseSeeder extends Seeder
                     'status_saman_pdrm_s_167' => rand(0, 1),
                     'no_saman_pdrm_s_167' => rand(0, 1) ? 'S167/' . str_pad(rand(1000, 9999), 4, '0', STR_PAD_LEFT) . '/24' : null,
 
-                    // BAHAGIAN 5: Bukti & Rajah
+                    // BAHAGIAN 5: Bukti & Rajah (Data types are correct)
                     'status_id_siasatan_dikemaskini' => rand(0, 1),
                     'status_rajah_kasar_tempat_kejadian' => rand(0, 1),
                     'status_gambar_tempat_kejadian' => rand(0, 1),
@@ -170,6 +173,7 @@ class DatabaseSeeder extends Seeder
                     'status_gambar_barang_kes_kontraban' => rand(0, 1),
 
                     // BAHAGIAN 6: Laporan RJ & Semboyan
+                    // OK: This was already correct
                     'status_pem' => json_encode(['PEM 1', 'PEM 2']),
                     'status_rj2' => rand(0, 1),
                     'tarikh_rj2' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 60)) : null,
@@ -192,105 +196,86 @@ class DatabaseSeeder extends Seeder
                     'tarikh_semboyan_ketiga_wanted_person' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 20)) : null,
                     'status_penandaan_kelas_warna' => rand(0, 1),
 
-                    // BAHAGIAN 7: Laporan E-FSA & Agensi Luar
+                    // BAHAGIAN 7: Laporan E-FSA & Agensi Luar (Data types are correct)
                     'status_permohonan_laporan_post_mortem_mayat' => rand(0, 1),
                     'tarikh_permohonan_laporan_post_mortem_mayat' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 90)) : null,
-                    
-                    // E-FSA Bank Records (Now using string values)
                     'status_permohonan_E_FSA_1_oleh_IO_AIO' => ['Dibuat', 'Tidak', null][array_rand(['Dibuat', 'Tidak', null])],
                     'nama_bank_permohonan_E_FSA_1' => rand(0, 1) ? $bankNames[array_rand($bankNames)] : null,
                     'status_laporan_penuh_E_FSA_1_oleh_IO_AIO' => ['Diterima', 'Tidak', null][array_rand(['Diterima', 'Tidak', null])],
                     'nama_bank_laporan_E_FSA_1_oleh_IO_AIO' => rand(0, 1) ? $bankNames[array_rand($bankNames)] : null,
                     'tarikh_laporan_penuh_E_FSA_1_oleh_IO_AIO' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 60)) : null,
-
                     'status_permohonan_E_FSA_2_oleh_IO_AIO' => ['Dibuat', 'Tidak', null][array_rand(['Dibuat', 'Tidak', null])],
                     'nama_bank_permohonan_E_FSA_2_BANK' => rand(0, 1) ? $bankNames[array_rand($bankNames)] : null,
                     'status_laporan_penuh_E_FSA_2_oleh_IO_AIO' => ['Diterima', 'Tidak', null][array_rand(['Diterima', 'Tidak', null])],
                     'nama_bank_laporan_E_FSA_2_oleh_IO_AIO' => rand(0, 1) ? $bankNames[array_rand($bankNames)] : null,
                     'tarikh_laporan_penuh_E_FSA_2_oleh_IO_AIO' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 55)) : null,
-
                     'status_permohonan_E_FSA_3_oleh_IO_AIO' => ['Dibuat', 'Tidak', null][array_rand(['Dibuat', 'Tidak', null])],
                     'nama_bank_permohonan_E_FSA_3_BANK' => rand(0, 1) ? $bankNames[array_rand($bankNames)] : null,
                     'status_laporan_penuh_E_FSA_3_oleh_IO_AIO' => ['Diterima', 'Tidak', null][array_rand(['Diterima', 'Tidak', null])],
                     'nama_bank_laporan_E_FSA_3_oleh_IO_AIO' => rand(0, 1) ? $bankNames[array_rand($bankNames)] : null,
                     'tarikh_laporan_penuh_E_FSA_3_oleh_IO_AIO' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 52)) : null,
-
                     'status_permohonan_E_FSA_4_oleh_IO_AIO' => ['Dibuat', 'Tidak', null][array_rand(['Dibuat', 'Tidak', null])],
                     'nama_bank_permohonan_E_FSA_4_BANK' => rand(0, 1) ? $bankNames[array_rand($bankNames)] : null,
                     'status_laporan_penuh_E_FSA_4_oleh_IO_AIO' => ['Diterima', 'Tidak', null][array_rand(['Diterima', 'Tidak', null])],
                     'nama_bank_laporan_E_FSA_4_oleh_IO_AIO' => rand(0, 1) ? $bankNames[array_rand($bankNames)] : null,
                     'tarikh_laporan_penuh_E_FSA_4_oleh_IO_AIO' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 48)) : null,
-
                     'status_permohonan_E_FSA_5_oleh_IO_AIO' => ['Dibuat', 'Tidak', null][array_rand(['Dibuat', 'Tidak', null])],
                     'nama_bank_permohonan_E_FSA_5_BANK' => rand(0, 1) ? $bankNames[array_rand($bankNames)] : null,
                     'status_laporan_penuh_E_FSA_5_oleh_IO_AIO' => ['Diterima', 'Tidak', null][array_rand(['Diterima', 'Tidak', null])],
                     'nama_bank_laporan_E_FSA_5_oleh_IO_AIO' => rand(0, 1) ? $bankNames[array_rand($bankNames)] : null,
                     'tarikh_laporan_penuh_E_FSA_5_oleh_IO_AIO' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 45)) : null,
-
-                    // E-FSA Telco Records (Now using string values)
                     'status_permohonan_E_FSA_1_telco_oleh_IO_AIO' => ['Dibuat', 'Tidak', null][array_rand(['Dibuat', 'Tidak', null])],
                     'nama_telco_permohonan_E_FSA_1_oleh_IO_AIO' => rand(0, 1) ? $telcoNames[array_rand($telcoNames)] : null,
                     'status_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO' => ['Diterima', 'Tidak', null][array_rand(['Diterima', 'Tidak', null])],
                     'nama_telco_laporan_E_FSA_1_oleh_IO_AIO' => rand(0, 1) ? $telcoNames[array_rand($telcoNames)] : null,
                     'tarikh_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 50)) : null,
-
                     'status_permohonan_E_FSA_2_telco_oleh_IO_AIO' => ['Dibuat', 'Tidak', null][array_rand(['Dibuat', 'Tidak', null])],
                     'nama_telco_permohonan_E_FSA_2_oleh_IO_AIO' => rand(0, 1) ? $telcoNames[array_rand($telcoNames)] : null,
                     'status_laporan_penuh_E_FSA_2_telco_oleh_IO_AIO' => ['Diterima', 'Tidak', null][array_rand(['Diterima', 'Tidak', null])],
                     'nama_telco_laporan_E_FSA_2_oleh_IO_AIO' => rand(0, 1) ? $telcoNames[array_rand($telcoNames)] : null,
                     'tarikh_laporan_penuh_E_FSA_2_telco_oleh_IO_AIO' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 47)) : null,
-
                     'status_permohonan_E_FSA_3_telco_oleh_IO_AIO' => ['Dibuat', 'Tidak', null][array_rand(['Dibuat', 'Tidak', null])],
                     'nama_telco_permohonan_E_FSA_3_oleh_IO_AIO' => rand(0, 1) ? $telcoNames[array_rand($telcoNames)] : null,
                     'status_laporan_penuh_E_FSA_3_telco_oleh_IO_AIO' => ['Diterima', 'Tidak', null][array_rand(['Diterima', 'Tidak', null])],
                     'nama_telco_laporan_E_FSA_3_oleh_IO_AIO' => rand(0, 1) ? $telcoNames[array_rand($telcoNames)] : null,
                     'tarikh_laporan_penuh_E_FSA_3_telco_oleh_IO_AIO' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 44)) : null,
-
                     'status_permohonan_E_FSA_4_telco_oleh_IO_AIO' => ['Dibuat', 'Tidak', null][array_rand(['Dibuat', 'Tidak', null])],
                     'nama_telco_permohonan_E_FSA_4_oleh_IO_AIO' => rand(0, 1) ? $telcoNames[array_rand($telcoNames)] : null,
                     'status_laporan_penuh_E_FSA_4_telco_oleh_IO_AIO' => ['Diterima', 'Tidak', null][array_rand(['Diterima', 'Tidak', null])],
                     'nama_telco_laporan_E_FSA_4_oleh_IO_AIO' => rand(0, 1) ? $telcoNames[array_rand($telcoNames)] : null,
                     'tarikh_laporan_penuh_E_FSA_4_telco_oleh_IO_AIO' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 41)) : null,
-
                     'status_permohonan_E_FSA_5_telco_oleh_IO_AIO' => ['Dibuat', 'Tidak', null][array_rand(['Dibuat', 'Tidak', null])],
                     'nama_telco_permohonan_E_FSA_5_oleh_IO_AIO' => rand(0, 1) ? $telcoNames[array_rand($telcoNames)] : null,
                     'status_laporan_penuh_E_FSA_5_telco_oleh_IO_AIO' => ['Diterima', 'Tidak', null][array_rand(['Diterima', 'Tidak', null])],
                     'nama_telco_laporan_E_FSA_5_oleh_IO_AIO' => rand(0, 1) ? $telcoNames[array_rand($telcoNames)] : null,
                     'tarikh_laporan_penuh_E_FSA_5_telco_oleh_IO_AIO' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 38)) : null,
-
-                    // Other Agency Reports
                     'status_permohonan_laporan_puspakom' => rand(0, 1),
                     'tarikh_permohonan_laporan_puspakom' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 45)) : null,
                     'status_laporan_penuh_puspakom' => rand(0, 1),
                     'tarikh_laporan_penuh_puspakom' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 40)) : null,
-
                     'status_permohonan_laporan_jkr' => rand(0, 1),
                     'tarikh_permohonan_laporan_jkr' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 35)) : null,
                     'status_laporan_penuh_jkr' => rand(0, 1),
                     'tarikh_laporan_penuh_jkr' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 30)) : null,
-
                     'status_permohonan_laporan_jpj' => rand(0, 1),
                     'tarikh_permohonan_laporan_jpj' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 25)) : null,
                     'status_laporan_penuh_jpj' => rand(0, 1),
                     'tarikh_laporan_penuh_jpj' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 20)) : null,
-
                     'status_permohonan_laporan_imigresen' => rand(0, 1),
                     'tarikh_permohonan_laporan_imigresen' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 15)) : null,
                     'status_laporan_penuh_imigresen' => rand(0, 1),
                     'tarikh_laporan_penuh_imigresen' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 10)) : null,
-
                     'status_permohonan_laporan_kastam' => rand(0, 1),
                     'tarikh_permohonan_laporan_kastam' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 12)) : null,
                     'status_laporan_penuh_kastam' => rand(0, 1),
                     'tarikh_laporan_penuh_kastam' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 8)) : null,
-
                     'status_permohonan_laporan_forensik_pdrm' => rand(0, 1),
                     'tarikh_permohonan_laporan_forensik_pdrm' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 18)) : null,
                     'status_laporan_penuh_forensik_pdrm' => rand(0, 1),
                     'tarikh_laporan_penuh_forensik_pdrm' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 14)) : null,
                     'jenis_barang_kes_forensik' => 'DNA, Cap Jari, Serbuk Mesiu',
 
-                    // BAHAGIAN 8: Status Fail
+                    // BAHAGIAN 8: Status Fail (Data types are correct)
                     'muka_surat_4_barang_kes_ditulis' => rand(0, 1),
                     'muka_surat_4_dengan_arahan_tpr' => rand(0, 1),
                     'muka_surat_4_keputusan_kes_dicatat' => rand(0, 1),

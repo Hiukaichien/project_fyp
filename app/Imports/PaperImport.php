@@ -900,7 +900,7 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
 
                 // BAHAGIAN 8: Status Fail
                 'status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar' => 'status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar',
-                'status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar_dan_telah_ada_arahan_ya_tpr' => 'status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar_dan_telah_ada_arahan_ya_tpr',
+                'status_barang_kes_arahan_tpr' => 'status_barang_kes_arahan_tpr',
                 'adakah_muka_surat_4_keputusan_kes_dicatat' => 'adakah_muka_surat_4_keputusan_kes_dicatat',
                 'adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan' => 'adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan',
                 'adakah_ks_kus_fail_selesai' => 'adakah_ks_kus_fail_selesai',

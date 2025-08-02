@@ -33,22 +33,23 @@ class Komersil extends Model
             'arahan_minit_ketua_jabatan_tarikh' => 'date:Y-m-d',
             'arahan_minit_oleh_ya_tpr_status' => 'boolean',
             'arahan_minit_oleh_ya_tpr_tarikh' => 'date:Y-m-d',
-            'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan' => 'string', // Changed from array to string
+            'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan' => 'array', // JSON field should be cast as array
 
             // B4 - Barang Kes
-            'adakah_barang_kes_didaftarkan' => 'boolean',
+           'adakah_barang_kes_didaftarkan' => 'boolean',
             'status_pergerakan_barang_kes' => 'string',
+            'status_pergerakan_barang_kes_ujian_makmal' => 'string',
             'status_pergerakan_barang_kes_lain' => 'string',
-            'status_barang_kes_selesai_siasatan' => 'string',
+            'status_barang_kes_selesai_siasatan' => 'array', // CORRECTED: Was string
             'status_barang_kes_selesai_siasatan_lain' => 'string',
-            'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan' => 'string',
+            'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan' => 'array', // CORRECTED: Was string
             'kaedah_pelupusan_lain' => 'string',
-            'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => 'string',
-            'resit_kew_38e_bagi_pelupusan' => 'string',
-            'adakah_borang_serah_terima_pegawai_tangkapan' => 'string',
-            'adakah_borang_serah_terima_pemilik_saksi' => 'string', // Changed from boolean to string
+            'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => 'array', // CORRECTED: Was string
+            'resit_kew_38e_bagi_pelupusan' => 'array', // CORRECTED: Was string
+            'adakah_borang_serah_terima_pegawai_tangkapan' => 'array', // CORRECTED: Was string
+            'adakah_borang_serah_terima_pemilik_saksi' => 'string', 
             'adakah_sijil_surat_kebenaran_ipo' => 'boolean',
-            'adakah_gambar_pelupusan' => 'string', // Changed from boolean to string
+            'adakah_gambar_pelupusan' => 'string',
 
         // B5 - Dokumen Siasatan
         'status_id_siasatan_dikemaskini' => 'boolean',

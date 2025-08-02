@@ -221,12 +221,12 @@
     'jenis_barang_kes_dadah' => 'Jenis Barang Kes Dadah',
     'status_pergerakan_barang_kes' => 'Status Pergerakan Barang Kes',
     'status_pergerakan_barang_kes_makmal' => 'Pergerakan Barang Kes Makmal',
-    'status_pergerakan_barang_kes_lain' => 'Pergerakan Barang Kes Lain',
+    //'status_pergerakan_barang_kes_lain' => 'Pergerakan Barang Kes Lain',
     'status_barang_kes_selesai_siasatan' => 'Status Barang Kes Selesai Siasatan',
-    'status_barang_kes_selesai_siasatan_RM' => 'Siasatan Selesai RM',
-    'status_barang_kes_selesai_siasatan_lain' => 'Siasatan Selesai Lain',
+    //'status_barang_kes_selesai_siasatan_RM' => 'Siasatan Selesai RM',
+    //'status_barang_kes_selesai_siasatan_lain' => 'Siasatan Selesai Lain',
     'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan' => 'Kaedah Pelupusan',
-    'kaedah_pelupusan_barang_kes_lain' => 'Kaedah Pelupusan Lain',
+    //'kaedah_pelupusan_barang_kes_lain' => 'Kaedah Pelupusan Lain',
     'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => 'Arahan Pelupusan',
     'resit_kew38e_pelupusan_wang_tunai' => 'Resit Kew.38e',
     'adakah_borang_serah_terima_pegawai_tangkapan' => 'Borang Serah Terima Pegawai Tangkapan',
@@ -506,7 +506,7 @@
 
             // BAHAGIAN 8: Status Fail
             'status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar' => 'M/S 4 - Barang Kes Ditulis',
-            'status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar_dan_telah_ada_arahan_ya_tpr' => 'M/S 4 - Dengan Arahan TPR',
+            'status_barang_kes_arahan_tpr' => 'M/S 4 - Dengan Arahan TPR',
             'adakah_muka_surat_4_keputusan_kes_dicatat' => 'M/S 4 - Keputusan Kes Dicatat',
             'adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan' => 'Fail LMM(T) Ada Keputusan',
             'adakah_ks_kus_fail_selesai' => 'KS KUS/FAIL Selesai',
@@ -744,8 +744,11 @@
         'jenis_barang_kes_berharga' => 'Jenis Barang Kes Berharga',
         'jenis_barang_kes_kenderaan' => 'Jenis Barang Kes Kenderaan',
         'status_pergerakan_barang_kes' => 'Status Pergerakan Barang Kes',
+        //'status_pergerakan_barang_kes_lain' => 'Pergerakan Barang Kes Lain',
         'status_barang_kes_selesai_siasatan' => 'Status Barang Kes Selesai Siasatan',
+        //'status_barang_kes_selesai_siasatan_lain' => 'Siasatan Selesai Lain',
         'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan' => 'Kaedah Pelupusan Barang Kes',
+        //'kaedah_pelupusan_lain' => 'Kaedah Pelupusan Lain',
         'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => 'Arahan Pelupusan ke Perbendaharaan',
         'resit_kew_38e_bagi_pelupusan' => 'Resit Kew.38e Pelupusan',
         'adakah_borang_serah_terima_pegawai_tangkapan' => 'Borang Serah Terima Pegawai Tangkapan',
@@ -1482,17 +1485,18 @@
                 // List of lain_lain fields that need special rendering
                 $lainLainFields = [
                     'lain_lain_rj_dikesan',
-                    'lain_lain_permohonan_laporan',
-                    'kaedah_pelupusan_barang_kes_lain',
-                    'status_pergerakan_barang_kes_lain',
-                    'status_barang_kes_selesai_siasatan_lain'
+                    'lain_lain_permohonan_laporan'
+                ];
+                
+                // Fields that need combined render function (for Ujian Makmal and Lain-Lain conditions)
+                $combinedRenderFields = [
+                    'status_pergerakan_barang_kes',
+                    'status_barang_kes_selesai_siasatan',
+                    'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan'
                 ];
                 
                 // List of JSON fields that need special rendering
                 $jsonFields = [
-                    'status_pergerakan_barang_kes',
-                    'status_barang_kes_selesai_siasatan',
-                    'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan',
                     'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan',
                     'resit_kew38e_pelupusan_wang_tunai',
                     'adakah_borang_serah_terima_pegawai_tangkapan',
@@ -1513,6 +1517,10 @@
                     // Add custom render function for lain_lain fields
                     if (in_array($column, $lainLainFields)) {
                         $columnConfig['render'] = '%%LAIN_LAIN_RENDER%%';
+                    }
+                    // Add custom render function for combined fields  
+                    elseif (in_array($column, $combinedRenderFields)) {
+                        $columnConfig['render'] = '%%COMBINED_RENDER%%';
                     }
                     // Add custom render function for JSON fields
                     elseif (in_array($column, $jsonFields)) {
@@ -1556,12 +1564,53 @@
                 return parsedData;
             };
 
+            // Combined render function for Narkotik
+            const combinedRenderFunction = function(data, type, row, meta) {
+                if (!data || data === '-') return '-';
+
+                let details = '';
+                const colName = meta.settings.aoColumns[meta.col].name;
+
+                // Logic for 'status_pergerakan_barang_kes'
+                if (colName === 'status_pergerakan_barang_kes') {
+                    // CHECK FOR UJIAN MAKMAL
+                    if (data === 'Ujian Makmal' && row.status_pergerakan_barang_kes_makmal) {
+                        details = ` : ${row.status_pergerakan_barang_kes_makmal}`;
+                    } 
+                    // CHECK FOR LAIN-LAIN
+                    else if (data === 'Lain-Lain' && row.status_pergerakan_barang_kes_lain) {
+                        details = ` : ${row.status_pergerakan_barang_kes_lain}`;
+                    }
+                } 
+                // Logic for 'status_barang_kes_selesai_siasatan'
+                else if (colName === 'status_barang_kes_selesai_siasatan') {
+                    // CHECK FOR DILUPUSKAN KE PERBENDAHARAAN with RM amount
+                    if (data === 'Dilupuskan ke Perbendaharaan' && row.status_barang_kes_selesai_siasatan_RM) {
+                        details = ` (RM ${row.status_barang_kes_selesai_siasatan_RM})`;
+                    } 
+                    // CHECK FOR LAIN-LAIN
+                    else if (data === 'Lain-Lain' && row.status_barang_kes_selesai_siasatan_lain) {
+                        details = ` : ${row.status_barang_kes_selesai_siasatan_lain}`;
+                    }
+                }
+                // Logic for 'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan'
+                else if (colName === 'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan') {
+                    if (data === 'Lain-Lain' && row.kaedah_pelupusan_barang_kes_lain) {
+                        details = ` : ${row.kaedah_pelupusan_barang_kes_lain}`;
+                    }
+                }
+                
+                return data + details;
+            };
+
             // Step 3: Loop through the config and replace the placeholders
             dtColumnsConfig.forEach(function(column) {
                 if (column.render === '%%LAIN_LAIN_RENDER%%') {
                     column.render = lainLainRenderFunction;
                 } else if (column.render === '%%JSON_RENDER%%') {
                     column.render = jsonRenderFunction;
+                } else if (column.render === '%%COMBINED_RENDER%%') {
+                    column.render = combinedRenderFunction;
                 }
             });
 
@@ -1698,175 +1747,144 @@
             });
             initializedTables[tabName] = true;
 
-        @elseif($key === 'Komersil')
-            {{-- Use custom columns for Komersil --}}
-            @php
-                $dtColumns = [
-                    ['data' => 'action', 'name' => 'action', 'orderable' => false, 'searchable' => false, 'title' => 'Tindakan', 'width' => '100px'],
-                    ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'title' => 'No.']
-                ];
-                
-                // List of lain_lain fields that need special rendering
-                $lainLainFields = [
-                    'lain_lain_rj_dikesan',
-                    'lain_lain_permohonan_laporan'
-                ];
-                
-                // List of JSON fields that need special rendering
-                $jsonFields = [
-                    'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan',
-                    'adakah_borang_serah_terima_pegawai_tangkapan',
-                    'adakah_borang_serah_terima_pemilik_saksi',
-                    'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan',
-                    'resit_kew_38e_bagi_pelupusan'
-                ];
-                
-                // Columns that need a special combined render function
-                $combinedRenderFields = [
-                    'status_pergerakan_barang_kes',
-                    'status_barang_kes_selesai_siasatan',
-                    'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan'
-                ];
-                
-                foreach($komersilColumns as $column => $label) {
-                    $columnConfig = [
-                        'data' => $column,
-                        'name' => $column,
-                        'title' => $label,
-                        'defaultContent' => '-',
-                        'orderable' => true,
-                        'searchable' => true
-                    ];
-                    
-                    // Add custom render function for lain_lain fields
-                    if (in_array($column, $lainLainFields)) {
-                        $columnConfig['render'] = '%%LAIN_LAIN_RENDER%%';
-                    }
-                    // Add custom render function for JSON fields
-                    elseif (in_array($column, $jsonFields)) {
-                        $columnConfig['render'] = '%%JSON_RENDER%%';
-                        $columnConfig['orderable'] = false;
-                        $columnConfig['searchable'] = false;
-                    }
-                    // Add combined render function for special fields
-                    elseif (in_array($column, $combinedRenderFields)) {
-                        $columnConfig['render'] = '%%COMBINED_RENDER%%';
-                    }
-                    
-                    $dtColumns[] = $columnConfig;
-                }
-            @endphp
+{{-- FILE: resources/views/projects/show.blade.php (Part 5 of 5) --}}
 
-            // Step 1: Get the column configuration from PHP
-            let dtColumnsConfig = @json($dtColumns);
+@elseif($key === 'Komersil')
+    {{-- Use custom columns for Komersil --}}
+    @php
+        $dtColumns = [
+            ['data' => 'action', 'name' => 'action', 'orderable' => false, 'searchable' => false, 'title' => 'Tindakan', 'width' => '100px'],
+            ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'title' => 'No.']
+        ];
+        
+        $lainLainFields = [ 'lain_lain_rj_dikesan', 'lain_lain_permohonan_laporan' ];
+        $combinedRenderFields = [
+            'status_pergerakan_barang_kes',
+            'status_barang_kes_selesai_siasatan',
+            'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan'
+        ];
+        $jsonFields = [
+            'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan', 'adakah_borang_serah_terima_pegawai_tangkapan',
+            'adakah_borang_serah_terima_pemilik_saksi', 'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan', 'resit_kew_38e_bagi_pelupusan'
+        ];
+        
+        foreach($komersilColumns as $column => $label) {
+            $columnConfig = [
+                'data' => $column, 'name' => $column, 'title' => $label,
+                'defaultContent' => '-', 'orderable' => true, 'searchable' => true
+            ];
+            
+            if (in_array($column, $lainLainFields)) {
+                $columnConfig['render'] = '%%LAIN_LAIN_RENDER%%';
+            } elseif (in_array($column, $combinedRenderFields)) {
+                $columnConfig['render'] = '%%COMBINED_RENDER%%';
+            } elseif (in_array($column, $jsonFields)) {
+                $columnConfig['render'] = '%%JSON_RENDER%%';
+                $columnConfig['orderable'] = false;
+                $columnConfig['searchable'] = false;
+            }
+            
+            $dtColumns[] = $columnConfig;
+        }
+    @endphp
 
-            // Step 2: Define the render functions in JavaScript
-            const lainLainRenderFunction = function(data, type, row) {
-                if (data === null || data === undefined || data === '' || data === '-') {
-                    return '-';
-                }
-                // For lain_lain fields, show "Lain-lain ; [actual text]"
-                return 'Lain-lain ; ' + data;
-            };
+    // Step 1: Get the column configuration from PHP
+    let dtColumnsConfig = @json($dtColumns);
 
-            const jsonRenderFunction = function(data, type, row) {
-                if (data === null || data === undefined) return "-";
-                let parsedData = data;
-                // Check if data is a string that looks like a JSON array
-                if (typeof data === "string" && data.startsWith('[') && data.endsWith(']')) {
-                    try {
-                        parsedData = JSON.parse(data);
-                    } catch (e) {
-                        return data; // Return original string if it's not valid JSON
-                    }
-                }
-                // Check if we now have a valid array
-                if (Array.isArray(parsedData)) {
-                    return parsedData.length > 0 ? parsedData.join(", ") : "-";
-                }
-                // If not an array or parsable string, return it as is
-                return parsedData;
-            };
+    // Step 2: Define the render functions in JavaScript
+    const lainLainRenderFunction = function(data, type, row) {
+        if (!data || data === '-') return '-';
+        return 'Lain-lain ; ' + data;
+    };
 
-            // Define the combined render function for special fields
-            const combinedRenderFunction = function(data, type, row, meta) {
-                if (!data || data === '-') return '-';
+    const jsonRenderFunction = function(data, type, row) {
+        if (data === null || data === undefined) return "-";
+        try {
+            const parsedData = JSON.parse(data);
+            if (Array.isArray(parsedData)) {
+                return parsedData.join(", ") || "-";
+            }
+        } catch (e) { /* Not valid JSON, fall through */ }
+        return data || "-";
+    };
 
-                let details = '';
-                const colName = meta.settings.aoColumns[meta.col].name;
+    // *** FIX STARTS HERE: Use the correct Komersil field names ***
+    const combinedRenderFunction = function(data, type, row, meta) {
+        if (!data || data === '-') return '-';
 
-                if (colName === 'status_pergerakan_barang_kes') {
-                    if (data === 'Ujian Makmal' && row.status_pergerakan_barang_kes_ujian_makmal) {
-                        details = ` : ${row.status_pergerakan_barang_kes_ujian_makmal}`;
-                    } else if (data === 'Lain-Lain' && row.status_pergerakan_barang_kes_lain) {
-                        details = ` : ${row.status_pergerakan_barang_kes_lain}`;
-                    }
-                } 
-                else if (colName === 'status_barang_kes_selesai_siasatan') {
-                    if (data === 'Lain-Lain' && row.status_barang_kes_selesai_siasatan_lain) {
-                        details = ` : ${row.status_barang_kes_selesai_siasatan_lain}`;
-                    }
-                }
-                else if (colName === 'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan') {
-                    if (data === 'Lain-Lain' && row.kaedah_pelupusan_lain) {
-                        details = ` : ${row.kaedah_pelupusan_lain}`;
-                    }
-                }
-                
-                return data + details;
-            };
+        let details = '';
+        const colName = meta.settings.aoColumns[meta.col].name;
 
-            // Step 3: Loop through the config and replace the placeholders
-            dtColumnsConfig.forEach(function(column) {
-                if (column.render === '%%LAIN_LAIN_RENDER%%') {
-                    column.render = lainLainRenderFunction;
-                } else if (column.render === '%%JSON_RENDER%%') {
-                    column.render = jsonRenderFunction;
-                } else if (column.render === '%%COMBINED_RENDER%%') {
-                    column.render = combinedRenderFunction;
-                }
-            });
+        // Logic for 'status_pergerakan_barang_kes'
+        if (colName === 'status_pergerakan_barang_kes') {
+            // CHECK FOR UJIAN MAKMAL
+            if (data === 'Ujian Makmal' && row.status_pergerakan_barang_kes_ujian_makmal) {
+                details = ` : ${row.status_pergerakan_barang_kes_ujian_makmal}`;
+            } 
+            // CHECK FOR LAIN-LAIN
+            else if (data === 'Lain-Lain' && row.status_pergerakan_barang_kes_lain) {
+                details = ` : ${row.status_pergerakan_barang_kes_lain}`;
+            }
+        } 
+        // Logic for 'status_barang_kes_selesai_siasatan'
+        else if (colName === 'status_barang_kes_selesai_siasatan') {
+            if (data === 'Lain-Lain' && row.status_barang_kes_selesai_siasatan_lain) {
+                details = ` : ${row.status_barang_kes_selesai_siasatan_lain}`;
+            }
+        }
+        // Logic for 'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan'
+        else if (colName === 'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan') {
+            if (data === 'Lain-Lain' && row.kaedah_pelupusan_lain) {
+                details = ` : ${row.kaedah_pelupusan_lain}`;
+            }
+        }
+        
+        return data + details;
+    };
+    // *** FIX ENDS HERE ***
 
-            // Step 4: Initialize the DataTable with the corrected configuration
-            $(tableId).DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    url: "{{ route($config['route'], $project->id) }}",
-                    type: "POST",
-                    data: { _token: '{{ csrf_token() }}' }
-                },
-                columns: dtColumnsConfig, // Use the processed JavaScript variable
-                order: [[2, 'desc']],
-                columnDefs: [{
-                    targets: 0,
-                    className: "sticky left-0 bg-gray-50 dark:text-white dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600"
-                }],
-                fixedColumns: { left: 1 },
-                language: {
-                    search: "Cari:",
-                    lengthMenu: "Tunjukkan _MENU_ entri",
-                    info: "Menunjukkan _START_ hingga _END_ daripada _TOTAL_ entri",
-                    infoEmpty: "Menunjukkan 0 hingga 0 daripada 0 entri",
-                    emptyTable: "Tiada data tersedia dalam jadual"
-                },
-                "drawCallback": function( settings ) {
-                    if (panel.length) {
-                        panel.removeClass('datatable-container-loading');
-                    }
-                },
-                                // Logic to read URL and apply search filter on initialization
-                "initComplete": function(settings, json) {
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const statusFilter = urlParams.get('status');
 
-                    if (statusFilter === 'terbengkalai') {
-                        // The keyword to search for across all columns
-                        this.api().search('TERBENGKALAI MELEBIHI 3 BULAN').draw();
-                    }
-                }
-            });
-            initializedTables[tabName] = true;
+    // Step 3: Loop through the config and replace the placeholders
+    dtColumnsConfig.forEach(function(column) {
+        if (column.render === '%%LAIN_LAIN_RENDER%%') {
+            column.render = lainLainRenderFunction;
+        } else if (column.render === '%%JSON_RENDER%%') {
+            column.render = jsonRenderFunction;
+        } else if (column.render === '%%COMBINED_RENDER%%') {
+            column.render = combinedRenderFunction;
+        }
+    });
+
+    // Step 4: Initialize the DataTable with the corrected configuration
+    $(tableId).DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: "{{ route($config['route'], $project->id) }}",
+            type: "POST",
+            data: { _token: '{{ csrf_token() }}' }
+        },
+        columns: dtColumnsConfig,
+        order: [[2, 'desc']],
+        columnDefs: [{
+            targets: 0,
+            className: "sticky left-0 bg-gray-50 dark:text-white dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600"
+        }],
+        fixedColumns: { left: 1 },
+        language: { /* ... language options ... */ },
+        "drawCallback": function( settings ) {
+            if (panel.length) { panel.removeClass('datatable-container-loading'); }
+        },
+        "initComplete": function(settings, json) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const statusFilter = urlParams.get('status');
+
+            if (statusFilter === 'terbengkalai') {
+                this.api().search('TERBENGKALAI MELEBIHI 3 BULAN').draw();
+            }
+        }
+    });
+    initializedTables[tabName] = true;
 
 @elseif($key === 'LaporanMatiMengejut')
     {{-- Use custom columns for LaporanMatiMengejut --}}
@@ -1982,137 +2000,129 @@
     });
     initializedTables[tabName] = true;
 
-        @elseif($key === 'TrafikSeksyen')
-            {{-- Use custom columns for TrafikSeksyen --}}
-            @php
-                $dtColumns = [
-                    ['data' => 'action', 'name' => 'action', 'orderable' => false, 'searchable' => false, 'title' => 'Tindakan', 'width' => '100px'],
-                    ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'title' => 'No.']
-                ];
-                
-                // List of fields that need special combined rendering
-                $combinedRenderFields = [
-                    'status_pergerakan_barang_kes',
-                    'status_barang_kes_selesai_siasatan',
-                    'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan'
-                ];
-                
-                // List of string fields that should be displayed as-is
-                $stringFields = [
-                    'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan',
-                    'resit_kew38e_pelupusan_wang_tunai',
-                    'adakah_borang_serah_terima_pegawai_tangkapan'
-                ];
-                
-                foreach($trafikSeksyenColumns as $column => $label) {
-                    $columnConfig = [
-                        'data' => $column,
-                        'name' => $column,
-                        'title' => $label,
-                        'defaultContent' => '-',
-                        'orderable' => true,
-                        'searchable' => true
-                    ];
-                    
-                    // Add custom render function for combined fields
-                    if (in_array($column, $combinedRenderFields)) {
-                        $columnConfig['render'] = '%%COMBINED_RENDER%%';
-                    }
-                    // Add custom render function for string fields
-                    elseif (in_array($column, $stringFields)) {
-                        $columnConfig['render'] = '%%STRING_RENDER%%';
-                    }
-                    
-                    $dtColumns[] = $columnConfig;
-                }
-            @endphp
+{{-- FILE: resources/views/projects/show.blade.php (Part 5) --}}
 
-            // Step 1: Get the column configuration from PHP
-            let dtColumnsConfig = @json($dtColumns);
+{{-- FILE: resources/views/projects/show.blade.php (Part 5 of 5) --}}
 
-            // Step 2: Define the render functions in JavaScript
-            const stringRenderFunction = function(data, type, row) {
-                if (data === null || data === undefined || data === '' || data === '-') {
-                    return '-';
-                }
-                return data;
-            };
+@elseif($key === 'TrafikSeksyen')
+    {{-- Use custom columns for TrafikSeksyen --}}
+    @php
+        $dtColumns = [
+            ['data' => 'action', 'name' => 'action', 'orderable' => false, 'searchable' => false, 'title' => 'Tindakan', 'width' => '100px'],
+            ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'title' => 'No.']
+        ];
+        
+        $combinedRenderFields = [
+            'status_pergerakan_barang_kes',
+            'status_barang_kes_selesai_siasatan',
+            'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan'
+        ];
+        
+        $lainLainFields = [ 'lain_lain_permohonan_laporan' ];
+        
+        foreach($trafikSeksyenColumns as $column => $label) {
+            $columnConfig = [
+                'data' => $column, 'name' => $column, 'title' => $label,
+                'defaultContent' => '-', 'orderable' => true, 'searchable' => true
+            ];
+            
+            if (in_array($column, $combinedRenderFields)) {
+                $columnConfig['render'] = '%%COMBINED_RENDER%%';
+            } elseif (in_array($column, $lainLainFields)) {
+                $columnConfig['render'] = '%%LAIN_LAIN_RENDER%%';
+            }
+            
+            $dtColumns[] = $columnConfig;
+        }
+    @endphp
 
-            // Define the combined render function for special fields
-            const combinedRenderFunction = function(data, type, row, meta) {
-                if (!data || data === '-') return '-';
+    // Step 1: Get the column configuration from PHP
+    let dtColumnsConfig = @json($dtColumns);
 
-                let details = '';
-                const colName = meta.settings.aoColumns[meta.col].name;
+    // Step 2: Define the render functions in JavaScript
+    const lainLainRenderFunction = function(data, type, row) {
+        if (!data || data === '-') return '-';
+        return 'Lain-lain ; ' + data;
+    };
 
-                if (colName === 'status_pergerakan_barang_kes') {
-                    if (data === 'Lain-Lain' && row.status_pergerakan_barang_kes_lain) {
-                        details = ` : ${row.status_pergerakan_barang_kes_lain}`;
-                    }
-                } 
-                else if (colName === 'status_barang_kes_selesai_siasatan') {
-                    if (data === 'Lain-Lain' && row.status_barang_kes_selesai_siasatan_lain) {
-                        details = ` : ${row.status_barang_kes_selesai_siasatan_lain}`;
-                    }
-                }
-                else if (colName === 'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan') {
-                    if (data === 'Lain-Lain' && row.kaedah_pelupusan_barang_kes_lain) {
-                        details = ` : ${row.kaedah_pelupusan_barang_kes_lain}`;
-                    }
-                }
-                
-                return data + details;
-            };
+    // *** FIX STARTS HERE: Use the complete rendering logic ***
+    const combinedRenderFunction = function(data, type, row, meta) {
+        if (!data || data === '-') return '-';
 
-            // Step 3: Loop through the config and replace the placeholders
-            dtColumnsConfig.forEach(function(column) {
-                if (column.render === '%%STRING_RENDER%%') {
-                    column.render = stringRenderFunction;
-                } else if (column.render === '%%COMBINED_RENDER%%') {
-                    column.render = combinedRenderFunction;
-                }
-            });
+        let details = '';
+        const colName = meta.settings.aoColumns[meta.col].name;
 
-            // Step 4: Initialize the DataTable with the corrected configuration
-            $(tableId).DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    url: "{{ route($config['route'], $project->id) }}",
-                    type: "POST",
-                    data: { _token: '{{ csrf_token() }}' }
-                },
-                columns: dtColumnsConfig, // Use the processed JavaScript variable
-                order: [[2, 'desc']],
-                columnDefs: [{
-                    targets: 0,
-                    className: "sticky left-0 bg-gray-50 dark:text-white dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600"
-                }],
-                fixedColumns: { left: 1 },
-                language: {
-                    search: "Cari:",
-                    lengthMenu: "Tunjukkan _MENU_ entri",
-                    info: "Menunjukkan _START_ hingga _END_ daripada _TOTAL_ entri",
-                    infoEmpty: "Menunjukkan 0 hingga 0 daripada 0 entri",
-                    emptyTable: "Tiada data tersedia dalam jadual"
-                },
-                "drawCallback": function( settings ) {
-                    if (panel.length) {
-                        panel.removeClass('datatable-container-loading');
-                    }
-                },
-                                // Logic to read URL and apply search filter on initialization
-                "initComplete": function(settings, json) {
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const statusFilter = urlParams.get('status');
+        // Logic for 'status_pergerakan_barang_kes'
+        if (colName === 'status_pergerakan_barang_kes') {
+            // CHECK FOR UJIAN MAKMAL
+            if (data === 'Ujian Makmal' && row.status_pergerakan_barang_kes_makmal) {
+                details = ` : ${row.status_pergerakan_barang_kes_makmal}`;
+            } 
+            // CHECK FOR LAIN-LAIN
+            else if (data === 'Lain-Lain' && row.status_pergerakan_barang_kes_lain) {
+                details = ` : ${row.status_pergerakan_barang_kes_lain}`;
+            }
+        } 
+        // Logic for 'status_barang_kes_selesai_siasatan'
+        else if (colName === 'status_barang_kes_selesai_siasatan') {
+            // CHECK FOR DILUPUSKAN KE PERBENDAHARAAN
+            if (data === 'Dilupuskan ke Perbendaharaan' && row.status_barang_kes_selesai_siasatan_RM) {
+                details = ` (${row.status_barang_kes_selesai_siasatan_RM})`;
+            } 
+            // CHECK FOR LAIN-LAIN
+            else if (data === 'Lain-Lain' && row.status_barang_kes_selesai_siasatan_lain) {
+                details = ` : ${row.status_barang_kes_selesai_siasatan_lain}`;
+            }
+        }
+        // Logic for 'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan'
+        else if (colName === 'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan') {
+            if (data === 'Lain-Lain' && row.kaedah_pelupusan_barang_kes_lain) {
+                details = ` : ${row.kaedah_pelupusan_barang_kes_lain}`;
+            }
+        }
+        
+        return data + details;
+    };
+    // *** FIX ENDS HERE ***
 
-                    if (statusFilter === 'terbengkalai') {
-                        // The keyword to search for across all columns
-                        this.api().search('TERBENGKALAI MELEBIHI 3 BULAN').draw();
-                    }
-                }
-            });
-            initializedTables[tabName] = true;
+    // Step 3: Loop through the config and replace the placeholders
+    dtColumnsConfig.forEach(function(column) {
+        if (column.render === '%%COMBINED_RENDER%%') {
+            column.render = combinedRenderFunction;
+        } else if (column.render === '%%LAIN_LAIN_RENDER%%') {
+            column.render = lainLainRenderFunction;
+        }
+    });
+
+    // Step 4: Initialize the DataTable with the corrected configuration
+    $(tableId).DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: "{{ route($config['route'], $project->id) }}",
+            type: "POST",
+            data: { _token: '{{ csrf_token() }}' }
+        },
+        columns: dtColumnsConfig, // Use the processed JavaScript variable
+        order: [[2, 'desc']],
+        columnDefs: [{
+            targets: 0,
+            className: "sticky left-0 bg-gray-50 dark:text-white dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600"
+        }],
+        fixedColumns: { left: 1 },
+        language: { /* ... language options ... */ },
+        "drawCallback": function( settings ) {
+            if (panel.length) { panel.removeClass('datatable-container-loading'); }
+        },
+        "initComplete": function(settings, json) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const statusFilter = urlParams.get('status');
+            if (statusFilter === 'terbengkalai') {
+                this.api().search('TERBENGKALAI MELEBIHI 3 BULAN').draw();
+            }
+        }
+    });
+    initializedTables[tabName] = true;
 
 @elseif($key === 'TrafikRule')
             @php

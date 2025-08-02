@@ -439,7 +439,7 @@ public function exportPapers(Request $request, Project $project)
                 
                 // BAHAGIAN 8: Status Fail
                 'status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar' => 'M/S 4 - Barang Kes Ditulis Bersama No Daftar',
-                'status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar_dan_telah_ada_arahan_ya_tpr' => 'M/S 4 - Barang Kes Ditulis Bersama No Daftar & Arahan TPR',
+                'status_barang_kes_arahan_tpr' => 'M/S 4 - Barang Kes Ditulis Bersama No Daftar & Arahan TPR',
                 'adakah_muka_surat_4_keputusan_kes_dicatat' => 'M/S 4 - Keputusan Kes Dicatat',
                 'adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan' => 'Fail LMM(T) Telah Ada Keputusan',
                 'adakah_ks_kus_fail_selesai' => 'KS Telah di KUS/FAIL',
@@ -930,9 +930,26 @@ public function getKomersilData(Project $project)
         // --- JSON/Array Field Formatting ---
         ->editColumn('status_pem', fn($row) => $this->formatArrayField($row->status_pem))
         ->editColumn('adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan', fn($row) => $this->formatArrayField($row->adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan))
-        ->editColumn('status_pergerakan_barang_kes', fn($row) => $this->formatArrayField($row->status_pergerakan_barang_kes))
-        ->editColumn('status_barang_kes_selesai_siasatan', fn($row) => $this->formatArrayField($row->status_barang_kes_selesai_siasatan))
-        ->editColumn('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan', fn($row) => $this->formatArrayField($row->barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan))
+        
+        // --- Combined "Lain-lain: text" formatting like TrafikSeksyen, Jenayah, Narkotik ---
+        ->editColumn('status_pergerakan_barang_kes', function ($row) {
+            if ($row->status_pergerakan_barang_kes === 'Lain-Lain' && !empty($row->status_pergerakan_barang_kes_lain)) {
+                return 'Lain-lain: ' . htmlspecialchars($row->status_pergerakan_barang_kes_lain);
+            }
+            return htmlspecialchars($row->status_pergerakan_barang_kes ?? '-');
+        })
+        ->editColumn('status_barang_kes_selesai_siasatan', function ($row) {
+            if ($row->status_barang_kes_selesai_siasatan === 'Lain-Lain' && !empty($row->status_barang_kes_selesai_siasatan_lain)) {
+                return 'Lain-lain: ' . htmlspecialchars($row->status_barang_kes_selesai_siasatan_lain);
+            }
+            return htmlspecialchars($row->status_barang_kes_selesai_siasatan ?? '-');
+        })
+        ->editColumn('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan', function ($row) {
+            if ($row->barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan === 'Lain-Lain' && !empty($row->kaedah_pelupusan_barang_kes_lain)) {
+                return 'Lain-lain: ' . htmlspecialchars($row->kaedah_pelupusan_barang_kes_lain);
+            }
+            return htmlspecialchars($row->barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan ?? '-');
+        })
         ->editColumn('adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan', fn($row) => $this->formatArrayField($row->adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan))
         ->editColumn('resit_kew_38e_bagi_pelupusan', fn($row) => $this->formatArrayField($row->resit_kew_38e_bagi_pelupusan))
         ->editColumn('adakah_borang_serah_terima_pegawai_tangkapan', fn($row) => $this->formatArrayField($row->adakah_borang_serah_terima_pegawai_tangkapan))
@@ -2197,7 +2214,7 @@ public function getLaporanMatiMengejutData(Project $project) {
         ->editColumn('status_permohonan_laporan_imigresen', fn($row) => $this->formatBoolean($row->status_permohonan_laporan_imigresen, 'Dibuat', 'Tidak'))
         ->editColumn('status_laporan_penuh_imigresen', fn($row) => $this->formatBoolean($row->status_laporan_penuh_imigresen, 'Diterima', 'Tidak'))
         ->editColumn('status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar', fn($row) => $this->formatBoolean($row->status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar))
-        ->editColumn('status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar_dan_telah_ada_arahan_ya_tpr', fn($row) => $this->formatBoolean($row->status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar_dan_telah_ada_arahan_ya_tpr))
+        ->editColumn('status_barang_kes_arahan_tpr', fn($row) => $this->formatBoolean($row->status_barang_kes_arahan_tpr))
         ->editColumn('adakah_muka_surat_4_keputusan_kes_dicatat', fn($row) => $this->formatBoolean($row->adakah_muka_surat_4_keputusan_kes_dicatat))
         ->editColumn('adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan', fn($row) => $this->formatBoolean($row->adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan))
         ->editColumn('adakah_ks_kus_fail_selesai', fn($row) => $this->formatBoolean($row->adakah_ks_kus_fail_selesai))
@@ -2206,16 +2223,7 @@ public function getLaporanMatiMengejutData(Project $project) {
         ->editColumn('status_pem', fn($row) => $this->formatArrayField($row->status_pem))
         ->editColumn('arahan_pelupusan_barang_kes', fn($row) => $this->formatArrayField($row->arahan_pelupusan_barang_kes))
 
-        // Add additional columns needed for combined render functions
-        ->addColumn('status_pergerakan_barang_kes_lain', function($row) {
-            return $row->status_pergerakan_barang_kes_lain ?? '';
-        })
-        ->addColumn('status_barang_kes_selesai_siasatan_lain', function($row) {
-            return $row->status_barang_kes_selesai_siasatan_lain ?? '';
-        })
-        ->addColumn('kaedah_pelupusan_barang_kes_lain', function($row) {
-            return $row->kaedah_pelupusan_barang_kes_lain ?? '';
-        })
+        // Add additional columns needed for special fields (but not separate _lain columns)
         ->addColumn('ujian_makmal_details', function($row) {
             return $row->ujian_makmal_details ?? '';
         })
@@ -2237,7 +2245,7 @@ public function getLaporanMatiMengejutData(Project $project) {
             'status_permohonan_laporan_jabatan_patalogi', 'status_laporan_penuh_jabatan_patalogi',
             'status_permohonan_laporan_imigresen', 'status_laporan_penuh_imigresen',
             'status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar',
-            'status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar_dan_telah_ada_arahan_ya_tpr',
+            'status_barang_kes_arahan_tpr',
             'adakah_muka_surat_4_keputusan_kes_dicatat', 'adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan',
             'adakah_ks_kus_fail_selesai'
         ])

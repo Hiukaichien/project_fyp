@@ -125,7 +125,7 @@ return new class extends Migration
 
             // BAHAGIAN 8: Status Fail
             $table->boolean('status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar')->nullable();
-            $table->boolean('status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar_dan_telah_ada_arahan_ya_tpr')->nullable();
+            $table->boolean('status_barang_kes_arahan_tpr')->nullable(); // M/S 4 - Barang Kes Ditulis Bersama No Daftar & Arahan TPR
             $table->boolean('adakah_muka_surat_4_keputusan_kes_dicatat')->nullable();
             $table->boolean('adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan')->nullable();
             $table->boolean('adakah_ks_kus_fail_selesai')->nullable();
