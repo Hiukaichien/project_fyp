@@ -225,7 +225,7 @@ class TrafikSeksyen extends Model
             return null; // Cannot calculate if dates are missing
         }
 
-        return $tarikhA->diffInHours($tarikhB) > 48 ? 'LEWAT' : 'DALAM TEMPOH';
+        return $tarikhA->diffInHours($tarikhB) > 48 ? 'LEWAT' : 'TIDAK';
     }
 
     public function getTempohLewatEdaranDikesanAttribute(): ?string

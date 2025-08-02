@@ -203,7 +203,7 @@ class Jenayah extends Model
 
         return $tarikhA->diffInHours($tarikhB) > $limitInHours 
             ? 'LEWAT' 
-            : 'DALAM TEMPOH';
+            : 'TIDAK';
     }
     
     public function getTempohLewatEdaranDikesanAttribute(): ?string

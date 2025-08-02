@@ -173,7 +173,7 @@ class LaporanMatiMengejut extends Model
             return 'TIDAK'; // Cannot calculate if dates are missing
         }
 
-        return $tarikhA->diffInHours($tarikhB) > $limitInHours ? 'LEWAT' : 'DALAM TEMPOH';
+        return $tarikhA->diffInHours($tarikhB) > $limitInHours ? 'LEWAT' : 'TIDAK';
     }
 
     public function getTempohLewatEdaranDikesanAttribute(): ?string

@@ -216,7 +216,7 @@ class Narkotik extends Model
             return 'TIDAK';
         }
 
-        return $tarikhA->diffInHours($tarikhB) > 48 ? 'LEWAT' : 'DALAM TEMPOH';
+        return $tarikhA->diffInHours($tarikhB) > 48 ? 'LEWAT' : 'TIDAK';
     }
 
     public function getTempohLewatEdaranDikesanAttribute(): ?string

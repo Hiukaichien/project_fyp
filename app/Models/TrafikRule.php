@@ -135,7 +135,7 @@ class TrafikRule extends Model
             return null;
         }
 
-        return $tarikhA->diffInHours($tarikhB) > 24 ? 'LEWAT' : 'DALAM TEMPOH';
+        return $tarikhA->diffInHours($tarikhB) > 24 ? 'LEWAT' : 'TIDAK';
     }
 
     public function getTempohLewatEdaranDikesanAttribute(): ?string
