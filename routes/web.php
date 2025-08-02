@@ -24,6 +24,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/projects/{project}/destroy-paper/{paperType}/{paperId}', [ProjectController::class, 'destroyPaper'])->name('projects.destroy_paper');
     Route::get('/projects/{project}/export', [ProjectController::class, 'exportPapers'])->name('projects.export_papers');
 
+    Route::delete('/projects/{project}/destroy-all-papers', [ProjectController::class, 'destroyAllPapers'])
+    ->name('projects.destroy_all_papers')
+    ->middleware(['auth']);
+
     // --- STEP 1: Update all DataTables routes ---
     Route::post('/projects/{project}/jenayah-data', [ProjectController::class, 'getJenayahData'])->name('projects.jenayah_data');
     Route::post('/projects/{project}/narkotik-data', [ProjectController::class, 'getNarkotikData'])->name('projects.narkotik_data');
