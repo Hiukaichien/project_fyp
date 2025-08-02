@@ -57,12 +57,7 @@ return new class extends Migration
             $table->string('jenis_barang_kes_berharga')->nullable()->comment('jenis_barang_kes_berharga: VARCHAR(255)');
             $table->string('jenis_barang_kes_kenderaan')->nullable()->comment('jenis_barang_kes_kenderaan: VARCHAR(255)');
             $table->string('jenis_barang_kes_dadah')->nullable()->comment('jenis_barang_kes_dadah: VARCHAR(255)');
-            #$table->json('status_pergerakan_barang_kes')->nullable()->comment('status_pergerakan_barang_kes: JSON');
-            #$table->json('status_barang_kes_selesai_siasatan')->nullable()->comment('status_barang_kes_selesai_siasatan: JSON');
-            #$table->json('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan')->nullable()->comment('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan: JSON');
-            #$table->json('adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan')->nullable()->comment('adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan: JSON');
-            #$table->json('resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan')->nullable()->comment('resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan: JSON');
-            #$table->json('adakah_borang_serah_terima_pegawai_tangkapan')->nullable()->comment('adakah_borang_serah_terima_pegawai_tangkapan: JSON');
+          
             $table->string('status_pergerakan_barang_kes')->nullable()->comment('status_pergerakan_barang_kes: VARCHAR(255)');
             $table->string('status_pergerakan_barang_kes_makmal')->nullable()->comment('status_pergerakan_barang_kes_lain: VARCHAR(255)');
             $table->string('status_pergerakan_barang_kes_lain')->nullable()->comment('status_pergerakan_barang_kes_lain: VARCHAR(255)');
@@ -74,7 +69,7 @@ return new class extends Migration
             $table->string('adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan')->nullable()->comment('adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan: VARCHAR(255)');
             $table->boolean('resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan')->nullable()->comment('resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan: BOOLEAN');
             $table->boolean('adakah_borang_serah_terima_pegawai_tangkapan')->nullable()->comment('adakah_borang_serah_terima_pegawai_tangkapan: BOOLEAN');
-            #$table->json('adakah_borang_serah_terima_pemilik_saksi')->nullable()->comment('adakah_borang_serah_terima_pemilik_saksi: JSON');
+
             $table->boolean('adakah_borang_serah_terima_pemilik_saksi')->nullable()->comment('adakah_borang_serah_terima_pemilik_saksi: BOOLEAN');
             $table->boolean('adakah_sijil_surat_kebenaran_ipo')->nullable()->comment('adakah_sijil_surat_kebenaran_ipo: BOOLEAN');
             $table->boolean('adakah_gambar_pelupusan')->nullable()->comment('adakah_gambar_pelupusan: BOOLEAN');

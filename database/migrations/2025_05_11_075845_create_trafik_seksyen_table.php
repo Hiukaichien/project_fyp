@@ -57,7 +57,6 @@ return new class extends Migration
             $table->string('jenis_barang_kes_am')->nullable()->comment('jenis_barang_kes_am: VARCHAR(255)');
             $table->string('jenis_barang_kes_berharga')->nullable()->comment('jenis_barang_kes_berharga: VARCHAR(255)');
             $table->string('jenis_barang_kes_kenderaan')->nullable()->comment('jenis_barang_kes_kenderaan: VARCHAR(255)');
-            // CHANGED from JSON to STRING + ADDED _lain columns
             $table->string('status_pergerakan_barang_kes')->nullable()->comment('status_pergerakan_barang_kes: VARCHAR(255)');
             $table->string('status_pergerakan_barang_kes_makmal')->nullable()->after('status_pergerakan_barang_kes');
             $table->string('status_pergerakan_barang_kes_lain')->nullable()->comment('status_pergerakan_barang_kes_lain: VARCHAR(255)');
@@ -69,12 +68,9 @@ return new class extends Migration
             $table->string('adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan')->nullable()->comment('adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan: VARCHAR(255)');
             $table->string('resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan')->nullable()->comment('resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan: VARCHAR(255)');
             $table->string('adakah_borang_serah_terima_pegawai_tangkapan')->nullable()->comment('adakah_borang_serah_terima_pegawai_tangkapan: VARCHAR(255)');
-            // CHANGED from VARCHAR to BOOLEAN
             $table->boolean('adakah_borang_serah_terima_pemilik_saksi')->nullable()->comment('adakah_borang_serah_terima_pemilik_saksi: BOOLEAN');
             $table->boolean('adakah_sijil_surat_kebenaran_ipo')->nullable()->comment('adakah_sijil_surat_kebenaran_ipo: BOOLEAN');
-            // CHANGED from VARCHAR to BOOLEAN
             $table->boolean('adakah_gambar_pelupusan')->nullable()->comment('adakah_gambar_pelupusan: BOOLEAN');
-            // ADDED missing column
             $table->text('ulasan_keseluruhan_pegawai_pemeriksa_barang_kes')->nullable()->comment('ulasan_keseluruhan_pegawai_pemeriksa_barang_kes: TEXT');
             
             // BAHAGIAN 5: Dokumen Siasatan (B5)
