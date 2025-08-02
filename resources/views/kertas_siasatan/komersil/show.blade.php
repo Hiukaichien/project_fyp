@@ -317,7 +317,7 @@
 
                                 @if($paper->status_pergerakan_barang_kes === 'Ujian Makmal' && !empty($paper->status_pergerakan_barang_kes_lain))
                                     <div class="text-xs text-gray-600 mt-1">
-                                        Nyatakan: {{ $paper->status_pergerakan_barang_kes_lain }}
+                                        Nyatakan: {{ $paper->status_pergerakan_barang_kes_ujian_makmal }}
                                     </div>
                                 @elseif($paper->status_pergerakan_barang_kes === 'Lain-Lain' && !empty($paper->status_pergerakan_barang_kes_lain))
                                     <div class="text-xs text-gray-600 mt-1">

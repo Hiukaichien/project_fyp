@@ -14,13 +14,13 @@
     // A single source of truth for all table configurations.
     // Keys are PascalCase to match the $dashboardData array from the controller.
     $paperTypes = [
-        'Jenayah' => ['model' => new Jenayah(), 'route' => 'projects.jenayah_data', 'title' => 'JSJ(Jenayah)'],
-        'Narkotik' => ['model' => new Narkotik(), 'route' => 'projects.narkotik_data', 'title' => 'JSJN(Narkotik)'],
-        'Komersil' => ['model' => new Komersil(), 'route' => 'projects.komersil_data', 'title' => 'JSJK(Komersil)'],
-        'TrafikSeksyen' => ['model' => new TrafikSeksyen(), 'route' => 'projects.trafik_seksyen_data', 'title' => 'JSPT(Seksyen) '],
-        'TrafikRule' => ['model' => new TrafikRule(), 'route' => 'projects.trafik_rule_data', 'title' => 'JSPT(Rule)'],
-        'OrangHilang' => ['model' => new OrangHilang(), 'route' => 'projects.orang_hilang_data', 'title' => 'JP(Orang Hilang)'],
-        'LaporanMatiMengejut' => ['model' => new LaporanMatiMengejut(), 'route' => 'projects.laporan_mati_mengejut_data', 'title' => 'JP(LMM)'],
+        'Jenayah' => ['model' => new Jenayah(), 'route' => 'projects.jenayah_data', 'title' => 'JSJ'],
+        'Narkotik' => ['model' => new Narkotik(), 'route' => 'projects.narkotik_data', 'title' => 'JSJN'],
+        'Komersil' => ['model' => new Komersil(), 'route' => 'projects.komersil_data', 'title' => 'JSJK'],
+        'TrafikSeksyen' => ['model' => new TrafikSeksyen(), 'route' => 'projects.trafik_seksyen_data', 'title' => 'JSPT (APJ 1987 - AKTA 333) '],
+        'TrafikRule' => ['model' => new TrafikRule(), 'route' => 'projects.trafik_rule_data', 'title' => 'JSPT (KKLJ 1969 - LN 166/1959)'],
+        'OrangHilang' => ['model' => new OrangHilang(), 'route' => 'projects.orang_hilang_data', 'title' => 'JP (ORANG HILANG)'],
+        'LaporanMatiMengejut' => ['model' => new LaporanMatiMengejut(), 'route' => 'projects.laporan_mati_mengejut_data', 'title' => 'JP (MATI MENGEJUT)'],
     ];
 
     $ignoreColumns = ['id', 'user_id', 'project_id'];
@@ -317,9 +317,7 @@
     'ulasan_keseluruhan_pegawai_pemeriksa_fail' => 'Ulasan Pegawai Pemeriksa Fail',
     
     // Calculated Statuses
-    'lewat_edaran_status' => 'Status Lewat Edaran',
     'terbengkalai_status' => 'Status Terbengkalai',
-    'baru_dikemaskini_status' => 'Status Kemaskini',
 
     // Date columns
     'created_at' => 'Tarikh Dicipta',
@@ -890,12 +888,22 @@
                         </p>
                     </div>
                     <div class="flex-shrink-0 flex items-center space-x-4">
-                        <x-primary-button x-data="" x-on:click.prevent="$dispatch('open-modal', 'import-papers-modal')"><i class="fas fa-file-upload mr-2"></i> {{ __('muat naik') }}</x-primary-button>
-                        <button x-data="" x-on:click.prevent="$dispatch('open-modal', 'export-papers-modal')" class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-500 active:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                            <i class="fas fa-file-download mr-2"></i> {{ __('Eksport') }}
-                        </button>
-                        <a href="{{ route('projects.edit', $project) }}" class="text-yellow-600 dark:text-yellow-400 hover:text-yellow-500" title="{{ __('Edit Projek') }}"><i class="fas fa-edit fa-lg"></i></a>
-                    </div>
+                    <x-primary-button x-data="" x-on:click.prevent="$dispatch('open-modal', 'import-papers-modal')"><i class="fas fa-file-upload mr-2"></i> {{ __('muat naik') }}</x-primary-button>
+                    
+                            <button x-data="" x-on:click.prevent="$dispatch('open-modal', 'export-papers-modal')" class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-500 active:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                <i class="fas fa-file-download mr-2"></i> {{ __('Eksport') }}
+                            </button>
+
+                            <form action="{{ route('projects.destroy_all_papers', $project) }}" method="POST" onsubmit="return confirm('Anda pasti ingin memadam SEMUA kertas siasatan dalam projek ini? Tindakan ini tidak boleh diundur.');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150" title="Padam Semua Kertas Siasatan">
+                                    <i class="fas fa-trash-alt mr-2"></i> Padam Semua
+                                </button>
+                            </form>
+
+                            <a href="{{ route('projects.edit', $project) }}" class="text-yellow-600 dark:text-yellow-400 hover:text-yellow-500" title="{{ __('Edit Projek') }}"><i class="fas fa-edit fa-lg"></i></a>
+                        </div>
                 </div>
                 @if($project->description)<p class="text-gray-700 dark:text-gray-300 whitespace-pre-wrap mt-4 border-t pt-4">{{ $project->description }}</p>@endif
             </div>
@@ -1537,18 +1545,24 @@
                 
                 // List of lain_lain fields that need special rendering
                 $lainLainFields = [
-                    'lain_lain_rj_dikesan'
+                    'lain_lain_rj_dikesan',
+                    'lain_lain_permohonan_laporan'
                 ];
                 
                 // List of JSON fields that need special rendering
                 $jsonFields = [
-                    'status_pergerakan_barang_kes',
-                    'status_barang_kes_selesai_siasatan',
-                    'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan',
                     'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan',
                     'adakah_borang_serah_terima_pegawai_tangkapan',
                     'adakah_borang_serah_terima_pemilik_saksi',
-                    'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan'
+                    'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan',
+                    'resit_kew_38e_bagi_pelupusan'
+                ];
+                
+                // Columns that need a special combined render function
+                $combinedRenderFields = [
+                    'status_pergerakan_barang_kes',
+                    'status_barang_kes_selesai_siasatan',
+                    'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan'
                 ];
                 
                 foreach($komersilColumns as $column => $label) {
@@ -1570,6 +1584,10 @@
                         $columnConfig['render'] = '%%JSON_RENDER%%';
                         $columnConfig['orderable'] = false;
                         $columnConfig['searchable'] = false;
+                    }
+                    // Add combined render function for special fields
+                    elseif (in_array($column, $combinedRenderFields)) {
+                        $columnConfig['render'] = '%%COMBINED_RENDER%%';
                     }
                     
                     $dtColumns[] = $columnConfig;
@@ -1607,12 +1625,42 @@
                 return parsedData;
             };
 
+            // Define the combined render function for special fields
+            const combinedRenderFunction = function(data, type, row, meta) {
+                if (!data || data === '-') return '-';
+
+                let details = '';
+                const colName = meta.settings.aoColumns[meta.col].name;
+
+                if (colName === 'status_pergerakan_barang_kes') {
+                    if (data === 'Ujian Makmal' && row.status_pergerakan_barang_kes_ujian_makmal) {
+                        details = ` : ${row.status_pergerakan_barang_kes_ujian_makmal}`;
+                    } else if (data === 'Lain-Lain' && row.status_pergerakan_barang_kes_lain) {
+                        details = ` : ${row.status_pergerakan_barang_kes_lain}`;
+                    }
+                } 
+                else if (colName === 'status_barang_kes_selesai_siasatan') {
+                    if (data === 'Lain-Lain' && row.status_barang_kes_selesai_siasatan_lain) {
+                        details = ` : ${row.status_barang_kes_selesai_siasatan_lain}`;
+                    }
+                }
+                else if (colName === 'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan') {
+                    if (data === 'Lain-Lain' && row.barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan_lain) {
+                        details = ` : ${row.barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan_lain}`;
+                    }
+                }
+                
+                return data + details;
+            };
+
             // Step 3: Loop through the config and replace the placeholders
             dtColumnsConfig.forEach(function(column) {
                 if (column.render === '%%LAIN_LAIN_RENDER%%') {
                     column.render = lainLainRenderFunction;
                 } else if (column.render === '%%JSON_RENDER%%') {
                     column.render = jsonRenderFunction;
+                } else if (column.render === '%%COMBINED_RENDER%%') {
+                    column.render = combinedRenderFunction;
                 }
             });
 

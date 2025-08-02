@@ -372,15 +372,17 @@
                                         value="Simpanan Stor Ekshibit" {{ $currentPergerakan == 'Simpanan Stor Ekshibit' ? 'checked' : '' }} class="form-radio h-4 w-4 text-blue-600">
                                     <span class="ml-2 text-gray-700">Simpanan Stor Ekshibit</span>
                                 </label>
-                                <label class="flex items-center">
-                                    <input type="radio" name="status_pergerakan_barang_kes" value="Ujian Makmal" {{ $currentPergerakan == 'Ujian Makmal' ? 'checked' : '' }}
-                                        class="form-radio h-4 w-4 text-blue-600">
-                                    <span class="ml-2 text-gray-700">Ujian Makmal(Nyatakan)</span>
-                                    <input type="text" name="status_pergerakan_barang_kes_lain"
-                                        id="status_pergerakan_barang_kes_lain_komersil"
-                                        value="{{ old('status_pergerakan_barang_kes_lain', $paper->status_pergerakan_barang_kes_lain) }}"
+                                <div class="flex items-center">
+                                    <label class="flex items-center">
+                                        <input type="radio" name="status_pergerakan_barang_kes" value="Ujian Makmal" {{ $currentPergerakan == 'Ujian Makmal' ? 'checked' : '' }}
+                                            class="form-radio h-4 w-4 text-blue-600" id="ujian_makmal_komersil">
+                                        <span class="ml-2 text-gray-700">Ujian Makmal(Nyatakan)</span>
+                                    </label>
+                                    <input type="text" name="status_pergerakan_barang_kes_ujian_makmal"
+                                        id="status_pergerakan_barang_kes_ujian_makmal_komersil"
+                                        value="{{ old('status_pergerakan_barang_kes_ujian_makmal', $paper->status_pergerakan_barang_kes_ujian_makmal) }}"
                                         class="ml-2 form-input text-sm w-64" {{ $currentPergerakan != 'Ujian Makmal' ? 'disabled' : '' }}>
-                                </label>
+                                </div>
                                 <label class="flex items-center">
                                     <input type="radio" name="status_pergerakan_barang_kes" value="Di Mahkamah" {{ $currentPergerakan == 'Di Mahkamah' ? 'checked' : '' }}
                                         class="form-radio h-4 w-4 text-blue-600">
@@ -413,21 +415,10 @@
                                 @php
                                     $currentSelesai = old('status_barang_kes_selesai_siasatan', is_array($paper->status_barang_kes_selesai_siasatan) ? ($paper->status_barang_kes_selesai_siasatan[0] ?? '') : $paper->status_barang_kes_selesai_siasatan);
                                 @endphp
-                                <div class="flex items-center">
-                                    <label class="flex items-center">
-                                        <input type="radio" name="status_barang_kes_selesai_siasatan"
-                                            value="Dilupuskan ke Perbendaharaan" {{ $currentSelesai == 'Dilupuskan ke Perbendaharaan' ? 'checked' : '' }}
-                                            class="form-radio h-4 w-4 text-blue-600">
-                                        <span class="ml-2 text-gray-700">Dilupuskan ke Perbendaharaan</span>
-                                    </label>
-                                    <input type="text" name="status_barang_kes_selesai_siasatan_lain"
-                                        id="status_barang_kes_selesai_siasatan_lain_komersil"
-                                        value="{{ old('status_barang_kes_selesai_siasatan_lain', $paper->status_barang_kes_selesai_siasatan_lain) }}"
-                                        class="ml-2 form-input text-sm w-64" {{ $currentSelesai != 'Dilupuskan ke Perbendaharaan' ? 'disabled' : '' }}>
-                                </div>
                                 <label class="flex items-center">
                                     <input type="radio" name="status_barang_kes_selesai_siasatan"
-                                        value="Dilupuskan ke Perbendaharaan" {{ $currentSelesai == 'Dilupuskan ke Perbendaharaan' ? 'checked' : '' }} class="form-radio h-4 w-4 text-blue-600">
+                                        value="Dilupuskan ke Perbendaharaan" {{ $currentSelesai == 'Dilupuskan ke Perbendaharaan' ? 'checked' : '' }}
+                                        class="form-radio h-4 w-4 text-blue-600">
                                     <span class="ml-2 text-gray-700">Dilupuskan ke Perbendaharaan</span>
                                 </label>
                                 <label class="flex items-center">
@@ -1722,40 +1713,43 @@
 
                 <script>
                     document.addEventListener('DOMContentLoaded', function () {
-                        // Function to handle enabling/disabling of "Lain-lain" text input
-                        function setupOtherInputToggle(radioName, otherInputId) {
+                        // Function to handle enabling/disabling of specific text inputs
+                        function setupSpecificInputToggle(radioName, radioValue, otherInputId) {
                             const radios = document.querySelectorAll(`input[name="${radioName}"]`);
                             const otherInput = document.getElementById(otherInputId);
 
                             radios.forEach(radio => {
                                 radio.addEventListener('change', function () {
-                                    if (this.value === 'Lain-Lain' || this.value == 'Ujian Makmal' || this.value == 'Dilupuskan ke Perbendaharaan') {
+                                    if (this.value === radioValue) {
                                         otherInput.disabled = false;
                                         otherInput.focus();
                                     } else {
                                         otherInput.disabled = true;
-                                        otherInput.value = ''; // Clear value when not 'Lain-lain'
+                                        otherInput.value = ''; // Clear value when not selected
                                     }
                                 });
                             });
 
                             // Initial state on page load
                             const currentChecked = document.querySelector(`input[name="${radioName}"]:checked`);
-                            if (currentChecked && currentChecked.value === 'Lain-Lain') {
+                            if (currentChecked && currentChecked.value === radioValue) {
                                 otherInput.disabled = false;
                             } else {
                                 otherInput.disabled = true;
                             }
                         }
 
-                        // Apply to Barang Kes "Status Pergerakan"
-                        setupOtherInputToggle('status_pergerakan_barang_kes', 'status_pergerakan_barang_kes_lain_komersil');
+                        // Apply to Barang Kes "Status Pergerakan" - Ujian Makmal
+                        setupSpecificInputToggle('status_pergerakan_barang_kes', 'Ujian Makmal', 'status_pergerakan_barang_kes_ujian_makmal_komersil');
+                        
+                        // Apply to Barang Kes "Status Pergerakan" - Lain-lain
+                        setupSpecificInputToggle('status_pergerakan_barang_kes', 'Lain-Lain', 'status_pergerakan_barang_kes_lain_komersil');
 
                         // Apply to Barang Kes "Status Selesai Siasatan"
-                        setupOtherInputToggle('status_barang_kes_selesai_siasatan', 'status_barang_kes_selesai_siasatan_lain_komersil');
+                        setupSpecificInputToggle('status_barang_kes_selesai_siasatan', 'Lain-Lain', 'status_barang_kes_selesai_siasatan_lain_komersil');
 
                         // Apply to Barang Kes "Kaedah Pelupusan"
-                        setupOtherInputToggle('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan', 'kaedah_pelupusan_barang_kes_lain_komersil');
+                        setupSpecificInputToggle('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan', 'Lain-Lain', 'kaedah_pelupusan_barang_kes_lain_komersil');
                     });
                 </script>
 

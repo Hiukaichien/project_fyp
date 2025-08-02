@@ -54,6 +54,7 @@ return new class extends Migration
             $table->string('jenis_barang_kes_berharga')->nullable()->comment('jenis_barang_kes_berharga: VARCHAR(255)');
             $table->string('jenis_barang_kes_kenderaan')->nullable()->comment('jenis_barang_kes_kenderaan: VARCHAR(255)');
             $table->json('status_pergerakan_barang_kes')->nullable()->comment('B4');
+            $table->text('status_pergerakan_barang_kes_ujian_makmal')->nullable()->after('B4');
             $table->json('status_barang_kes_selesai_siasatan')->nullable()->comment('B4');
             $table->json('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan')->nullable()->comment('B4');
             $table->json('adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan')->nullable()->comment('B4');
