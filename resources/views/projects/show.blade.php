@@ -1045,13 +1045,13 @@
                 <label for="paper_type_modal" class="block text-sm font-medium text-gray-700 dark:text-black-200">Kategori Kertas</label>
                 <select name="paper_type" id="paper_type_modal" required class="mt-1 block w-full form-select rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                     <option value="" disabled selected>-- Sila Pilih Kategori --</option>
-                    <option value="Jenayah" @if(old('paper_type') == 'Jenayah') selected @endif>Jenayah</option>
-                    <option value="Narkotik" @if(old('paper_type') == 'Narkotik') selected @endif>Narkotik</option>
-                    <option value="Komersil" @if(old('paper_type') == 'Komersil') selected @endif>Komersil</option>
-                    <option value="TrafikSeksyen" @if(old('paper_type') == 'TrafikSeksyen') selected @endif>Trafik Seksyen</option>
-                    <option value="TrafikRule" @if(old('paper_type') == 'TrafikRule') selected @endif>Trafik Rule</option>
-                    <option value="OrangHilang" @if(old('paper_type') == 'OrangHilang') selected @endif>Orang Hilang</option>
-                    <option value="LaporanMatiMengejut" @if(old('paper_type') == 'LaporanMatiMengejut') selected @endif>Laporan Mati Mengejut</option>
+                    <option value="Jenayah" @if(old('paper_type') == 'Jenayah') selected @endif>JSJ (Jenayah)</option>
+                    <option value="Narkotik" @if(old('paper_type') == 'Narkotik') selected @endif>JSJN (Narkotik)</option>
+                    <option value="Komersil" @if(old('paper_type') == 'Komersil') selected @endif>JSJK (Komersil)</option>
+                    <option value="TrafikSeksyen" @if(old('paper_type') == 'TrafikSeksyen') selected @endif>JSPT (APJ 1987 - AKTA 333)</option>
+                    <option value="TrafikRule" @if(old('paper_type') == 'TrafikRule') selected @endif>JSPT (KKLJ 1969 - LN 166/1959)</option>
+                    <option value="OrangHilang" @if(old('paper_type') == 'OrangHilang') selected @endif>JP (Orang Hilang)</option>
+                    <option value="LaporanMatiMengejut" @if(old('paper_type') == 'LaporanMatiMengejut') selected @endif>JP (Mati Mengejut)</option>
                 </select>
             </div>
             <div class="mt-6">
@@ -1141,13 +1141,13 @@
                 <label for="paper_type_export" class="block text-sm font-medium text-gray-700 dark:text-gray-700">Kategori Kertas</label>
                 <select name="paper_type" id="paper_type_export" required class="mt-1 block w-full form-select rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                     <option value="" disabled selected>-- Sila Pilih Kategori --</option>
-                    <option value="Jenayah">Jenayah</option>
-                    <option value="Narkotik">Narkotik</option>
-                    <option value="Komersil">Komersil</option>
-                    <option value="TrafikSeksyen">Trafik Seksyen</option>
-                    <option value="TrafikRule">Trafik Rule</option>
-                    <option value="OrangHilang">Orang Hilang</option>
-                    <option value="LaporanMatiMengejut">Laporan Mati Mengejut</option>
+                    <option value="Jenayah">JSJ (Jenayah)</option>
+                    <option value="Narkotik">JSJN (Narkotik)</option>
+                    <option value="Komersil">JSJK (Komersil)</option>
+                    <option value="TrafikSeksyen">JSPT (APJ 1987 - AKTA 333)</option>
+                    <option value="TrafikRule">JSPT (KKLJ 1969 - LN 166/1959)</option>
+                    <option value="OrangHilang">JP (Orang Hilang)</option>
+                    <option value="LaporanMatiMengejut">JP (Mati Mengejut)</option>
                 </select>
             </div>
             <div class="mt-6 flex justify-end">
