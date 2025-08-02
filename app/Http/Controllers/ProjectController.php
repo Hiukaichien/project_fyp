@@ -164,6 +164,14 @@ class ProjectController extends Controller
         $validated = $request->validate([
             'excel_file' => 'required|file|mimes:xlsx,xls,csv|mimetypes:application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv,text/plain,application/csv|max:20480',
             'paper_type' => ['required', 'string', Rule::in(['Jenayah', 'Narkotik', 'Komersil', 'TrafikSeksyen', 'TrafikRule', 'OrangHilang', 'LaporanMatiMengejut'])],
+        ], [
+            'excel_file.required' => 'Fail Excel adalah wajib.',
+            'excel_file.file' => 'Medan fail Excel mestilah fail yang sah.',
+            'excel_file.mimes' => 'Fail Excel mestilah jenis fail: xlsx, xls, csv.',
+            'excel_file.mimetypes' => 'Fail Excel mestilah jenis fail: xlsx, xls, csv.',
+            'excel_file.max' => 'Fail Excel tidak boleh melebihi 20MB.',
+            'paper_type.required' => 'Kategori kertas adalah wajib.',
+            'paper_type.in' => 'Kategori kertas yang dipilih tidak sah.',
         ]);
 
         $import = new PaperImport($project->id, Auth::id(), $validated['paper_type']);
@@ -195,6 +203,25 @@ class ProjectController extends Controller
         }
     }
         
+        public function destroyAllPapers(Project $project)
+    {
+        // First, ensure the authenticated user is authorized to access this project
+        Gate::authorize('access-project', $project);
+
+        // Efficiently delete all related papers for each type
+        // This runs a DELETE query for each relationship without loading models into memory
+        $project->jenayah()->delete();
+        $project->narkotik()->delete();
+        $project->komersil()->delete();
+        $project->trafikSeksyen()->delete();
+        $project->trafikRule()->delete();
+        $project->orangHilang()->delete();
+        $project->laporanMatiMengejut()->delete();
+
+        // Redirect back to the project page with a success message
+        return Redirect::route('projects.show', $project)
+            ->with('success', 'Semua kertas siasatan dalam projek ini telah berjaya dipadam.');
+    }
     public function destroyPaper(Request $request, Project $project, $paperType, $paperId)
     {
         Gate::authorize('access-project', $project);
@@ -818,9 +845,35 @@ public function getKomersilData(Project $project)
         // --- JSON/Array Field Formatting ---
         ->editColumn('status_pem', fn($row) => $this->formatArrayField($row->status_pem))
         ->editColumn('adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan', fn($row) => $this->formatArrayField($row->adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan))
-        ->editColumn('status_pergerakan_barang_kes', fn($row) => $this->formatArrayField($row->status_pergerakan_barang_kes))
-        ->editColumn('status_barang_kes_selesai_siasatan', fn($row) => $this->formatArrayField($row->status_barang_kes_selesai_siasatan))
-        ->editColumn('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan', fn($row) => $this->formatArrayField($row->barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan))
+        
+        // Special handling for combined fields - keep original value but ensure additional text fields are available
+        ->editColumn('status_pergerakan_barang_kes', function($row) {
+            // Keep the original value for the render function to work
+            return $row->status_pergerakan_barang_kes;
+        })
+        ->editColumn('status_barang_kes_selesai_siasatan', function($row) {
+            // Keep the original value for the render function to work
+            return $row->status_barang_kes_selesai_siasatan;
+        })
+        ->editColumn('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan', function($row) {
+            // Keep the original value for the render function to work
+            return $row->barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan;
+        })
+        
+        // Make sure the additional text fields are included in the response
+        ->addColumn('status_pergerakan_barang_kes_ujian_makmal', function($row) {
+            return $row->status_pergerakan_barang_kes_ujian_makmal ?? '';
+        })
+        ->addColumn('status_pergerakan_barang_kes_lain', function($row) {
+            return $row->status_pergerakan_barang_kes_lain ?? '';
+        })
+        ->addColumn('status_barang_kes_selesai_siasatan_lain', function($row) {
+            return $row->status_barang_kes_selesai_siasatan_lain ?? '';
+        })
+        ->addColumn('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan_lain', function($row) {
+            return $row->barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan_lain ?? '';
+        })
+        
         ->editColumn('adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan', fn($row) => $this->formatArrayField($row->adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan))
         ->editColumn('resit_kew_38e_bagi_pelupusan', fn($row) => $this->formatArrayField($row->resit_kew_38e_bagi_pelupusan))
         ->editColumn('adakah_borang_serah_terima_pegawai_tangkapan', fn($row) => $this->formatArrayField($row->adakah_borang_serah_terima_pegawai_tangkapan))
