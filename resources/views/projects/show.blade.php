@@ -1141,9 +1141,10 @@
                 <span id="file-name" class="ml-3 text-sm text-gray-500">Sila pilih kategori kertas dahulu</span>
             </div>
             <p class="mt-2 text-xs text-blue-600">
-                <a href="{{ route('templates.download', 'templat_lmm.csv') }}" download class="underline hover:text-blue-800">
-                    Klik di sini untuk muat turun contoh templat
+                <a id="template-download-link" href="#" download class="underline hover:text-blue-800" style="display: none;">
+                    Klik di sini untuk muat turun templat <span id="template-type"></span>
                 </a>
+                <span id="template-placeholder" class="text-gray-500">Sila pilih kategori kertas untuk muat turun templat</span>
             </p>
         </div>
 
@@ -1172,6 +1173,11 @@
                 // Get the new info box elements
                 const columnInfoDiv = document.getElementById('column-info');
                 const columnListEl = document.getElementById('column-list');
+                
+                // Get template download elements
+                const templateDownloadLink = document.getElementById('template-download-link');
+                const templateTypeSpan = document.getElementById('template-type');
+                const templatePlaceholder = document.getElementById('template-placeholder');
 
                 // Store the required columns for each paper type
                 const columnData = {
@@ -1184,6 +1190,28 @@
                     'LaporanMatiMengejut': 'no_kertas_siasatan, no_fail_lmm_sdr, no_repot_polis, pegawai_penyiasat, tarikh_laporan_polis_dibuka, seksyen'
                 };
 
+                // Map paper types to their corresponding template files
+                const templateFiles = {
+                    'Jenayah': 'templat_jsj.csv',
+                    'Narkotik': 'templat_jsjn.csv',
+                    'Komersil': 'templat_jsjk.csv',
+                    'TrafikSeksyen': 'templat_trafikseksyen.csv',
+                    'TrafikRule': 'templat_trafikrule.csv',
+                    'OrangHilang': 'templat_oh.csv',
+                    'LaporanMatiMengejut': 'templat_lmm.csv'
+                };
+
+                // Map paper types to their display names
+                const paperTypeNames = {
+                    'Jenayah': 'JSJ (Jenayah)',
+                    'Narkotik': 'JSJN (Narkotik)',
+                    'Komersil': 'JSJK (Komersil)',
+                    'TrafikSeksyen': 'JSPT (APJ 1987 - AKTA 333)',
+                    'TrafikRule': 'JSPT (KKLJ 1969 - LN 166/1959)',
+                    'OrangHilang': 'JP (Orang Hilang)',
+                    'LaporanMatiMengejut': 'JP (Mati Mengejut)'
+                };
+
                 // Function to show/hide and update the column info box
                 function updateColumnInfo() {
                     const selectedType = paperTypeSelect.value;
@@ -1194,6 +1222,25 @@
                         columnInfoDiv.style.display = 'block';
                     } else {
                         columnInfoDiv.style.display = 'none';
+                    }
+                }
+
+                // Function to update template download link
+                function updateTemplateDownload() {
+                    const selectedType = paperTypeSelect.value;
+                    const templateFile = templateFiles[selectedType];
+                    const typeName = paperTypeNames[selectedType];
+
+                    if (templateFile && typeName) {
+                        // Construct the URL properly using Laravel route
+                        const baseUrl = "{{ route('templates.download', ['filename' => 'PLACEHOLDER']) }}";
+                        templateDownloadLink.href = baseUrl.replace('PLACEHOLDER', templateFile);
+                        templateTypeSpan.textContent = typeName;
+                        templateDownloadLink.style.display = 'inline';
+                        templatePlaceholder.style.display = 'none';
+                    } else {
+                        templateDownloadLink.style.display = 'none';
+                        templatePlaceholder.style.display = 'inline';
                     }
                 }
 
@@ -1222,6 +1269,7 @@
                 paperTypeSelect.addEventListener('change', function() {
                     updateFileSelectButton();
                     updateColumnInfo(); // <-- Call the new function
+                    updateTemplateDownload(); // <-- Call the template download function
                     checkFormValidity();
                 });
                 
@@ -1233,6 +1281,7 @@
                 // Initial checks when the modal is opened
                 updateFileSelectButton();
                 updateColumnInfo();
+                updateTemplateDownload(); // <-- Call the template download function initially
                 checkFormValidity();
             });
         </script>
