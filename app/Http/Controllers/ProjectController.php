@@ -179,11 +179,42 @@ class ProjectController extends Controller
         try {
             Excel::import($import, $request->file('excel_file'));
 
-            $successCount = $import->getSuccessCount();
+            $createdCount = $import->getCreatedCount();
+            $updatedCount = $import->getUpdatedCount();
+            $updatedRecords = $import->getUpdatedRecords();
             $skippedRows = $import->getSkippedRows();
             $friendlyName = Str::headline($validated['paper_type']);
             
-            $feedback = "Import Selesai. {$successCount} rekod {$friendlyName} baharu berjaya diimport.";
+            // Build detailed feedback message
+            $feedback = "Import Selesai. ";
+            
+            if ($createdCount > 0) {
+                $feedback .= "{$createdCount} rekod {$friendlyName} baharu berjaya dicipta. ";
+            }
+            
+            if ($updatedCount > 0) {
+                $feedback .= "{$updatedCount} rekod {$friendlyName} berjaya dikemaskini. ";
+                
+                // Add details about updated records
+                if (!empty($updatedRecords)) {
+                    $updateDetails = [];
+                    foreach ($updatedRecords as $record) {
+                        $changedFieldsStr = implode(', ', $record['changed_fields']);
+                        $updateDetails[] = "• {$record['unique_value']}: {$changedFieldsStr}";
+                    }
+                    
+                    if (count($updateDetails) <= 10) { // Show details for up to 10 records
+                        $feedback .= "\n\nMaklumat lanjut rekod yang dikemaskini:\n" . implode("\n", $updateDetails);
+                    } else {
+                        $feedback .= "\n\nContoh rekod yang dikemaskini:\n" . implode("\n", array_slice($updateDetails, 0, 10));
+                        $feedback .= "\n... dan " . (count($updateDetails) - 10) . " rekod lagi.";
+                    }
+                }
+            }
+            
+            if ($createdCount == 0 && $updatedCount == 0) {
+                $feedback = "Import selesai tetapi tiada rekod baharu dicipta atau dikemaskini.";
+            }
             
             if (!empty($skippedRows)) {
                 return back()
