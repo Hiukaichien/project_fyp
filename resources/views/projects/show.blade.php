@@ -315,9 +315,6 @@
     'status_kus_fail' => 'Status KUS/FAIL',
     'keputusan_akhir_mahkamah' => 'Keputusan Akhir Mahkamah',
     'ulasan_keseluruhan_pegawai_pemeriksa_fail' => 'Ulasan Pegawai Pemeriksa Fail',
-    
-    // Calculated Statuses
-    'terbengkalai_status' => 'Status Terbengkalai',
 
     // Date columns
     'created_at' => 'Tarikh Dicipta',

@@ -162,7 +162,7 @@ class ProjectController extends Controller
         Gate::authorize('access-project', $project);
         
         $validated = $request->validate([
-            'excel_file' => 'required|file|mimes:xlsx,xls,csv|mimetypes:application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv,text/plain,application/csv|max:512000',
+            'excel_file' => 'required|file|mimes:xlsx,xls,csv|mimetypes:application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv,text/plain,application/csv,application/octet-stream,text/x-csv,application/x-csv,text/comma-separated-values|max:512000',
             'paper_type' => ['required', 'string', Rule::in(['Jenayah', 'Narkotik', 'Komersil', 'TrafikSeksyen', 'TrafikRule', 'OrangHilang', 'LaporanMatiMengejut'])],
         ], [
             'excel_file.required' => 'Fail Excel adalah wajib.',

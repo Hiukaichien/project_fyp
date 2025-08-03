@@ -982,8 +982,12 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
                 // Check how many of our expected headers are present in the normalized file headers
                 $foundHeaders = array_intersect($expectedHeaders, $normalizedActualHeaders);
                 
-                if (empty($foundHeaders)) {
-                    $message = 'Import gagal. Sila pastikan fail Excel mempunyai sekurang-kurangnya satu lajur yang diperlukan.';
+                // Require at least the unique identifier column to be present
+                $uniqueColumn = $this->config['unique_by'];
+                $uniqueHeaderSnake = array_search($uniqueColumn, $this->config['column_map']);
+                
+                if (empty($foundHeaders) || !in_array($uniqueHeaderSnake, $normalizedActualHeaders)) {
+                    $message = "Import gagal. Sila pastikan fail Excel mempunyai sekurang-kurangnya lajur '{$uniqueHeaderSnake}' yang diperlukan.";
                     throw ValidationException::withMessages(['excel_file' => $message]);
                 }
             },
