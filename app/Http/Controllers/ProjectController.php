@@ -215,7 +215,7 @@ class ProjectController extends Controller
                     if (count($updateDetails) <= 10) { // Show details for up to 10 records
                         $feedback .= "<br><br><strong>Maklumat lanjut rekod yang dikemaskini:</strong><br>" . implode("<br>", $updateDetails);
                     } else {
-                        $feedback .= "<br><br><strong>Contoh rekod yang dikemaskini:</strong><br>" . implode("<br>", array_slice($updateDetails, 0, 10));
+                        $feedback .= "<br><br><strong>Rekod yang dikemaskini:</strong><br>" . implode("<br>", array_slice($updateDetails, 0, 10));
                         $feedback .= "<br>... dan " . (count($updateDetails) - 10) . " rekod lagi.";
                     }
                 }
