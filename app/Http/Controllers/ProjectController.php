@@ -426,10 +426,13 @@ public function exportPapers(Request $request, Project $project)
                 'jenis_barang_kes_am' => 'Jenis Barang Kes Am',
                 'jenis_barang_kes_berharga' => 'Jenis Barang Kes Berharga',
                 'status_pergerakan_barang_kes' => 'Status Pergerakan Barang Kes',
+                'status_pergerakan_barang_kes_lain' => 'Status Pergerakan Barang Kes (Lain-lain)',
                 'ujian_makmal_details' => 'Ujian Makmal',
                 'status_barang_kes_selesai_siasatan' => 'Status Barang Kes Selesai Siasatan',
+                'status_barang_kes_selesai_siasatan_lain' => 'Status Barang Kes Selesai Siasatan (Lain-lain)',
                 'dilupuskan_perbendaharaan_amount' => 'Dilupuskan ke Perbendaharaan',
                 'kaedah_pelupusan_barang_kes' => 'Kaedah Pelupusan Barang Kes',
+                'kaedah_pelupusan_barang_kes_lain' => 'Kaedah Pelupusan Barang Kes (Lain-lain)',
                 'arahan_pelupusan_barang_kes' => 'Arahan Pelupusan Barang Kes',
                 'adakah_borang_serah_terima_pegawai_tangkapan_io' => 'Borang Serah/Terima (Pegawai Tangkapan)',
                 'adakah_borang_serah_terima_penyiasat_pemilik_saksi' => 'Borang Serah/Terima (Penyiasat/Pemilik)',
@@ -2385,5 +2388,16 @@ public function getLaporanMatiMengejutData(Project $project) {
         }
 
         return implode(' ', $badges);
+    }
+
+    public function downloadTemplate($filename)
+    {
+        $filePath = storage_path('app/templates/' . $filename);
+        
+        if (!file_exists($filePath)) {
+            abort(404, 'Template file not found.');
+        }
+        
+        return response()->download($filePath);
     }
 }

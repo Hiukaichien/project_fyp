@@ -1165,8 +1165,31 @@ private function transformDate($value, $format = 'Y-m-d')
         if (is_null($value) || $value === '') return null;
         
         if (is_string($value)) {
-            $items = array_map('trim', explode(',', $value));
-            return json_encode(array_filter($items)); // Encode to JSON string for the database
+            // Trim the value first
+            $value = trim($value);
+            
+            // If it's already a JSON string, try to decode and re-encode to ensure proper format
+            if (str_starts_with($value, '[') && str_ends_with($value, ']')) {
+                $decoded = json_decode($value, true);
+                if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                    return json_encode($decoded); // Return the properly formatted JSON
+                }
+            }
+            
+            // Check if it contains commas (multiple values)
+            if (str_contains($value, ',')) {
+                $items = array_map('trim', explode(',', $value));
+                return json_encode(array_filter($items, function($item) {
+                    return $item !== '';
+                }));
+            }
+            
+            // Single value - convert to JSON array
+            return json_encode([$value]);
+        }
+        
+        if (is_array($value)) {
+            return json_encode($value);
         }
         
         return null;

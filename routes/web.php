@@ -23,6 +23,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/projects/{project}/import', [ProjectController::class, 'importPapers'])->name('projects.import');
     Route::delete('/projects/{project}/destroy-paper/{paperType}/{paperId}', [ProjectController::class, 'destroyPaper'])->name('projects.destroy_paper');
     Route::get('/projects/{project}/export', [ProjectController::class, 'exportPapers'])->name('projects.export_papers');
+    Route::get('/templates/{filename}', [ProjectController::class, 'downloadTemplate'])->name('templates.download');
 
     Route::delete('/projects/{project}/destroy-all-papers', [ProjectController::class, 'destroyAllPapers'])
     ->name('projects.destroy_all_papers')

@@ -220,7 +220,7 @@
     'jenis_barang_kes_kenderaan' => 'Jenis Barang Kes Kenderaan',
     'jenis_barang_kes_dadah' => 'Jenis Barang Kes Dadah',
     'status_pergerakan_barang_kes' => 'Status Pergerakan Barang Kes',
-    'status_pergerakan_barang_kes_makmal' => 'Pergerakan Barang Kes Makmal',
+    //'status_pergerakan_barang_kes_makmal' => 'Pergerakan Barang Kes Makmal',
     //'status_pergerakan_barang_kes_lain' => 'Pergerakan Barang Kes Lain',
     'status_barang_kes_selesai_siasatan' => 'Status Barang Kes Selesai Siasatan',
     //'status_barang_kes_selesai_siasatan_RM' => 'Siasatan Selesai RM',
@@ -455,8 +455,13 @@
             'jenis_barang_kes_am' => 'Jenis Barang Kes Am',
             'jenis_barang_kes_berharga' => 'Jenis Barang Kes Berharga',
             'status_pergerakan_barang_kes' => 'Status Pergerakan Barang Kes',
+            //'status_pergerakan_barang_kes_lain' => 'Status Pergerakan Barang Kes (Lain-lain)',
+            //'ujian_makmal_details' => 'Ujian Makmal',
             'status_barang_kes_selesai_siasatan' => 'Status Barang Kes Selesai Siasatan',
+            //'status_barang_kes_selesai_siasatan_lain' => 'Status Barang Kes Selesai Siasatan (Lain-lain)',
+            //'dilupuskan_perbendaharaan_amount' => 'Jumlah Dilupuskan ke Perbendaharaan',
             'kaedah_pelupusan_barang_kes' => 'Kaedah Pelupusan Barang Kes',
+            //'kaedah_pelupusan_barang_kes_lain' => 'Kaedah Pelupusan Barang Kes (Lain-lain)',
             'arahan_pelupusan_barang_kes' => 'Arahan Pelupusan Barang Kes',
             'adakah_borang_serah_terima_pegawai_tangkapan_io' => 'Borang Serah/Terima (Pegawai Tangkapan)',
             'adakah_borang_serah_terima_penyiasat_pemilik_saksi' => 'Borang Serah/Terima (Penyiasat/Pemilik)',
@@ -1074,8 +1079,8 @@
                 <span id="file-name" class="ml-3 text-sm text-gray-500">Sila pilih kategori kertas dahulu</span>
             </div>
             <p class="mt-2 text-xs text-blue-600">
-                <a href="{{ asset('storage/templates/templat_lmm.csv') }}" download class="underline hover:text-blue-800">
-                    Klik di sini untuk muat turun templat
+                <a href="{{ route('templates.download', 'templat_lmm.csv') }}" download class="underline hover:text-blue-800">
+                    Klik di sini untuk muat turun contoh templat
                 </a>
             </p>
         </div>
@@ -1625,7 +1630,9 @@
                 }
                 // Logic for 'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan'
                 else if (colName === 'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan') {
-                    // Note: kaedah_pelupusan_barang_kes_lain is not included in DataTable columns for Narkotik
+                    if (data === 'Lain-Lain' && row.kaedah_pelupusan_barang_kes_lain) {
+                        details = ` : ${row.kaedah_pelupusan_barang_kes_lain}`;
+                    }
                 }
                 
                 return data + details;
@@ -1792,8 +1799,7 @@
             'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan'
         ];
         $jsonFields = [
-            'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan', 'adakah_borang_serah_terima_pegawai_tangkapan',
-            'adakah_borang_serah_terima_pemilik_saksi', 'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan', 'resit_kew_38e_bagi_pelupusan'
+            'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan', 'status_pem'
         ];
         
         foreach($komersilColumns as $column => $label) {
@@ -2095,7 +2101,7 @@
         else if (colName === 'status_barang_kes_selesai_siasatan') {
             // CHECK FOR DILUPUSKAN KE PERBENDAHARAAN
             if (data === 'Dilupuskan ke Perbendaharaan' && row.status_barang_kes_selesai_siasatan_RM) {
-                details = ` (${row.status_barang_kes_selesai_siasatan_RM})`;
+                details = ` (RM ${row.status_barang_kes_selesai_siasatan_RM})`;
             } 
             // CHECK FOR LAIN-LAIN
             else if (data === 'Lain-Lain' && row.status_barang_kes_selesai_siasatan_lain) {
