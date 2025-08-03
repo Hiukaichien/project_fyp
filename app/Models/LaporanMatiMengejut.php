@@ -52,7 +52,7 @@ class LaporanMatiMengejut extends Model
         'adakah_barang_kes_didaftarkan' => 'boolean',
         'ujian_makmal_details' => 'string',
         'dilupuskan_perbendaharaan_amount' => 'decimal:2',
-        'arahan_pelupusan_barang_kes' => 'array',
+        'arahan_pelupusan_barang_kes' => 'string',
         'adakah_borang_serah_terima_pegawai_tangkapan_io' => 'boolean',
         'adakah_borang_serah_terima_penyiasat_pemilik_saksi' => 'boolean',
         'adakah_sijil_surat_kebenaran_ipd' => 'boolean',
