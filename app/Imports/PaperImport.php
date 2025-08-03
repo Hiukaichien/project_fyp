@@ -19,9 +19,12 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
     protected $paperType;
     protected $modelClass;
     private $config;
-    
+
+    private $createdCount = 0;
+    private $updatedCount = 0;
     private $successCount = 0;
     private $skippedRows = [];
+    private $updatedRecords = []; // Track which records were updated and what changed
 
     private static $paperConfig = [
          'Jenayah' => [
@@ -974,94 +977,164 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
         ];
     }
 
-    public function collection(Collection $rows)
-    {
-        $uniqueDbColumn = $this->config['unique_by'];
-        // The key in the row is now already normalized (e.g., 'no_kertas_siasatan')
-        $uniqueExcelHeaderSnake = array_search($uniqueDbColumn, $this->config['column_map']);
-        
-        if (!$uniqueExcelHeaderSnake) {
-             throw new \Exception("Ralat konfigurasi untuk {$this->paperType}: Pengenal unik '{$uniqueDbColumn}' tidak dijumpai.");
+// FILE: app/Imports/PaperImport.php
+
+public function collection(Collection $rows)
+{
+    $uniqueDbColumn = $this->config['unique_by'];
+    $uniqueExcelHeaderSnake = array_search($uniqueDbColumn, $this->config['column_map']);
+    
+    if (!$uniqueExcelHeaderSnake) {
+         throw new \Exception("Ralat konfigurasi untuk {$this->paperType}: Pengenal unik '{$uniqueDbColumn}' tidak dijumpai.");
+    }
+
+    $rowNumber = 2; // Start from row 2 for user feedback
+
+    foreach ($rows as $row) {
+        $uniqueValue = $row[$uniqueExcelHeaderSnake] ?? null;
+
+        // Skip if the unique key is missing in the row
+        if (empty($uniqueValue)) {
+            $this->skippedRows[] = "Baris {$rowNumber}: Dilangkau kerana lajur unik '{$uniqueExcelHeaderSnake}' kosong.";
+            $rowNumber++;
+            continue;
         }
 
-        $existingKeys = $this->modelClass::query()
-            ->whereHas('project', fn($query) => $query->where('user_id', $this->userId))
-            ->pluck($uniqueDbColumn)
-            ->all();
+        // Prepare the data for insertion or update
+        $dataForDb = ['project_id' => $this->projectId];
+        
+        $modelCasts = (new $this->modelClass)->getCasts();
 
-        $dataToInsert = [];
-        $rowNumber = 2;
+        foreach ($this->config['column_map'] as $excelHeaderSnake => $dbColumn) {
+            // Check if the column exists in the imported row
+            if ($row->has($excelHeaderSnake)) {
+                $value = $row[$excelHeaderSnake];
+                $castType = $modelCasts[$dbColumn] ?? 'string';
 
-        foreach ($rows as $row) {
-            // *** ACCESS THE ROW DATA WITH THE NORMALIZED KEY ***
-            $uniqueValue = $row[$uniqueExcelHeaderSnake] ?? null;
-
-            if (empty($uniqueValue)) {
-                $this->skippedRows[] = "Baris {$rowNumber}: Dilangkau kerana '{$uniqueExcelHeaderSnake}' tiada.";
-                $rowNumber++;
-                continue;
-            }
-
-            if (in_array($uniqueValue, $existingKeys)) {
-                $this->skippedRows[] = "Baris {$rowNumber}: Dilangkau kerana '{$uniqueValue}' sudah wujud.";
-                $rowNumber++;
-                continue;
-            }
-
-            $data = [
-                'project_id' => $this->projectId,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
-            
-            $modelCasts = (new $this->modelClass)->getCasts();
-
-            foreach ($this->config['column_map'] as $excelHeaderSnake => $dbColumn) {
-                // The key $excelHeaderSnake directly matches the keys in the mapped row
-                if (isset($row[$excelHeaderSnake])) {
-                    $value = $row[$excelHeaderSnake];
-                    $castType = $modelCasts[$dbColumn] ?? 'string';
-
-                    switch ($castType) {
-                        case 'date:Y-m-d': case 'date': case 'datetime':
-                            $data[$dbColumn] = $this->transformDate($value); break;
-                        case 'boolean':
-                            $data[$dbColumn] = $this->transformBoolean($value); break;
-                        case 'decimal:2':
-                            $data[$dbColumn] = $this->transformDecimal($value); break;
-                        case 'array': case 'json':
-                            $data[$dbColumn] = $this->transformJsonArray($value); break;
-                        default:
-                            $data[$dbColumn] = is_string($value) ? trim($value) : $value; break;
-                    }
+                // Transform the value based on its expected cast type
+                // The transform functions will handle empty/null values correctly
+                switch ($castType) {
+                    case 'date:Y-m-d': case 'date': case 'datetime':
+                        $dataForDb[$dbColumn] = $this->transformDate($value); break;
+                    case 'boolean':
+                        $dataForDb[$dbColumn] = $this->transformBoolean($value); break;
+                    case 'decimal:2':
+                        $dataForDb[$dbColumn] = $this->transformDecimal($value); break;
+                    case 'array': case 'json':
+                        $dataForDb[$dbColumn] = $this->transformJsonArray($value); break;
+                    default:
+                        $dataForDb[$dbColumn] = is_string($value) ? trim($value) : $value; break;
                 }
             }
-            
-            $dataToInsert[] = $data;
-            $existingKeys[] = $uniqueValue;
-            $this->successCount++;
-            $rowNumber++;
         }
+        
+        // Check if record already exists to track what changes
+        $existingRecord = $this->modelClass::where($uniqueDbColumn, $uniqueValue)
+            ->where('project_id', $this->projectId)
+            ->first();
+        
+        // This is the core "update or create" logic
+        $record = $this->modelClass::updateOrCreate(
+            [$uniqueDbColumn => $uniqueValue, 'project_id' => $this->projectId], // Attributes to find the record
+            $dataForDb  // Values to update or create with
+        );
 
-        if (!empty($dataToInsert)) {
-            foreach (array_chunk($dataToInsert, 500) as $chunk) {
-                $this->modelClass::insert($chunk);
+        // Track whether we created a new record or updated an existing one
+        if ($record->wasRecentlyCreated) {
+            $this->createdCount++;
+        } else {
+            $this->updatedCount++;
+            
+            // Track what changed for existing records
+            if ($existingRecord) {
+                $changedFields = [];
+                foreach ($dataForDb as $field => $newValue) {
+                    if ($field !== 'project_id') { // Skip project_id as it's always the same
+                        $oldValue = $existingRecord->getAttribute($field);
+                        
+                        // Handle different data types for comparison
+                        if ($this->valuesAreDifferent($oldValue, $newValue)) {
+                            $changedFields[] = $field;
+                        }
+                    }
+                }
+                
+                if (!empty($changedFields)) {
+                    $this->updatedRecords[] = [
+                        'unique_value' => $uniqueValue,
+                        'row_number' => $rowNumber,
+                        'changed_fields' => $changedFields
+                    ];
+                }
             }
         }
+        
+        $rowNumber++;
+    }
+    
+    // Set success count as total of created + updated records
+    $this->successCount = $this->createdCount + $this->updatedCount;
+}
+
+
+private function transformDate($value, $format = 'Y-m-d')
+{
+    // Return null immediately if the value is empty
+    if (empty($value) && $value !== 0) return null;
+
+    // First, try to handle Excel's numeric date format (e.g., 45321)
+    if (is_numeric($value)) {
+        try {
+            return Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value))->format($format);
+        } catch (\Exception $e) {
+            // It was a number, but not a valid Excel date. Fall through to string parsing.
+        }
     }
 
-    private function transformDate($value, $format = 'Y-m-d H:i:s')
-    {
-        if (empty($value)) return null;
-        if (is_numeric($value)) {
-            try { return Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($value))->format($format); } catch (\Exception $e) { return null; }
+    // If it's a string, trim whitespace - this is always important
+    $value = trim((string) $value);
+
+    // List of common date formats to try. The '|' tells Carbon to ignore the time part.
+    $formatsToTry = [
+        // Date with time formats (including AM/PM)
+        'd/m/Y g:i:s A',               // 20/5/2025 5:19:00 PM
+        'd/m/Y g:i A',                 // 20/5/2025 5:19 PM
+        'm/d/Y g:i:s A',               // 5/20/2025 5:19:00 PM (US format)
+        'm/d/Y g:i A',                 // 5/20/2025 5:19 PM (US format)
+        'd/m/Y H:i:s',                 // 20/5/2025 17:19:00 (24-hour)
+        'd/m/Y H:i',                   // 20/5/2025 17:19 (24-hour)
+        'm/d/Y H:i:s',                 // 5/20/2025 17:19:00 (US format, 24-hour)
+        'm/d/Y H:i',                   // 5/20/2025 17:19 (US format, 24-hour)
+        
+        // Date only formats
+        'd/m/Y|', 'd-m-Y|', 'd.m.Y|', // Day-first
+        'm/d/Y|', 'm-d-Y|', 'm.d.Y|', // Month-first (US format)
+        'Y-m-d|',                      // ISO 8601
+        'Y-m-d H:i:s',                 // Full datetime
+    ];
+
+    // Loop through formats and return the first one that succeeds
+    foreach ($formatsToTry as $inputFormat) {
+        // We use a try-catch because an invalid date (e.g., 32/13/2025) will throw an exception
+        try {
+            $date = Carbon::createFromFormat($inputFormat, $value);
+            // Check if parsing was successful (it returns false on format mismatch)
+            if ($date !== false) {
+                return $date->format($format);
+            }
+        } catch (\Exception $e) {
+            continue; // Ignore exception and try the next format
         }
-        $formatsToTry = ['d/m/Y', 'd.m.Y', 'd-m-Y', 'm/d/Y', 'm.d.Y', 'm-d-Y', 'Y-m-d H:i:s', 'Y-m-d'];
-        foreach ($formatsToTry as $inputFormat) {
-            try { return Carbon::createFromFormat($inputFormat, $value)->format($format); } catch (\Exception $e) { continue; }
-        }
-        try { return Carbon::parse($value)->format($format); } catch (\Exception $e) { Log::warning("Could not parse date format for value: '{$value}'. Error: " . $e->getMessage()); return null; }
     }
+
+    // As a final fallback, try Carbon's very flexible generic parser
+    try {
+        return Carbon::parse($value)->format($format);
+    } catch (\Exception $e) {
+        Log::warning("Could not parse date format for value: '{$value}'. Error: " . $e->getMessage());
+        return null; 
+    }
+}
 
     private function transformBoolean($value)
     {
@@ -1098,10 +1171,45 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
         
         return null;
     }
-    
+
+    private function valuesAreDifferent($oldValue, $newValue)
+    {
+        // Handle null comparisons
+        if (is_null($oldValue) && is_null($newValue)) {
+            return false;
+        }
+        
+        if (is_null($oldValue) || is_null($newValue)) {
+            return true;
+        }
+        
+        // Handle date comparisons - convert both to same format
+        if ($oldValue instanceof \Carbon\Carbon && !is_null($newValue)) {
+            $oldValue = $oldValue->format('Y-m-d');
+        }
+        
+        // Convert both to strings for comparison
+        return trim((string) $oldValue) !== trim((string) $newValue);
+    }
+
     public function getSuccessCount(): int
     {
         return $this->successCount;
+    }
+
+    public function getCreatedCount(): int
+    {
+        return $this->createdCount;
+    }
+
+    public function getUpdatedCount(): int
+    {
+        return $this->updatedCount;
+    }
+
+    public function getUpdatedRecords(): array
+    {
+        return $this->updatedRecords;
     }
 
     public function getSkippedRows(): array
