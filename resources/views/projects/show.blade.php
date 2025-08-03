@@ -1025,116 +1025,147 @@
 
 
 {{-- FILE: resources/views/projects/show.blade.php (Part 4 of 5) --}}
-    {{-- Import Modal --}}
-    <x-modal name="import-papers-modal" :show="$errors->has('excel_file') || $errors->has('excel_errors')" focusable>
-        <form action="{{ route('projects.import', $project) }}" method="POST" enctype="multipart/form-data" class="p-6">
-            @csrf
-            <h2 class="text-lg font-medium text-gray-900 dark:text-black-100">Muat Naik Kertas Siasatan ke: {{ $project->name }}</h2>
-            <p class="mt-1 text-sm text-gray-600 dark:text-grey-600">Sila pilih kategori kertas dan muat naik fail Excel yang sepadan.</p>
+{{-- FILE: resources/views/projects/show.blade.php --}}
 
-            @if ($errors->has('excel_file') || $errors->has('excel_errors'))
-                <div class="mt-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" role="alert">
-                    <p class="font-bold">{{ $errors->first('excel_file') }}</p>
-                    @if ($errors->has('excel_errors'))
-                        <ul class="mt-2 list-disc list-inside text-sm">
-                            @foreach ($errors->get('excel_errors') as $errorMessage)
-                                <li>{{ $errorMessage }}</li>
-                            @endforeach
-                        </ul>
-                    @endif
-                </div>
-            @endif
+{{-- Import Modal --}}
+<x-modal name="import-papers-modal" :show="$errors->has('excel_file') || $errors->has('excel_errors')" focusable>
+    <form action="{{ route('projects.import', $project) }}" method="POST" enctype="multipart/form-data" class="p-6">
+        @csrf
+        <h2 class="text-lg font-medium text-gray-900 dark:text-black-100">Muat Naik Kertas Siasatan ke: {{ $project->name }}</h2>
+        <p class="mt-1 text-sm text-gray-600 dark:text-grey-600">Sila pilih kategori kertas dan muat naik fail Excel yang sepadan.</p>
 
-            <div class="mt-6">
-                <label for="paper_type_modal" class="block text-sm font-medium text-gray-700 dark:text-black-200">Kategori Kertas</label>
-                <select name="paper_type" id="paper_type_modal" required class="mt-1 block w-full form-select rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                    <option value="" disabled selected>-- Sila Pilih Kategori --</option>
-                    <option value="Jenayah" @if(old('paper_type') == 'Jenayah') selected @endif>JSJ (Jenayah)</option>
-                    <option value="Narkotik" @if(old('paper_type') == 'Narkotik') selected @endif>JSJN (Narkotik)</option>
-                    <option value="Komersil" @if(old('paper_type') == 'Komersil') selected @endif>JSJK (Komersil)</option>
-                    <option value="TrafikSeksyen" @if(old('paper_type') == 'TrafikSeksyen') selected @endif>JSPT (APJ 1987 - AKTA 333)</option>
-                    <option value="TrafikRule" @if(old('paper_type') == 'TrafikRule') selected @endif>JSPT (KKLJ 1969 - LN 166/1959)</option>
-                    <option value="OrangHilang" @if(old('paper_type') == 'OrangHilang') selected @endif>JP (Orang Hilang)</option>
-                    <option value="LaporanMatiMengejut" @if(old('paper_type') == 'LaporanMatiMengejut') selected @endif>JP (Mati Mengejut)</option>
-                </select>
+        {{-- Error Display --}}
+        @if ($errors->has('excel_file') || $errors->has('excel_errors'))
+            <div class="mt-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4" role="alert">
+                <p class="font-bold">{{ $errors->first('excel_file') }}</p>
+                @if ($errors->has('excel_errors'))
+                    <ul class="mt-2 list-disc list-inside text-sm">
+                        @foreach ($errors->get('excel_errors') as $errorMessage)
+                            <li>{{ $errorMessage }}</li>
+                        @endforeach
+                    </ul>
+                @endif
             </div>
-            <div class="mt-6">
-                <label for="excel_file_modal" class="block text-sm font-medium text-gray-700 dark:text-black-300">Pilih Fail Excel</label>
-                <div class="mt-1 flex items-center">
-                    <input type="file" name="excel_file" id="excel_file_modal" required accept=".xlsx,.xls,.csv" class="hidden">
-                    <button type="button" id="file-select-btn" disabled class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-500 active:bg-blue-700 focus:outline-none focus:border-blue-700 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150 opacity-50 cursor-not-allowed">
-                        <i class="fas fa-file-upload mr-2"></i>Pilih Fail
-                    </button>
-                    <span id="file-name" class="ml-3 text-sm text-gray-500">Sila pilih kategori kertas dahulu</span>
-                </div>
-            </div>
-            <div class="mt-6 flex justify-end">
-                <x-secondary-button x-on:click="$dispatch('close')">{{ __('Batal') }}</x-secondary-button>
-                <x-primary-button id="import-submit-btn" class="ms-3" disabled>{{ __('Muat Naik Fail') }}</x-primary-button>
-            </div>
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    const paperTypeSelect = document.getElementById('paper_type_modal');
-                    const fileInput = document.getElementById('excel_file_modal');
-                    const fileName = document.getElementById('file-name');
-                    const submitBtn = document.getElementById('import-submit-btn');
-                    const fileSelectBtn = document.getElementById('file-select-btn');
+        @endif
 
-                    function updateFileSelectButton() {
-                        const paperTypeSelected = paperTypeSelect.value !== '';
-                        
-                        if (paperTypeSelected) {
-                            fileSelectBtn.disabled = false;
-                            fileSelectBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                            fileSelectBtn.classList.add('hover:bg-blue-500', 'active:bg-blue-700');
-                            fileSelectBtn.onclick = function() {
-                                document.getElementById('excel_file_modal').click();
-                            };
-                            fileName.textContent = fileInput.files.length > 0 ? fileInput.files[0].name : 'Tiada fail dipilih';
-                        } else {
-                            fileSelectBtn.disabled = true;
-                            fileSelectBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                            fileSelectBtn.classList.remove('hover:bg-blue-500', 'active:bg-blue-700');
-                            fileSelectBtn.onclick = null;
-                            fileName.textContent = 'Sila pilih kategori kertas dahulu';
-                            // Clear file selection if paper type is cleared
-                            fileInput.value = '';
-                        }
+        {{-- Paper Type Dropdown --}}
+        <div class="mt-6">
+            <label for="paper_type_modal" class="block text-sm font-medium text-gray-700 dark:text-black-200">Kategori Kertas</label>
+            <select name="paper_type" id="paper_type_modal" required class="mt-1 block w-full form-select rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                <option value="" disabled selected>-- Sila Pilih Kategori --</option>
+                <option value="Jenayah" @if(old('paper_type') == 'Jenayah') selected @endif>JSJ (Jenayah)</option>
+                <option value="Narkotik" @if(old('paper_type') == 'Narkotik') selected @endif>JSJN (Narkotik)</option>
+                <option value="Komersil" @if(old('paper_type') == 'Komersil') selected @endif>JSJK (Komersil)</option>
+                <option value="TrafikSeksyen" @if(old('paper_type') == 'TrafikSeksyen') selected @endif>JSPT (APJ 1987 - AKTA 333)</option>
+                <option value="TrafikRule" @if(old('paper_type') == 'TrafikRule') selected @endif>JSPT (KKLJ 1969 - LN 166/1959)</option>
+                <option value="OrangHilang" @if(old('paper_type') == 'OrangHilang') selected @endif>JP (Orang Hilang)</option>
+                <option value="LaporanMatiMengejut" @if(old('paper_type') == 'LaporanMatiMengejut') selected @endif>JP (Mati Mengejut)</option>
+            </select>
+        </div>
+
+        {{-- File Input --}}
+        <div class="mt-6">
+            <label for="excel_file_modal" class="block text-sm font-medium text-gray-700 dark:text-black-300">Pilih Fail Excel</label>
+            <div class="mt-1 flex items-center">
+                <input type="file" name="excel_file" id="excel_file_modal" required accept=".xlsx,.xls,.csv" class="hidden">
+                <button type="button" id="file-select-btn" disabled class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-500 active:bg-blue-700 focus:outline-none focus:border-blue-700 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150 opacity-50 cursor-not-allowed">
+                    <i class="fas fa-file-upload mr-2"></i>Pilih Fail
+                </button>
+                <span id="file-name" class="ml-3 text-sm text-gray-500">Sila pilih kategori kertas dahulu</span>
+            </div>
+        </div>
+
+        {{-- *** NEW DYNAMIC INFO BOX *** --}}
+        <div id="column-info" class="mt-4 p-3 bg-yellow-100 border-l-4 border-yellow-400 text-yellow-800 text-sm rounded" style="display: none;">
+            <p class="font-bold">Pastikan fail anda mempunyai lajur berikut (dalam urutan yang betul):</p>
+            <code id="column-list" class="block mt-2 text-xs break-words"></code>
+        </div>
+        {{-- *** END OF NEW DYNAMIC INFO BOX *** --}}
+
+        {{-- Action Buttons --}}
+        <div class="mt-6 flex justify-end">
+            <x-secondary-button x-on:click="$dispatch('close')">{{ __('Batal') }}</x-secondary-button>
+            <x-primary-button id="import-submit-btn" class="ms-3" disabled>{{ __('Muat Naik Fail') }}</x-primary-button>
+        </div>
+
+        {{-- JavaScript for Modal Interactivity --}}
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const paperTypeSelect = document.getElementById('paper_type_modal');
+                const fileInput = document.getElementById('excel_file_modal');
+                const fileNameSpan = document.getElementById('file-name');
+                const submitBtn = document.getElementById('import-submit-btn');
+                const fileSelectBtn = document.getElementById('file-select-btn');
+                
+                // Get the new info box elements
+                const columnInfoDiv = document.getElementById('column-info');
+                const columnListEl = document.getElementById('column-list');
+
+                // Store the required columns for each paper type
+                const columnData = {
+                    'Jenayah': 'no_kertas_siasatan, no_repot_polis, pegawai_penyiasat, tarikh_laporan_polis_dibuka, seksyen',
+                    'Narkotik': 'no_kertas_siasatan, no_repot_polis, pegawai_penyiasat, tarikh_laporan_polis_dibuka, seksyen',
+                    'Komersil': 'no_kertas_siasatan, no_repot_polis, pegawai_penyiasat, tarikh_laporan_polis_dibuka, seksyen',
+                    'TrafikSeksyen': 'no_kertas_siasatan, no_repot_polis, pegawai_penyiasat, tarikh_laporan_polis_dibuka, seksyen',
+                    'TrafikRule': 'no_kertas_siasatan, no_fail_lmm_t, no_repot_polis, pegawai_penyiasat, tarikh_laporan_polis_dibuka, seksyen',
+                    'OrangHilang': 'no_kertas_siasatan, no_repot_polis, pegawai_penyiasat, tarikh_laporan_polis_dibuka, seksyen',
+                    'LaporanMatiMengejut': 'no_kertas_siasatan, no_fail_lmm_sdr, no_repot_polis, pegawai_penyiasat, tarikh_laporan_polis_dibuka, seksyen'
+                };
+
+                // Function to show/hide and update the column info box
+                function updateColumnInfo() {
+                    const selectedType = paperTypeSelect.value;
+                    const requiredColumns = columnData[selectedType];
+
+                    if (requiredColumns) {
+                        columnListEl.textContent = requiredColumns;
+                        columnInfoDiv.style.display = 'block';
+                    } else {
+                        columnInfoDiv.style.display = 'none';
                     }
+                }
 
-                    function checkFormValidity() {
-                        const paperTypeSelected = paperTypeSelect.value !== '';
-                        const fileSelected = fileInput.files.length > 0;
-                        
-                        if (paperTypeSelected && fileSelected) {
-                            submitBtn.disabled = false;
-                            submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                            submitBtn.classList.add('hover:bg-gray-700', 'focus:bg-gray-700', 'active:bg-gray-900');
-                        } else {
-                            submitBtn.disabled = true;
-                            submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                            submitBtn.classList.remove('hover:bg-gray-700', 'focus:bg-gray-700', 'active:bg-gray-900');
-                        }
+                function updateFileSelectButton() {
+                    const paperTypeSelected = paperTypeSelect.value !== '';
+                    if (paperTypeSelected) {
+                        fileSelectBtn.disabled = false;
+                        fileSelectBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                        fileNameSpan.textContent = fileInput.files.length > 0 ? fileInput.files[0].name : 'Tiada fail dipilih';
+                        fileSelectBtn.onclick = () => fileInput.click();
+                    } else {
+                        fileSelectBtn.disabled = true;
+                        fileSelectBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                        fileNameSpan.textContent = 'Sila pilih kategori kertas dahulu';
+                        fileInput.value = '';
+                        fileSelectBtn.onclick = null;
                     }
+                }
 
-                    paperTypeSelect.addEventListener('change', function() {
-                        updateFileSelectButton();
-                        checkFormValidity();
-                    });
-                    
-                    fileInput.addEventListener('change', function(e) {
-                        const selectedFileName = e.target.files[0] ? e.target.files[0].name : 'Tiada fail dipilih';
-                        fileName.textContent = selectedFileName;
-                        checkFormValidity();
-                    });
+                function checkFormValidity() {
+                    const paperTypeSelected = paperTypeSelect.value !== '';
+                    const fileSelected = fileInput.files.length > 0;
+                    submitBtn.disabled = !(paperTypeSelected && fileSelected);
+                }
 
-                    // Initial check
+                paperTypeSelect.addEventListener('change', function() {
                     updateFileSelectButton();
+                    updateColumnInfo(); // <-- Call the new function
                     checkFormValidity();
                 });
-            </script>
-        </form>
-    </x-modal>
+                
+                fileInput.addEventListener('change', function(e) {
+                    fileNameSpan.textContent = e.target.files.length > 0 ? e.target.files[0].name : 'Tiada fail dipilih';
+                    checkFormValidity();
+                });
+
+                // Initial checks when the modal is opened
+                updateFileSelectButton();
+                updateColumnInfo();
+                checkFormValidity();
+            });
+        </script>
+    </form>
+</x-modal>
 
     <!-- Export Modal -->
     <x-modal name="export-papers-modal" focusable>
@@ -2336,11 +2367,11 @@
                                 legend: {
                                     position: 'bottom',
                                     labels: {
-                                        generateLabels: function(chart) {
+                                            generateLabels: function(chart) {
                                             const data = chart.data;
                                             if (data.labels.length && data.datasets.length) {
                                                 const total = data.datasets[0].data.reduce((sum, value) => sum + value, 0);
-                                                return data.labels.map(function(label, i) {
+                                                const labels = data.labels.map(function(label, i) {
                                                     const value = data.datasets[0].data[i];
                                                     const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
                                                     return {
@@ -2352,6 +2383,18 @@
                                                         index: i
                                                     };
                                                 });
+                                                
+                                                // Add a third line for total count after the second legend
+                                                labels.push({
+                                                    text: `Jumlah Kertas Siasatan (${total})            `,
+                                                    fillStyle: 'transparent',
+                                                    strokeStyle: 'transparent',
+                                                    lineWidth: 0,
+                                                    hidden: false,
+                                                    index: -1 // Special index to identify this as non-clickable
+                                                });
+                                                
+                                                return labels;
                                             }
                                             return [];
                                         }
