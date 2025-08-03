@@ -82,15 +82,19 @@
                 }
             @endphp
 
-            <!-- BAHAGIAN 1: Maklumat Asas -->
+            <!-- BAHAGIAN 1 -->
             <div class="bg-white shadow overflow-hidden sm:rounded-lg">
                 <div class="px-4 py-5 sm:px-6 bg-blue-50">
                     <h3 class="text-lg leading-6 font-medium text-gray-900">
-                        BAHAGIAN 1: Maklumat Asas (No. KS: {{ $paper->no_kertas_siasatan }})
+                        BAHAGIAN 1
                     </h3>
                 </div>
                 <div class="border-t border-gray-200">
                     <dl class="sm:divide-y sm:divide-gray-200">
+                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt class="text-sm font-medium text-gray-500">No. Kertas Siasatan</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->no_kertas_siasatan ?? '-' }}</dd>
+                        </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">No. Repot Polis</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->no_repot_polis ?? '-' }}</dd>
@@ -111,10 +115,10 @@
                 </div>
             </div>
 
-            <!-- BAHAGIAN 2: Pemeriksaan & Status -->
+            <!-- BAHAGIAN 2 -->
             <div class="bg-white shadow overflow-hidden sm:rounded-lg">
                 <div class="px-4 py-5 sm:px-6 bg-green-50">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900">BAHAGIAN 2: Pemeriksaan & Status</h3>
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">BAHAGIAN 2</h3>
                 </div>
                 <div class="border-t border-gray-200">
                     <dl class="sm:divide-y sm:divide-gray-200">
@@ -132,7 +136,7 @@
                         </div>
                         {{-- Calculated Field 1 --}}
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-yellow-50">
-                            <dt class="text-sm font-medium text-yellow-800">Sistem Calculate (B - A): KS Lewat Edaran 24 Jam</dt>
+                            <dt class="text-sm font-medium text-yellow-800">Sistem Calculate (B - A): KS Lewat Edaran 48 Jam</dt>
                             <dd class="mt-1 text-sm font-bold text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->lewat_edaran_status ?? 'Tidak Terkira' }}</dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -166,10 +170,10 @@
                 </div>
             </div>
 
-            <!-- BAHAGIAN 3: Arahan & Keputusan -->
+            <!-- BAHAGIAN 3 -->
             <div class="bg-white shadow overflow-hidden sm:rounded-lg">
                 <div class="px-4 py-5 sm:px-6 bg-orange-50">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900">BAHAGIAN 3: Arahan & Keputusan</h3>
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">BAHAGIAN 3</h3>
                 </div>
                 <div class="border-t border-gray-200">
                     <dl class="sm:divide-y sm:divide-gray-200">
@@ -217,10 +221,10 @@
                 </div>
             </div>
 
-            <!-- BAHAGIAN 4: Barang Kes -->
+            <!-- BAHAGIAN 4 -->
             <div class="bg-white shadow overflow-hidden sm:rounded-lg">
                 <div class="px-4 py-5 sm:px-6 bg-pink-50">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900">BAHAGIAN 4: Barang Kes</h3>
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">BAHAGIAN 4</h3>
                 </div>
                 <div class="border-t border-gray-200">
                     <dl class="sm:divide-y sm:divide-gray-200">
@@ -343,10 +347,10 @@
                 </div>
             </div>
 
-            <!-- BAHAGIAN 5: Dokumen Siasatan -->
+            <!-- BAHAGIAN 5 -->
             <div class="bg-white shadow overflow-hidden sm:rounded-lg">
                 <div class="px-4 py-5 sm:px-6 bg-purple-50">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900">BAHAGIAN 5: Dokumen Siasatan</h3>
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">BAHAGIAN 5</h3>
                 </div>
                 <div class="border-t border-gray-200">
                     <dl class="sm:divide-y sm:divide-gray-200">
@@ -390,10 +394,10 @@
                 </div>
             </div>
 
-            <!-- BAHAGIAN 6: Borang & Semakan -->
+            <!-- BAHAGIAN 6 -->
             <div class="bg-white shadow overflow-hidden sm:rounded-lg">
                 <div class="px-4 py-5 sm:px-6 bg-indigo-50">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900">BAHAGIAN 6: Borang & Semakan</h3>
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">BAHAGIAN 6</h3>
                 </div>
                 <div class="border-t border-gray-200">
                     <dl class="sm:divide-y sm:divide-gray-200">
@@ -463,24 +467,22 @@
                             <dt class="text-sm font-medium text-gray-500">Semboyan Usaha Pemakluman Ketiga Wanted Person</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_status_and_date($paper->status_semboyan_ketiga_wanted_person, $paper->tarikh_semboyan_ketiga_wanted_person, 'Dibuat', 'Tidak') !!}</dd>
                         </div>
-                        
-                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">Adakah Penandaan Kelas Warna Pada Kulit Kertas Siasatan Dibuat</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_boolean_badge($paper->status_penandaan_kelas_warna) !!}</dd>
-                        </div>
-                        
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">Ulasan Keseluruhan Pegawai Pemeriksa (Jika Ada)</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->ulasan_keseluruhan_pegawai_pemeriksa_bahagian_6 ?? '-' }}</dd>
+                        </div>
+                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt class="text-sm font-medium text-gray-500">Adakah Penandaan Kelas Warna Pada Kulit Kertas Siasatan Dibuat</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_boolean_badge($paper->status_penandaan_kelas_warna) !!}</dd>
                         </div>
                     </dl>
                 </div>
             </div>
 
-            <!-- BAHAGIAN 7: Permohonan Laporan Agensi Luar -->
+            <!-- BAHAGIAN 7 -->
             <div class="bg-white shadow overflow-hidden sm:rounded-lg">
                 <div class="px-4 py-5 sm:px-6 bg-red-50">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900">BAHAGIAN 7: Permohonan Laporan Agensi Luar</h3>
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">BAHAGIAN 7</h3>
                 </div>
                 <div class="border-t border-gray-200">
                     <dl class="sm:divide-y sm:divide-gray-200">
@@ -589,6 +591,21 @@
                             </div>
                         </div>
 
+                        <!-- JKJR -->
+                        <div class="py-3 sm:py-4 sm:px-6">
+                            <h4 class="text-sm font-semibold text-gray-700 mb-2">JKJR</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <dt class="text-sm font-medium text-gray-500 mb-1">Permohonan Laporan</dt>
+                                    <dd class="text-sm text-gray-900">{!! show_status_and_date($paper->status_permohonan_laporan_jkjr, $paper->tarikh_permohonan_laporan_jkjr, 'Ada', 'Tiada') !!}</dd>
+                                </div>
+                                <div>
+                                    <dt class="text-sm font-medium text-gray-500 mb-1">Laporan Penuh Diterima</dt>
+                                    <dd class="text-sm text-gray-900">{!! show_status_and_date($paper->status_laporan_penuh_jkjr, $paper->tarikh_laporan_penuh_jkjr, 'Dilampirkan', 'Tiada') !!}</dd>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Imigresen -->
                         <div class="py-3 sm:py-4 sm:px-6">
                             <h4 class="text-sm font-semibold text-gray-700 mb-2">Imigresen</h4>
@@ -604,6 +621,40 @@
                             </div>
                         </div>
 
+                        <!-- Kastam -->
+                        <div class="py-3 sm:py-4 sm:px-6 bg-gray-50">
+                            <h4 class="text-sm font-semibold text-gray-700 mb-2">Kastam</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <dt class="text-sm font-medium text-gray-500 mb-1">Permohonan Laporan</dt>
+                                    <dd class="text-sm text-gray-900">{!! show_status_and_date($paper->status_permohonan_laporan_kastam, $paper->tarikh_permohonan_laporan_kastam, 'Ada', 'Tiada') !!}</dd>
+                                </div>
+                                <div>
+                                    <dt class="text-sm font-medium text-gray-500 mb-1">Laporan Penuh Diterima</dt>
+                                    <dd class="text-sm text-gray-900">{!! show_status_and_date($paper->status_laporan_penuh_kastam, $paper->tarikh_laporan_penuh_kastam, 'Dilampirkan', 'Tiada') !!}</dd>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Forensik PDRM -->
+                        <div class="py-3 sm:py-4 sm:px-6">
+                            <h4 class="text-sm font-semibold text-gray-700 mb-2">Forensik PDRM</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <dt class="text-sm font-medium text-gray-500 mb-1">Permohonan Laporan</dt>
+                                    <dd class="text-sm text-gray-900">{!! show_status_and_date($paper->status_permohonan_laporan_forensik_pdrm, $paper->tarikh_permohonan_laporan_forensik_pdrm, 'Ada', 'Tiada') !!}</dd>
+                                </div>
+                                <div>
+                                    <dt class="text-sm font-medium text-gray-500 mb-1">Laporan Penuh Diterima</dt>
+                                    <dd class="text-sm text-gray-900">{!! show_status_and_date($paper->status_laporan_penuh_forensik_pdrm, $paper->tarikh_laporan_penuh_forensik_pdrm, 'Dilampirkan', 'Tiada') !!}</dd>
+                                </div>
+                                <div class="col-span-full">
+                                    <dt class="text-sm font-medium text-gray-500">Jenis Barang Kes Forensik</dt>
+                                    <dd class="text-sm text-gray-900 whitespace-pre-wrap">{{ $paper->jenis_barang_kes_forensik ?? '-' }}</dd>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Lain-lain Permohonan Laporan -->
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50">
                             <dt class="text-sm font-medium text-gray-500">Lain-lain Permohonan Laporan</dt>
@@ -613,10 +664,10 @@
                 </div>
             </div>
 
-            <!-- BAHAGIAN 8: Status Fail -->
+            <!-- BAHAGIAN 8 -->
             <div class="bg-white shadow overflow-hidden sm:rounded-lg">
                 <div class="px-4 py-5 sm:px-6 bg-yellow-50">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900">BAHAGIAN 8: Status Fail</h3>
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">BAHAGIAN 8</h3>
                 </div>
                 <div class="border-t border-gray-200">
                     <dl class="sm:divide-y sm:divide-gray-200">

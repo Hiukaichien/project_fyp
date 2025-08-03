@@ -195,7 +195,7 @@ class Jenayah extends Model
     {
         $tarikhA = $this->tarikh_edaran_minit_ks_pertama;
         $tarikhB = $this->tarikh_edaran_minit_ks_kedua;
-        $limitInHours = 48;
+        $limitInHours = 24;
 
         if (!$tarikhA || !$tarikhB) {
             return 'TIDAK';

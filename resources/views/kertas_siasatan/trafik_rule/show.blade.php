@@ -82,15 +82,19 @@
                 }
             @endphp
 
-                        <!-- BAHAGIAN 1: Maklumat Asas -->
+                        <!-- BAHAGIAN 1 -->
             <div class="bg-white shadow overflow-hidden sm:rounded-lg">
                 <div class="px-4 py-5 sm:px-6 bg-blue-50">
                     <h3 class="text-lg leading-6 font-medium text-gray-900">
-                        BAHAGIAN 1: Maklumat Asas (No. KS: {{ $paper->no_kertas_siasatan }})
+                        BAHAGIAN 1
                     </h3>
                 </div>
                 <div class="border-t border-gray-200">
                     <dl class="sm:divide-y sm:divide-gray-200">
+                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt class="text-sm font-medium text-gray-500">No. Kertas Siasatan</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->no_kertas_siasatan ?? '-' }}</dd>
+                        </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">No. Fail LMM (T)</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->no_fail_lmm_t ?? '-' }}</dd>
@@ -115,10 +119,10 @@
                 </div>
             </div>
 
-           <!-- BAHAGIAN 2: Pemeriksaan & Status (RE-ORDERED) -->
+           <!-- BAHAGIAN 2 (RE-ORDERED) -->
             <div class="bg-white shadow overflow-hidden sm:rounded-lg">
                 <div class="px-4 py-5 sm:px-6 bg-green-50">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900">BAHAGIAN 2: Pemeriksaan & Status</h3>
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">BAHAGIAN 2</h3>
                 </div>
                 <div class="border-t border-gray-200">
                     <dl class="sm:divide-y sm:divide-gray-200">
@@ -192,10 +196,10 @@
                 </div>
             </div>
 
-                        <!-- BAHAGIAN 3: Arahan & Keputusan -->
+                        <!-- BAHAGIAN 3 -->
             <div class="bg-white shadow overflow-hidden sm:rounded-lg">
                 <div class="px-4 py-5 sm:px-6 bg-orange-50">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900">BAHAGIAN 3: Arahan & Keputusan</h3>
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">BAHAGIAN 3</h3>
                 </div>
                 <div class="border-t border-gray-200">
                     <dl class="sm:divide-y sm:divide-gray-200">
@@ -236,10 +240,10 @@
                 </div>
             </div>
 
-                        <!-- BAHAGIAN 5: Dokumen Siasatan -->
+                        <!-- BAHAGIAN 5 -->
             <div class="bg-white shadow overflow-hidden sm:rounded-lg">
                 <div class="px-4 py-5 sm:px-6 bg-purple-50">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900">BAHAGIAN 5: Dokumen Siasatan</h3>
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">BAHAGIAN 5</h3>
                 </div>
                 <div class="border-t border-gray-200">
                     <dl class="sm:divide-y sm:divide-gray-200">
@@ -259,10 +263,10 @@
                 </div>
             </div>
 
-                        <!-- BAHAGIAN 6: Borang & Semakan -->
+                        <!-- BAHAGIAN 6 -->
             <div class="bg-white shadow overflow-hidden sm:rounded-lg">
                 <div class="px-4 py-5 sm:px-6 bg-indigo-50">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900">BAHAGIAN 6: Borang & Semakan</h3>
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">BAHAGIAN 6</h3>
                 </div>
                 <div class="border-t border-gray-200">
                     <dl class="sm:divide-y sm:divide-gray-200">
@@ -304,10 +308,10 @@
                 </div>
             </div>
 
-            <!-- BAHAGIAN 7: Permohonan Laporan Agensi Luar -->
+            <!-- BAHAGIAN 7 -->
             <div class="bg-white shadow overflow-hidden sm:rounded-lg">
                 <div class="px-4 py-5 sm:px-6 bg-red-50">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900">BAHAGIAN 7: Permohonan Laporan Agensi Luar</h3>
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">BAHAGIAN 7</h3>
                 </div>
                 <div class="border-t border-gray-200">
                     <dl class="sm:divide-y sm:divide-gray-200">
@@ -365,10 +369,10 @@
                 </div>
             </div>
 
-                        <!-- BAHAGIAN 8: Status Fail -->
+                        <!-- BAHAGIAN 8 -->
             <div class="bg-white shadow overflow-hidden sm:rounded-lg">
                 <div class="px-4 py-5 sm:px-6 bg-yellow-50">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900">BAHAGIAN 8: Status Fail</h3>
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">BAHAGIAN 8</h3>
                 </div>
                 <div class="border-t border-gray-200">
                     <dl class="sm:divide-y sm:divide-gray-200">

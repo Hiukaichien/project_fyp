@@ -146,6 +146,26 @@ return new class extends Migration
             $table->date('tarikh_permohonan_laporan_jpj')->nullable()->comment('tarikh_permohonan_laporan_jpj: DATE');
             $table->boolean('status_laporan_penuh_jpj')->nullable()->comment('status_laporan_penuh_jpj: BOOLEAN');
             $table->date('tarikh_laporan_penuh_jpj')->nullable()->comment('tarikh_laporan_penuh_jpj: DATE');
+            
+            // JKJR
+            $table->boolean('status_permohonan_laporan_jkjr')->nullable()->comment('status_permohonan_laporan_jkjr: BOOLEAN');
+            $table->date('tarikh_permohonan_laporan_jkjr')->nullable()->comment('tarikh_permohonan_laporan_jkjr: DATE');
+            $table->boolean('status_laporan_penuh_jkjr')->nullable()->comment('status_laporan_penuh_jkjr: BOOLEAN');
+            $table->date('tarikh_laporan_penuh_jkjr')->nullable()->comment('tarikh_laporan_penuh_jkjr: DATE');
+            
+            // Kastam
+            $table->boolean('status_permohonan_laporan_kastam')->nullable()->comment('status_permohonan_laporan_kastam: BOOLEAN');
+            $table->date('tarikh_permohonan_laporan_kastam')->nullable()->comment('tarikh_permohonan_laporan_kastam: DATE');
+            $table->boolean('status_laporan_penuh_kastam')->nullable()->comment('status_laporan_penuh_kastam: BOOLEAN');
+            $table->date('tarikh_laporan_penuh_kastam')->nullable()->comment('tarikh_laporan_penuh_kastam: DATE');
+
+            // Forensik PDRM
+            $table->boolean('status_permohonan_laporan_forensik_pdrm')->nullable()->comment('status_permohonan_laporan_forensik_pdrm: BOOLEAN');
+            $table->date('tarikh_permohonan_laporan_forensik_pdrm')->nullable()->comment('tarikh_permohonan_laporan_forensik_pdrm: DATE');
+            $table->boolean('status_laporan_penuh_forensik_pdrm')->nullable()->comment('status_laporan_penuh_forensik_pdrm: BOOLEAN');
+            $table->date('tarikh_laporan_penuh_forensik_pdrm')->nullable()->comment('tarikh_laporan_penuh_forensik_pdrm: DATE');
+            $table->text('jenis_barang_kes_forensik')->nullable()->comment('jenis_barang_kes_forensik: TEXT');
+            
             $table->boolean('status_permohonan_laporan_imigresen')->nullable()->comment('status_permohonan_laporan_imigresen: BOOLEAN');
             $table->date('tarikh_permohonan_laporan_imigresen')->nullable()->comment('tarikh_permohonan_laporan_imigresen: DATE');
             $table->boolean('status_laporan_penuh_imigresen')->nullable()->comment('status_laporan_penuh_imigresen: BOOLEAN');

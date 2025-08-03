@@ -1726,6 +1726,47 @@ public function getKomersilData(Project $project)
                 return htmlspecialchars($row->lain_lain_permohonan_laporan ?? '-');
             })
 
+            // NEW JKJR, Kastam, and Forensik PDRM fields
+            ->editColumn('tarikh_permohonan_laporan_jkjr', function($row) {
+                return optional($row->tarikh_permohonan_laporan_jkjr)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('status_permohonan_laporan_jkjr', function($row) {
+                return $this->formatBoolean($row->status_permohonan_laporan_jkjr, 'Ada', 'Tiada');
+            })
+            ->editColumn('tarikh_laporan_penuh_jkjr', function($row) {
+                return optional($row->tarikh_laporan_penuh_jkjr)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('status_laporan_penuh_jkjr', function($row) {
+                return $this->formatBoolean($row->status_laporan_penuh_jkjr, 'Dilampirkan', 'Tiada');
+            })
+            ->editColumn('tarikh_permohonan_laporan_kastam', function($row) {
+                return optional($row->tarikh_permohonan_laporan_kastam)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('status_permohonan_laporan_kastam', function($row) {
+                return $this->formatBoolean($row->status_permohonan_laporan_kastam, 'Ada', 'Tiada');
+            })
+            ->editColumn('tarikh_laporan_penuh_kastam', function($row) {
+                return optional($row->tarikh_laporan_penuh_kastam)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('status_laporan_penuh_kastam', function($row) {
+                return $this->formatBoolean($row->status_laporan_penuh_kastam, 'Dilampirkan', 'Tiada');
+            })
+            ->editColumn('tarikh_permohonan_laporan_forensik_pdrm', function($row) {
+                return optional($row->tarikh_permohonan_laporan_forensik_pdrm)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('status_permohonan_laporan_forensik_pdrm', function($row) {
+                return $this->formatBoolean($row->status_permohonan_laporan_forensik_pdrm, 'Ada', 'Tiada');
+            })
+            ->editColumn('tarikh_laporan_penuh_forensik_pdrm', function($row) {
+                return optional($row->tarikh_laporan_penuh_forensik_pdrm)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('status_laporan_penuh_forensik_pdrm', function($row) {
+                return $this->formatBoolean($row->status_laporan_penuh_forensik_pdrm, 'Dilampirkan', 'Tiada');
+            })
+            ->editColumn('jenis_barang_kes_forensik', function($row) {
+                return htmlspecialchars($row->jenis_barang_kes_forensik ?? '-');
+            })
+
             ->rawColumns(array_merge([
                 'action',
                 // Raw columns for boolean fields
@@ -1772,6 +1813,12 @@ public function getKomersilData(Project $project)
                 'status_laporan_penuh_jpj',
                 'status_permohonan_laporan_imigresen',
                 'status_laporan_penuh_imigresen',
+                'status_permohonan_laporan_jkjr',
+                'status_laporan_penuh_jkjr',
+                'status_permohonan_laporan_kastam',
+                'status_laporan_penuh_kastam',
+                'status_permohonan_laporan_forensik_pdrm',
+                'status_laporan_penuh_forensik_pdrm',
                 'muka_surat_4_barang_kes_ditulis',
                 'muka_surat_4_dengan_arahan_tpr',
                 'muka_surat_4_keputusan_kes_dicatat',

@@ -107,9 +107,9 @@
                     }
                 @endphp
 
-                <!-- BAHAGIAN 1: Maklumat Asas -->
+                <!-- BAHAGIAN 1 -->
                 <div>
-                    <h3 class="text-lg font-bold mb-4 text-gray-800 border-b pb-2">BAHAGIAN 1: Maklumat Asas</h3>
+                    <h3 class="text-lg font-bold mb-4 text-gray-800 border-b pb-2">BAHAGIAN 1</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <div>
                             <label class="block text-sm font-medium text-gray-500">No. Kertas Siasatan</label>
@@ -144,9 +144,9 @@
                         </div>
                     </div>
                 </div>
-                <!-- BAHAGIAN 2: Pemeriksaan & Status -->
+                <!-- BAHAGIAN 2 -->
                 <div>
-                    <h3 class="text-lg font-bold mb-4 text-gray-800 border-b pb-2">BAHAGIAN 2: Pemeriksaan & Status</h3>
+                    <h3 class="text-lg font-bold mb-4 text-gray-800 border-b pb-2">BAHAGIAN 2</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <div>
                             <label for="pegawai_pemeriksa" class="block text-sm font-medium text-gray-700">Pegawai
@@ -198,9 +198,9 @@
                     </div>
                 </div>
 
-                <!-- BAHAGIAN 3: Arahan & Keputusan -->
+                <!-- BAHAGIAN 3 -->
                 <div>
-                    <h3 class="text-lg font-bold mb-4 text-gray-800 border-b pb-2">BAHAGIAN 3: Arahan & Keputusan</h3>
+                    <h3 class="text-lg font-bold mb-4 text-gray-800 border-b pb-2">BAHAGIAN 3</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Arahan Minit Oleh SIO</label>
@@ -278,9 +278,9 @@
                     </div>
                 </div>
 
-                <!-- BAHAGIAN 4: Barang Kes -->
+                <!-- BAHAGIAN 4 -->
                 <div>
-                    <h3 class="text-lg font-bold mb-4 text-gray-800 border-b pb-2">BAHAGIAN 4: Barang Kes</h3>
+                    <h3 class="text-lg font-bold mb-4 text-gray-800 border-b pb-2">BAHAGIAN 4</h3>
                     <div class="space-y-6">
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Adakah Barang Kes Didaftarkan</label>
@@ -588,9 +588,9 @@
                         </div>
                     </div>
                 </div>
-                <!-- BAHAGIAN 5: Dokumen Siasatan -->
+                <!-- BAHAGIAN 5 -->
                 <div>
-                    <h3 class="text-lg mt-5 font-bold mb-4 text-gray-800 border-b pb-2">BAHAGIAN 5: Dokumen Siasatan
+                    <h3 class="text-lg mt-5 font-bold mb-4 text-gray-800 border-b pb-2">BAHAGIAN 5
                     </h3>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
                         <div>
@@ -628,9 +628,9 @@
                     </div>
                 </div>
 
-                <!-- BAHAGIAN 6: Borang & Semakan -->
+                <!-- BAHAGIAN 6 -->
                 <div>
-                    <h3 class="text-lg mt-5 font-bold mb-4 text-gray-800 border-b pb-2">BAHAGIAN 6: Borang & Semakan
+                    <h3 class="text-lg mt-5 font-bold mb-4 text-gray-800 border-b pb-2">BAHAGIAN 6
                     </h3>
                     <div class="space-y-6">
 
@@ -697,10 +697,10 @@
                         </div>
                     </div>
                 </div>
-                <!-- BAHAGIAN 7: Permohonan Laporan Agensi Luar -->
-                <!-- BAHAGIAN 7: Permohonan Laporan Agensi Luar -->
+                <!-- BAHAGIAN 7 -->
+                <!-- BAHAGIAN 7 -->
                 <div>
-                    <h3 class="text-lg mt-5 font-bold mb-4 text-gray-800 border-b pb-2">BAHAGIAN 7: Permohonan Laporan
+                    <h3 class="text-lg mt-5 font-bold mb-4 text-gray-800 border-b pb-2">BAHAGIAN 7
                         Agensi Luar</h3>
 
 
@@ -1628,9 +1628,9 @@
                         </div>
                     </div>
                 </div>
-                <!-- BAHAGIAN 8: Status Fail -->
+                <!-- BAHAGIAN 8 -->
                 <div>
-                    <h3 class="text-lg font-bold mb-4 text-gray-800 border-b pb-2">BAHAGIAN 8: Status Fail</h3>
+                    <h3 class="text-lg font-bold mb-4 text-gray-800 border-b pb-2">BAHAGIAN 8</h3>
                     <div class="space-y-6">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
