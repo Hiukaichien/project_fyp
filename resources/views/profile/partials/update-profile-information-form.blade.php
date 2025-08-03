@@ -24,7 +24,7 @@
         </div>
 
         <div>
-            <x-input-label for="username" :value="__('Nama Pengguna')" />
+            <x-input-label for="username" :value="__('ID Pengguna')" />
             <x-text-input id="username" name="username" type="text" class="mt-1 block w-full" :value="old('username', $user->username)" required autocomplete="username" />
             <x-input-error class="mt-2" :messages="$errors->get('username')" />
             {{-- If you want the username to be readonly after registration, uncomment the line below and comment out the one above --}}
