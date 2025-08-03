@@ -162,14 +162,14 @@ class ProjectController extends Controller
         Gate::authorize('access-project', $project);
         
         $validated = $request->validate([
-            'excel_file' => 'required|file|mimes:xlsx,xls,csv|mimetypes:application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv,text/plain,application/csv|max:20480',
+            'excel_file' => 'required|file|mimes:xlsx,xls,csv|mimetypes:application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv,text/plain,application/csv|max:512000',
             'paper_type' => ['required', 'string', Rule::in(['Jenayah', 'Narkotik', 'Komersil', 'TrafikSeksyen', 'TrafikRule', 'OrangHilang', 'LaporanMatiMengejut'])],
         ], [
             'excel_file.required' => 'Fail Excel adalah wajib.',
             'excel_file.file' => 'Medan fail Excel mestilah fail yang sah.',
             'excel_file.mimes' => 'Fail Excel mestilah jenis fail: xlsx, xls, csv.',
             'excel_file.mimetypes' => 'Fail Excel mestilah jenis fail: xlsx, xls, csv.',
-            'excel_file.max' => 'Fail Excel tidak boleh melebihi 20MB.',
+            'excel_file.max' => 'Fail Excel tidak boleh melebihi 500MB.',
             'paper_type.required' => 'Kategori kertas adalah wajib.',
             'paper_type.in' => 'Kategori kertas yang dipilih tidak sah.',
         ]);
@@ -199,7 +199,16 @@ class ProjectController extends Controller
                 if (!empty($updatedRecords)) {
                     $updateDetails = [];
                     foreach ($updatedRecords as $record) {
-                        $changedFieldsStr = implode(', ', $record['changed_fields']);
+                        $changedFields = $record['changed_fields'];
+                        
+                        // Limit the number of fields shown per record to avoid overly long lines
+                        if (count($changedFields) > 5) {
+                            $displayFields = array_slice($changedFields, 0, 5);
+                            $changedFieldsStr = implode(', ', $displayFields) . ' dan ' . (count($changedFields) - 5) . ' medan lagi';
+                        } else {
+                            $changedFieldsStr = implode(', ', $changedFields);
+                        }
+                        
                         $updateDetails[] = "• {$record['unique_value']}: {$changedFieldsStr}";
                     }
                     
