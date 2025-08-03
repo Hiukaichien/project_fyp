@@ -1073,11 +1073,16 @@
                 </button>
                 <span id="file-name" class="ml-3 text-sm text-gray-500">Sila pilih kategori kertas dahulu</span>
             </div>
+            <p class="mt-2 text-xs text-blue-600">
+                <a href="{{ asset('storage/templates/templat_lmm.csv') }}" download class="underline hover:text-blue-800">
+                    Klik di sini untuk muat turun templat
+                </a>
+            </p>
         </div>
 
         {{-- *** NEW DYNAMIC INFO BOX *** --}}
         <div id="column-info" class="mt-4 p-3 bg-yellow-100 border-l-4 border-yellow-400 text-yellow-800 text-sm rounded" style="display: none;">
-            <p class="font-bold">Pastikan fail anda mempunyai lajur berikut (dalam urutan yang betul):</p>
+            <p class="font-bold">Pastikan fail anda mempunyai lajur berikut:</p>
             <code id="column-list" class="block mt-2 text-xs break-words"></code>
         </div>
         {{-- *** END OF NEW DYNAMIC INFO BOX *** --}}
@@ -1475,7 +1480,7 @@
                         data: { _token: '{{ csrf_token() }}' }
                     },
                     columns: dtColumnsConfig, // Use the processed configuration
-                    order: [[2, 'desc']], 
+                    order: [[2, 'asc']], 
                     columnDefs: [{
                         targets: 0,
                         className: "sticky left-0 bg-gray-50 dark:text-white dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600"
@@ -1739,7 +1744,7 @@
                     data: { _token: '{{ csrf_token() }}' }
                 },
                 columns: dtColumnsConfig, // Use the processed JavaScript variable
-                order: [[2, 'desc']],
+                order: [[2, 'asc']],
                 columnDefs: [{
                     targets: 0,
                     className: "sticky left-0 bg-gray-50 dark:text-white dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600"
@@ -1888,7 +1893,7 @@
             data: { _token: '{{ csrf_token() }}' }
         },
         columns: dtColumnsConfig,
-        order: [[2, 'desc']],
+        order: [[2, 'asc']],
         columnDefs: [{
             targets: 0,
             className: "sticky left-0 bg-gray-50 dark:text-white dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600"
@@ -1994,7 +1999,7 @@
                     data: { _token: '{{ csrf_token() }}' }
                 },
         columns: dtColumnsConfig,
-        order: [[2, 'desc']],
+        order: [[2, 'asc']],
         columnDefs: [{
             targets: 0,
             className: "sticky left-0 bg-gray-50 dark:text-white dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600"
@@ -2127,7 +2132,7 @@
             data: { _token: '{{ csrf_token() }}' }
         },
         columns: dtColumnsConfig, // Use the processed JavaScript variable
-        order: [[2, 'desc']],
+        order: [[2, 'asc']],
         columnDefs: [{
             targets: 0,
             className: "sticky left-0 bg-gray-50 dark:text-white dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600"
@@ -2175,7 +2180,7 @@
                     data: { _token: '{{ csrf_token() }}' }
                 },
                 columns: @json($dtColumns),
-                order: [[2, 'desc']],
+                order: [[2, 'asc']],
                 columnDefs: [{
                     targets: 0,
                     className: "sticky left-0 bg-gray-50 dark:text-white dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600"
@@ -2310,7 +2315,7 @@
                     data: { _token: '{{ csrf_token() }}' }
                 },
                 columns: dtColumnsConfig, // Use the processed JavaScript variable
-                order: [[2, 'desc']],
+                order: [[2, 'asc']],
                 columnDefs: [{
                     targets: 0,
                     className: "sticky left-0 bg-gray-50 dark:text-white dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600"
