@@ -55,11 +55,11 @@ return new class extends Migration
             $table->string('jenis_barang_kes_kenderaan')->nullable()->comment('jenis_barang_kes_kenderaan: VARCHAR(255)');
             $table->string('status_pergerakan_barang_kes')->nullable()->comment('B4');
             $table->text('status_pergerakan_barang_kes_ujian_makmal')->nullable()->comment('B4');
-            $table->json('status_barang_kes_selesai_siasatan')->nullable()->comment('B4');
-            $table->json('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan')->nullable()->comment('B4');
-            $table->json('adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan')->nullable()->comment('B4');
-            $table->json('resit_kew_38e_bagi_pelupusan')->nullable()->comment('B4,resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan');
-            $table->json('adakah_borang_serah_terima_pegawai_tangkapan')->nullable()->comment('B4');
+            $table->string('status_barang_kes_selesai_siasatan')->nullable()->comment('B4');
+            $table->string('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan')->nullable()->comment('B4');
+            $table->string('adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan')->nullable()->comment('B4');
+            $table->string('resit_kew_38e_bagi_pelupusan')->nullable()->comment('B4,resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan');
+            $table->string('adakah_borang_serah_terima_pegawai_tangkapan')->nullable()->comment('B4');
             $table->string('adakah_borang_serah_terima_pemilik_saksi')->nullable()->comment('B4');
             $table->boolean('adakah_sijil_surat_kebenaran_ipo')->nullable()->comment('B4');
             $table->string('adakah_gambar_pelupusan')->nullable()->comment('B4');

@@ -147,12 +147,12 @@ class DatabaseSeeder extends Seeder
                     'jenis_barang_kes_kenderaan' => rand(0, 1) ? 'Kereta/Motosikal/Lori' : null,
                     // OK: This column is STRING in the migration
                     'status_pergerakan_barang_kes' => 'Simpanan Stor Ekshibit',
-                    // CORRECTED: These columns are JSON in the migration
-                    'status_barang_kes_selesai_siasatan' => json_encode('Dikembalikan Kepada Pemilik'),
-                    'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan' => json_encode('Dilelong'),
-                    'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => json_encode('Ya'),
-                    'resit_kew_38e_bagi_pelupusan' => json_encode('Ada Dilampirkan'),
-                    'adakah_borang_serah_terima_pegawai_tangkapan' => json_encode('Ada Dilampirkan'),
+                    // CHANGED: These columns are now STRING in the migration
+                    'status_barang_kes_selesai_siasatan' => 'Dikembalikan Kepada Pemilik',
+                    'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan' => 'Dilelong',
+                    'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => 'Ya',
+                    'resit_kew_38e_bagi_pelupusan' => 'Ada Dilampirkan',
+                    'adakah_borang_serah_terima_pegawai_tangkapan' => 'Ada Dilampirkan',
                     // OK: These columns are STRING and BOOLEAN
                     'adakah_borang_serah_terima_pemilik_saksi' => 'Ada Dilampirkan',
                     'adakah_sijil_surat_kebenaran_ipo' => rand(0, 1),
