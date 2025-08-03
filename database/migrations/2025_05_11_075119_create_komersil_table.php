@@ -106,6 +106,8 @@ return new class extends Migration
 
             // Additional BAHAGIAN 4 fields from edit form
             $table->text('status_pergerakan_barang_kes_lain')->nullable()->comment('B4 - Other movement status');
+            $table->string('status_pergerakan_barang_kes_makmal')->nullable()->comment('B4 - Laboratory movement status');
+            $table->string('status_barang_kes_selesai_siasatan_RM')->nullable()->comment('status_barang_kes_selesai_siasatan_lain');
             $table->text('status_barang_kes_selesai_siasatan_lain')->nullable()->comment('B4 - Other completion status');
             $table->text('kaedah_pelupusan_lain')->nullable()->comment('B4 - Other disposal method');
             $table->text('ulasan_keseluruhan_pegawai_pemeriksa_barang_kes')->nullable()->comment('B4 - Overall examiner comments on evidence');
