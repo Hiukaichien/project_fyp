@@ -17,11 +17,13 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
     protected $projectId;
     protected $userId;
     protected $paperType;
+    protected $duplicateHandling;
     protected $modelClass;
     private $config;
 
     private $createdCount = 0;
     private $updatedCount = 0;
+    private $skippedCount = 0;
     private $successCount = 0;
     private $skippedRows = [];
     private $updatedRecords = []; // Track which records were updated and what changed
@@ -926,7 +928,7 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
         ],
     ];
 
-       public function __construct(int $projectId, int $userId, string $paperType)
+       public function __construct(int $projectId, int $userId, string $paperType, string $duplicateHandling = 'update')
     {
         if (!isset(self::$paperConfig[$paperType])) {
             throw new \InvalidArgumentException("Invalid paper type specified: {$paperType}");
@@ -934,6 +936,7 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
         $this->projectId = $projectId;
         $this->userId = $userId;
         $this->paperType = $paperType;
+        $this->duplicateHandling = $duplicateHandling;
         $this->config = self::$paperConfig[$paperType];
         $this->modelClass = $this->config['model'];
     }
@@ -1013,6 +1016,7 @@ public function collection(Collection $rows)
         // Skip if the unique key is missing in the row
         if (empty($uniqueValue)) {
             $this->skippedRows[] = "Baris {$rowNumber}: Dilangkau kerana lajur unik '{$uniqueExcelHeaderSnake}' kosong.";
+            $this->skippedCount++;
             $rowNumber++;
             continue;
         }
@@ -1050,7 +1054,61 @@ public function collection(Collection $rows)
             ->where('project_id', $this->projectId)
             ->first();
         
-        // This is the core "update or create" logic
+        // Handle different duplicate strategies
+        if ($existingRecord) {
+            switch ($this->duplicateHandling) {
+                case 'skip':
+                    // Skip this record entirely and show detailed duplicate info
+                    $uniqueColumnDisplay = $this->getDisplayColumnName($uniqueExcelHeaderSnake);
+                    $this->skippedRows[] = "Baris {$rowNumber}: Rekod dengan {$uniqueColumnDisplay} '{$uniqueValue}' sudah wujud dalam sistem.";
+                    $this->skippedCount++;
+                    $rowNumber++;
+                    continue 2; // Continue to next iteration of the outer loop
+                    
+                case 'fill_empty':
+                    // Only update fields that are currently null or empty
+                    $updateData = ['project_id' => $this->projectId];
+                    foreach ($dataForDb as $field => $newValue) {
+                        if ($field !== 'project_id') {
+                            $currentValue = $existingRecord->getAttribute($field);
+                            // Only update if current value is null, empty string, or empty array
+                            if (is_null($currentValue) || $currentValue === '' || 
+                                (is_array($currentValue) && empty($currentValue))) {
+                                $updateData[$field] = $newValue;
+                            }
+                        }
+                    }
+                    
+                    // Only update if there are fields to update
+                    if (count($updateData) > 1) { // More than just project_id
+                        $existingRecord->update($updateData);
+                        $this->updatedCount++;
+                        
+                        // Track what fields were filled
+                        $filledFields = array_keys(array_diff_key($updateData, ['project_id' => '']));
+                        if (!empty($filledFields)) {
+                            $this->updatedRecords[] = [
+                                'unique_value' => $uniqueValue,
+                                'row_number' => $rowNumber,
+                                'changed_fields' => $filledFields
+                            ];
+                        }
+                    } else {
+                        $this->skippedRows[] = "Baris {$rowNumber}: Dilangkau kerana semua lajur untuk rekod '{$uniqueValue}' sudah terisi.";
+                        $this->skippedCount++;
+                    }
+                    
+                    $rowNumber++;
+                    continue 2; // Continue to next iteration
+                    
+                case 'update':
+                default:
+                    // Default behavior - update all fields (original behavior)
+                    break;
+            }
+        }
+        
+        // This is the core "update or create" logic (for 'update' mode or new records)
         $record = $this->modelClass::updateOrCreate(
             [$uniqueDbColumn => $uniqueValue, 'project_id' => $this->projectId], // Attributes to find the record
             $dataForDb  // Values to update or create with
@@ -1247,6 +1305,11 @@ private function transformDate($value, $format = 'Y-m-d')
         return $this->updatedCount;
     }
 
+    public function getSkippedCount(): int
+    {
+        return $this->skippedCount;
+    }
+
     public function getUpdatedRecords(): array
     {
         return $this->updatedRecords;
@@ -1255,5 +1318,23 @@ private function transformDate($value, $format = 'Y-m-d')
     public function getSkippedRows(): array
     {
         return $this->skippedRows;
+    }
+    
+    /**
+     * Get a user-friendly display name for column headers
+     */
+    private function getDisplayColumnName(string $columnName): string
+    {
+        $displayNames = [
+            'no_kertas_siasatan' => 'No. Kertas Siasatan',
+            'no_fail_lmm_t' => 'No. Fail L.M.M.(T)',
+            'no_fail_lmm_sdr' => 'No. Fail L.M.M.(SDR)',
+            'no_repot_polis' => 'No. Repot Polis',
+            'pegawai_penyiasat' => 'Pegawai Penyiasat',
+            'tarikh_laporan_polis_dibuka' => 'Tarikh Laporan Polis Dibuka',
+            'seksyen' => 'Seksyen'
+        ];
+        
+        return $displayNames[$columnName] ?? ucwords(str_replace('_', ' ', $columnName));
     }
 }

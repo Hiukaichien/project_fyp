@@ -174,13 +174,15 @@ class ProjectController extends Controller
             'paper_type.in' => 'Kategori kertas yang dipilih tidak sah.',
         ]);
 
-        $import = new PaperImport($project->id, Auth::id(), $validated['paper_type']);
+        // Always skip duplicates to prevent duplicate inserts
+        $import = new PaperImport($project->id, Auth::id(), $validated['paper_type'], 'skip');
 
         try {
             Excel::import($import, $request->file('excel_file'));
 
             $createdCount = $import->getCreatedCount();
             $updatedCount = $import->getUpdatedCount();
+            $skippedCount = $import->getSkippedCount();
             $updatedRecords = $import->getUpdatedRecords();
             $skippedRows = $import->getSkippedRows();
             $friendlyName = Str::headline($validated['paper_type']);
@@ -221,7 +223,13 @@ class ProjectController extends Controller
                 }
             }
             
-            if ($createdCount == 0 && $updatedCount == 0) {
+            if ($skippedCount > 0) {
+                $feedback .= "{$skippedCount} rekod {$friendlyName} tidak dimasukkan kerana sudah wujud dalam sistem. ";
+            }
+            
+            if ($createdCount == 0 && $updatedCount == 0 && $skippedCount == 0) {
+                $feedback = "Import selesai tetapi tiada rekod diproses.";
+            } elseif ($createdCount == 0 && $updatedCount == 0) {
                 $feedback = "Import selesai tetapi tiada rekod baharu dicipta atau dikemaskini.";
             }
             
@@ -229,7 +237,7 @@ class ProjectController extends Controller
                 return back()
                     ->with('success', $feedback)
                     ->withErrors([
-                        'excel_file' => 'Beberapa rekod telah dilangkau:',
+                        'excel_file' => 'Rekod pendua tidak dimasukkan untuk mengelakkan data berganda:',
                         'excel_errors' => $skippedRows
                     ]);
             }
