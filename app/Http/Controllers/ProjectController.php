@@ -11,6 +11,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Auth; 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -162,10 +163,12 @@ class ProjectController extends Controller
         Gate::authorize('access-project', $project);
         
         $validated = $request->validate([
-            'excel_file' => 'required|file|mimes:xlsx,xls,csv|mimetypes:application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv,text/plain,application/csv,application/octet-stream,text/x-csv,application/x-csv,text/comma-separated-values|max:512000',
+            'excel_file' => 'required_without:temp_file_path|file|mimes:xlsx,xls,csv|mimetypes:application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv,text/plain,application/csv,application/octet-stream,text/x-csv,application/x-csv,text/comma-separated-values|max:512000',
             'paper_type' => ['required', 'string', Rule::in(['Jenayah', 'Narkotik', 'Komersil', 'TrafikSeksyen', 'TrafikRule', 'OrangHilang', 'LaporanMatiMengejut'])],
+            'confirm_overwrite' => 'sometimes|boolean',
+            'temp_file_path' => 'sometimes|string',
         ], [
-            'excel_file.required' => 'Fail Excel adalah wajib.',
+            'excel_file.required_without' => 'Fail Excel adalah wajib.',
             'excel_file.file' => 'Medan fail Excel mestilah fail yang sah.',
             'excel_file.mimes' => 'Fail Excel mestilah jenis fail: xlsx, xls, csv.',
             'excel_file.mimetypes' => 'Fail Excel mestilah jenis fail: xlsx, xls, csv.',
@@ -174,81 +177,123 @@ class ProjectController extends Controller
             'paper_type.in' => 'Kategori kertas yang dipilih tidak sah.',
         ]);
 
-        // Always skip duplicates to prevent duplicate inserts
-        $import = new PaperImport($project->id, Auth::id(), $validated['paper_type'], 'skip');
-
-        try {
-            Excel::import($import, $request->file('excel_file'));
-
-            $createdCount = $import->getCreatedCount();
-            $updatedCount = $import->getUpdatedCount();
-            $skippedCount = $import->getSkippedCount();
-            $updatedRecords = $import->getUpdatedRecords();
-            $skippedRows = $import->getSkippedRows();
-            $friendlyName = Str::headline($validated['paper_type']);
+        // Check if user confirmed overwrite
+        $confirmOverwrite = $request->boolean('confirm_overwrite', false);
+        
+        // First pass: detect duplicates if not confirming overwrite
+        if (!$confirmOverwrite && !$request->has('temp_file_path')) {
+            $detectImport = new PaperImport($project->id, Auth::id(), $validated['paper_type'], 'detect');
             
-            // Build detailed feedback message
-            $feedback = "Import Selesai. ";
-            
-            if ($createdCount > 0) {
-                $feedback .= "{$createdCount} rekod {$friendlyName} baharu berjaya dicipta. ";
-            }
-            
-            if ($updatedCount > 0) {
-                $feedback .= "{$updatedCount} rekod {$friendlyName} berjaya dikemaskini. ";
+            try {
+                Excel::import($detectImport, $request->file('excel_file'));
+                $duplicateRecords = $detectImport->getDuplicateRecords();
+                $newRecordsCount = $detectImport->getNewRecordsCount();
+                $totalRecords = $newRecordsCount + count($duplicateRecords);
                 
-                // Add details about updated records
-                if (!empty($updatedRecords)) {
-                    $updateDetails = [];
-                    foreach ($updatedRecords as $record) {
-                        $changedFields = $record['changed_fields'];
-                        
-                        // Limit the number of fields shown per record to avoid overly long lines
-                        if (count($changedFields) > 5) {
-                            $displayFields = array_slice($changedFields, 0, 5);
-                            $changedFieldsStr = implode(', ', $displayFields) . ' dan ' . (count($changedFields) - 5) . ' medan lagi';
-                        } else {
-                            $changedFieldsStr = implode(', ', $changedFields);
-                        }
-                        
-                        $updateDetails[] = "• {$record['unique_value']}: {$changedFieldsStr}";
+                // If duplicates found, return them for confirmation modal
+                if (!empty($duplicateRecords)) {
+                    // Store the file temporarily for the second pass
+                    $file = $request->file('excel_file');
+                    $fileName = time() . '_' . $file->getClientOriginalName();
+                    
+                    // Use a more direct approach
+                    $tempDir = storage_path('app' . DIRECTORY_SEPARATOR . 'temp');
+                    if (!is_dir($tempDir)) {
+                        mkdir($tempDir, 0755, true);
                     }
                     
-                    if (count($updateDetails) <= 10) { // Show details for up to 10 records
-                        $feedback .= "<br><br><strong>Maklumat lanjut rekod yang dikemaskini:</strong><br>" . implode("<br>", $updateDetails);
-                    } else {
-                        $feedback .= "<br><br><strong>Rekod yang dikemaskini:</strong><br>" . implode("<br>", array_slice($updateDetails, 0, 10));
-                        $feedback .= "<br>... dan " . (count($updateDetails) - 10) . " rekod lagi.";
+                    $fullPath = $tempDir . DIRECTORY_SEPARATOR . $fileName;
+                    $file->move($tempDir, $fileName);
+                    
+                    // Verify file was stored successfully
+                    if (!file_exists($fullPath)) {
+                        return back()->with('error', 'Gagal menyimpan fail sementara. Sila cuba lagi.');
                     }
-                }
-            }
-            
-            if ($skippedCount > 0) {
-                $feedback .= "{$skippedCount} rekod {$friendlyName} tidak dimasukkan kerana sudah wujud dalam sistem. ";
-            }
-            
-            if ($createdCount == 0 && $updatedCount == 0 && $skippedCount == 0) {
-                $feedback = "Import selesai tetapi tiada rekod diproses.";
-            } elseif ($createdCount == 0 && $updatedCount == 0) {
-                $feedback = "Import selesai tetapi tiada rekod baharu dicipta atau dikemaskini.";
-            }
-            
-            if (!empty($skippedRows)) {
-                return back()
-                    ->with('success', $feedback)
-                    ->withErrors([
-                        'excel_file' => 'Rekod pendua tidak dimasukkan untuk mengelakkan data berganda:',
-                        'excel_errors' => $skippedRows
+                    
+                    Log::info('Temporary file stored at: ' . $fullPath);
+                    
+                    return back()->with([
+                        'duplicates_found' => true,
+                        'duplicate_records' => $duplicateRecords,
+                        'new_records_count' => $newRecordsCount,
+                        'total_records_count' => $totalRecords,
+                        'temp_file_path' => 'temp' . DIRECTORY_SEPARATOR . $fileName,
+                        'paper_type' => $validated['paper_type'],
+                        'project_id' => $project->id,
                     ]);
+                }
+                
+                // No duplicates, proceed with normal import
+                $import = new PaperImport($project->id, Auth::id(), $validated['paper_type'], 'update');
+                Excel::import($import, $request->file('excel_file'));
+                
+            } catch (ValidationException $e) {
+                return back()->withErrors($e->errors())->withInput();
+            } catch (\Exception $e) {
+                return back()->with('error', 'Ralat tidak dijangka semasa memproses fail: ' . $e->getMessage())->withInput();
             }
-
-            return back()->with('success', $feedback);
-
-        } catch (ValidationException $e) {
-            return back()->withErrors($e->errors())->withInput();
-        } catch (\Exception $e) {
-            return back()->with('error', 'Ralat tidak dijangka semasa memproses fail: ' . $e->getMessage())->withInput();
+        } else {
+            // Handle both overwrite confirmation and cancel scenarios
+            $tempFilePath = $request->input('temp_file_path');
+            
+            Log::info('Looking for temp file path: ' . $tempFilePath);
+            
+            if (!$tempFilePath) {
+                return back()->with('error', 'Fail sementara tidak dijumpai. Sila cuba lagi.')->withInput();
+            }
+            
+            $tempFile = storage_path('app' . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $tempFilePath));
+            Log::info('Looking for temp file at: ' . $tempFile);
+            Log::info('File exists: ' . (file_exists($tempFile) ? 'YES' : 'NO'));
+            
+            if (!file_exists($tempFile)) {
+                return back()->with('error', 'Fail sementara tidak dijumpai. Sila cuba lagi.')->withInput();
+            }
+            
+            // If confirm_overwrite is false (cancel button), just clean up and return
+            if (!$confirmOverwrite) {
+                unlink($tempFile);
+                return back()->with('info', 'Import dibatalkan.');
+            }
+            
+            // User confirmed overwrite, proceed with update
+            $import = new PaperImport($project->id, Auth::id(), $validated['paper_type'], 'update');
+            
+            try {
+                Excel::import($import, $tempFile);
+                // Clean up temp file
+                unlink($tempFile);
+            } catch (ValidationException $e) {
+                return back()->withErrors($e->errors())->withInput();
+            } catch (\Exception $e) {
+                return back()->with('error', 'Ralat tidak dijangka semasa memproses fail: ' . $e->getMessage())->withInput();
+            }
         }
+
+        // Process results and show feedback
+        $createdCount = $import->getCreatedCount();
+        $updatedCount = $import->getUpdatedCount();
+        $skippedCount = $import->getSkippedCount();
+        $updatedRecords = $import->getUpdatedRecords();
+        $skippedRows = $import->getSkippedRows();
+        $friendlyName = Str::headline($validated['paper_type']);
+        
+        // Build detailed feedback message
+        $feedback = "Import Selesai. ";
+        
+        if ($createdCount > 0) {
+            $feedback .= "{$createdCount} rekod {$friendlyName} baharu berjaya dicipta. ";
+        }
+        
+        if ($updatedCount > 0) {
+            $feedback .= "{$updatedCount} rekod {$friendlyName} berjaya dikemaskini. ";
+        }
+        
+        if ($confirmOverwrite && $updatedCount > 0) {
+            $feedback .= "Data sedia ada telah ditimpa. ";
+        }
+
+        return back()->with('success', $feedback);
     }
         
         public function getPapersForDestroy(Project $project)

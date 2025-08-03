@@ -1288,6 +1288,71 @@
     </form>
 </x-modal>
 
+    <!-- Duplicate Confirmation Modal -->
+    @if(session('duplicates_found'))
+    <x-modal name="duplicate-confirmation-modal" :show="true" focusable>
+        <div class="p-6">
+            <h2 class="text-lg font-medium text-red-900">Rekod Pendua Dijumpai</h2>
+            <p class="mt-1 text-sm text-red-600">Sistem telah mengesan rekod pendua dalam fail yang dimuat naik.</p>
+
+            <!-- Import Summary -->
+            <div class="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <h3 class="text-sm font-medium text-blue-900 mb-2">Ringkasan Import:</h3>
+                <div class="grid grid-cols-3 gap-4 text-xs">
+                    <div class="text-center">
+                        <div class="text-lg font-bold text-green-600">{{ session('new_records_count', 0) }}</div>
+                        <div class="text-green-700">Rekod Baharu</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-lg font-bold text-red-600">{{ count(session('duplicate_records', [])) }}</div>
+                        <div class="text-red-700">Rekod Pendua</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-lg font-bold text-blue-600">{{ session('total_records_count', 0) }}</div>
+                        <div class="text-blue-700">Jumlah Rekod</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Duplicate Records List -->
+            <div class="mt-4 max-h-64 overflow-y-auto">
+                <h3 class="text-sm font-medium text-gray-900 mb-2">Senarai Rekod Pendua:</h3>
+                <ul class="space-y-1 text-xs text-gray-700">
+                    @foreach(session('duplicate_records', []) as $duplicate)
+                        <li class="p-2 bg-red-50 rounded border-l-2 border-red-200">
+                            <strong>Baris {{ $duplicate['row_number'] }}:</strong> 
+                            {{ $duplicate['unique_column'] }} "{{ $duplicate['unique_value'] }}"
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="mt-6 flex justify-end space-x-3">
+                <form method="POST" action="{{ route('projects.import', $project) }}" class="inline">
+                    @csrf
+                    <input type="hidden" name="temp_file_path" value="{{ session('temp_file_path') }}">
+                    <input type="hidden" name="paper_type" value="{{ session('paper_type') }}">
+                    <input type="hidden" name="confirm_overwrite" value="0">
+                    <x-secondary-button type="submit">
+                        {{ __('Batal Import') }}
+                    </x-secondary-button>
+                </form>
+
+                <form method="POST" action="{{ route('projects.import', $project) }}" class="inline">
+                    @csrf
+                    <input type="hidden" name="temp_file_path" value="{{ session('temp_file_path') }}">
+                    <input type="hidden" name="paper_type" value="{{ session('paper_type') }}">
+                    <input type="hidden" name="confirm_overwrite" value="1">
+                    <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                        {{ __('Timpa Data Sedia Ada') }}
+                    </button>
+                </form>
+            </div>
+        </div>
+    </x-modal>
+    @endif
+
     <!-- Export Modal -->
     <x-modal name="export-papers-modal" focusable>
         <form action="{{ route('projects.export_papers', $project) }}" method="GET" class="p-6">

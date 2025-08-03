@@ -18,6 +18,7 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
     protected $userId;
     protected $paperType;
     protected $duplicateHandling;
+    protected $confirmOverwrite;
     protected $modelClass;
     private $config;
 
@@ -27,6 +28,8 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
     private $successCount = 0;
     private $skippedRows = [];
     private $updatedRecords = []; // Track which records were updated and what changed
+    private $duplicateRecords = []; // Track duplicate records found
+    private $newRecordsCount = 0; // Track how many new records would be created
 
     private static $paperConfig = [
          'Jenayah' => [
@@ -928,7 +931,7 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
         ],
     ];
 
-       public function __construct(int $projectId, int $userId, string $paperType, string $duplicateHandling = 'update')
+       public function __construct(int $projectId, int $userId, string $paperType, string $duplicateHandling = 'update', bool $confirmOverwrite = false)
     {
         if (!isset(self::$paperConfig[$paperType])) {
             throw new \InvalidArgumentException("Invalid paper type specified: {$paperType}");
@@ -937,6 +940,7 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
         $this->userId = $userId;
         $this->paperType = $paperType;
         $this->duplicateHandling = $duplicateHandling;
+        $this->confirmOverwrite = $confirmOverwrite;
         $this->config = self::$paperConfig[$paperType];
         $this->modelClass = $this->config['model'];
     }
@@ -1057,6 +1061,18 @@ public function collection(Collection $rows)
         // Handle different duplicate strategies
         if ($existingRecord) {
             switch ($this->duplicateHandling) {
+                case 'detect':
+                    // Just detect duplicates without processing
+                    $uniqueColumnDisplay = $this->getDisplayColumnName($uniqueExcelHeaderSnake);
+                    $this->duplicateRecords[] = [
+                        'row_number' => $rowNumber,
+                        'unique_column' => $uniqueColumnDisplay,
+                        'unique_value' => $uniqueValue,
+                        'data' => $dataForDb
+                    ];
+                    $rowNumber++;
+                    continue 2; // Continue to next iteration
+                    
                 case 'skip':
                     // Skip this record entirely and show detailed duplicate info
                     $uniqueColumnDisplay = $this->getDisplayColumnName($uniqueExcelHeaderSnake);
@@ -1105,6 +1121,13 @@ public function collection(Collection $rows)
                 default:
                     // Default behavior - update all fields (original behavior)
                     break;
+            }
+        } else {
+            // This would be a new record
+            if ($this->duplicateHandling === 'detect') {
+                $this->newRecordsCount++;
+                $rowNumber++;
+                continue; // Continue to next iteration without creating
             }
         }
         
@@ -1318,6 +1341,16 @@ private function transformDate($value, $format = 'Y-m-d')
     public function getSkippedRows(): array
     {
         return $this->skippedRows;
+    }
+    
+    public function getDuplicateRecords(): array
+    {
+        return $this->duplicateRecords;
+    }
+    
+    public function getNewRecordsCount(): int
+    {
+        return $this->newRecordsCount;
     }
     
     /**
