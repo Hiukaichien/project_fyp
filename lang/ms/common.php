@@ -48,4 +48,9 @@ return [
     'Setelah akaun dipadam, semua sumber dan data akan dipadam secara kekal. Sila masukkan kata laluan untuk mengesahkan pemadaman akaun.' => 'Setelah akaun dipadam, semua sumber dan data akan dipadam secara kekal. Sila masukkan kata laluan untuk mengesahkan pemadaman akaun.',
     'Batal' => 'Batal',
     
+    // Password reset page labels
+    'Lupa kata laluan? Tiada masalah. Beritahu kami alamat emel anda dan kami akan menghantar pautan tetapan semula kata laluan untuk memilih yang baru.' => 'Lupa kata laluan? Tiada masalah. Beritahu kami alamat emel anda dan kami akan menghantar pautan tetapan semula kata laluan untuk memilih yang baru.',
+    'Hantar Pautan Tetapan Semula Kata Laluan' => 'Hantar Pautan Tetapan Semula Kata Laluan',
+    'Tetapkan Semula Kata Laluan' => 'Tetapkan Semula Kata Laluan',
+    
 ];
