@@ -17,7 +17,7 @@
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     @if (session('success'))
                         <div class="mb-4 p-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800" role="alert">
-                            {{ session('success') }}
+                            {!! session('success') !!}
                         </div>
                     @endif
                     @if (session('info'))

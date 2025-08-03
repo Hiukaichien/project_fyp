@@ -213,10 +213,10 @@ class ProjectController extends Controller
                     }
                     
                     if (count($updateDetails) <= 10) { // Show details for up to 10 records
-                        $feedback .= "\n\nMaklumat lanjut rekod yang dikemaskini:\n" . implode("\n", $updateDetails);
+                        $feedback .= "<br><br><strong>Maklumat lanjut rekod yang dikemaskini:</strong><br>" . implode("<br>", $updateDetails);
                     } else {
-                        $feedback .= "\n\nContoh rekod yang dikemaskini:\n" . implode("\n", array_slice($updateDetails, 0, 10));
-                        $feedback .= "\n... dan " . (count($updateDetails) - 10) . " rekod lagi.";
+                        $feedback .= "<br><br><strong>Contoh rekod yang dikemaskini:</strong><br>" . implode("<br>", array_slice($updateDetails, 0, 10));
+                        $feedback .= "<br>... dan " . (count($updateDetails) - 10) . " rekod lagi.";
                     }
                 }
             }
