@@ -686,11 +686,11 @@
                             <h4 class="font-semibold text-md text-gray-700">JKJR</h4>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700">Permohonan Laporan JKJR - CHECK-BOX (ADA / TIADA)</label>
+                                    <label class="block text-sm font-medium text-gray-700">Permohonan Laporan JKJR</label>
                                     {!! render_status_with_date_radio('jkjr_permohonan', 'status_permohonan_laporan_jkjr', 'tarikh_permohonan_laporan_jkjr', $paper->status_permohonan_laporan_jkjr, $paper->tarikh_permohonan_laporan_jkjr, 'Ada', 'Tiada') !!}
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700">Laporan Penuh JKJR - CHECK-BOX (DILAMPIRKAN / TIADA)</label>
+                                    <label class="block text-sm font-medium text-gray-700">Laporan Penuh JKJR</label>
                                     {!! render_status_with_date_radio('jkjr_penuh', 'status_laporan_penuh_jkjr', 'tarikh_laporan_penuh_jkjr', $paper->status_laporan_penuh_jkjr, $paper->tarikh_laporan_penuh_jkjr, 'Dilampirkan', 'Tiada') !!}
                                 </div>
                             </div>
@@ -701,11 +701,11 @@
                             <h4 class="font-semibold text-md text-gray-700">Kastam</h4>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700">Permohonan Laporan Kastam Untuk Kes Kontraban - CHECK-BOX (ADA / TIADA)</label>
+                                    <label class="block text-sm font-medium text-gray-700">Permohonan Laporan Kastam Untuk Kes Kontraban</label>
                                     {!! render_status_with_date_radio('kastam_permohonan', 'status_permohonan_laporan_kastam', 'tarikh_permohonan_laporan_kastam', $paper->status_permohonan_laporan_kastam, $paper->tarikh_permohonan_laporan_kastam, 'Ada', 'Tiada') !!}
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700">Laporan Penuh Kastam - CHECK-BOX (DILAMPIRKAN / TIADA)</label>
+                                    <label class="block text-sm font-medium text-gray-700">Laporan Penuh Kastam</label>
                                     {!! render_status_with_date_radio('kastam_penuh', 'status_laporan_penuh_kastam', 'tarikh_laporan_penuh_kastam', $paper->status_laporan_penuh_kastam, $paper->tarikh_laporan_penuh_kastam, 'Dilampirkan', 'Tiada') !!}
                                 </div>
                             </div>
@@ -716,11 +716,11 @@
                             <h4 class="font-semibold text-md text-gray-700">Forensik PDRM</h4>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700">Permohonan Laporan Forensik PDRM - CHECK-BOX (ADA / TIADA)</label>
+                                    <label class="block text-sm font-medium text-gray-700">Permohonan Laporan Forensik PDRM</label>
                                     {!! render_status_with_date_radio('forensik_pdrm_permohonan', 'status_permohonan_laporan_forensik_pdrm', 'tarikh_permohonan_laporan_forensik_pdrm', $paper->status_permohonan_laporan_forensik_pdrm, $paper->tarikh_permohonan_laporan_forensik_pdrm, 'Ada', 'Tiada') !!}
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700">Laporan Penuh Forensik PDRM - CHECK-BOX (DILAMPIRKAN / TIADA)</label>
+                                    <label class="block text-sm font-medium text-gray-700">Laporan Penuh Forensik PDRM</label>
                                     {!! render_status_with_date_radio('forensik_pdrm_penuh', 'status_laporan_penuh_forensik_pdrm', 'tarikh_laporan_penuh_forensik_pdrm', $paper->status_laporan_penuh_forensik_pdrm, $paper->tarikh_laporan_penuh_forensik_pdrm, 'Dilampirkan', 'Tiada') !!}
                                 </div>
                                 <div class="col-span-full">
