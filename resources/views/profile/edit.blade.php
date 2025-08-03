@@ -1,12 +1,10 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Profil') }}
+            {{ __('Profil') }} : {{ Auth::user()->name }}
         @php
             if (Auth::user()->superadmin === 'yes') {
-                echo ' : Superadmin';
-            } else {
-                echo ' : User';
+                echo ' (Admin)';
             }
         @endphp
         </h2>

@@ -9,10 +9,19 @@
         </p>
     </header>
 
-    <x-danger-button
-        x-data=""
-        x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion')"
-    >{{ __('Padam Akaun') }}</x-danger-button>
+    @if(auth()->user()->can_be_deleted)
+        <x-danger-button
+            x-data=""
+            x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion')"
+        >{{ __('Padam Akaun') }}</x-danger-button>
+    @else
+        <x-danger-button
+            x-data=""
+            class="opacity-50 cursor-not-allowed"
+            disabled
+        >{{ __('Padam Akaun') }}</x-danger-button>
+        
+    @endif
 
     <x-modal name="confirm-user-deletion" :show="$errors->userDeletion->isNotEmpty()" focusable>
         <form method="post" action="{{ route('profile.destroy') }}" class="p-6">

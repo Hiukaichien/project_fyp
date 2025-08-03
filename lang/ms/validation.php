@@ -173,6 +173,11 @@ return [
         'password' => [
             'required' => 'Kata laluan diperlukan.',
             'min' => 'Kata laluan mesti sekurang-kurangnya :min karakter.',
+            'confirmed' => 'Pengesahan kata laluan tidak sepadan.',
+        ],
+        'current_password' => [
+            'required' => 'Kata laluan semasa diperlukan.',
+            'current_password' => 'Kata laluan tidak betul.',
         ],
         'name' => [
             'required' => 'Nama diperlukan.',
@@ -209,6 +214,7 @@ return [
         'login' => 'id pengguna atau emel',
         'password' => 'kata laluan',
         'password_confirmation' => 'pengesahan kata laluan',
+        'current_password' => 'kata laluan semasa',
         'name' => 'nama',
         'username' => 'id pengguna',
         'email' => 'alamat emel',
