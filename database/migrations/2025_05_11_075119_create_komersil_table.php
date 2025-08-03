@@ -56,11 +56,11 @@ return new class extends Migration
             $table->string('status_pergerakan_barang_kes')->nullable()->comment('B4');
             $table->text('status_pergerakan_barang_kes_ujian_makmal')->nullable()->comment('B4');
             $table->string('status_barang_kes_selesai_siasatan')->nullable()->comment('B4');
-            $table->string('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan')->nullable()->comment('B4');
-            $table->string('adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan')->nullable()->comment('B4');
-            $table->string('resit_kew_38e_bagi_pelupusan')->nullable()->comment('B4,resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan');
-            $table->string('adakah_borang_serah_terima_pegawai_tangkapan')->nullable()->comment('B4');
-            $table->string('adakah_borang_serah_terima_pemilik_saksi')->nullable()->comment('B4');
+            $table->text('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan')->nullable()->comment('B4');
+            $table->text('adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan')->nullable()->comment('B4');
+            $table->text('resit_kew_38e_bagi_pelupusan')->nullable()->comment('B4,resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan');
+            $table->text('adakah_borang_serah_terima_pegawai_tangkapan')->nullable()->comment('B4');
+            $table->text('adakah_borang_serah_terima_pemilik_saksi')->nullable()->comment('B4');
             $table->boolean('adakah_sijil_surat_kebenaran_ipo')->nullable()->comment('B4');
             $table->string('adakah_gambar_pelupusan')->nullable()->comment('B4');
 
@@ -105,9 +105,9 @@ return new class extends Migration
             $table->string('no_saman_pdrm_s_167')->nullable()->comment('B6 - Saman PDRM S167 number');
 
             // Additional BAHAGIAN 4 fields from edit form
-            $table->string('status_pergerakan_barang_kes_lain')->nullable()->comment('B4 - Other movement status');
-            $table->string('status_barang_kes_selesai_siasatan_lain')->nullable()->comment('B4 - Other completion status');
-            $table->string('kaedah_pelupusan_lain')->nullable()->comment('B4 - Other disposal method');
+            $table->text('status_pergerakan_barang_kes_lain')->nullable()->comment('B4 - Other movement status');
+            $table->text('status_barang_kes_selesai_siasatan_lain')->nullable()->comment('B4 - Other completion status');
+            $table->text('kaedah_pelupusan_lain')->nullable()->comment('B4 - Other disposal method');
             $table->text('ulasan_keseluruhan_pegawai_pemeriksa_barang_kes')->nullable()->comment('B4 - Overall examiner comments on evidence');
             
             // BAHAGIAN 7: Laporan E-FSA, Puspakom, dll (B7)
@@ -115,65 +115,65 @@ return new class extends Migration
             $table->boolean('status_permohonan_laporan_post_mortem_mayat')->nullable()->comment('B7 - Post mortem request status');
             $table->date('tarikh_permohonan_laporan_post_mortem_mayat')->nullable()->comment('B7 - Post mortem request date');
             // BANK
-            $table->string('status_permohonan_E_FSA_1_oleh_IO_AIO')->nullable(); // B7
-            $table->string('nama_bank_permohonan_E_FSA_1')->nullable(); // B7
-            $table->string('status_laporan_penuh_E_FSA_1_oleh_IO_AIO')->nullable(); // B7
-            $table->string('nama_bank_laporan_E_FSA_1_oleh_IO_AIO')->nullable(); // B7
+            $table->string('status_permohonan_E_FSA_1_oleh_IO_AIO', 100)->nullable(); // B7
+            $table->string('nama_bank_permohonan_E_FSA_1', 100)->nullable(); // B7
+            $table->string('status_laporan_penuh_E_FSA_1_oleh_IO_AIO', 100)->nullable(); // B7
+            $table->string('nama_bank_laporan_E_FSA_1_oleh_IO_AIO', 100)->nullable(); // B7
             $table->date('tarikh_laporan_penuh_E_FSA_1_oleh_IO_AIO')->nullable(); // B7
 
-            $table->string('status_permohonan_E_FSA_2_oleh_IO_AIO')->nullable(); // B7
-            $table->string('nama_bank_permohonan_E_FSA_2_BANK')->nullable(); // B7
-            $table->string('status_laporan_penuh_E_FSA_2_oleh_IO_AIO')->nullable(); // B7
-            $table->string('nama_bank_laporan_E_FSA_2_oleh_IO_AIO')->nullable(); // B7
+            $table->string('status_permohonan_E_FSA_2_oleh_IO_AIO', 100)->nullable(); // B7
+            $table->string('nama_bank_permohonan_E_FSA_2_BANK', 100)->nullable(); // B7
+            $table->string('status_laporan_penuh_E_FSA_2_oleh_IO_AIO', 100)->nullable(); // B7
+            $table->string('nama_bank_laporan_E_FSA_2_oleh_IO_AIO', 100)->nullable(); // B7
             $table->date('tarikh_laporan_penuh_E_FSA_2_oleh_IO_AIO')->nullable(); // B7
 
-            $table->string('status_permohonan_E_FSA_3_oleh_IO_AIO')->nullable(); // B7
-            $table->string('nama_bank_permohonan_E_FSA_3_BANK')->nullable(); // B7
-            $table->string('status_laporan_penuh_E_FSA_3_oleh_IO_AIO')->nullable(); // B7
-            $table->string('nama_bank_laporan_E_FSA_3_oleh_IO_AIO')->nullable(); // B7
+            $table->string('status_permohonan_E_FSA_3_oleh_IO_AIO', 100)->nullable(); // B7
+            $table->string('nama_bank_permohonan_E_FSA_3_BANK', 100)->nullable(); // B7
+            $table->string('status_laporan_penuh_E_FSA_3_oleh_IO_AIO', 100)->nullable(); // B7
+            $table->string('nama_bank_laporan_E_FSA_3_oleh_IO_AIO', 100)->nullable(); // B7
             $table->date('tarikh_laporan_penuh_E_FSA_3_oleh_IO_AIO')->nullable(); // B7
 
-            $table->string('status_permohonan_E_FSA_4_oleh_IO_AIO')->nullable(); // B7
-            $table->string('nama_bank_permohonan_E_FSA_4_BANK')->nullable(); // B7
-            $table->string('status_laporan_penuh_E_FSA_4_oleh_IO_AIO')->nullable(); // B7
-            $table->string('nama_bank_laporan_E_FSA_4_oleh_IO_AIO')->nullable(); // B7
+            $table->string('status_permohonan_E_FSA_4_oleh_IO_AIO', 100)->nullable(); // B7
+            $table->string('nama_bank_permohonan_E_FSA_4_BANK', 100)->nullable(); // B7
+            $table->string('status_laporan_penuh_E_FSA_4_oleh_IO_AIO', 100)->nullable(); // B7
+            $table->string('nama_bank_laporan_E_FSA_4_oleh_IO_AIO', 100)->nullable(); // B7
             $table->date('tarikh_laporan_penuh_E_FSA_4_oleh_IO_AIO')->nullable(); // B7
 
-            $table->string('status_permohonan_E_FSA_5_oleh_IO_AIO')->nullable(); // B7
-            $table->string('nama_bank_permohonan_E_FSA_5_BANK')->nullable(); // B7
-            $table->string('status_laporan_penuh_E_FSA_5_oleh_IO_AIO')->nullable(); // B7
-            $table->string('nama_bank_laporan_E_FSA_5_oleh_IO_AIO')->nullable(); // B7
+            $table->string('status_permohonan_E_FSA_5_oleh_IO_AIO', 100)->nullable(); // B7
+            $table->string('nama_bank_permohonan_E_FSA_5_BANK', 100)->nullable(); // B7
+            $table->string('status_laporan_penuh_E_FSA_5_oleh_IO_AIO', 100)->nullable(); // B7
+            $table->string('nama_bank_laporan_E_FSA_5_oleh_IO_AIO', 100)->nullable(); // B7
             $table->date('tarikh_laporan_penuh_E_FSA_5_oleh_IO_AIO')->nullable(); // B7
 
             // TELCO
-            $table->string('status_permohonan_E_FSA_1_telco_oleh_IO_AIO')->nullable(); // B7
-            $table->string('nama_telco_permohonan_E_FSA_1_oleh_IO_AIO')->nullable(); // B7
-            $table->string('status_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO')->nullable(); // B7
-            $table->string('nama_telco_laporan_E_FSA_1_oleh_IO_AIO')->nullable(); // B7
+            $table->string('status_permohonan_E_FSA_1_telco_oleh_IO_AIO', 100)->nullable(); // B7
+            $table->string('nama_telco_permohonan_E_FSA_1_oleh_IO_AIO', 100)->nullable(); // B7
+            $table->string('status_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO', 100)->nullable(); // B7
+            $table->string('nama_telco_laporan_E_FSA_1_oleh_IO_AIO', 100)->nullable(); // B7
             $table->date('tarikh_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO')->nullable(); // B7
 
-            $table->string('status_permohonan_E_FSA_2_telco_oleh_IO_AIO')->nullable(); // B7
-            $table->string('nama_telco_permohonan_E_FSA_2_oleh_IO_AIO')->nullable(); // B7
-            $table->string('status_laporan_penuh_E_FSA_2_telco_oleh_IO_AIO')->nullable(); // B7
-            $table->string('nama_telco_laporan_E_FSA_2_oleh_IO_AIO')->nullable(); // B7
+            $table->string('status_permohonan_E_FSA_2_telco_oleh_IO_AIO', 100)->nullable(); // B7
+            $table->string('nama_telco_permohonan_E_FSA_2_oleh_IO_AIO', 100)->nullable(); // B7
+            $table->string('status_laporan_penuh_E_FSA_2_telco_oleh_IO_AIO', 100)->nullable(); // B7
+            $table->string('nama_telco_laporan_E_FSA_2_oleh_IO_AIO', 100)->nullable(); // B7
             $table->date('tarikh_laporan_penuh_E_FSA_2_telco_oleh_IO_AIO')->nullable(); // B7
 
-            $table->string('status_permohonan_E_FSA_3_telco_oleh_IO_AIO')->nullable(); // B7
-            $table->string('nama_telco_permohonan_E_FSA_3_oleh_IO_AIO')->nullable(); // B7
-            $table->string('status_laporan_penuh_E_FSA_3_telco_oleh_IO_AIO')->nullable(); // B7
-            $table->string('nama_telco_laporan_E_FSA_3_oleh_IO_AIO')->nullable(); // B7
+            $table->string('status_permohonan_E_FSA_3_telco_oleh_IO_AIO', 100)->nullable(); // B7
+            $table->string('nama_telco_permohonan_E_FSA_3_oleh_IO_AIO', 100)->nullable(); // B7
+            $table->string('status_laporan_penuh_E_FSA_3_telco_oleh_IO_AIO', 100)->nullable(); // B7
+            $table->string('nama_telco_laporan_E_FSA_3_oleh_IO_AIO', 100)->nullable(); // B7
             $table->date('tarikh_laporan_penuh_E_FSA_3_telco_oleh_IO_AIO')->nullable(); // B7
 
-            $table->string('status_permohonan_E_FSA_4_telco_oleh_IO_AIO')->nullable(); // B7
-            $table->string('nama_telco_permohonan_E_FSA_4_oleh_IO_AIO')->nullable(); // B7
-            $table->string('status_laporan_penuh_E_FSA_4_telco_oleh_IO_AIO')->nullable(); // B7
-            $table->string('nama_telco_laporan_E_FSA_4_oleh_IO_AIO')->nullable(); // B7
+            $table->string('status_permohonan_E_FSA_4_telco_oleh_IO_AIO', 100)->nullable(); // B7
+            $table->string('nama_telco_permohonan_E_FSA_4_oleh_IO_AIO', 100)->nullable(); // B7
+            $table->string('status_laporan_penuh_E_FSA_4_telco_oleh_IO_AIO', 100)->nullable(); // B7
+            $table->string('nama_telco_laporan_E_FSA_4_oleh_IO_AIO', 100)->nullable(); // B7
             $table->date('tarikh_laporan_penuh_E_FSA_4_telco_oleh_IO_AIO')->nullable(); // B7
 
-            $table->string('status_permohonan_E_FSA_5_telco_oleh_IO_AIO')->nullable(); // B7
-            $table->string('nama_telco_permohonan_E_FSA_5_oleh_IO_AIO')->nullable(); // B7
-            $table->string('status_laporan_penuh_E_FSA_5_telco_oleh_IO_AIO')->nullable(); // B7
-            $table->string('nama_telco_laporan_E_FSA_5_oleh_IO_AIO')->nullable(); // B7
+            $table->string('status_permohonan_E_FSA_5_telco_oleh_IO_AIO', 100)->nullable(); // B7
+            $table->string('nama_telco_permohonan_E_FSA_5_oleh_IO_AIO', 100)->nullable(); // B7
+            $table->string('status_laporan_penuh_E_FSA_5_telco_oleh_IO_AIO', 100)->nullable(); // B7
+            $table->string('nama_telco_laporan_E_FSA_5_oleh_IO_AIO', 100)->nullable(); // B7
             $table->date('tarikh_laporan_penuh_E_FSA_5_telco_oleh_IO_AIO')->nullable(); // B7
 
            
@@ -211,7 +211,7 @@ return new class extends Migration
             $table->date('tarikh_laporan_penuh_forensik_pdrm')->nullable(); // B7
             $table->text('jenis_barang_kes_forensik')->nullable()->comment('jenis_barang_kes_forensik');
             // Lain-lain
-            $table->string('lain_lain_permohonan_laporan')->nullable(); // B7
+            $table->text('lain_lain_permohonan_laporan')->nullable(); // B7
 
             // BAHAGIAN 8: Status Fail (B8)
             $table->boolean('muka_surat_4_barang_kes_ditulis')->nullable()->comment('ADAKAH MUKA SURAT 4 - BARANG KES DITULIS BERSAMA NO DAFTAR BARANG KES');
@@ -219,7 +219,7 @@ return new class extends Migration
             $table->boolean('muka_surat_4_keputusan_kes_dicatat')->nullable()->comment('ADAKAH MUKA SURAT 4 - KEPUTUSAN KES DICATAT SELENGKAPNYA...');
             $table->boolean('fail_lmm_ada_keputusan_koroner')->nullable()->comment('ADAKAH FAIL L.M.M (T) ATAU L.M.M TELAH ADA KEPUTUSAN SIASATAN OLEH YA KORONER');
             $table->boolean('status_kus_fail')->nullable()->comment('ADAKAH KERTAS SIASATAN TELAH DI KUS/FAIL...');
-            $table->string('keputusan_akhir_mahkamah')->nullable()->comment('KEPUTUSAN AKHIR OLEH MAHKAMAH...');
+            $table->text('keputusan_akhir_mahkamah')->nullable()->comment('KEPUTUSAN AKHIR OLEH MAHKAMAH...');
             $table->text('ulasan_pegawai_pemeriksa_fail')->nullable()->comment('ULASAN KESELURUHAN PEGAWAI PEMERIKSA (JIKA ADA)');
 
             $table->timestamps();

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('superadmin')->default('no'); // Added superadmin field
+            $table->boolean('can_be_deleted')->default(true); // Added can_be_deleted field
             $table->rememberToken();
             $table->timestamps();
         });

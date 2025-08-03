@@ -30,7 +30,8 @@ class DatabaseSeeder extends Seeder
                 'username' => 'user',
                 'password' => Hash::make('password'),
                 'email_verified_at' => now(),
-          'superadmin' => 'no', // Default user is not a superadmin
+                'superadmin' => 'no', // Default user is not a superadmin
+                'can_be_deleted' => true,
             ]
         );
         
@@ -43,6 +44,7 @@ class DatabaseSeeder extends Seeder
                 'password' => Hash::make('password'),
                 'email_verified_at' => now(),
                 'superadmin' => 'yes',
+                'can_be_deleted' => false, // Prevent superadmin deletion
             ]
         );
 

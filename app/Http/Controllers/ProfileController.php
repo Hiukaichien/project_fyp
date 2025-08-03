@@ -48,6 +48,13 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
+        // Check if user can be deleted
+        if (!$user->can_be_deleted) {
+            return Redirect::route('profile.edit')->withErrors([
+                'userDeletion' => 'Akaun ini tidak boleh dipadam.'
+            ]);
+        }
+
         Auth::logout();
 
         $user->delete();

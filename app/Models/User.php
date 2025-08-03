@@ -23,6 +23,7 @@ class User extends Authenticatable
         'email',
         'password',
         'superadmin', // Added superadmin field
+        'can_be_deleted', // Added can_be_deleted field
     ];
 
     /**
