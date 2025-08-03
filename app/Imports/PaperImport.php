@@ -910,7 +910,7 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
         ],
     ];
 
-    public function __construct(int $projectId, int $userId, string $paperType)
+       public function __construct(int $projectId, int $userId, string $paperType)
     {
         if (!isset(self::$paperConfig[$paperType])) {
             throw new \InvalidArgumentException("Invalid paper type specified: {$paperType}");
@@ -922,13 +922,50 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
         $this->modelClass = $this->config['model'];
     }
 
+    // *** NORMALIZATION FUNCTION ***
+    /**
+     * Normalizes a header by converting it to snake_case.
+     * e.g., "NO. KERTAS SIASATAN" becomes "no_kertas_siasatan".
+     * e.g., "NO. FAIL L.M.M.(T)" becomes "no_fail_lmm_t".
+     */
+    private function normalizeHeader(string $header): string
+    {
+        // Replace dots, parentheses, and multiple spaces with a single space
+        $header = preg_replace('/[\.\(\)]+|\s+/', ' ', $header);
+        // Trim and convert to snake_case
+        return Str::snake(trim($header));
+    }
+
+    // *** THIS MAKES WithHeadingRow USE NEW FUNCTION ***
+    public function headingRow(): int
+    {
+        return 1; // Standard heading row
+    }
+
+    public function map($row): array
+    {
+        $mappedRow = [];
+        foreach ($row as $header => $value) {
+            $mappedRow[$this->normalizeHeader($header)] = $value;
+        }
+        return $mappedRow;
+    }
+
+
     public function registerEvents(): array
     {
         return [
             BeforeImport::class => function (BeforeImport $event) {
+                // *** UPDATE THE VALIDATION LOGIC ***
                 $expectedHeaders = array_keys($this->config['column_map']);
-                $actualHeaders = array_map(fn($h) => Str::snake(trim($h)), $event->getReader()->getActiveSheet()->toArray()[0]);
-                $foundHeaders = array_intersect($expectedHeaders, $actualHeaders);
+                
+                // Get the actual headers and normalize them using our function
+                $actualHeaders = $event->getReader()->getActiveSheet()->toArray()[0] ?? [];
+                $normalizedActualHeaders = array_map([$this, 'normalizeHeader'], $actualHeaders);
+
+                // Check how many of our expected headers are present in the normalized file headers
+                $foundHeaders = array_intersect($expectedHeaders, $normalizedActualHeaders);
+                
                 if (empty($foundHeaders)) {
                     $message = 'Import gagal. Sila pastikan fail Excel mempunyai sekurang-kurangnya satu lajur yang diperlukan.';
                     throw ValidationException::withMessages(['excel_file' => $message]);
@@ -940,6 +977,7 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
     public function collection(Collection $rows)
     {
         $uniqueDbColumn = $this->config['unique_by'];
+        // The key in the row is now already normalized (e.g., 'no_kertas_siasatan')
         $uniqueExcelHeaderSnake = array_search($uniqueDbColumn, $this->config['column_map']);
         
         if (!$uniqueExcelHeaderSnake) {
@@ -955,6 +993,7 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
         $rowNumber = 2;
 
         foreach ($rows as $row) {
+            // *** ACCESS THE ROW DATA WITH THE NORMALIZED KEY ***
             $uniqueValue = $row[$uniqueExcelHeaderSnake] ?? null;
 
             if (empty($uniqueValue)) {
@@ -975,34 +1014,25 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
                 'updated_at' => now(),
             ];
             
-            // Get the cast types from the model instance
             $modelCasts = (new $this->modelClass)->getCasts();
 
             foreach ($this->config['column_map'] as $excelHeaderSnake => $dbColumn) {
+                // The key $excelHeaderSnake directly matches the keys in the mapped row
                 if (isset($row[$excelHeaderSnake])) {
                     $value = $row[$excelHeaderSnake];
-                    $castType = $modelCasts[$dbColumn] ?? 'string'; // Default to string if no cast is defined
+                    $castType = $modelCasts[$dbColumn] ?? 'string';
 
-                    // Transform the value based on its expected cast type
                     switch ($castType) {
-                        case 'date:Y-m-d':
-                        case 'date':
-                        case 'datetime':
-                            $data[$dbColumn] = $this->transformDate($value);
-                            break;
+                        case 'date:Y-m-d': case 'date': case 'datetime':
+                            $data[$dbColumn] = $this->transformDate($value); break;
                         case 'boolean':
-                            $data[$dbColumn] = $this->transformBoolean($value);
-                            break;
-                        case 'decimal:2': // Assuming you might use this format
-                            $data[$dbColumn] = $this->transformDecimal($value);
-                            break;
-                        case 'array':
-                        case 'json':
-                            $data[$dbColumn] = $this->transformJsonArray($value);
-                            break;
+                            $data[$dbColumn] = $this->transformBoolean($value); break;
+                        case 'decimal:2':
+                            $data[$dbColumn] = $this->transformDecimal($value); break;
+                        case 'array': case 'json':
+                            $data[$dbColumn] = $this->transformJsonArray($value); break;
                         default:
-                            $data[$dbColumn] = is_string($value) ? trim($value) : $value;
-                            break;
+                            $data[$dbColumn] = is_string($value) ? trim($value) : $value; break;
                     }
                 }
             }
