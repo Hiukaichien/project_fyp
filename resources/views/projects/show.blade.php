@@ -1297,7 +1297,7 @@
 
             <!-- Import Summary -->
             <div class="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <h3 class="text-sm font-medium text-blue-900 mb-2">Ringkasan Import:</h3>
+                <h3 class="text-sm font-medium text-blue-900 mb-2">Ringkasan Muat Naik:</h3>
                 <div class="grid grid-cols-3 gap-4 text-xs">
                     <div class="text-center">
                         <div class="text-lg font-bold text-green-600">{{ session('new_records_count', 0) }}</div>
@@ -1335,7 +1335,7 @@
                     <input type="hidden" name="paper_type" value="{{ session('paper_type') }}">
                     <input type="hidden" name="confirm_overwrite" value="0">
                     <x-secondary-button type="submit">
-                        {{ __('Batal Import') }}
+                        {{ __('Batal') }}
                     </x-secondary-button>
                 </form>
 
