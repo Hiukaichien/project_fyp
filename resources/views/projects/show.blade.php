@@ -1631,7 +1631,7 @@
                     } 
                     else if (colName === 'status_barang_kes_selesai_siasatan') {
                         if (data === 'Dilupuskan ke Perbendaharaan' && row.status_barang_kes_selesai_siasatan_RM) {
-                            details = ` (${row.status_barang_kes_selesai_siasatan_RM})`;
+                            details = ` (RM ${row.status_barang_kes_selesai_siasatan_RM})`;
                         } else if (data === 'Lain-Lain' && row.status_barang_kes_selesai_siasatan_lain) {
                             details = `: ${row.status_barang_kes_selesai_siasatan_lain}`;
                         }
