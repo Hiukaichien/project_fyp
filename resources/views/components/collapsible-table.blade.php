@@ -47,6 +47,7 @@
                         @elseif ($issueType === 'kemaskini')
                             <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tarikh Edaran Akhir</th>
                             <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">TARIKH SEMBOYAN PEMERIKSAAN</th>
+                            <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">STATUS KERTAS SIASATAN</th>
                             <th class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">TEMPOH DIKEMASKINI</th>
                         @endif
 
@@ -91,6 +92,9 @@
                             @elseif ($issueType === 'kemaskini')
                                 <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">{{ optional($item->tarikh_edaran_minit_ks_akhir)->format('d/m/Y') ?? '-' }}</td>
                                 <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-500">{{ optional($item->tarikh_semboyan_pemeriksaan_jips_ke_daerah)->format('d/m/Y') ?? '-' }}</td>
+                                <td class="px-3 py-2 whitespace-nowrap text-sm font-semibold text-green-600">
+                                    {{ $item->baru_dikemaskini_status ?? 'TIDAK' }}
+                                </td>
                                 <td class="px-3 py-2 whitespace-nowrap text-sm font-semibold text-green-600">{{ $item->tempoh_dikemaskini }}</td>
                             @endif
 
