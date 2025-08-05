@@ -45,7 +45,7 @@
             issueType="terbengkalai"
         />
         <x-collapsible-table 
-            title="KS Terbengkalai / Baru Dikemaskini Selepas Semboyan" 
+            title="Kertas Siasatan Terbengkalai / Baru Dikemaskini Setelah Semboyan Pemeriksaan Dihantar" 
             :collection="$data['ksBaruKemaskini']" 
             bgColor="bg-green-50 dark:bg-green-900/20" 
             :pageName="$key.'_kemaskini_page'"
