@@ -31,7 +31,7 @@
                                         Nama
                                     </th>
                                     <th class="px-6 py-3 border-b border-gray-300 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Pengguna ID
+                                        ID Pengguna
                                     </th>
                                     <th class="px-6 py-3 border-b border-gray-300 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Emel
