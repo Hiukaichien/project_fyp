@@ -31,10 +31,10 @@
                                         Nama
                                     </th>
                                     <th class="px-6 py-3 border-b border-gray-300 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Username
+                                        Pengguna ID
                                     </th>
                                     <th class="px-6 py-3 border-b border-gray-300 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Email
+                                        Emel
                                     </th>
                                     <th class="px-6 py-3 border-b border-gray-300 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Status
