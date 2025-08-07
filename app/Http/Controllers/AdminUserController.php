@@ -92,21 +92,28 @@ class AdminUserController extends Controller
             abort(403, 'Access denied. Only admin can update users.');
         }
 
-        $request->validate([
+        // Validation rules
+        $rules = [
             'name' => ['required', 'string', 'max:255'],
             'username' => ['required', 'string', 'max:255', 'unique:users,username,' . $user->id],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email,' . $user->id],
             'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
-            'superadmin' => ['required', 'in:yes,no'],
-        ]);
+            // Superadmin field is optional since it's commented out in the form
+            'superadmin' => ['nullable', 'in:yes,no'],
+        ];
+
+        $request->validate($rules);
 
         $updateData = [
             'name' => $request->name,
             'username' => $request->username,
             'email' => $request->email,
-            'superadmin' => $request->superadmin,
-            'can_be_deleted' => $request->superadmin === 'no',
         ];
+
+        // Since superadmin input is commented out, preserve existing role
+        // Keep the existing superadmin status - don't allow changes through this form
+        $updateData['superadmin'] = $user->superadmin;
+        $updateData['can_be_deleted'] = $user->can_be_deleted;
 
         // Only update password if provided
         if ($request->filled('password')) {
@@ -115,7 +122,11 @@ class AdminUserController extends Controller
 
         $user->update($updateData);
 
-        return redirect()->route('admin.users.index')->with('success', 'Pengguna berjaya dikemaskini.');
+        $successMessage = $user->id === Auth::id() 
+            ? 'Profil anda berjaya dikemaskini.' 
+            : 'Pengguna berjaya dikemaskini.';
+
+        return redirect()->route('admin.users.index')->with('success', $successMessage);
     }
 
     /**

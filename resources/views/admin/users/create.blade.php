@@ -47,7 +47,7 @@
                                         Pengguna Biasa
                                     </option>
                                     <option value="yes" {{ old('superadmin') === 'yes' ? 'selected' : '' }}>
-                                        Superadmin
+                                        Admin
                                     </option>
                                 </select>
                                 <x-input-error :messages="$errors->get('superadmin')" class="mt-2" />

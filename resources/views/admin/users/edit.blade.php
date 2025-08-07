@@ -4,7 +4,13 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-2xl font-bold">Edit Pengguna: {{ $user->name }}</h2>
+                        <h2 class="text-2xl font-bold">
+                            @if($user->id === Auth::id())
+                                Edit Profil : {{ $user->name }}
+                            @else
+                                Edit Pengguna: {{ $user->name }}
+                            @endif
+                        </h2>
                         <a href="{{ route('admin.users.index') }}" 
                            class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                             Kembali
@@ -37,22 +43,45 @@
                                 <x-input-error :messages="$errors->get('email')" class="mt-2" />
                             </div>
 
-                            <!-- Superadmin Status -->
-                            <div class="mt-4">
+                            {{-- Superadmin Status - Commented out temporarily --}}
+                            {{-- <div class="mt-4">
                                 <x-input-label for="superadmin" :value="__('Status Pengguna')" />
-                                <select id="superadmin" 
-                                        name="superadmin" 
-                                        class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" 
-                                        required>
-                                    <option value="no" {{ old('superadmin', $user->superadmin) === 'no' ? 'selected' : '' }}>
-                                        Pengguna Biasa
-                                    </option>
-                                    <option value="yes" {{ old('superadmin', $user->superadmin) === 'yes' ? 'selected' : '' }}>
-                                        Superadmin
-                                    </option>
-                                </select>
+                                
+                                @if($user->id === Auth::id())
+                                    <!-- Current user editing their own account - disable role change -->
+                                    <select id="superadmin" 
+                                            name="superadmin" 
+                                            class="block mt-1 w-full border-gray-300 bg-gray-100 text-gray-500 cursor-not-allowed rounded-md shadow-sm" 
+                                            disabled>
+                                        <option value="yes" {{ $user->superadmin === 'yes' ? 'selected' : '' }}>
+                                            Admin
+                                        </option>
+                                        <option value="no" {{ $user->superadmin === 'no' ? 'selected' : '' }}>
+                                            Pengguna Biasa
+                                        </option>
+                                    </select>
+                                    <!-- Hidden field to maintain the current value -->
+                                    <input type="hidden" name="superadmin" value="{{ $user->superadmin }}">
+                                    <p class="mt-2 text-sm text-amber-600">
+                                        <strong>Nota:</strong> Anda tidak boleh mengubah status peranan akaun sendiri untuk keselamatan.
+                                    </p>
+                                @else
+                                    <!-- Editing other users - allow role change -->
+                                    <select id="superadmin" 
+                                            name="superadmin" 
+                                            class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" 
+                                            required>
+                                        <option value="no" {{ old('superadmin', $user->superadmin) === 'no' ? 'selected' : '' }}>
+                                            Pengguna Biasa
+                                        </option>
+                                        <option value="yes" {{ old('superadmin', $user->superadmin) === 'yes' ? 'selected' : '' }}>
+                                            Admin
+                                        </option>
+                                    </select>
+                                @endif
+                                
                                 <x-input-error :messages="$errors->get('superadmin')" class="mt-2" />
-                            </div>
+                            </div> --}}
 
                             <!-- Password (Optional for update) -->
                             <div class="mt-4">
@@ -75,7 +104,11 @@
 
                             <div class="flex items-center justify-end mt-6">
                                 <x-primary-button>
-                                    {{ __('Kemaskini Pengguna') }}
+                                    @if($user->id === Auth::id())
+                                        {{ __('Kemaskini Profil Sendiri') }}
+                                    @else
+                                        {{ __('Kemaskini Pengguna') }}
+                                    @endif
                                 </x-primary-button>
                             </div>
                         </form>

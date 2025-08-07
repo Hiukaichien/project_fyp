@@ -63,10 +63,16 @@
                                             @if ($user->superadmin === 'yes')
                                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                                                     Admin
+                                                    @if ($user->id === Auth::id())
+                                                        <span class="ml-1 text-xs">(Anda)</span>
+                                                    @endif
                                                 </span>
                                             @else
                                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                                     Pengguna Biasa
+                                                    @if ($user->id === Auth::id())
+                                                        <span class="ml-1 text-xs">(Anda)</span>
+                                                    @endif
                                                 </span>
                                             @endif
                                         </td>
@@ -76,7 +82,11 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                                             <a href="{{ route('admin.users.edit', $user) }}" 
                                                class="text-indigo-600 hover:text-indigo-900">
-                                                Edit
+                                                @if ($user->id === Auth::id())
+                                                    Edit Profil Sendiri
+                                                @else
+                                                    Edit
+                                                @endif
                                             </a>
                                             
                                             @if ($user->can_be_deleted && $user->id !== Auth::id())
