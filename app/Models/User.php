@@ -62,4 +62,12 @@ class User extends Authenticatable
     {
         $this->notify(new ResetPasswordNotification($token));
     }
+
+    /**
+     * Get the projects that belong to the user.
+     */
+    public function projects()
+    {
+        return $this->hasMany(\App\Models\Project::class);
+    }
 }

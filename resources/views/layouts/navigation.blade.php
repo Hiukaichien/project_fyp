@@ -16,6 +16,13 @@
                     <x-nav-link :href="route('projects.index')" :active="request()->routeIs('dashboard') || request()->routeIs('projects.*')" class="dark:text-white">
                         {{ __('Projek') }}
                     </x-nav-link>
+
+                    {{-- Admin Navigation Link (only for superadmins) --}}
+                    @if(Auth::user()->superadmin === 'yes')
+                        <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')" class="dark:text-white">
+                            {{ __('Pengurusan Pengguna') }}
+                        </x-nav-link>
+                    @endif
                  
                     {{-- The "Projects" link is now redundant as "Dashboard" leads to the project list --}}
                     {{-- <x-nav-link :href="route('projects.index')" :active="request()->routeIs('projects.*')">
@@ -77,6 +84,13 @@
             <x-responsive-nav-link :href="route('projects.index')" :active="request()->routeIs('dashboard') || request()->routeIs('projects.*')">
                 {{ __('Papan Pemuka') }}
             </x-responsive-nav-link>
+            
+            {{-- Admin Navigation Link (mobile) --}}
+            @if(Auth::user()->superadmin === 'yes')
+                <x-responsive-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
+                    {{ __('Pengurusan Pengguna') }}
+                </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->

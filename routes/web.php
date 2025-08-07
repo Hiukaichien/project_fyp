@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\KertasSiasatanController;
+use App\Http\Controllers\AdminUserController;
 
 Route::get('/', function () {
     // If user is already authenticated, redirect to dashboard
@@ -23,6 +24,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Admin Routes
+    Route::prefix('admin')->name('admin.')->group(function () {
+        Route::resource('users', AdminUserController::class);
+    });
 
     // Project-specific routes
     Route::post('/projects/{project}/import', [ProjectController::class, 'importPapers'])->name('projects.import');

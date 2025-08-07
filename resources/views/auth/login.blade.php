@@ -2,6 +2,13 @@
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
+    <!-- Info Messages -->
+    @if (session('info'))
+        <div class="mb-4 p-4 bg-blue-100 border border-blue-400 text-blue-700 rounded">
+            {{ session('info') }}
+        </div>
+    @endif
+
     <form method="POST" action="{{ route('login') }}" class="max-w-md mx-auto mt-12 space-y-6">
         @csrf
 
@@ -43,10 +50,12 @@
         </div>
     </form>
 
-    <!-- Register Link at Bottom -->
+    <!-- Registration Disabled 
     <div class="mt-6 text-center">
-        <a href="{{ route('register') }}" class="text-sm text-gray-600 hover:text-gray-900 underline">
-            {{ __('Tiada akaun? Daftar') }}
-        </a>
+        <p class="text-sm text-gray-600">
+            {{ __('Tiada akaun? Sila hubungi pentadbir sistem untuk membuat akaun baharu.') }}
+        </p>
+    -->
+    
     </div>
 </x-guest-layout>
