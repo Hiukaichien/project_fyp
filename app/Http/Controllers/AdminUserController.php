@@ -58,24 +58,27 @@ class AdminUserController extends Controller
             'username' => ['required', 'string', 'max:255', 'unique:'.User::class],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'superadmin' => ['required', 'in:yes,no'],
-            // Project visibility fields commented out since form section is commented out
-            // 'project_visibility' => ['required', 'in:all,selected'],
-            // 'visible_projects' => ['nullable', 'array'],
-            // 'visible_projects.*' => ['exists:projects,id'],
+            // Superadmin field commented out - only creating regular users for now
+            // 'superadmin' => ['required', 'in:yes,no'],
+            'project_visibility' => ['required', 'in:all,selected'],
+            'visible_projects' => ['nullable', 'array'],
+            'visible_projects.*' => ['exists:projects,id'],
         ]);
 
-        // Set default project visibility - new users start with no projects visible
-        // They will need admin to explicitly grant access to projects (visible_projects = [])
-        $visibleProjects = [];
+        // Determine project visibility based on form input
+        if ($request->project_visibility === 'all') {
+            $visibleProjects = null; // null means all projects
+        } else {
+            $visibleProjects = $request->visible_projects ?? []; // selected projects or empty array
+        }
 
         $user = User::create([
             'name' => $request->name,
             'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'superadmin' => $request->superadmin,
-            'can_be_deleted' => $request->superadmin === 'no', // Superadmins can't be deleted by default
+            'superadmin' => 'no', // Always create regular users for now
+            'can_be_deleted' => true, // Regular users can be deleted
             'visible_projects' => $visibleProjects,
         ]);
 
