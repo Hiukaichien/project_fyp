@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
                 'email_verified_at' => now(),
                 'superadmin' => 'no', // Default user is not a superadmin
                 'can_be_deleted' => true,
+                'visible_projects' => null, // Will be set after project creation
             ]
         );
         
@@ -45,11 +46,12 @@ class DatabaseSeeder extends Seeder
                 'email_verified_at' => now(),
                 'superadmin' => 'yes',
                 'can_be_deleted' => false, // Prevent superadmin deletion
+                'visible_projects' => null, // Superadmin can see all projects
             ]
         );
 
 
-        // 2. Create a default project and associate it with the new user
+                // 2. Create a default project and associate it with the new user
         $project = Project::updateOrCreate(
             ['name' => 'Projek Siasatan 1'],
             [
@@ -58,6 +60,11 @@ class DatabaseSeeder extends Seeder
                 'description' => 'Projek rintis untuk pengauditan dan kawal selia kertas siasatan.',
             ]
         );
+
+        // Update the regular user's visible_projects to include the project they own
+        $user->update([
+            'visible_projects' => [$project->id]
+        ]);
 
             // 3. Seed Jenayah Papers (20 records) - Updated to follow TrafikSeksyen structure
                 for ($i = 1; $i <= 10; $i++) {

@@ -36,13 +36,27 @@ class ProjectController extends Controller
 {
  public function index()
     {
-        if (Auth::user()->superadmin == 'yes')
+        if (Auth::user()->superadmin == 'yes') {
+            // Superadmins can see all projects
             $projects = Project::orderBy('updated_at', 'desc')->paginate(10);
-        else {
-            // Show only projects belonging to the authenticated user.
-            $projects = Project::where('user_id', Auth::id())
-                ->orderBy('updated_at', 'desc')
-                ->paginate(10);
+        } else {
+            // Regular users: show projects based on visible_projects setting
+            $user = Auth::user();
+            
+            if (is_null($user->visible_projects)) {
+                // User can see all projects (legacy behavior)
+                $projects = Project::orderBy('updated_at', 'desc')->paginate(10);
+            } else {
+                // User can only see specific projects + their own projects
+                $visibleProjectIds = array_unique(array_merge(
+                    $user->visible_projects, // Projects explicitly made visible to them
+                    $user->projects()->pluck('id')->toArray() // Projects they own
+                ));
+                
+                $projects = Project::whereIn('id', $visibleProjectIds)
+                    ->orderBy('updated_at', 'desc')
+                    ->paginate(10);
+            }
         }
 
         return view('projects.project', compact('projects'));

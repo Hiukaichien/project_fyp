@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('superadmin')->default('no'); // Added superadmin field
             $table->boolean('can_be_deleted')->default(true); // Added can_be_deleted field
+            $table->json('visible_projects')->nullable(); // Projects visible to this user (null means all projects)
             $table->rememberToken();
             $table->timestamps();
         });

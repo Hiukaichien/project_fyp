@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -36,7 +37,10 @@ class AdminUserController extends Controller
             abort(403, 'Access denied. Only admin can create users.');
         }
 
-        return view('admin.users.create');
+        // Get all projects for project visibility selection
+        $projects = Project::with('user')->orderBy('name')->get();
+
+        return view('admin.users.create', compact('projects'));
     }
 
     /**
@@ -55,15 +59,24 @@ class AdminUserController extends Controller
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'superadmin' => ['required', 'in:yes,no'],
+            // Project visibility fields commented out since form section is commented out
+            // 'project_visibility' => ['required', 'in:all,selected'],
+            // 'visible_projects' => ['nullable', 'array'],
+            // 'visible_projects.*' => ['exists:projects,id'],
         ]);
 
-        User::create([
+        // Set default project visibility - new users start with no projects visible
+        // They will need admin to explicitly grant access to projects (visible_projects = [])
+        $visibleProjects = [];
+
+        $user = User::create([
             'name' => $request->name,
             'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'superadmin' => $request->superadmin,
             'can_be_deleted' => $request->superadmin === 'no', // Superadmins can't be deleted by default
+            'visible_projects' => $visibleProjects,
         ]);
 
         return redirect()->route('admin.users.index')->with('success', 'Pengguna berjaya dicipta.');
@@ -79,7 +92,10 @@ class AdminUserController extends Controller
             abort(403, 'Access denied. Only admin can edit users.');
         }
 
-        return view('admin.users.edit', compact('user'));
+        // Get all projects for the project selection
+        $projects = Project::orderBy('name')->get();
+
+        return view('admin.users.edit', compact('user', 'projects'));
     }
 
     /**
@@ -100,6 +116,9 @@ class AdminUserController extends Controller
             'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
             // Superadmin field is optional since it's commented out in the form
             'superadmin' => ['nullable', 'in:yes,no'],
+            'project_visibility' => ['required_unless:user,' . Auth::id(), 'in:all,selected'],
+            'visible_projects' => ['nullable', 'array'],
+            'visible_projects.*' => ['exists:projects,id'],
         ];
 
         $request->validate($rules);
@@ -109,6 +128,24 @@ class AdminUserController extends Controller
             'username' => $request->username,
             'email' => $request->email,
         ];
+
+        // Handle project visibility (only for other users, not self)
+        if ($user->id !== Auth::id()) {
+            if ($request->project_visibility === 'all') {
+                $updateData['visible_projects'] = null; // null means all projects
+            } else {
+                // Get the selected projects from the form (default to empty array if none selected)
+                $selectedProjects = $request->visible_projects ?? [];
+                
+                // Always include projects owned by this user (they cannot be unticked)
+                $ownedProjectIds = $user->projects()->pluck('id')->toArray();
+                
+                // Merge selected projects with owned projects and remove duplicates
+                $finalVisibleProjects = array_unique(array_merge($selectedProjects, $ownedProjectIds));
+                
+                $updateData['visible_projects'] = $finalVisibleProjects;
+            }
+        }
 
         // Since superadmin input is commented out, preserve existing role
         // Keep the existing superadmin status - don't allow changes through this form

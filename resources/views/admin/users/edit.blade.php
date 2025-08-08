@@ -93,7 +93,6 @@
                                 <x-input-error :messages="$errors->get('password')" class="mt-2" />
                             </div>
 
-                            <!-- Confirm Password -->
                             <div class="mt-4">
                                 <x-input-label for="password_confirmation" :value="__('Sahkan Kata Laluan Baharu')" />
                                 <x-text-input id="password_confirmation" class="block mt-1 w-full"
@@ -101,6 +100,101 @@
                                                 name="password_confirmation" autocomplete="new-password" />
                                 <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                             </div>
+
+                            <!-- Project Visibility -->
+                            @if($user->id !== Auth::id())
+                                @php
+                                    // Determine the original state from database
+                                    $originalUser = \App\Models\User::find($user->id);
+                                    $isAllProjects = is_null($originalUser->visible_projects);
+                                    
+                                    // Get owned project IDs
+                                    $ownedProjectIds = $user->projects->pluck('id')->toArray();
+                                    
+                                    // If user can see all projects (visible_projects is null)
+                                    if ($isAllProjects) {
+                                        // In "all projects" mode, still show owned projects as checked for display
+                                        $currentVisibleProjects = $ownedProjectIds;
+                                        $showAsSelected = false; // Show "all projects" radio as selected
+                                    } else {
+                                        // User has specific visible projects
+                                        $currentVisibleProjects = $originalUser->visible_projects ?? [];
+                                        $showAsSelected = true; // Show "selected projects" radio as selected
+                                        
+                                        // Always include owned projects if in selected mode
+                                        $currentVisibleProjects = array_unique(array_merge($currentVisibleProjects, $ownedProjectIds));
+                                    }
+                                @endphp
+                                <div class="mt-4">
+                                    <x-input-label for="visible_projects" :value="__('Projek Yang Boleh Dilihat')" />
+                                    <div class="mt-2 space-y-2">
+                                        <label class="flex items-center">
+                                            <input type="radio" 
+                                                   name="project_visibility" 
+                                                   value="all" 
+                                                   class="mr-2" 
+                                                   {{ !$showAsSelected ? 'checked' : '' }}>
+                                            <span class="text-sm text-gray-700">Semua projek (tidak terhad)</span>
+                                        </label>
+                                        <label class="flex items-center">
+                                            <input type="radio" 
+                                                   name="project_visibility" 
+                                                   value="selected" 
+                                                   class="mr-2" 
+                                                   {{ $showAsSelected ? 'checked' : '' }}>
+                                            <span class="text-sm text-gray-700">Projek terpilih sahaja</span>
+                                        </label>
+                                    </div>
+                                    
+                                    <div id="project-selection" class="mt-4 space-y-2 {{ !$showAsSelected ? 'hidden' : '' }}">
+                                        <label class="text-sm font-medium text-gray-700">Pilih Projek:</label>
+                                        
+                                        <!-- Search input -->
+                                        <div class="mb-3">
+                                            <input type="text" 
+                                                   id="project-search" 
+                                                   placeholder="Cari projek..." 
+                                                   class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                        </div>
+                                        
+                                        <div id="project-list" class="max-h-48 overflow-y-auto border border-gray-300 rounded-md p-3 bg-gray-50">
+                                            @foreach($projects as $project)
+                                                @php
+                                                    $isOwned = $project->user_id == $user->id;
+                                                @endphp
+                                                <label class="flex items-center py-1 {{ $isOwned ? 'bg-gray-100 rounded px-2' : '' }}">
+                                                    <input type="checkbox" 
+                                                           name="visible_projects[]" 
+                                                           value="{{ $project->id }}" 
+                                                           class="mr-2 {{ $isOwned ? 'text-gray-400' : '' }}"
+                                                           {{ in_array($project->id, $currentVisibleProjects) ? 'checked' : '' }}
+                                                           {{ $isOwned ? 'disabled' : '' }}>
+                                                    
+                                                    @if($isOwned)
+                                                        {{-- Hidden input to ensure owned projects are always included --}}
+                                                        <input type="hidden" name="visible_projects[]" value="{{ $project->id }}">
+                                                    @endif
+                                                    
+                                                    <span class="text-sm {{ $isOwned ? 'text-gray-500' : 'text-gray-700' }}">{{ $project->name }}</span>
+                                                    <span class="text-xs text-gray-500 ml-2">({{ $project->project_date->format('d/m/Y') }})
+                                                        @if($isOwned)
+                                                            <span class="text-gray-500">- Pemilik (Tidak Boleh Diubah)</span>
+                                                        @else
+                                                            - Pemilik: {{ $project->user->name }}
+                                                        @endif
+                                                    </span>
+                                                </label>
+                                            @endforeach
+                                        </div>
+                                        
+                                        <!-- No results message -->
+                                        <div id="no-results" class="hidden text-sm text-gray-500 italic p-3 text-center">
+                                            Tiada projek dijumpai
+                                        </div>
+                                    </div>
+                                    <x-input-error :messages="$errors->get('visible_projects')" class="mt-2" />
+                                </div>
+                            @endif
 
                             <div class="flex items-center justify-end mt-6">
                                 <x-primary-button>
@@ -117,4 +211,59 @@
             </div>
         </div>
     </div>
+
+    <!-- JavaScript to handle project visibility radio buttons and search -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const radios = document.querySelectorAll('input[name="project_visibility"]');
+            const projectSelection = document.getElementById('project-selection');
+            const checkboxes = document.querySelectorAll('input[name="visible_projects[]"]');
+            const searchInput = document.getElementById('project-search');
+            const projectList = document.getElementById('project-list');
+            const noResults = document.getElementById('no-results');
+
+            // Handle radio button changes
+            radios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'all') {
+                        projectSelection.classList.add('hidden');
+                        // Uncheck all project checkboxes when "all" is selected
+                        checkboxes.forEach(checkbox => checkbox.checked = false);
+                    } else if (this.value === 'selected') {
+                        projectSelection.classList.remove('hidden');
+                    }
+                });
+            });
+
+            // Handle project search
+            if (searchInput && projectList) {
+                searchInput.addEventListener('input', function(e) {
+                    const searchTerm = e.target.value.toLowerCase().trim();
+                    const projectLabels = projectList.querySelectorAll('label');
+                    let visibleCount = 0;
+
+                    projectLabels.forEach(label => {
+                        const projectText = label.textContent.toLowerCase();
+                        const shouldShow = searchTerm === '' || projectText.includes(searchTerm);
+                        
+                        if (shouldShow) {
+                            label.style.display = 'flex';
+                            visibleCount++;
+                        } else {
+                            label.style.display = 'none';
+                        }
+                    });
+
+                    // Show/hide "no results" message
+                    if (visibleCount === 0 && searchTerm !== '') {
+                        noResults.classList.remove('hidden');
+                        projectList.style.display = 'none';
+                    } else {
+                        noResults.classList.add('hidden');
+                        projectList.style.display = 'block';
+                    }
+                });
+            }
+        });
+    </script>
 </x-app-layout>

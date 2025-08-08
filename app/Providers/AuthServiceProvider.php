@@ -23,12 +23,22 @@ class AuthServiceProvider extends ServiceProvider
      */
    public function boot(): void
     {
-        // This gate checks if the authenticated user owns the project.
+        // This gate checks if the authenticated user can access the project.
         Gate::define('access-project', function (User $user, Project $project) {
             if ($user->superadmin === 'yes') {
-                return true;
+                return true; // Superadmins can access all projects
             }
-            return $user->id === $project->user_id;
+            
+            if ($user->id === $project->user_id) {
+                return true; // Users can always access their own projects
+            }
+            
+            // Check if project is in user's visible projects list
+            if (is_null($user->visible_projects)) {
+                return true; // User can access all projects (legacy behavior)
+            }
+            
+            return in_array($project->id, $user->visible_projects);
         });
     }
 }
