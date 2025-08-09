@@ -254,16 +254,16 @@
                             @endphp
                             {!! render_json_checkboxes('status_pem', $paper->status_pem, $pem_options) !!}
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">RJ 10B</label>
-                                {!! render_status_with_date_radio('rj10b', 'status_rj10b', 'tarikh_rj10b', $paper->status_rj10b, $paper->tarikh_rj10b) !!}
-                            </div>
-                            <div>
-                                <label for="lain_lain_rj_dikesan" class="block text-sm font-medium text-gray-700">Lain-lain RJ Dikesan</label>
-                                <input type="text" name="lain_lain_rj_dikesan" id="lain_lain_rj_dikesan" value="{{ old('lain_lain_rj_dikesan', $paper->lain_lain_rj_dikesan) }}" class="mt-1 block w-full form-input">
-                            </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- RJ Fields - Added as per client requirements -->
+                            <div><label class="block text-sm font-medium text-gray-700">RJ 2</label>{!! render_status_with_date_radio('rj2', 'status_rj2', 'tarikh_rj2', $paper->status_rj2, $paper->tarikh_rj2) !!}</div>
+                            <div><label class="block text-sm font-medium text-gray-700">RJ 2B</label>{!! render_status_with_date_radio('rj2b', 'status_rj2b', 'tarikh_rj2b', $paper->status_rj2b, $paper->tarikh_rj2b) !!}</div>
+                            <div><label class="block text-sm font-medium text-gray-700">RJ 9</label>{!! render_status_with_date_radio('rj9', 'status_rj9', 'tarikh_rj9', $paper->status_rj9, $paper->tarikh_rj9) !!}</div>
+                            <div><label class="block text-sm font-medium text-gray-700">RJ 99</label>{!! render_status_with_date_radio('rj99', 'status_rj99', 'tarikh_rj99', $paper->status_rj99, $paper->tarikh_rj99) !!}</div>
+                            <div><label class="block text-sm font-medium text-gray-700">RJ 10A</label>{!! render_status_with_date_radio('rj10a', 'status_rj10a', 'tarikh_rj10a', $paper->status_rj10a, $paper->tarikh_rj10a) !!}</div>
+                            <div><label class="block text-sm font-medium text-gray-700">RJ 10B</label>{!! render_status_with_date_radio('rj10b', 'status_rj10b', 'tarikh_rj10b', $paper->status_rj10b, $paper->tarikh_rj10b) !!}</div>
                         </div>
+                        <!-- Note: "Lain-lain RJ dikesan" removed as per client requirements -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {{-- Saman PDRM (S) 257 --}}
                             <div x-data='{ status: "{{ old('status_saman_pdrm_s_257', $paper->status_saman_pdrm_s_257 ? '1' : '0') }}" }'>
@@ -346,6 +346,36 @@
                             </div>
                         </div>
 
+                        {{-- PUSPAKOM Section - Added as per client requirements --}}
+                        <div class="p-4 border rounded-md">
+                            <h4 class="font-semibold text-md text-gray-700">Laporan PUSPAKOM</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Permohonan Laporan PUSPAKOM</label>
+                                    {!! render_status_with_date_radio('puspakom_permohonan', 'status_permohonan_laporan_puspakom', 'tarikh_permohonan_laporan_puspakom', $paper->status_permohonan_laporan_puspakom, $paper->tarikh_permohonan_laporan_puspakom, 'Ada', 'Tiada') !!}
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Laporan Penuh PUSPAKOM</label>
+                                    {!! render_status_with_date_radio('puspakom_penuh', 'status_laporan_penuh_puspakom', 'tarikh_laporan_penuh_puspakom', $paper->status_laporan_penuh_puspakom, $paper->tarikh_laporan_penuh_puspakom, 'Dilampirkan', 'Tiada') !!}
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- HOSPITAL Section - Added as per client requirements --}}
+                        <div class="p-4 border rounded-md">
+                            <h4 class="font-semibold text-md text-gray-700">Laporan HOSPITAL</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Permohonan Laporan HOSPITAL</label>
+                                    {!! render_status_with_date_radio('hospital_permohonan', 'status_permohonan_laporan_hospital', 'tarikh_permohonan_laporan_hospital', $paper->status_permohonan_laporan_hospital, $paper->tarikh_permohonan_laporan_hospital, 'Ada', 'Tiada') !!}
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Laporan Penuh HOSPITAL</label>
+                                    {!! render_status_with_date_radio('hospital_penuh', 'status_laporan_penuh_hospital', 'tarikh_laporan_penuh_hospital', $paper->status_laporan_penuh_hospital, $paper->tarikh_laporan_penuh_hospital, 'Dilampirkan', 'Tiada') !!}
+                                </div>
+                            </div>
+                        </div>
+
                         {{-- Lain-lain Section --}}
                         <div class="p-4 border rounded-md">
                              <label for="lain_lain_permohonan_laporan" class="block text-sm font-medium text-gray-700">Lain-lain Permohonan Laporan</label>
@@ -374,18 +404,21 @@
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Keputusan Akhir Mahkamah</label>
-                             <select name="keputusan_akhir_mahkamah" class="mt-1 block w-full form-select">
-                                <option value="">-- Sila Pilih --</option>
-                                <option value="Jatuh Hukum" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'Jatuh Hukum' ? 'selected' : '' }}>Jatuh Hukum</option>
-                                <option value="NFA" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'NFA' ? 'selected' : '' }}>NFA</option>
-                                <option value="DNA" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'DNA' ? 'selected' : '' }}>DNA</option>
-                                <option value="DNAA" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'DNAA' ? 'selected' : '' }}>DNAA</option>
-                                <option value="KUS/Sementara" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'KUS/Sementara' ? 'selected' : '' }}>KUS/Sementara</option>
-                                <option value="Masih Dalam Siasatan OYDS Gagal Dikesan" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'Masih Dalam Siasatan OYDS Gagal Dikesan' ? 'selected' : '' }}>Masih Dalam Siasatan OYDS Gagal Dikesan</option>
-                                <option value="Masih Dalam Siasatan Untuk Lengkapkan Dokumentasi" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'Masih Dalam Siasatan Untuk Lengkapkan Dokumentasi' ? 'selected' : '' }}>Masih Dalam Siasatan Untuk Lengkapkan Dokumentasi</option>
-                                <option value="Terbengkalai/Tiada Tindakan" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'Terbengkalai/Tiada Tindakan' ? 'selected' : '' }}>Terbengkalai/Tiada Tindakan</option>
-                            </select>
+                            <label class="block text-sm font-medium text-gray-700">Keputusan Akhir Oleh Mahkamah Sebelum Kertas Siasatan Di KUS/FAIL Atau Disimpan</label>
+                            @php
+                                $mahkamahOptions = [
+                                    'Jatuh Hukum' => 'Jatuh Hukum',
+                                    'NFA' => 'NFA', 
+                                    'DNA' => 'DNA',
+                                    'DNAA' => 'DNAA',
+                                    'KUS/Sementara' => 'KUS/Sementara',
+                                    'KUS / FAIL' => 'KUS / FAIL',
+                                    'MASIH DALAM SIASATAN / OYDS GAGAL DIKESAN' => 'MASIH DALAM SIASATAN / OYDS GAGAL DIKESAN',
+                                    'MASIH DALAM SIASATAN / LENGKAPKAN DOKUMEN SIASATAN' => 'MASIH DALAM SIASATAN / LENGKAPKAN DOKUMEN SIASATAN',
+                                    'Terbengkalai/Tiada Tindakan' => 'Terbengkalai/Tiada Tindakan'
+                                ];
+                            @endphp
+                            {!! render_json_checkboxes('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah, $mahkamahOptions) !!}
                         </div>
 
                         <div>

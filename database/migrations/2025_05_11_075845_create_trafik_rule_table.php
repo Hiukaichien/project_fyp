@@ -58,9 +58,22 @@ return new class extends Migration
 
             // BAHAGIAN 6: Borang & Semakan (B6)
             $table->json('status_pem')->nullable()->comment('B6'); // This is still multi-select checkboxes
+            
+            // RJ Fields - following TrafikSeksyen structure
+            $table->boolean('status_rj2')->nullable()->comment('B6: status_rj2');
+            $table->date('tarikh_rj2')->nullable()->comment('B6: tarikh_rj2');
+            $table->boolean('status_rj2b')->nullable()->comment('B6: status_rj2b');
+            $table->date('tarikh_rj2b')->nullable()->comment('B6: tarikh_rj2b');
+            $table->boolean('status_rj9')->nullable()->comment('B6: status_rj9');
+            $table->date('tarikh_rj9')->nullable()->comment('B6: tarikh_rj9');
+            $table->boolean('status_rj99')->nullable()->comment('B6: status_rj99');
+            $table->date('tarikh_rj99')->nullable()->comment('B6: tarikh_rj99');
+            $table->boolean('status_rj10a')->nullable()->comment('B6: status_rj10a');
+            $table->date('tarikh_rj10a')->nullable()->comment('B6: tarikh_rj10a');
+            
             $table->boolean('status_rj10b')->nullable()->comment('B6');
             $table->date('tarikh_rj10b')->nullable()->comment('B6');
-            $table->text('lain_lain_rj_dikesan')->nullable()->comment('B6');
+            // Note: "Lain-lain RJ dikesan" is NOT needed as per client requirements
             $table->boolean('status_saman_pdrm_s_257')->nullable()->comment('B6');
             $table->string('no_saman_pdrm_s_257')->nullable()->comment('B6');
             $table->boolean('status_saman_pdrm_s_167')->nullable()->comment('B6');
@@ -68,21 +81,36 @@ return new class extends Migration
             $table->text('ulasan_keseluruhan_pegawai_pemeriksa_borang')->nullable()->comment('B6');
 
             // BAHAGIAN 7: Permohonan Laporan Agensi Luar (B7)
+            
+            // JKR
             $table->boolean('status_permohonan_laporan_jkr')->nullable()->comment('B7');
             $table->date('tarikh_permohonan_laporan_jkr')->nullable()->comment('B7');
             $table->boolean('status_laporan_penuh_jkr')->nullable()->comment('B7');
             $table->date('tarikh_laporan_penuh_jkr')->nullable()->comment('B7');
 
+            // JPJ
             $table->boolean('status_permohonan_laporan_jpj')->nullable()->comment('B7');
             $table->date('tarikh_permohonan_laporan_jpj')->nullable()->comment('B7');
             $table->boolean('status_laporan_penuh_jpj')->nullable()->comment('B7'); 
             $table->date('tarikh_laporan_penuh_jpj')->nullable()->comment('B7'); 
             
+            // JKJR
             $table->boolean('status_permohonan_laporan_jkjr')->nullable()->comment('B7');
             $table->date('tarikh_permohonan_laporan_jkjr')->nullable()->comment('B7');
-            
             $table->boolean('status_laporan_penuh_jkjr')->nullable()->comment('B7'); 
             $table->date('tarikh_laporan_penuh_jkjr')->nullable()->comment('B7'); 
+            
+            // PUSPAKOM - Added as per client requirements
+            $table->boolean('status_permohonan_laporan_puspakom')->nullable()->comment('B7: status_permohonan_laporan_puspakom');
+            $table->date('tarikh_permohonan_laporan_puspakom')->nullable()->comment('B7: tarikh_permohonan_laporan_puspakom');
+            $table->boolean('status_laporan_penuh_puspakom')->nullable()->comment('B7: status_laporan_penuh_puspakom');
+            $table->date('tarikh_laporan_penuh_puspakom')->nullable()->comment('B7: tarikh_laporan_penuh_puspakom');
+            
+            // HOSPITAL - Added as per client requirements 
+            $table->boolean('status_permohonan_laporan_hospital')->nullable()->comment('B7: status_permohonan_laporan_hospital');
+            $table->date('tarikh_permohonan_laporan_hospital')->nullable()->comment('B7: tarikh_permohonan_laporan_hospital');
+            $table->boolean('status_laporan_penuh_hospital')->nullable()->comment('B7: status_laporan_penuh_hospital');
+            $table->date('tarikh_laporan_penuh_hospital')->nullable()->comment('B7: tarikh_laporan_penuh_hospital');
             
             $table->string('lain_lain_permohonan_laporan')->nullable()->comment('B7');
 
@@ -90,7 +118,7 @@ return new class extends Migration
             $table->boolean('adakah_muka_surat_4_keputusan_kes_dicatat')->nullable()->comment('B8');
             $table->boolean('adakah_ks_kus_fail_selesai')->nullable()->comment('B8');
             $table->boolean('adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan')->nullable()->comment('B8');
-            $table->string('keputusan_akhir_mahkamah')->nullable()->comment('B8');
+            $table->json('keputusan_akhir_mahkamah')->nullable()->comment('B8');
             $table->text('ulasan_keseluruhan_pegawai_pemeriksa_fail')->nullable()->comment('B8');
             
             $table->timestamps();

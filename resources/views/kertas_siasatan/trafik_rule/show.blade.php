@@ -274,14 +274,32 @@
                             <dt class="text-sm font-medium text-gray-500">Borang PEM</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_json_list($paper->status_pem) !!}</dd>
                         </div>
+                        <!-- RJ Fields -->
+                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt class="text-sm font-medium text-gray-500">RJ 2</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_status_and_date($paper->status_rj2, $paper->tarikh_rj2, 'Diterima', 'Tidak') !!}</dd>
+                        </div>
+                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt class="text-sm font-medium text-gray-500">RJ 2B</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_status_and_date($paper->status_rj2b, $paper->tarikh_rj2b, 'Diterima', 'Tidak') !!}</dd>
+                        </div>
+                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt class="text-sm font-medium text-gray-500">RJ 9</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_status_and_date($paper->status_rj9, $paper->tarikh_rj9, 'Diterima', 'Tidak') !!}</dd>
+                        </div>
+                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt class="text-sm font-medium text-gray-500">RJ 99</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_status_and_date($paper->status_rj99, $paper->tarikh_rj99, 'Diterima', 'Tidak') !!}</dd>
+                        </div>
+                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt class="text-sm font-medium text-gray-500">RJ 10A</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_status_and_date($paper->status_rj10a, $paper->tarikh_rj10a, 'Diterima', 'Tidak') !!}</dd>
+                        </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">RJ 10B</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_status_and_date($paper->status_rj10b, $paper->tarikh_rj10b, 'Cipta', 'Tidak') !!}</dd>
                         </div>
-                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">Lain-lain RJ Dikesan</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->lain_lain_rj_dikesan ?? '-' }}</dd>
-                        </div>
+                        <!-- Note: "Lain-lain RJ dikesan" removed as per client requirements -->
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">Saman PDRM (S) 257</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
@@ -360,6 +378,36 @@
                             </div>
                         </div>
 
+                        {{-- PUSPAKOM Section --}}
+                        <div class="py-3 sm:py-4 sm:px-6">
+                            <h4 class="text-sm font-semibold text-gray-700 mb-2">Laporan PUSPAKOM</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <dt class="text-sm font-medium text-gray-500">Permohonan Laporan PUSPAKOM</dt>
+                                    <dd class="text-sm text-gray-900">{!! show_status_and_date($paper->status_permohonan_laporan_puspakom, $paper->tarikh_permohonan_laporan_puspakom, 'Ada', 'Tiada') !!}</dd>
+                                </div>
+                                <div>
+                                    <dt class="text-sm font-medium text-gray-500">Laporan Penuh PUSPAKOM</dt>
+                                    <dd class="text-sm text-gray-900">{!! show_status_and_date($paper->status_laporan_penuh_puspakom, $paper->tarikh_laporan_penuh_puspakom, 'Dilampirkan', 'Tiada') !!}</dd>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- HOSPITAL Section --}}
+                        <div class="py-3 sm:py-4 sm:px-6 bg-gray-50">
+                            <h4 class="text-sm font-semibold text-gray-700 mb-2">Laporan HOSPITAL</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <dt class="text-sm font-medium text-gray-500">Permohonan Laporan HOSPITAL</dt>
+                                    <dd class="text-sm text-gray-900">{!! show_status_and_date($paper->status_permohonan_laporan_hospital, $paper->tarikh_permohonan_laporan_hospital, 'Ada', 'Tiada') !!}</dd>
+                                </div>
+                                <div>
+                                    <dt class="text-sm font-medium text-gray-500">Laporan Penuh HOSPITAL</dt>
+                                    <dd class="text-sm text-gray-900">{!! show_status_and_date($paper->status_laporan_penuh_hospital, $paper->tarikh_laporan_penuh_hospital, 'Dilampirkan', 'Tiada') !!}</dd>
+                                </div>
+                            </div>
+                        </div>
+
                         {{-- Lain-lain Section --}}
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">Lain-lain Permohonan Laporan</dt>
@@ -389,9 +437,8 @@
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_boolean_badge($paper->adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan, 'Ya', 'Tidak') !!}</dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">Keputusan Akhir Mahkamah</dt>
-                            {{-- This column is a simple string in Trafik Rule based on your edit blade, not JSON list --}}
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->keputusan_akhir_mahkamah ?? '-' }}</dd>
+                            <dt class="text-sm font-medium text-gray-500">Keputusan Akhir Oleh Mahkamah Sebelum Kertas Siasatan Di KUS/FAIL Atau Disimpan</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_json_list($paper->keputusan_akhir_mahkamah) !!}</dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">Ulasan Keseluruhan Pegawai Pemeriksa (Fail)</dt>

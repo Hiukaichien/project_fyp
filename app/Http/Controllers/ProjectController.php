@@ -522,6 +522,14 @@ public function exportPapers(Request $request, Project $project)
                 'tarikh_rj2' => 'Tarikh RJ2',
                 'status_rj2b' => 'RJ2B',
                 'tarikh_rj2b' => 'Tarikh RJ2B',
+                'status_rj9' => 'RJ9',
+                'tarikh_rj9' => 'Tarikh RJ9',
+                'status_rj99' => 'RJ99',
+                'tarikh_rj99' => 'Tarikh RJ99',
+                'status_rj10a' => 'RJ10A',
+                'tarikh_rj10a' => 'Tarikh RJ10A',
+                'status_rj10b' => 'RJ10B',
+                'tarikh_rj10b' => 'Tarikh RJ10B',
                 'status_semboyan_pemakluman_ke_kedutaan_bagi_kes_mati' => 'Semboyan Pemakluman ke Kedutaan',
                 'ulasan_keseluruhan_pegawai_pemeriksa_borang' => 'Ulasan Keseluruhan (Borang)',
                 
@@ -846,10 +854,18 @@ public function getJenayahData(Project $project)
         ->editColumn('tarikh_permohonan_laporan_jabatan_patalogi', fn($r) => optional($r->tarikh_permohonan_laporan_jabatan_patalogi)->format('d/m/Y') ?? '-')
         ->editColumn('status_laporan_penuh_jabatan_patalogi', fn($row) => $this->formatBoolean($row->status_laporan_penuh_jabatan_patalogi, 'Diterima', 'Tidak'))
         ->editColumn('tarikh_laporan_penuh_jabatan_patalogi', fn($r) => optional($r->tarikh_laporan_penuh_jabatan_patalogi)->format('d/m/Y') ?? '-')
-        ->editColumn('status_permohonan_laporan_puspakom', fn($row) => $this->formatBoolean($row->status_permohonan_laporan_puspakom, 'Dibuat', 'Tidak'))
+        ->editColumn('status_permohonan_laporan_puspakom', fn($row) => $this->formatBoolean($row->status_permohonan_laporan_puspakom, 'Ada', 'Tiada'))
         ->editColumn('tarikh_permohonan_laporan_puspakom', fn($r) => optional($r->tarikh_permohonan_laporan_puspakom)->format('d/m/Y') ?? '-')
-        ->editColumn('status_laporan_penuh_puspakom', fn($row) => $this->formatBoolean($row->status_laporan_penuh_puspakom, 'Diterima', 'Tidak'))
+        ->editColumn('status_laporan_penuh_puspakom', fn($row) => $this->formatBoolean($row->status_laporan_penuh_puspakom, 'Dilampirkan', 'Tiada'))
         ->editColumn('tarikh_laporan_penuh_puspakom', fn($r) => optional($r->tarikh_laporan_penuh_puspakom)->format('d/m/Y') ?? '-')
+        ->editColumn('status_permohonan_laporan_jkjr', fn($row) => $this->formatBoolean($row->status_permohonan_laporan_jkjr, 'Ada', 'Tiada'))
+        ->editColumn('tarikh_permohonan_laporan_jkjr', fn($r) => optional($r->tarikh_permohonan_laporan_jkjr)->format('d/m/Y') ?? '-')
+        ->editColumn('status_laporan_penuh_jkjr', fn($row) => $this->formatBoolean($row->status_laporan_penuh_jkjr, 'Dilampirkan', 'Tiada'))
+        ->editColumn('tarikh_laporan_penuh_jkjr', fn($r) => optional($r->tarikh_laporan_penuh_jkjr)->format('d/m/Y') ?? '-')
+        ->editColumn('status_permohonan_laporan_hospital', fn($row) => $this->formatBoolean($row->status_permohonan_laporan_hospital, 'Ada', 'Tiada'))
+        ->editColumn('tarikh_permohonan_laporan_hospital', fn($r) => optional($r->tarikh_permohonan_laporan_hospital)->format('d/m/Y') ?? '-')
+        ->editColumn('status_laporan_penuh_hospital', fn($row) => $this->formatBoolean($row->status_laporan_penuh_hospital, 'Dilampirkan', 'Tiada'))
+        ->editColumn('tarikh_laporan_penuh_hospital', fn($r) => optional($r->tarikh_laporan_penuh_hospital)->format('d/m/Y') ?? '-')
         ->editColumn('status_permohonan_laporan_jpj', fn($row) => $this->formatBoolean($row->status_permohonan_laporan_jpj, 'Dibuat', 'Tidak'))
         ->editColumn('tarikh_permohonan_laporan_jpj', fn($r) => optional($r->tarikh_permohonan_laporan_jpj)->format('d/m/Y') ?? '-')
         ->editColumn('status_laporan_penuh_jpj', fn($row) => $this->formatBoolean($row->status_laporan_penuh_jpj, 'Diterima', 'Tidak'))
@@ -1019,8 +1035,8 @@ public function getKomersilData(Project $project)
         ->editColumn('status_laporan_penuh_E_FSA_4_telco_oleh_IO_AIO', fn($row) => $this->formatString($row->status_laporan_penuh_E_FSA_4_telco_oleh_IO_AIO, 'Diterima', 'Tidak'))
         ->editColumn('status_permohonan_E_FSA_5_telco_oleh_IO_AIO', fn($row) => $this->formatString($row->status_permohonan_E_FSA_5_telco_oleh_IO_AIO, 'Dibuat', 'Tidak'))
         ->editColumn('status_laporan_penuh_E_FSA_5_telco_oleh_IO_AIO', fn($row) => $this->formatString($row->status_laporan_penuh_E_FSA_5_telco_oleh_IO_AIO, 'Diterima', 'Tidak'))
-        ->editColumn('status_permohonan_laporan_puspakom', fn($row) => $this->formatBoolean($row->status_permohonan_laporan_puspakom, 'Dibuat', 'Tidak'))
-        ->editColumn('status_laporan_penuh_puspakom', fn($row) => $this->formatBoolean($row->status_laporan_penuh_puspakom, 'Diterima', 'Tidak'))
+        ->editColumn('status_permohonan_laporan_puspakom', fn($row) => $this->formatBoolean($row->status_permohonan_laporan_puspakom, 'Ada', 'Tiada'))
+        ->editColumn('status_laporan_penuh_puspakom', fn($row) => $this->formatBoolean($row->status_laporan_penuh_puspakom, 'Dilampirkan', 'Tiada'))
         ->editColumn('status_permohonan_laporan_jkr', fn($row) => $this->formatBoolean($row->status_permohonan_laporan_jkr, 'Dibuat', 'Tidak'))
         ->editColumn('status_laporan_penuh_jkr', fn($row) => $this->formatBoolean($row->status_laporan_penuh_jkr, 'Diterima', 'Tidak'))
         ->editColumn('status_permohonan_laporan_jpj', fn($row) => $this->formatBoolean($row->status_permohonan_laporan_jpj, 'Dibuat', 'Tidak'))
@@ -1411,10 +1427,10 @@ public function getKomersilData(Project $project)
                 return htmlspecialchars($row->adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan ?? '-');
             })
             ->editColumn('keputusan_akhir_mahkamah', function ($row) {
-                return htmlspecialchars($row->keputusan_akhir_mahkamah ?? '-');
+                return $this->formatArrayField($row->keputusan_akhir_mahkamah);
             })
 
-            ->rawColumns(array_merge([
+            ->rawColumns([
                 'action',
                 'arahan_minit_oleh_sio_status',
                 'arahan_minit_ketua_bahagian_status',
@@ -1468,13 +1484,13 @@ public function getKomersilData(Project $project)
                 'fail_lmm_ada_keputusan_koroner',
                 'status_kus_fail',
                 'status_pem',
+                'keputusan_akhir_mahkamah', // Array field for badges
                 'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan',
                 'status_pergerakan_barang_kes',
                 'status_barang_kes_selesai_siasatan',
                 'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan',
                 'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan',
-                'keputusan_akhir_mahkamah',
-            ]))
+            ])
             ->make(true);
     }
     
@@ -1902,6 +1918,7 @@ public function getKomersilData(Project $project)
                 'muka_surat_4_keputusan_kes_dicatat',
                 'fail_lmm_ada_keputusan_koroner',
                 'status_kus_fail', // Now a boolean
+                'keputusan_akhir_mahkamah',
                 // Raw columns for JSON/complex string fields
                 'status_pem',
                 'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan', // Now a string
@@ -1911,7 +1928,6 @@ public function getKomersilData(Project $project)
                 'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan', // Now a string
                 'resit_kew38e_pelupusan_wang_tunai', // Now a string
                 'adakah_borang_serah_terima_pegawai_tangkapan', // Now a string
-                'keputusan_akhir_mahkamah', // Now a string
                 'lain_lain_permohonan_laporan', // String, ensuring it's in rawColumns if special chars might exist
             ]))
             ->editColumn('created_at', function ($row) {
@@ -1991,6 +2007,23 @@ public function getKomersilData(Project $project)
             ->editColumn('tarikh_rj10b', function($row) {
                 return optional($row->tarikh_rj10b)->format('d/m/Y') ?? '-';
             })
+            
+            // RJ Fields - Added date formatters
+            ->editColumn('tarikh_rj2', function($row) {
+                return optional($row->tarikh_rj2)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('tarikh_rj2b', function($row) {
+                return optional($row->tarikh_rj2b)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('tarikh_rj9', function($row) {
+                return optional($row->tarikh_rj9)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('tarikh_rj99', function($row) {
+                return optional($row->tarikh_rj99)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('tarikh_rj10a', function($row) {
+                return optional($row->tarikh_rj10a)->format('d/m/Y') ?? '-';
+            })
             ->editColumn('tarikh_permohonan_laporan_jkr', function($row) {
                 return optional($row->tarikh_permohonan_laporan_jkr)->format('d/m/Y') ?? '-';
             })
@@ -2010,6 +2043,22 @@ public function getKomersilData(Project $project)
             // --- END of new date columns ---
             ->editColumn('tarikh_laporan_penuh_jkjr', function($row) {
                 return optional($row->tarikh_laporan_penuh_jkjr)->format('d/m/Y') ?? '-';
+            })
+            
+            // PUSPAKOM - Added date formatters
+            ->editColumn('tarikh_permohonan_laporan_puspakom', function($row) {
+                return optional($row->tarikh_permohonan_laporan_puspakom)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('tarikh_laporan_penuh_puspakom', function($row) {
+                return optional($row->tarikh_laporan_penuh_puspakom)->format('d/m/Y') ?? '-';
+            })
+            
+            // HOSPITAL - Added date formatters
+            ->editColumn('tarikh_permohonan_laporan_hospital', function($row) {
+                return optional($row->tarikh_permohonan_laporan_hospital)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('tarikh_laporan_penuh_hospital', function($row) {
+                return optional($row->tarikh_laporan_penuh_hospital)->format('d/m/Y') ?? '-';
             })
             
             // Format boolean fields
@@ -2037,6 +2086,23 @@ public function getKomersilData(Project $project)
             ->editColumn('status_rj10b', function($row) {
                 return $this->formatBoolean($row->status_rj10b, 'Cipta', 'Tidak');
             })
+            
+            // RJ Fields - Added boolean formatters
+            ->editColumn('status_rj2', function($row) {
+                return $this->formatBoolean($row->status_rj2, 'Diterima', 'Tidak');
+            })
+            ->editColumn('status_rj2b', function($row) {
+                return $this->formatBoolean($row->status_rj2b, 'Diterima', 'Tidak');
+            })
+            ->editColumn('status_rj9', function($row) {
+                return $this->formatBoolean($row->status_rj9, 'Diterima', 'Tidak');
+            })
+            ->editColumn('status_rj99', function($row) {
+                return $this->formatBoolean($row->status_rj99, 'Diterima', 'Tidak');
+            })
+            ->editColumn('status_rj10a', function($row) {
+                return $this->formatBoolean($row->status_rj10a, 'Diterima', 'Tidak');
+            })
             ->editColumn('status_saman_pdrm_s_257', function($row) {
                 return $this->formatBoolean($row->status_saman_pdrm_s_257, 'Dicipta', 'Tidak');
             })
@@ -2057,11 +2123,27 @@ public function getKomersilData(Project $project)
                 return $this->formatBoolean($row->status_laporan_penuh_jpj, 'Dilampirkan', 'Tidak');
             })
             ->editColumn('status_permohonan_laporan_jkjr', function($row) {
-                return $this->formatBoolean($row->status_permohonan_laporan_jkjr);
+                return $this->formatBoolean($row->status_permohonan_laporan_jkjr, 'Ada', 'Tiada');
             })
             // --- END of new boolean columns ---
             ->editColumn('status_laporan_penuh_jkjr', function($row) {
-                return $this->formatBoolean($row->status_laporan_penuh_jkjr, 'Dilampirkan', 'Tidak');
+                return $this->formatBoolean($row->status_laporan_penuh_jkjr, 'Dilampirkan', 'Tiada');
+            })
+            
+            // PUSPAKOM - Added boolean formatters
+            ->editColumn('status_permohonan_laporan_puspakom', function($row) {
+                return $this->formatBoolean($row->status_permohonan_laporan_puspakom, 'Ada', 'Tiada');
+            })
+            ->editColumn('status_laporan_penuh_puspakom', function($row) {
+                return $this->formatBoolean($row->status_laporan_penuh_puspakom, 'Dilampirkan', 'Tiada');
+            })
+            
+            // HOSPITAL - Added boolean formatters
+            ->editColumn('status_permohonan_laporan_hospital', function($row) {
+                return $this->formatBoolean($row->status_permohonan_laporan_hospital, 'Ada', 'Tiada');
+            })
+            ->editColumn('status_laporan_penuh_hospital', function($row) {
+                return $this->formatBoolean($row->status_laporan_penuh_hospital, 'Dilampirkan', 'Tiada');
             })
             ->editColumn('adakah_muka_surat_4_keputusan_kes_dicatat', function($row) {
                 return $this->formatBoolean($row->adakah_muka_surat_4_keputusan_kes_dicatat);
@@ -2080,6 +2162,11 @@ public function getKomersilData(Project $project)
             ->editColumn('status_pem', function($row) {
                 return $this->formatArrayField($row->status_pem);
             })
+            
+            // Format keputusan_akhir_mahkamah as checkbox array (like TrafikSeksyen)
+            ->editColumn('keputusan_akhir_mahkamah', function ($row) {
+                return $this->formatArrayField($row->keputusan_akhir_mahkamah);
+            })
 
             ->rawColumns([
                 'action',
@@ -2091,19 +2178,41 @@ public function getKomersilData(Project $project)
                 'status_rajah_kasar_tempat_kejadian',
                 'status_gambar_tempat_kejadian',
                 'status_pem',
+                'keputusan_akhir_mahkamah', // Added back for array formatting
+                
+                // RJ Status fields
+                'status_rj2',
+                'status_rj2b',
+                'status_rj9',
+                'status_rj99',
+                'status_rj10a',
                 'status_rj10b',
+                
+                // Saman fields
                 'status_saman_pdrm_s_257',
                 'status_saman_pdrm_s_167',
+                
+                // JKR/JPJ/JKJR fields  
                 'status_permohonan_laporan_jkr',
                 'status_laporan_penuh_jkr',
                 'status_permohonan_laporan_jpj',
+                'status_laporan_penuh_jpj',
+                'status_permohonan_laporan_jkjr',
                 'status_laporan_penuh_jkjr',
+                
+                // PUSPAKOM fields
+                'status_permohonan_laporan_puspakom',
+                'status_laporan_penuh_puspakom',
+                
+                // Hospital fields
+                'status_permohonan_laporan_hospital',
+                'status_laporan_penuh_hospital',
+                
+                // Other boolean fields
                 'adakah_muka_surat_4_keputusan_kes_dicatat',
                 'adakah_ks_kus_fail_selesai',
                 'adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan',
                 'fail_lmm_t_muka_surat_2_disahkan_kpd',
-                'status_laporan_penuh_jpj',
-                'status_permohonan_laporan_jkjr',
             ])
             ->editColumn('created_at', function ($row) {
                 return optional($row->created_at)->format('d/m/Y H:i:s') ?? '-';

@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Kema                                    <input type="text" name="tarikh_semboyan_pemeriksaan_jips_ke_daerah" id="tarikh_semboyan_pemeriksaan_jips_ke_daerah" value="{{ old('tarikh_semboyan_pemeriksaan_jips_ke_daerah', optional($paper->tarikh_semboyan_pemeriksaan_jips_ke_daerah)->format('d/m/Y')) }}" placeholder="DD/MM/YYYY" class="mt-1 block w-full form-input date-input">                       <input type="text" name="tarikh_edaran_minit_ks_akhir" id="tarikh_edaran_minit_ks_akhir" value="{{ old('tarikh_edaran_minit_ks_akhir', optional($paper->tarikh_edaran_minit_ks_akhir)->format('d/m/Y')) }}" placeholder="DD/MM/YYYY" class="mt-1 block w-full form-input date-input">                       <input type="text" name="tarikh_edaran_minit_ks_sebelum_akhir" id="tarikh_edaran_minit_ks_sebelum_akhir" value="{{ old('tarikh_edaran_minit_ks_sebelum_akhir', optional($paper->tarikh_edaran_minit_ks_sebelum_akhir)->format('d/m/Y')) }}" placeholder="DD/MM/YYYY" class="mt-1 block w-full form-input date-input">kini Kertas Siasatan: Trafik ({{ $paper->no_kertas_siasatan }})
+            Kemaskini Kertas Siasatan: Trafik ({{ $paper->no_kertas_siasatan }})
         </h2>
     </x-slot>
 
@@ -60,8 +60,7 @@
                     $html .= "</div>";
                     $html .= "<div x-show='status === \"{$YaLabel}\"' x-transition class='mt-2'>";
                     $html .= "<label for='{$dateName}_{$id}' class='text-sm text-gray-600'>Jika Ada, nyatakan tarikh:</label>";
-                    $dateValue = old($dateName, optional($currentDate)->format('d/m/Y'));
-                    $html .= "<input type='text' name='{$dateName}' id='{$dateName}_{$id}' value='{$dateValue}' placeholder='DD/MM/YYYY' class='mt-1 block w-full form-input date-input'>";
+                    $html .= "<input type='date' name='{$dateName}' id='{$dateName}_{$id}' value='" . old($dateName, optional($currentDate)->format('Y-m-d')) . "' class='mt-1 block w-full form-input'>";
                     $html .= "</div></div>";
                     return $html;
                 }
@@ -103,7 +102,7 @@
                         </div>
                         <div>
                             <label for="tarikh_laporan_polis_dibuka" class="block text-sm font-medium text-gray-700">Tarikh Laporan Polis Dibuka</label>
-                            <input type="text" name="tarikh_laporan_polis_dibuka" id="tarikh_laporan_polis_dibuka" value="{{ old('tarikh_laporan_polis_dibuka', optional($paper->tarikh_laporan_polis_dibuka)->format('d/m/Y')) }}" placeholder="DD/MM/YYYY" class="mt-1 block w-full form-input date-input">
+                            <input type="date" name="tarikh_laporan_polis_dibuka" id="tarikh_laporan_polis_dibuka" value="{{ old('tarikh_laporan_polis_dibuka', optional($paper->tarikh_laporan_polis_dibuka)->format('Y-m-d')) }}" class="mt-1 block w-full form-input">
                         </div>
                         <div>
                             <label for="seksyen" class="block text-sm font-medium text-gray-700">Seksyen</label>
@@ -122,11 +121,11 @@
                         </div>
                         <div>
                             <label for="tarikh_edaran_minit_ks_pertama" class="block text-sm font-medium text-gray-700">Tarikh Edaran Minit KS Pertama (A)</label>
-                            <input type="text" name="tarikh_edaran_minit_ks_pertama" id="tarikh_edaran_minit_ks_pertama" value="{{ old('tarikh_edaran_minit_ks_pertama', optional($paper->tarikh_edaran_minit_ks_pertama)->format('d/m/Y')) }}" placeholder="DD/MM/YYYY" class="mt-1 block w-full form-input date-input">
+                            <input type="date" name="tarikh_edaran_minit_ks_pertama" id="tarikh_edaran_minit_ks_pertama" value="{{ old('tarikh_edaran_minit_ks_pertama', optional($paper->tarikh_edaran_minit_ks_pertama)->format('Y-m-d')) }}" class="mt-1 block w-full form-input">
                         </div>
                         <div>
                             <label for="tarikh_edaran_minit_ks_kedua" class="block text-sm font-medium text-gray-700">Tarikh Edaran Minit KS Kedua (B)</label>
-                            <input type="text" name="tarikh_edaran_minit_ks_kedua" id="tarikh_edaran_minit_ks_kedua" value="{{ old('tarikh_edaran_minit_ks_kedua', optional($paper->tarikh_edaran_minit_ks_kedua)->format('d/m/Y')) }}" placeholder="DD/MM/YYYY" class="mt-1 block w-full form-input date-input">
+                            <input type="date" name="tarikh_edaran_minit_ks_kedua" id="tarikh_edaran_minit_ks_kedua" value="{{ old('tarikh_edaran_minit_ks_kedua', optional($paper->tarikh_edaran_minit_ks_kedua)->format('Y-m-d')) }}" class="mt-1 block w-full form-input">
                         </div>
                         <div>
                             <label for="tarikh_edaran_minit_ks_sebelum_akhir" class="block text-sm font-medium text-gray-700">Tarikh Edaran Minit KS Sebelum Minit Akhir (C)</label>
@@ -581,11 +580,11 @@
 
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">Semboyan Pemakluman Pertama Wanted Person Ke Daerah Untuk Kesan / Tangkap</label>
+                                <label class="block text-sm font-medium text-gray-700">Semboyan Pemakluman Pertama Wanted Person Ke Daerah Untuk Kesan</label>
                                 {!! render_status_with_date_radio('wp1', 'status_semboyan_pertama_wanted_person', 'tarikh_semboyan_pertama_wanted_person', $paper->status_semboyan_pertama_wanted_person, $paper->tarikh_semboyan_pertama_wanted_person, 'Ada / Cipta', 'Tiada / Tidak Cipta', true) !!}
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">Semboyan Pemakluman Kedua Wanted Person Ke Daerah Untuk Kesan / Tangkap</label>
+                                <label class="block text-sm font-medium text-gray-700">Semboyan Pemakluman Kedua Wanted Person Ke Daerah Untuk Kesan</label>
                                 {!! render_status_with_date_radio('wp2', 'status_semboyan_kedua_wanted_person', 'tarikh_semboyan_kedua_wanted_person', $paper->status_semboyan_kedua_wanted_person, $paper->tarikh_semboyan_kedua_wanted_person, 'Ada / Cipta', 'Tiada / Tidak Cipta', true) !!}
                             </div>
                             <div>
@@ -991,30 +990,6 @@ document.addEventListener('DOMContentLoaded', function () {
         'kaedah_lain_trafik',
         'kaedah_pelupusan_barang_kes_lain_trafik'
     );
-
-    // Date input formatting for DD/MM/YYYY
-    document.querySelectorAll('.date-input').forEach(function(input) {
-        input.addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
-            
-            if (value.length >= 2) {
-                value = value.substring(0, 2) + '/' + value.substring(2);
-            }
-            if (value.length >= 5) {
-                value = value.substring(0, 5) + '/' + value.substring(5, 9);
-            }
-            
-            e.target.value = value;
-        });
-
-        input.addEventListener('blur', function(e) {
-            let value = e.target.value;
-            if (value && !/^\d{2}\/\d{2}\/\d{4}$/.test(value)) {
-                alert('Sila masukkan tarikh dalam format DD/MM/YYYY');
-                e.target.focus();
-            }
-        });
-    });
 });
 </script>
 @endpush
