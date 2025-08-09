@@ -53,6 +53,13 @@
                     return "{$status_html} | Tarikh: {$date_html}";
                 }
 
+                function show_triple_status_and_date($status, $date = null, $trueText = 'Ada', $falseText = 'Tiada', $neutralText = 'Tidak Berkaitan')
+                {
+                    $status_html = show_triple_badge($status, $trueText, $falseText, $neutralText);
+                    $date_html = ($status == 1) && $date ? (is_string($date) ? $date : optional($date)->format('d/m/Y')) : '-';
+                    return "{$status_html} | Tarikh: {$date_html}";
+                }
+
                 function show_json_list($json_data)
                 {
                     if (empty($json_data))
@@ -389,19 +396,19 @@
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">Borang Serah/Terima Pemilik & Saksi</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                {!! show_boolean_badge($paper->adakah_borang_serah_terima_pemilik_saksi, 'Ada Dilampirkan', 'Tidak Dilampirkan') !!}
+                                {!! show_triple_badge($paper->adakah_borang_serah_terima_pemilik_saksi, 'Ada Dilampirkan', 'Tidak Dilampirkan', 'Tidak Berkaitan') !!}
                             </dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">Sijil/Surat Kebenaran IPD</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                {!! show_triple_badge($paper->adakah_sijil_surat_kebenaran_ipd, 'Ada Dilampirkan', 'Tidak Dilampirkan', neutralText: 'Tidak Berkaitan') !!}
+                                {!! show_triple_badge($paper->adakah_sijil_surat_kebenaran_ipd, 'Ada Dilampirkan', 'Tidak Dilampirkan', 'Tidak Berkaitan') !!}
                             </dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">Gambar Pelupusan</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                {!! show_boolean_badge($paper->adakah_gambar_pelupusan, 'Ada Dilampirkan', 'Tidak Dilampirkan') !!}
+                                {!! show_triple_badge($paper->adakah_gambar_pelupusan, 'Ada Dilampirkan', 'Tidak Dilampirkan', 'Tidak Berkaitan') !!}
                             </dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -491,37 +498,37 @@
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">RJ 2</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                {!! show_status_and_date($paper->status_rj2, $paper->tarikh_rj2, 'Cipta', 'Tidak') !!}
+                                {!! show_triple_status_and_date($paper->status_rj2, $paper->tarikh_rj2, 'Cipta', 'Tidak', 'Tidak Berkaitan') !!}
                             </dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">RJ 2B</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                {!! show_status_and_date($paper->status_rj2b, $paper->tarikh_rj2b, 'Cipta', 'Tidak') !!}
+                                {!! show_triple_status_and_date($paper->status_rj2b, $paper->tarikh_rj2b, 'Cipta', 'Tidak', 'Tidak Berkaitan') !!}
                             </dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">RJ 9</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                {!! show_status_and_date($paper->status_rj9, $paper->tarikh_rj9, 'Cipta', 'Tidak') !!}
+                                {!! show_triple_status_and_date($paper->status_rj9, $paper->tarikh_rj9, 'Cipta', 'Tidak', 'Tidak Berkaitan') !!}
                             </dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">RJ 99</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                {!! show_status_and_date($paper->status_rj99, $paper->tarikh_rj99, 'Cipta', 'Tidak') !!}
+                                {!! show_triple_status_and_date($paper->status_rj99, $paper->tarikh_rj99, 'Cipta', 'Tidak', 'Tidak Berkaitan') !!}
                             </dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">RJ 10A</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                {!! show_status_and_date($paper->status_rj10a, $paper->tarikh_rj10a, 'Cipta', 'Tidak') !!}
+                                {!! show_triple_status_and_date($paper->status_rj10a, $paper->tarikh_rj10a, 'Cipta', 'Tidak', 'Tidak Berkaitan') !!}
                             </dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">RJ 10B</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                {!! show_status_and_date($paper->status_rj10b, $paper->tarikh_rj10b, 'Cipta', 'Tidak') !!}
+                                {!! show_triple_status_and_date($paper->status_rj10b, $paper->tarikh_rj10b, 'Cipta', 'Tidak', 'Tidak Berkaitan') !!}
                             </dd>
                         </div>
 

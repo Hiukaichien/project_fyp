@@ -47,9 +47,9 @@ class Komersil extends Model
             'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => 'string', // CHANGED: From array to string
             'resit_kew_38e_bagi_pelupusan' => 'string', // CHANGED: From array to string
             'adakah_borang_serah_terima_pegawai_tangkapan' => 'string', // CHANGED: From array to string
-            'adakah_borang_serah_terima_pemilik_saksi' => 'string', 
+            'adakah_borang_serah_terima_pemilik_saksi' => 'integer', 
             'adakah_sijil_surat_kebenaran_ipd' => 'integer',
-            'adakah_gambar_pelupusan' => 'string',
+            'adakah_gambar_pelupusan' => 'integer',
 
         // B5 - Dokumen Siasatan
         'status_id_siasatan_dikemaskini' => 'boolean',
@@ -63,17 +63,17 @@ class Komersil extends Model
 
         // B6 - Borang & Semakan
         'status_pem' => 'array', // This one is correct because it's for multiple checkboxes
-        'status_rj2' => 'boolean',
+        'status_rj2' => 'integer',
         'tarikh_rj2' => 'date:d/m/Y',
-        'status_rj2b' => 'boolean',
+        'status_rj2b' => 'integer',
         'tarikh_rj2b' => 'date:d/m/Y',
-        'status_rj9' => 'boolean',
+        'status_rj9' => 'integer',
         'tarikh_rj9' => 'date:d/m/Y',
-        'status_rj99' => 'boolean',
+        'status_rj99' => 'integer',
         'tarikh_rj99' => 'date:d/m/Y',
-        'status_rj10a' => 'boolean',
+        'status_rj10a' => 'integer',
         'tarikh_rj10a' => 'date:d/m/Y',
-        'status_rj10b' => 'boolean',
+        'status_rj10b' => 'integer',
         'tarikh_rj10b' => 'date:d/m/Y',
         'status_saman_pdrm_s_257' => 'boolean',
         'status_saman_pdrm_s_167' => 'boolean',
@@ -409,7 +409,7 @@ public function getTerbengkalaiStatusDcAttribute(): string
 
     public function getAdakahBorangSerahTerimaPemilikSaksiTextAttribute(): string 
     {
-        return $this->formatStringValue($this->adakah_borang_serah_terima_pemilik_saksi);
+        return $this->formatTripleValueToMalay($this->adakah_borang_serah_terima_pemilik_saksi, 'Ada Dilampirkan', 'Tidak Dilampirkan', 'Tidak Berkaitan');
     }
 
     public function getAdakahSijilSuratKebenaranIpdTextAttribute(): string 
@@ -419,7 +419,7 @@ public function getTerbengkalaiStatusDcAttribute(): string
 
     public function getAdakahGambarPelupusanTextAttribute(): string 
     {
-        return $this->formatStringValue($this->adakah_gambar_pelupusan);
+        return $this->formatTripleValueToMalay($this->adakah_gambar_pelupusan, 'Ada Dilampirkan', 'Tidak Dilampirkan', 'Tidak Berkaitan');
     }
 
     // B5 Accessors
@@ -466,32 +466,32 @@ public function getTerbengkalaiStatusDcAttribute(): string
     // B6 Accessors
     public function getStatusRj2TextAttribute(): string 
     {
-        return $this->formatBooleanToMalay($this->status_rj2, 'Cipta', 'Tidak Cipta');
+        return $this->formatTripleValueToMalay($this->status_rj2, 'Cipta', 'Tidak Cipta', 'Tidak Berkaitan');
     }
 
     public function getStatusRj2bTextAttribute(): string 
     {
-        return $this->formatBooleanToMalay($this->status_rj2b, 'Cipta', 'Tidak Cipta');
+        return $this->formatTripleValueToMalay($this->status_rj2b, 'Cipta', 'Tidak Cipta', 'Tidak Berkaitan');
     }
 
     public function getStatusRj9TextAttribute(): string 
     {
-        return $this->formatBooleanToMalay($this->status_rj9, 'Cipta', 'Tidak Cipta');
+        return $this->formatTripleValueToMalay($this->status_rj9, 'Cipta', 'Tidak Cipta', 'Tidak Berkaitan');
     }
 
     public function getStatusRj99TextAttribute(): string 
     {
-        return $this->formatBooleanToMalay($this->status_rj99, 'Cipta', 'Tidak Cipta');
+        return $this->formatTripleValueToMalay($this->status_rj99, 'Cipta', 'Tidak Cipta', 'Tidak Berkaitan');
     }
 
     public function getStatusRj10aTextAttribute(): string 
     {
-        return $this->formatBooleanToMalay($this->status_rj10a, 'Cipta', 'Tidak Cipta');
+        return $this->formatTripleValueToMalay($this->status_rj10a, 'Cipta', 'Tidak Cipta', 'Tidak Berkaitan');
     }
 
     public function getStatusRj10bTextAttribute(): string 
     {
-        return $this->formatBooleanToMalay($this->status_rj10b, 'Cipta', 'Tidak Cipta');
+        return $this->formatTripleValueToMalay($this->status_rj10b, 'Cipta', 'Tidak Cipta', 'Tidak Berkaitan');
     }
 
     public function getStatusSamanPdrmS257TextAttribute(): string 

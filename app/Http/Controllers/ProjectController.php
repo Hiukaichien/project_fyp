@@ -1002,12 +1002,12 @@ public function getKomersilData(Project $project)
         ->editColumn('status_gambar_barang_kes_kenderaan', fn($row) => $this->formatBoolean($row->status_gambar_barang_kes_kenderaan, 'Ada', 'Tiada'))
         ->editColumn('status_gambar_barang_kes_darah', fn($row) => $this->formatBoolean($row->status_gambar_barang_kes_darah, 'Ada', 'Tiada'))
         ->editColumn('status_gambar_barang_kes_kontraban', fn($row) => $this->formatBoolean($row->status_gambar_barang_kes_kontraban, 'Ada', 'Tiada'))
-        ->editColumn('status_rj2', fn($row) => $this->formatBoolean($row->status_rj2, 'Cipta', 'Tidak'))
-        ->editColumn('status_rj2b', fn($row) => $this->formatBoolean($row->status_rj2b, 'Cipta', 'Tidak'))
-        ->editColumn('status_rj9', fn($row) => $this->formatBoolean($row->status_rj9, 'Cipta', 'Tidak'))
-        ->editColumn('status_rj99', fn($row) => $this->formatBoolean($row->status_rj99, 'Cipta', 'Tidak'))
-        ->editColumn('status_rj10a', fn($row) => $this->formatBoolean($row->status_rj10a, 'Cipta', 'Tidak'))
-        ->editColumn('status_rj10b', fn($row) => $this->formatBoolean($row->status_rj10b, 'Cipta', 'Tidak'))
+        ->editColumn('status_rj2', fn($row) => $this->formatBoolean($row->status_rj2, 'Cipta', 'Tidak', 'Tidak Berkaitan'))
+        ->editColumn('status_rj2b', fn($row) => $this->formatBoolean($row->status_rj2b, 'Cipta', 'Tidak', 'Tidak Berkaitan'))
+        ->editColumn('status_rj9', fn($row) => $this->formatBoolean($row->status_rj9, 'Cipta', 'Tidak', 'Tidak Berkaitan'))
+        ->editColumn('status_rj99', fn($row) => $this->formatBoolean($row->status_rj99, 'Cipta', 'Tidak', 'Tidak Berkaitan'))
+        ->editColumn('status_rj10a', fn($row) => $this->formatBoolean($row->status_rj10a, 'Cipta', 'Tidak', 'Tidak Berkaitan'))
+        ->editColumn('status_rj10b', fn($row) => $this->formatBoolean($row->status_rj10b, 'Cipta', 'Tidak', 'Tidak Berkaitan'))
         ->editColumn('status_semboyan_pertama_wanted_person', fn($row) => $this->formatWantedPersonStatus($row->status_semboyan_pertama_wanted_person))
         ->editColumn('status_semboyan_kedua_wanted_person', fn($row) => $this->formatWantedPersonStatus($row->status_semboyan_kedua_wanted_person))
         ->editColumn('status_semboyan_ketiga_wanted_person', fn($row) => $this->formatWantedPersonStatus($row->status_semboyan_ketiga_wanted_person))
@@ -1080,9 +1080,18 @@ public function getKomersilData(Project $project)
         ->editColumn('resit_kew_38e_bagi_pelupusan', fn($row) => $this->formatArrayField($row->resit_kew_38e_bagi_pelupusan))
         ->editColumn('adakah_borang_serah_terima_pegawai_tangkapan', fn($row) => $this->formatArrayField($row->adakah_borang_serah_terima_pegawai_tangkapan))
 
-        // Format specific boolean field for three-value system
+        // Format specific boolean fields for three-value system
+        ->editColumn('adakah_borang_serah_terima_pegawai_tangkapan', function($row) {
+            return $this->formatBoolean($row->adakah_borang_serah_terima_pegawai_tangkapan, 'Ada', 'Tidak', 'Tidak Berkaitan');
+        })
         ->editColumn('adakah_sijil_surat_kebenaran_ipd', function($row) {
             return $this->formatBoolean($row->adakah_sijil_surat_kebenaran_ipd, 'Ada', 'Tidak', 'Tidak Berkaitan');
+        })
+        ->editColumn('adakah_borang_serah_terima_pemilik_saksi', function($row) {
+            return $this->formatBoolean($row->adakah_borang_serah_terima_pemilik_saksi, 'Ada', 'Tidak', 'Tidak Berkaitan');
+        })
+        ->editColumn('adakah_gambar_pelupusan', function($row) {
+            return $this->formatBoolean($row->adakah_gambar_pelupusan, 'Ada', 'Tidak', 'Tidak Berkaitan');
         })
 
         // --- RawColumns must include all columns with HTML ---
@@ -1092,6 +1101,9 @@ public function getKomersilData(Project $project)
                 'status_barang_kes_selesai_siasatan', 'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan', 
                 'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan', 'resit_kew_38e_bagi_pelupusan', 
                 'adakah_borang_serah_terima_pegawai_tangkapan', 'adakah_sijil_surat_kebenaran_ipd',
+                'adakah_borang_serah_terima_pemilik_saksi', 'adakah_gambar_pelupusan',
+                // RJ fields with three-value system
+                'status_rj2', 'status_rj2b', 'status_rj9', 'status_rj99', 'status_rj10a', 'status_rj10b',
                 // E-FSA string fields that use formatString method
                 'status_permohonan_E_FSA_1_oleh_IO_AIO', 'status_laporan_penuh_E_FSA_1_oleh_IO_AIO',
                 'status_permohonan_E_FSA_2_oleh_IO_AIO', 'status_laporan_penuh_E_FSA_2_oleh_IO_AIO',
