@@ -17,6 +17,9 @@ class TrafikRule extends Model
      * The attributes that should be cast to native types.
      */
     protected $casts = [
+        // IPRS Standard Fields
+        'iprs_tarikh_ks' => 'datetime:Y-m-d H:i:s',
+
         // B1
         'tarikh_laporan_polis_dibuka' => 'date:Y-m-d',
         // B2

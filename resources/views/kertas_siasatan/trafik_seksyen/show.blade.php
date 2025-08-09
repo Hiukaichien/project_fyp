@@ -18,6 +18,9 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             
+            {{-- IPRS Standard Section --}}
+            <x-iprs-section :paper="$paper" mode="view" />
+            
             @php
                 function show_boolean_badge($value, $trueText = 'Ya', $falseText = 'Tidak') {
                     if (is_null($value)) return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">-</span>';

@@ -15,6 +15,16 @@ return new class extends Migration
             $table->id();
             $table->foreignId('project_id')->constrained('projects')->onDelete('cascade');
 
+            // IPRS Standard Fields (8 columns for standardization)
+            $table->string('iprs_no_kertas_siasatan')->nullable()->comment('IPRS: Standard No KS');
+            $table->datetime('iprs_tarikh_ks')->nullable()->comment('IPRS: Standard Tarikh KS');
+            $table->string('iprs_no_repot')->nullable()->comment('IPRS: Standard No Repot');
+            $table->string('iprs_jenis_jabatan_ks')->nullable()->default('TrafikRule')->comment('IPRS: Jenis Jabatan KS');
+            $table->string('iprs_pegawai_penyiasat')->nullable()->comment('IPRS: Standard Pegawai Penyiasat');
+            $table->string('iprs_status_ks')->nullable()->comment('IPRS: Status KS (Selesai/Dalam Siasatan)');
+            $table->string('iprs_status_kes')->nullable()->comment('IPRS: Status Kes (Selesai/Dalam Proses)');
+            $table->string('iprs_seksyen')->nullable()->comment('IPRS: Standard Seksyen');
+
             // BAHAGIAN 1: Maklumat Asas (B1)
             $table->string('no_kertas_siasatan')->unique()->comment('B1');
             $table->string('no_fail_lmm_t')->nullable()->comment('B1');

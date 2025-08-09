@@ -78,7 +78,7 @@
         'resit_kew38e_pelupusan_wang_tunai' => 'Resit Kew.38e',
         'adakah_borang_serah_terima_pegawai_tangkapan' => 'Borang Serah/Terima (Pegawai Tangkapan)',
         'adakah_borang_serah_terima_pemilik_saksi' => 'Borang Serah/Terima (Pemilik/Saksi)',
-        'adakah_sijil_surat_kebenaran_ipd' => 'Sijil/Surat Kebenaran IPD',
+        'adakah_sijil_surat_kebenaran_ipo' => 'Sijil/Surat Kebenaran IPD',
         'adakah_gambar_pelupusan' => 'Gambar Pelupusan',
         'ulasan_keseluruhan_pegawai_pemeriksa_barang_kes' => 'Ulasan Pemeriksa (Barang Kes)',
         
@@ -231,7 +231,7 @@
     'resit_kew38e_pelupusan_wang_tunai' => 'Resit Kew.38e',
     'adakah_borang_serah_terima_pegawai_tangkapan' => 'Borang Serah Terima Pegawai Tangkapan',
     'adakah_borang_serah_terima_pemilik_saksi' => 'Borang Serah Terima Pemilik Saksi',
-    'adakah_sijil_surat_kebenaran_ipd' => 'Sijil Surat Kebenaran IPD',
+    'adakah_sijil_surat_kebenaran_ipo' => 'Sijil Surat Kebenaran IPO',
     'adakah_gambar_pelupusan' => 'Gambar Pelupusan',
     'ulasan_keseluruhan_pegawai_pemeriksa_b4' => 'Ulasan Pegawai Pemeriksa B4',
 
@@ -522,6 +522,16 @@
 
     // Define custom columns for TrafikSeksyen based on migration structure
     $trafikSeksyenColumns = [
+        // IPRS Standard Fields (8 columns for standardization)
+        'iprs_no_kertas_siasatan' => 'IPRS No. Kertas Siasatan',
+        'iprs_tarikh_ks' => 'IPRS Tarikh KS',
+        'iprs_no_repot' => 'IPRS No. Repot',
+        'iprs_jenis_jabatan_ks' => 'IPRS Jenis Jabatan KS',
+        'iprs_pegawai_penyiasat' => 'IPRS Pegawai Penyiasat',
+        'iprs_status_ks' => 'IPRS Status KS',
+        'iprs_status_kes' => 'IPRS Status Kes',
+        'iprs_seksyen' => 'IPRS Seksyen',
+        
         // BAHAGIAN 1: Maklumat Asas
         'no_kertas_siasatan' => 'No. Kertas Siasatan',
         'no_repot_polis' => 'No. Repot Polis',
@@ -580,7 +590,7 @@
         'resit_kew38e_pelupusan_wang_tunai' => 'Resit Kew.38e Pelupusan',
         'adakah_borang_serah_terima_pegawai_tangkapan' => 'Borang Serah Terima Pegawai Tangkapan',
         'adakah_borang_serah_terima_pemilik_saksi' => 'Borang Serah Terima Pemilik Saksi',
-        'adakah_sijil_surat_kebenaran_ipd' => 'Sijil Surat Kebenaran IPD',
+        'adakah_sijil_surat_kebenaran_ipo' => 'Sijil Surat Kebenaran IPO',
         'adakah_gambar_pelupusan' => 'Gambar Pelupusan',
         'ulasan_keseluruhan_pegawai_pemeriksa_barang_kes' => 'Ulasan Keseluruhan Pegawai Pemeriksa (Barang Kes)',
         
@@ -838,7 +848,7 @@
         'resit_kew_38e_bagi_pelupusan' => 'Resit Kew.38e Pelupusan',
         'adakah_borang_serah_terima_pegawai_tangkapan' => 'Borang Serah Terima Pegawai Tangkapan',
         'adakah_borang_serah_terima_pemilik_saksi' => 'Borang Serah Terima Pemilik Saksi',
-        'adakah_sijil_surat_kebenaran_ipd' => 'Sijil Surat Kebenaran IPD',
+        'adakah_sijil_surat_kebenaran_ipo' => 'Sijil Surat Kebenaran IPO',
         'adakah_gambar_pelupusan' => 'Gambar Pelupusan',
         
         // BAHAGIAN 5: Bukti & Rajah
@@ -2289,7 +2299,7 @@
         }
         return data || "-";
     };
-    
+
     // *** FIX STARTS HERE: Use the complete rendering logic ***
     const combinedRenderFunction = function(data, type, row, meta) {
         if (!data || data === '-') return '-';
@@ -2438,7 +2448,7 @@
 
                 $booleanDbColumnsWithTextAccessors = [
                     'arahan_minit_oleh_sio_status', 'arahan_minit_ketua_bahagian_status', 'arahan_minit_ketua_jabatan_status',
-                    'arahan_minit_oleh_ya_tpr_status', 'adakah_barang_kes_didaftarkan', 'adakah_sijil_surat_kebenaran_ipd',
+                    'arahan_minit_oleh_ya_tpr_status', 'adakah_barang_kes_didaftarkan', 'adakah_sijil_surat_kebenaran_ipo',
                     'status_id_siasatan_dikemaskini', 'status_rajah_kasar_tempat_kejadian', 'status_gambar_tempat_kejadian',
                     'status_gambar_post_mortem_mayat_di_hospital', 'status_gambar_barang_kes_am', 'status_gambar_barang_kes_berharga', 'status_gambar_barang_kes_kenderaan',
                     'status_gambar_barang_kes_darah', 'status_gambar_barang_kes_kontraban', 'status_rj2', 'status_rj2b',

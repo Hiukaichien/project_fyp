@@ -1002,12 +1002,12 @@ public function getKomersilData(Project $project)
         ->editColumn('status_gambar_barang_kes_kenderaan', fn($row) => $this->formatBoolean($row->status_gambar_barang_kes_kenderaan, 'Ada', 'Tiada'))
         ->editColumn('status_gambar_barang_kes_darah', fn($row) => $this->formatBoolean($row->status_gambar_barang_kes_darah, 'Ada', 'Tiada'))
         ->editColumn('status_gambar_barang_kes_kontraban', fn($row) => $this->formatBoolean($row->status_gambar_barang_kes_kontraban, 'Ada', 'Tiada'))
-        ->editColumn('status_rj2', fn($row) => $this->formatBoolean($row->status_rj2, 'Cipta', 'Tidak', 'Tidak Berkaitan'))
-        ->editColumn('status_rj2b', fn($row) => $this->formatBoolean($row->status_rj2b, 'Cipta', 'Tidak', 'Tidak Berkaitan'))
-        ->editColumn('status_rj9', fn($row) => $this->formatBoolean($row->status_rj9, 'Cipta', 'Tidak', 'Tidak Berkaitan'))
-        ->editColumn('status_rj99', fn($row) => $this->formatBoolean($row->status_rj99, 'Cipta', 'Tidak', 'Tidak Berkaitan'))
-        ->editColumn('status_rj10a', fn($row) => $this->formatBoolean($row->status_rj10a, 'Cipta', 'Tidak', 'Tidak Berkaitan'))
-        ->editColumn('status_rj10b', fn($row) => $this->formatBoolean($row->status_rj10b, 'Cipta', 'Tidak', 'Tidak Berkaitan'))
+        ->editColumn('status_rj2', fn($row) => $this->formatBoolean($row->status_rj2, 'Cipta', 'Tidak'))
+        ->editColumn('status_rj2b', fn($row) => $this->formatBoolean($row->status_rj2b, 'Cipta', 'Tidak'))
+        ->editColumn('status_rj9', fn($row) => $this->formatBoolean($row->status_rj9, 'Cipta', 'Tidak'))
+        ->editColumn('status_rj99', fn($row) => $this->formatBoolean($row->status_rj99, 'Cipta', 'Tidak'))
+        ->editColumn('status_rj10a', fn($row) => $this->formatBoolean($row->status_rj10a, 'Cipta', 'Tidak'))
+        ->editColumn('status_rj10b', fn($row) => $this->formatBoolean($row->status_rj10b, 'Cipta', 'Tidak'))
         ->editColumn('status_semboyan_pertama_wanted_person', fn($row) => $this->formatWantedPersonStatus($row->status_semboyan_pertama_wanted_person))
         ->editColumn('status_semboyan_kedua_wanted_person', fn($row) => $this->formatWantedPersonStatus($row->status_semboyan_kedua_wanted_person))
         ->editColumn('status_semboyan_ketiga_wanted_person', fn($row) => $this->formatWantedPersonStatus($row->status_semboyan_ketiga_wanted_person))
@@ -1080,30 +1080,13 @@ public function getKomersilData(Project $project)
         ->editColumn('resit_kew_38e_bagi_pelupusan', fn($row) => $this->formatArrayField($row->resit_kew_38e_bagi_pelupusan))
         ->editColumn('adakah_borang_serah_terima_pegawai_tangkapan', fn($row) => $this->formatArrayField($row->adakah_borang_serah_terima_pegawai_tangkapan))
 
-        // Format specific boolean fields for three-value system
-        ->editColumn('adakah_borang_serah_terima_pegawai_tangkapan', function($row) {
-            return $this->formatBoolean($row->adakah_borang_serah_terima_pegawai_tangkapan, 'Ada', 'Tidak', 'Tidak Berkaitan');
-        })
-        ->editColumn('adakah_sijil_surat_kebenaran_ipd', function($row) {
-            return $this->formatBoolean($row->adakah_sijil_surat_kebenaran_ipd, 'Ada', 'Tidak', 'Tidak Berkaitan');
-        })
-        ->editColumn('adakah_borang_serah_terima_pemilik_saksi', function($row) {
-            return $this->formatBoolean($row->adakah_borang_serah_terima_pemilik_saksi, 'Ada', 'Tidak', 'Tidak Berkaitan');
-        })
-        ->editColumn('adakah_gambar_pelupusan', function($row) {
-            return $this->formatBoolean($row->adakah_gambar_pelupusan, 'Ada', 'Tidak', 'Tidak Berkaitan');
-        })
-
         // --- RawColumns must include all columns with HTML ---
         ->rawColumns(array_merge(
             [
                 'action', 'status_pem', 'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan', 'status_pergerakan_barang_kes', 
                 'status_barang_kes_selesai_siasatan', 'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan', 
                 'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan', 'resit_kew_38e_bagi_pelupusan', 
-                'adakah_borang_serah_terima_pegawai_tangkapan', 'adakah_sijil_surat_kebenaran_ipd',
-                'adakah_borang_serah_terima_pemilik_saksi', 'adakah_gambar_pelupusan',
-                // RJ fields with three-value system
-                'status_rj2', 'status_rj2b', 'status_rj9', 'status_rj99', 'status_rj10a', 'status_rj10b',
+                'adakah_borang_serah_terima_pegawai_tangkapan',
                 // E-FSA string fields that use formatString method
                 'status_permohonan_E_FSA_1_oleh_IO_AIO', 'status_laporan_penuh_E_FSA_1_oleh_IO_AIO',
                 'status_permohonan_E_FSA_2_oleh_IO_AIO', 'status_laporan_penuh_E_FSA_2_oleh_IO_AIO',
@@ -1534,6 +1517,32 @@ public function getKomersilData(Project $project)
             })
             ->addColumn('baru_dikemaskini_status', function($row) {
                 return $row->baru_dikemaskini_status;
+            })
+
+            // Format IPRS Standard Fields (8 columns for standardization)
+            ->editColumn('iprs_no_kertas_siasatan', function($row) {
+                return htmlspecialchars($row->iprs_no_kertas_siasatan ?? '-');
+            })
+            ->editColumn('iprs_tarikh_ks', function($row) {
+                return optional($row->iprs_tarikh_ks)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('iprs_no_repot', function($row) {
+                return htmlspecialchars($row->iprs_no_repot ?? '-');
+            })
+            ->editColumn('iprs_jenis_jabatan_ks', function($row) {
+                return htmlspecialchars($row->iprs_jenis_jabatan_ks ?: 'TrafikSeksyen');
+            })
+            ->editColumn('iprs_pegawai_penyiasat', function($row) {
+                return htmlspecialchars($row->iprs_pegawai_penyiasat ?? '-');
+            })
+            ->editColumn('iprs_status_ks', function($row) {
+                return htmlspecialchars($row->iprs_status_ks ?? '-');
+            })
+            ->editColumn('iprs_status_kes', function($row) {
+                return htmlspecialchars($row->iprs_status_kes ?? '-');
+            })
+            ->editColumn('iprs_seksyen', function($row) {
+                return htmlspecialchars($row->iprs_seksyen ?? '-');
             })
 
             // Format Date fields
@@ -1978,6 +1987,20 @@ public function getKomersilData(Project $project)
                 return $row->baru_dikemaskini_status;
             })
 
+            // Format IPRS Standard Fields
+            ->editColumn('iprs_tarikh_ks', function($row) {
+                return optional($row->iprs_tarikh_ks)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('iprs_jenis_jabatan_ks', function($row) {
+                return $row->iprs_jenis_jabatan_ks ?: 'TrafikRule';
+            })
+            ->editColumn('iprs_status_ks', function($row) {
+                return $this->formatString($row->iprs_status_ks, 'Selesai Siasatan', 'Dalam Siasatan');
+            })
+            ->editColumn('iprs_status_kes', function($row) {
+                return $this->formatString($row->iprs_status_kes, 'Selesai', 'Dalam Proses');
+            })
+
             // Format Date fields
             ->editColumn('tarikh_laporan_polis_dibuka', function($row) {
                 return optional($row->tarikh_laporan_polis_dibuka)->format('d/m/Y') ?? '-';
@@ -2187,6 +2210,9 @@ public function getKomersilData(Project $project)
 
             ->rawColumns([
                 'action',
+                // IPRS Standard Fields
+                'iprs_status_ks',
+                'iprs_status_kes',
                 'arahan_minit_oleh_sio_status',
                 'arahan_minit_ketua_bahagian_status',
                 'arahan_minit_ketua_jabatan_status',
@@ -2549,24 +2575,12 @@ public function getLaporanMatiMengejutData(Project $project) {
     /**
      * Format boolean values for display in DataTables
      */
-    private function formatBoolean($value, $trueText = 'Ya', $falseText = 'Tidak', $neutralText = null)
+    private function formatBoolean($value, $trueText = 'Ya', $falseText = 'Tidak')
     {
         if (is_null($value)) {
             return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">-</span>';
         }
         
-        // Handle three-value system (0, 1, 2)
-        if (!is_null($neutralText)) {
-            if ($value == 2) {
-                return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">' . $neutralText . '</span>';
-            } elseif ($value == 1) {
-                return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">' . $trueText . '</span>';
-            } else {
-                return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">' . $falseText . '</span>';
-            }
-        }
-        
-        // Handle standard boolean system
         return $value 
             ? '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">' . $trueText . '</span>'
             : '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">' . $falseText . '</span>';

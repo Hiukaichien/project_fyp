@@ -18,6 +18,9 @@ class TrafikSeksyen extends Model
      * This is crucial. Laravel will convert 1/0 from DB to true/false PHP booleans.
      */
     protected $casts = [
+        // IPRS Standard Fields
+        'iprs_tarikh_ks' => 'datetime',
+        
         // B1
         'tarikh_laporan_polis_dibuka' => 'date:Y-m-d',
         // B2

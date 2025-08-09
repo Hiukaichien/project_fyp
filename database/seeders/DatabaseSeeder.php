@@ -296,11 +296,21 @@ class DatabaseSeeder extends Seeder
             );
         }
 
-        // 6. Seed Trafik Seksyen Papers (20 records) - Basic fields only
+ // 6. Seed Trafik Seksyen Papers (20 records) - Basic fields only
         for ($i = 1; $i <= 20; $i++) {
             TrafikSeksyen::updateOrCreate(
                 ['no_kertas_siasatan' => 'TRFS/KS/' . str_pad($i, 4, '0', STR_PAD_LEFT) . '/24'],
                 [
+                    // IPRS Standard Fields (8 columns for standardization)
+                    'iprs_no_kertas_siasatan' => 'TRFS/KS/' . str_pad($i, 4, '0', STR_PAD_LEFT) . '/24',
+                    'iprs_tarikh_ks' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30)),
+                    'iprs_no_repot' => 'IPD/TRAFFIC/' . str_pad(rand(1000, 99999), 5, '0', STR_PAD_LEFT) . '/' . date('y'),
+                    'iprs_jenis_jabatan_ks' => 'TrafikSeksyen',
+                    'iprs_pegawai_penyiasat' => ['SGT RAHMAN', 'INSP LILY', 'SGT AZMAN', 'ASP WONG', 'INSP SITI'][array_rand(['SGT RAHMAN', 'INSP LILY', 'SGT AZMAN', 'ASP WONG', 'INSP SITI'])],
+                    'iprs_status_ks' => ['Selesai Siasatan', 'Dalam Siasatan'][array_rand(['Selesai Siasatan', 'Dalam Siasatan'])],
+                    'iprs_status_kes' => ['Selesai', 'Dalam Proses'][array_rand(['Selesai', 'Dalam Proses'])],
+                    'iprs_seksyen' => ['41(1) APJ 1987', '42(1) APJ 1987', '43(1) APJ 1987', '44(1) APJ 1987'][array_rand(['41(1) APJ 1987', '42(1) APJ 1987', '43(1) APJ 1987', '44(1) APJ 1987'])],
+
                     // BAHAGIAN 1: Maklumat Asas
                     'project_id' => $project->id,
                     'no_repot_polis' => 'IPD/TRAFFIC/' . str_pad(rand(1000, 99999), 5, '0', STR_PAD_LEFT) . '/' . date('y'),
@@ -314,6 +324,9 @@ class DatabaseSeeder extends Seeder
                     'tarikh_edaran_minit_ks_kedua' => Carbon::now()->subMonths(rand(1, 5))->subDays(rand(1, 10)),
                     'tarikh_edaran_minit_ks_sebelum_akhir' => Carbon::now()->subMonths(rand(1, 4))->subDays(rand(1, 8)),
                     'tarikh_edaran_minit_ks_akhir' => Carbon::now()->subMonths(rand(1, 3))->subDays(rand(1, 5)),
+                    
+                    // Add some additional test data for other fields
+                    'keputusan_akhir_mahkamah' => json_encode(['Jatuh Hukum', 'KUS / FAIL']),
                 ]
             );
         }
