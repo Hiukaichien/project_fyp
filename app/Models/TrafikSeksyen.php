@@ -38,6 +38,11 @@ class TrafikSeksyen extends Model
         'arahan_minit_oleh_ya_tpr_tarikh' => 'date:Y-m-d', // Added date cast
         'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan' => 'string', // Changed from array to string
         
+        // B3 - Fail L.M.M (T) Additional Fields
+        'adakah_ms2_lmm_t_disahkan_oleh_kpd' => 'boolean',
+        'adakah_lmm_t_dirujuk_kepada_ya_koroner' => 'boolean',
+        // 'keputusan_ya_koroner_lmm_t' is text, no cast needed
+        
         // B4 - ENSURE THESE ARE 'boolean' or 'string' for single choice, and new '_lain' fields
         'adakah_barang_kes_didaftarkan' => 'boolean',
         'status_pergerakan_barang_kes' => 'string',
@@ -82,11 +87,11 @@ class TrafikSeksyen extends Model
         'tarikh_rj10b' => 'date:Y-m-d',
         'status_saman_pdrm_s_257' => 'boolean',
         'status_saman_pdrm_s_167' => 'boolean',
-        'status_semboyan_pertama_wanted_person' => 'boolean',
+        'status_semboyan_pertama_wanted_person' => 'string',
         'tarikh_semboyan_pertama_wanted_person' => 'date:Y-m-d',
-        'status_semboyan_kedua_wanted_person' => 'boolean',
+        'status_semboyan_kedua_wanted_person' => 'string',
         'tarikh_semboyan_kedua_wanted_person' => 'date:Y-m-d',
-        'status_semboyan_ketiga_wanted_person' => 'boolean',
+        'status_semboyan_ketiga_wanted_person' => 'string',
         'tarikh_semboyan_ketiga_wanted_person' => 'date:Y-m-d',
         'status_penandaan_kelas_warna' => 'boolean',
 
@@ -142,7 +147,7 @@ class TrafikSeksyen extends Model
         'muka_surat_4_keputusan_kes_dicatat' => 'boolean',
         'fail_lmm_ada_keputusan_koroner' => 'boolean',
         'status_kus_fail' => 'boolean', // Changed from string to boolean
-        'keputusan_akhir_mahkamah' => 'string', // Changed from array to string
+        'keputusan_akhir_mahkamah' => 'array', // Changed back to array for checkboxes
         
         // Common timestamps
         'created_at' => 'datetime',
@@ -168,6 +173,11 @@ class TrafikSeksyen extends Model
         'arahan_minit_ketua_bahagian_status_text',
         'arahan_minit_ketua_jabatan_status_text',
         'arahan_minit_oleh_ya_tpr_status_text',
+        
+        // B3 - Fail L.M.M (T) Additional Fields Text
+        'adakah_ms2_lmm_t_disahkan_oleh_kpd_text',
+        'adakah_lmm_t_dirujuk_kepada_ya_koroner_text',
+        
         'adakah_barang_kes_didaftarkan_text',
         'adakah_borang_serah_terima_pemilik_saksi_text', 
         'adakah_sijil_surat_kebenaran_ipo_text',
@@ -327,6 +337,19 @@ public function getTerbengkalaiStatusDcAttribute(): string
         return $value ? $trueText : $falseText;
     }
 
+    /**
+     * Helper function to format wanted person status values into Malay text.
+     * This function handles the three options: Ada/Cipta, Tiada/Tidak Cipta, Tidak Berkaitan
+     */
+    private function formatWantedPersonStatusToMalay(?string $value, string $nullText = '-') : string
+    {
+        if (is_null($value) || $value === '') {
+            return $nullText;
+        }
+        
+        return $value; // Return the string as-is since it's already in Malay
+    }
+
     // --- Accessors for Boolean Fields to display Malay Text ---
     // These methods return the Malay string which is then picked up by DataTables.
 
@@ -342,6 +365,14 @@ public function getTerbengkalaiStatusDcAttribute(): string
     }
     public function getArahanMinitOlehYaTprStatusTextAttribute(): string {
         return $this->formatBooleanToMalay($this->arahan_minit_oleh_ya_tpr_status);
+    }
+
+    // B3 - Fail L.M.M (T) Accessors
+    public function getAdakahMs2LmmTDisahkanOlehKpdTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->adakah_ms2_lmm_t_disahkan_oleh_kpd);
+    }
+    public function getAdakahLmmTDirujukKepadaYaKoronerTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->adakah_lmm_t_dirujuk_kepada_ya_koroner);
     }
 
     // B4 Accessors
@@ -414,13 +445,13 @@ public function getTerbengkalaiStatusDcAttribute(): string
         return $this->formatBooleanToMalay($this->status_saman_pdrm_s_167, 'Dicipta', 'Tidak Dicipta');
     }
     public function getStatusSemboyanPertamaWantedPersonTextAttribute(): string {
-        return $this->formatBooleanToMalay($this->status_semboyan_pertama_wanted_person);
+        return $this->formatWantedPersonStatusToMalay($this->status_semboyan_pertama_wanted_person);
     }
     public function getStatusSemboyanKeduaWantedPersonTextAttribute(): string {
-        return $this->formatBooleanToMalay($this->status_semboyan_kedua_wanted_person);
+        return $this->formatWantedPersonStatusToMalay($this->status_semboyan_kedua_wanted_person);
     }
     public function getStatusSemboyanKetigaWantedPersonTextAttribute(): string {
-        return $this->formatBooleanToMalay($this->status_semboyan_ketiga_wanted_person);
+        return $this->formatWantedPersonStatusToMalay($this->status_semboyan_ketiga_wanted_person);
     }
     public function getStatusPenandaanKelasWarnaTextAttribute(): string {
         return $this->formatBooleanToMalay($this->status_penandaan_kelas_warna);

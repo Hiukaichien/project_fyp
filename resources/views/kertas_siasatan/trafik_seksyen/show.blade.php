@@ -27,11 +27,26 @@
                 }
                 
                 function show_status_and_date($status, $date = null, $trueText = 'Ada', $falseText = 'Tiada') {
-                    // Convert potential 0/1 strings to boolean for consistent display
-                    $booleanStatus = filter_var($status, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+                    // Handle string values for wanted person status
+                    if (is_string($status)) {
+                        if ($status === 'Ada / Cipta') {
+                            $status_html = "<span class='px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800'>Ada / Cipta</span>";
+                            $show_date = true;
+                        } elseif ($status === 'Tidak Berkaitan') {
+                            $status_html = "<span class='px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800'>Tidak Berkaitan</span>";
+                            $show_date = false;
+                        } else {
+                            $status_html = "<span class='px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800'>Tiada / Tidak Cipta</span>";
+                            $show_date = false;
+                        }
+                    } else {
+                        // Convert potential 0/1 strings to boolean for consistent display
+                        $booleanStatus = filter_var($status, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+                        $status_html = show_boolean_badge($booleanStatus, $trueText, $falseText);
+                        $show_date = $booleanStatus;
+                    }
                     
-                    $status_html = show_boolean_badge($booleanStatus, $trueText, $falseText);
-                    $date_html = $booleanStatus && $date ? (is_string($date) ? $date : optional($date)->format('d/m/Y')) : '-';
+                    $date_html = $show_date && $date ? (is_string($date) ? $date : optional($date)->format('d/m/Y')) : '-';
                     return "{$status_html} | Tarikh: {$date_html}";
                 }
                 
@@ -98,6 +113,10 @@
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">No. Repot Polis</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->no_repot_polis ?? '-' }}</dd>
+                        </div>
+                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt class="text-sm font-medium text-gray-500">No.L.M.M (T)</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->no_lmm_t ?? '-' }}</dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">Pegawai Penyiasat</dt>
@@ -216,6 +235,27 @@
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">Ulasan Keseluruhan Pegawai Pemeriksa</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 whitespace-pre-wrap">{{ $paper->ulasan_keseluruhan_pegawai_pemeriksa ?? '-' }}</dd>
+                        </div>
+                        
+                        <!-- Fail L.M.M (T) Section -->
+                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-blue-50">
+                            <dt class="text-sm font-medium text-gray-700 border-l-4 border-blue-500 pl-3">Fail L.M.M (T)</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"></dd>
+                        </div>
+                        
+                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt class="text-sm font-medium text-gray-500">Adakah M/S 2 L.M.M(T) Telah Disahkan Oleh KPD</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_boolean_badge($paper->adakah_ms2_lmm_t_disahkan_oleh_kpd) !!}</dd>
+                        </div>
+                        
+                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt class="text-sm font-medium text-gray-500">Adakah L.M.M(T) Telah Di Rujuk Kepada YA Koroner Setelah Ada Arahan Oleh YA TPR</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_boolean_badge($paper->adakah_lmm_t_dirujuk_kepada_ya_koroner) !!}</dd>
+                        </div>
+                        
+                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt class="text-sm font-medium text-gray-500">Keputusan YA Koroner (L.M.M T)</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 whitespace-pre-wrap">{{ $paper->keputusan_ya_koroner_lmm_t ?? '-' }}</dd>
                         </div>
                     </dl>
                 </div>
@@ -456,15 +496,15 @@
                         </div>
                         
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">Semboyan Usaha Pemakluman Pertama Wanted Person</dt>
+                            <dt class="text-sm font-medium text-gray-500">Semboyan Pemakluman Pertama Wanted Person Ke Daerah Untuk Kesan</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_status_and_date($paper->status_semboyan_pertama_wanted_person, $paper->tarikh_semboyan_pertama_wanted_person, 'Dibuat', 'Tidak') !!}</dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">Semboyan Usaha Pemakluman Kedua Wanted Person</dt>
+                            <dt class="text-sm font-medium text-gray-500">Semboyan Pemakluman Kedua Wanted Person Ke Daerah Untuk Kesan</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_status_and_date($paper->status_semboyan_kedua_wanted_person, $paper->tarikh_semboyan_kedua_wanted_person, 'Dibuat', 'Tidak') !!}</dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">Semboyan Usaha Pemakluman Ketiga Wanted Person</dt>
+                            <dt class="text-sm font-medium text-gray-500">Semboyan Pemakluman Ketiga Wanted Person Ke Daerah Untuk Kesan</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_status_and_date($paper->status_semboyan_ketiga_wanted_person, $paper->tarikh_semboyan_ketiga_wanted_person, 'Dibuat', 'Tidak') !!}</dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">

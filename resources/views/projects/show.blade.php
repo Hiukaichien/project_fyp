@@ -525,6 +525,7 @@
         // BAHAGIAN 1: Maklumat Asas
         'no_kertas_siasatan' => 'No. Kertas Siasatan',
         'no_repot_polis' => 'No. Repot Polis',
+        'no_lmm_t' => 'No.L.M.M (T)',
         'pegawai_penyiasat' => 'Pegawai Penyiasat',
         'tarikh_laporan_polis_dibuka' => 'Tarikh Laporan Polis Dibuka',
         'seksyen' => 'Seksyen',
@@ -1184,7 +1185,7 @@
                     'Jenayah': 'no_kertas_siasatan, no_repot_polis, pegawai_penyiasat, tarikh_laporan_polis_dibuka, seksyen',
                     'Narkotik': 'no_kertas_siasatan, no_repot_polis, pegawai_penyiasat, tarikh_laporan_polis_dibuka, seksyen',
                     'Komersil': 'no_kertas_siasatan, no_repot_polis, pegawai_penyiasat, tarikh_laporan_polis_dibuka, seksyen',
-                    'TrafikSeksyen': 'no_kertas_siasatan, no_repot_polis, pegawai_penyiasat, tarikh_laporan_polis_dibuka, seksyen',
+                    'TrafikSeksyen': 'no_kertas_siasatan, no_repot_polis, no_lmm_t, pegawai_penyiasat, tarikh_laporan_polis_dibuka, seksyen',
                     'TrafikRule': 'no_kertas_siasatan, no_fail_lmm_t, no_repot_polis, pegawai_penyiasat, tarikh_laporan_polis_dibuka, seksyen',
                     'OrangHilang': 'no_kertas_siasatan, no_repot_polis, pegawai_penyiasat, tarikh_laporan_polis_dibuka, seksyen',
                     'LaporanMatiMengejut': 'no_kertas_siasatan, no_fail_lmm_sdr, no_repot_polis, pegawai_penyiasat, tarikh_laporan_polis_dibuka, seksyen'

@@ -821,11 +821,11 @@ public function getJenayahData(Project $project)
         ->editColumn('tarikh_rj10a', fn($r) => optional($r->tarikh_rj10a)->format('d/m/Y') ?? '-')
         ->editColumn('status_rj10b', fn($row) => $this->formatBoolean($row->status_rj10b, 'Cipta', 'Tidak'))
         ->editColumn('tarikh_rj10b', fn($r) => optional($r->tarikh_rj10b)->format('d/m/Y') ?? '-')
-        ->editColumn('status_semboyan_pertama_wanted_person', fn($row) => $this->formatBoolean($row->status_semboyan_pertama_wanted_person, 'Ada', 'Tiada'))
+        ->editColumn('status_semboyan_pertama_wanted_person', fn($row) => $this->formatWantedPersonStatus($row->status_semboyan_pertama_wanted_person))
         ->editColumn('tarikh_semboyan_pertama_wanted_person', fn($r) => optional($r->tarikh_semboyan_pertama_wanted_person)->format('d/m/Y') ?? '-')
-        ->editColumn('status_semboyan_kedua_wanted_person', fn($row) => $this->formatBoolean($row->status_semboyan_kedua_wanted_person, 'Ada', 'Tiada'))
+        ->editColumn('status_semboyan_kedua_wanted_person', fn($row) => $this->formatWantedPersonStatus($row->status_semboyan_kedua_wanted_person))
         ->editColumn('tarikh_semboyan_kedua_wanted_person', fn($r) => optional($r->tarikh_semboyan_kedua_wanted_person)->format('d/m/Y') ?? '-')
-        ->editColumn('status_semboyan_ketiga_wanted_person', fn($row) => $this->formatBoolean($row->status_semboyan_ketiga_wanted_person, 'Ada', 'Tiada'))
+        ->editColumn('status_semboyan_ketiga_wanted_person', fn($row) => $this->formatWantedPersonStatus($row->status_semboyan_ketiga_wanted_person))
         ->editColumn('tarikh_semboyan_ketiga_wanted_person', fn($r) => optional($r->tarikh_semboyan_ketiga_wanted_person)->format('d/m/Y') ?? '-')
         ->editColumn('status_penandaan_kelas_warna', fn($row) => $this->formatBoolean($row->status_penandaan_kelas_warna))
 
@@ -992,9 +992,9 @@ public function getKomersilData(Project $project)
         ->editColumn('status_rj99', fn($row) => $this->formatBoolean($row->status_rj99, 'Cipta', 'Tidak'))
         ->editColumn('status_rj10a', fn($row) => $this->formatBoolean($row->status_rj10a, 'Cipta', 'Tidak'))
         ->editColumn('status_rj10b', fn($row) => $this->formatBoolean($row->status_rj10b, 'Cipta', 'Tidak'))
-        ->editColumn('status_semboyan_pertama_wanted_person', fn($row) => $this->formatBoolean($row->status_semboyan_pertama_wanted_person, 'Ada', 'Tiada'))
-        ->editColumn('status_semboyan_kedua_wanted_person', fn($row) => $this->formatBoolean($row->status_semboyan_kedua_wanted_person, 'Ada', 'Tiada'))
-        ->editColumn('status_semboyan_ketiga_wanted_person', fn($row) => $this->formatBoolean($row->status_semboyan_ketiga_wanted_person, 'Ada', 'Tiada'))
+        ->editColumn('status_semboyan_pertama_wanted_person', fn($row) => $this->formatWantedPersonStatus($row->status_semboyan_pertama_wanted_person))
+        ->editColumn('status_semboyan_kedua_wanted_person', fn($row) => $this->formatWantedPersonStatus($row->status_semboyan_kedua_wanted_person))
+        ->editColumn('status_semboyan_ketiga_wanted_person', fn($row) => $this->formatWantedPersonStatus($row->status_semboyan_ketiga_wanted_person))
         ->editColumn('status_penandaan_kelas_warna', fn($row) => $this->formatBoolean($row->status_penandaan_kelas_warna))
         ->editColumn('status_saman_pdrm_s_257', fn($row) => $this->formatBoolean($row->status_saman_pdrm_s_257, 'Dicipta', 'Tidak'))
         ->editColumn('status_saman_pdrm_s_167', fn($row) => $this->formatBoolean($row->status_saman_pdrm_s_167, 'Dicipta', 'Tidak'))
@@ -1304,13 +1304,13 @@ public function getKomersilData(Project $project)
                 return $this->formatBoolean($row->status_rj10b, 'Cipta', 'Tidak Cipta');
             })
             ->editColumn('status_semboyan_pertama_wanted_person', function ($row) {
-                return $this->formatBoolean($row->status_semboyan_pertama_wanted_person, 'Ada', 'Tiada');
+                return $this->formatWantedPersonStatus($row->status_semboyan_pertama_wanted_person);
             })
             ->editColumn('status_semboyan_kedua_wanted_person', function ($row) {
-                return $this->formatBoolean($row->status_semboyan_kedua_wanted_person, 'Ada', 'Tiada');
+                return $this->formatWantedPersonStatus($row->status_semboyan_kedua_wanted_person);
             })
             ->editColumn('status_semboyan_ketiga_wanted_person', function ($row) {
-                return $this->formatBoolean($row->status_semboyan_ketiga_wanted_person, 'Ada', 'Tiada');
+                return $this->formatWantedPersonStatus($row->status_semboyan_ketiga_wanted_person);
             })
             ->editColumn('status_penandaan_kelas_warna', function ($row) {
                 return $this->formatBoolean($row->status_penandaan_kelas_warna);
@@ -1681,13 +1681,13 @@ public function getKomersilData(Project $project)
                 return $this->formatBoolean($row->status_saman_pdrm_s_167);
             })
             ->editColumn('status_semboyan_pertama_wanted_person', function($row) {
-                return $this->formatBoolean($row->status_semboyan_pertama_wanted_person);
+                return $this->formatWantedPersonStatus($row->status_semboyan_pertama_wanted_person);
             })
             ->editColumn('status_semboyan_kedua_wanted_person', function($row) {
-                return $this->formatBoolean($row->status_semboyan_kedua_wanted_person);
+                return $this->formatWantedPersonStatus($row->status_semboyan_kedua_wanted_person);
             })
             ->editColumn('status_semboyan_ketiga_wanted_person', function($row) {
-                return $this->formatBoolean($row->status_semboyan_ketiga_wanted_person);
+                return $this->formatWantedPersonStatus($row->status_semboyan_ketiga_wanted_person);
             })
             ->editColumn('status_penandaan_kelas_warna', function($row) {
                 return $this->formatBoolean($row->status_penandaan_kelas_warna);
@@ -1750,6 +1750,17 @@ public function getKomersilData(Project $project)
                 return $this->formatBoolean($row->status_kus_fail);
             })
             
+            // Format L.M.M (T) boolean fields
+            ->editColumn('adakah_ms2_lmm_t_disahkan_oleh_kpd', function($row) {
+                return $this->formatBoolean($row->adakah_ms2_lmm_t_disahkan_oleh_kpd);
+            })
+            ->editColumn('adakah_lmm_t_dirujuk_kepada_ya_koroner', function($row) {
+                return $this->formatBoolean($row->adakah_lmm_t_dirujuk_kepada_ya_koroner);
+            })
+            ->editColumn('keputusan_ya_koroner_lmm_t', function($row) {
+                return htmlspecialchars($row->keputusan_ya_koroner_lmm_t ?? '-');
+            })
+            
             // Format JSON array fields (status_pem)
             ->editColumn('status_pem', function($row) {
                 return $this->formatArrayField($row->status_pem);
@@ -1786,8 +1797,8 @@ public function getKomersilData(Project $project)
             ->editColumn('adakah_borang_serah_terima_pegawai_tangkapan', function($row) {
                 return htmlspecialchars($row->adakah_borang_serah_terima_pegawai_tangkapan ?? '-');
             })
-            ->editColumn('keputusan_akhir_mahkamah', function($row) { // Now a single string
-                return htmlspecialchars($row->keputusan_akhir_mahkamah ?? '-');
+            ->editColumn('keputusan_akhir_mahkamah', function($row) { // Now an array (checkboxes)
+                return $this->formatArrayField($row->keputusan_akhir_mahkamah);
             })
             ->editColumn('lain_lain_permohonan_laporan', function($row) { // Ensure this is also handled for display
                 return htmlspecialchars($row->lain_lain_permohonan_laporan ?? '-');
@@ -2421,6 +2432,21 @@ public function getLaporanMatiMengejutData(Project $project) {
         return $value 
             ? '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">' . $trueText . '</span>'
             : '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">' . $falseText . '</span>';
+    }
+
+    private function formatWantedPersonStatus($value)
+    {
+        if (is_null($value) || $value === '') {
+            return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">-</span>';
+        }
+        
+        if ($value === 'Ada / Cipta') {
+            return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Ada / Cipta</span>';
+        } elseif ($value === 'Tidak Berkaitan') {
+            return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">Tidak Berkaitan</span>';
+        } else {
+            return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Tiada / Tidak Cipta</span>';
+        }
     }
 
     /**

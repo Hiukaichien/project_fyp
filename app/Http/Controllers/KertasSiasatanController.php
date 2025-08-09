@@ -131,6 +131,28 @@ class KertasSiasatanController extends Controller
         // --- END: SPECIAL HANDLING ---
 
 
+        // --- START: DATE FORMAT CONVERSION DD/MM/YYYY to Y-m-d ---
+        // Convert DD/MM/YYYY format to Y-m-d format for database storage
+        foreach ($data as $field => $value) {
+            // Check if it's a date field (ends with 'tarikh' or contains specific date field names)
+            if ((str_ends_with($field, '_tarikh') || in_array($field, [
+                'tarikh_laporan_polis_dibuka',
+                'tarikh_edaran_minit_ks_pertama', 
+                'tarikh_edaran_minit_ks_kedua',
+                'tarikh_edaran_minit_ks_sebelum_akhir',
+                'tarikh_edaran_minit_ks_akhir',
+                'tarikh_semboyan_pemeriksaan_jips_ke_daerah'
+            ])) && !empty($value)) {
+                // Check if the date is in DD/MM/YYYY format
+                if (preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $value)) {
+                    // Convert DD/MM/YYYY to Y-m-d
+                    $dateParts = explode('/', $value);
+                    $data[$field] = $dateParts[2] . '-' . $dateParts[1] . '-' . $dateParts[0];
+                }
+            }
+        }
+        // --- END: DATE FORMAT CONVERSION ---
+
         // --- START: DEFINITIVE FIX FOR ALL BOOLEAN FIELDS ---
         // This loop ensures that any boolean field (from radio buttons or checkboxes)
         // is explicitly saved as true (1) or false (0), preventing nulls from

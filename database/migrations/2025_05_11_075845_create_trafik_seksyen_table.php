@@ -18,6 +18,7 @@ return new class extends Migration
             // BAHAGIAN 1: Maklumat Asas (B1)
             $table->string('no_kertas_siasatan')->unique()->comment('no_kertas_siasatan: VARCHAR(255)');
             $table->string('no_repot_polis')->nullable()->comment('no_repot_polis: VARCHAR(255)');
+            $table->string('no_lmm_t')->nullable()->comment('No.L.M.M (T): VARCHAR(255)');
             $table->string('pegawai_penyiasat')->nullable()->comment('pegawai_penyiasat: VARCHAR(255)');
             $table->date('tarikh_laporan_polis_dibuka')->nullable()->comment('tarikh_laporan_polis_dibuka: DATE');
             $table->string('seksyen')->nullable()->comment('seksyen: VARCHAR(255)');
@@ -46,6 +47,11 @@ return new class extends Migration
             $table->string('keputusan_siasatan_oleh_ya_koroner')->nullable()->comment('keputusan_siasatan_oleh_ya_koroner: VARCHAR(255)');
             $table->string('ulasan_keputusan_oleh_ya_koroner')->nullable()->comment('ulasan_keputusan_oleh_ya_koroner: VARCHAR(255)');
             $table->text('ulasan_keseluruhan_pegawai_pemeriksa')->nullable()->comment('ulasan_keseluruhan_pegawai_pemeriksa: TEXT');
+            
+            // BAHAGIAN 3: Fail L.M.M (T) - Additional Fields
+            $table->boolean('adakah_ms2_lmm_t_disahkan_oleh_kpd')->nullable()->comment('B3: ADAKAH M/S 2 L.M.M(T) TELAH DISAHKAN OLEH KPD');
+            $table->boolean('adakah_lmm_t_dirujuk_kepada_ya_koroner')->nullable()->comment('B3: ADAKAH L.M.M(T) TELAH DI RUJUK KEPADA YA KORONER SETELAH ADA ARAHAN OLEH YA TPR');
+            $table->text('keputusan_ya_koroner_lmm_t')->nullable()->comment('B3: KEPUTUSAN YA KORONER (L.M.M T)');
             
             // BAHAGIAN 4: Barang Kes (B4)
             $table->boolean('adakah_barang_kes_didaftarkan')->nullable()->comment('adakah_barang_kes_didaftarkan: BOOLEAN');
@@ -103,11 +109,11 @@ return new class extends Migration
             $table->string('no_saman_pdrm_s_257')->nullable()->comment('no_saman_pdrm_s_257: VARCHAR(255)');
             $table->boolean('status_saman_pdrm_s_167')->nullable()->comment('status_saman_pdrm_s_167: BOOLEAN');
             $table->string('no_saman_pdrm_s_167')->nullable()->comment('no_saman_pdrm_s_167: VARCHAR(255)');
-            $table->boolean('status_semboyan_pertama_wanted_person')->nullable()->comment('status_semboyan_pertama_wanted_person: BOOLEAN');
+            $table->string('status_semboyan_pertama_wanted_person')->nullable()->comment('status_semboyan_pertama_wanted_person: VARCHAR(255) (Ada / Cipta, Tiada / Tidak Cipta, Tidak Berkaitan)');
             $table->date('tarikh_semboyan_pertama_wanted_person')->nullable()->comment('tarikh_semboyan_pertama_wanted_person: DATE');
-            $table->boolean('status_semboyan_kedua_wanted_person')->nullable()->comment('status_semboyan_kedua_wanted_person: BOOLEAN');
+            $table->string('status_semboyan_kedua_wanted_person')->nullable()->comment('status_semboyan_kedua_wanted_person: VARCHAR(255) (Ada / Cipta, Tiada / Tidak Cipta, Tidak Berkaitan)');
             $table->date('tarikh_semboyan_kedua_wanted_person')->nullable()->comment('tarikh_semboyan_kedua_wanted_person: DATE');
-            $table->boolean('status_semboyan_ketiga_wanted_person')->nullable()->comment('status_semboyan_ketiga_wanted_person: BOOLEAN');
+            $table->string('status_semboyan_ketiga_wanted_person')->nullable()->comment('status_semboyan_ketiga_wanted_person: VARCHAR(255) (Ada / Cipta, Tiada / Tidak Cipta, Tidak Berkaitan)');
             $table->date('tarikh_semboyan_ketiga_wanted_person')->nullable()->comment('tarikh_semboyan_ketiga_wanted_person: DATE');
             $table->boolean('status_penandaan_kelas_warna')->nullable()->comment('status_penandaan_kelas_warna: BOOLEAN');
             $table->text('ulasan_keseluruhan_pegawai_pemeriksa_bahagian_6')->nullable()->comment('B6: ULASAN KESELURUHAN PEGAWAI PEMERIKSA (JIKA ADA)');
@@ -180,7 +186,7 @@ return new class extends Migration
             // CHANGED from VARCHAR to BOOLEAN
             $table->boolean('status_kus_fail')->nullable()->comment('ADAKAH KERTAS SIASATAN TELAH DI KUS/FAIL...');
             // CHANGED from JSON to STRING
-            $table->string('keputusan_akhir_mahkamah')->nullable()->comment('KEPUTUSAN AKHIR OLEH MAHKAMAH...');
+            $table->json('keputusan_akhir_mahkamah')->nullable()->comment('KEPUTUSAN AKHIR OLEH MAHKAMAH (Multi-select checkboxes)');
             $table->text('ulasan_pegawai_pemeriksa_fail')->nullable()->comment('ULASAN KESELURUHAN PEGAWAI PEMERIKSA (JIKA ADA)');
 
             $table->timestamps();

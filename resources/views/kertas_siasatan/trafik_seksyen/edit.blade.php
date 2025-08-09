@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Kemaskini Kertas Siasatan: Trafik ({{ $paper->no_kertas_siasatan }})
+            Kema                                    <input type="text" name="tarikh_semboyan_pemeriksaan_jips_ke_daerah" id="tarikh_semboyan_pemeriksaan_jips_ke_daerah" value="{{ old('tarikh_semboyan_pemeriksaan_jips_ke_daerah', optional($paper->tarikh_semboyan_pemeriksaan_jips_ke_daerah)->format('d/m/Y')) }}" placeholder="DD/MM/YYYY" class="mt-1 block w-full form-input date-input">                       <input type="text" name="tarikh_edaran_minit_ks_akhir" id="tarikh_edaran_minit_ks_akhir" value="{{ old('tarikh_edaran_minit_ks_akhir', optional($paper->tarikh_edaran_minit_ks_akhir)->format('d/m/Y')) }}" placeholder="DD/MM/YYYY" class="mt-1 block w-full form-input date-input">                       <input type="text" name="tarikh_edaran_minit_ks_sebelum_akhir" id="tarikh_edaran_minit_ks_sebelum_akhir" value="{{ old('tarikh_edaran_minit_ks_sebelum_akhir', optional($paper->tarikh_edaran_minit_ks_sebelum_akhir)->format('d/m/Y')) }}" placeholder="DD/MM/YYYY" class="mt-1 block w-full form-input date-input">kini Kertas Siasatan: Trafik ({{ $paper->no_kertas_siasatan }})
         </h2>
     </x-slot>
 
@@ -36,17 +36,32 @@
                 }
 
                 // Helper for status choices that reveal a date input with radio buttons
-                function render_status_with_date_radio($id, $statusName, $dateName, $currentStatus, $currentDate, $YaLabel = 'Ada / Cipta', $TidakLabel = 'Tiada / Tidak Cipta') {
+                function render_status_with_date_radio($id, $statusName, $dateName, $currentStatus, $currentDate, $YaLabel = 'Ada / Cipta', $TidakLabel = 'Tiada / Tidak Cipta', $showTidakBerkaitan = false) {
                     $effectiveStatus = old($statusName, $currentStatus);
-                    $initialStatusForAlpine = (($effectiveStatus === true || $effectiveStatus === 1 || $effectiveStatus === '1') ? '1' : '0');
+                    $initialStatusForAlpine = '';
+                    
+                    if ($effectiveStatus === $YaLabel) {
+                        $initialStatusForAlpine = $YaLabel;
+                    } elseif ($effectiveStatus === 'Tidak Berkaitan') {
+                        $initialStatusForAlpine = 'Tidak Berkaitan';
+                    } else {
+                        $initialStatusForAlpine = $TidakLabel;
+                    }
+                    
                     $html = "<div x-data='{ status: \"{$initialStatusForAlpine}\" }'>";
-                    $html .= "<div class='mt-2 flex items-center space-x-6'>";
-                    $html .= "<label class='flex items-center cursor-pointer'><input type='radio' name='{$statusName}' value='1' x-model='status' class='form-radio h-4 w-4 text-indigo-600'><span class='ml-2 text-gray-700'>{$YaLabel}</span></label>";
-                    $html .= "<label class='flex items-center cursor-pointer'><input type='radio' name='{$statusName}' value='0' x-model='status' class='form-radio h-4 w-4 text-indigo-600'><span class='ml-2 text-gray-700'>{$TidakLabel}</span></label>";
+                    $html .= "<div class='mt-2 flex items-center space-x-6 flex-wrap'>";
+                    $html .= "<label class='flex items-center cursor-pointer'><input type='radio' name='{$statusName}' value='{$YaLabel}' x-model='status' class='form-radio h-4 w-4 text-indigo-600'><span class='ml-2 text-gray-700'>{$YaLabel}</span></label>";
+                    $html .= "<label class='flex items-center cursor-pointer'><input type='radio' name='{$statusName}' value='{$TidakLabel}' x-model='status' class='form-radio h-4 w-4 text-indigo-600'><span class='ml-2 text-gray-700'>{$TidakLabel}</span></label>";
+                    
+                    if ($showTidakBerkaitan) {
+                        $html .= "<label class='flex items-center cursor-pointer'><input type='radio' name='{$statusName}' value='Tidak Berkaitan' x-model='status' class='form-radio h-4 w-4 text-indigo-600'><span class='ml-2 text-gray-700'>Tidak Berkaitan</span></label>";
+                    }
+                    
                     $html .= "</div>";
-                    $html .= "<div x-show='status === \"1\"' x-transition class='mt-2'>";
+                    $html .= "<div x-show='status === \"{$YaLabel}\"' x-transition class='mt-2'>";
                     $html .= "<label for='{$dateName}_{$id}' class='text-sm text-gray-600'>Jika Ada, nyatakan tarikh:</label>";
-                    $html .= "<input type='date' name='{$dateName}' id='{$dateName}_{$id}' value='" . old($dateName, optional($currentDate)->format('Y-m-d')) . "' class='mt-1 block w-full form-input'>";
+                    $dateValue = old($dateName, optional($currentDate)->format('d/m/Y'));
+                    $html .= "<input type='text' name='{$dateName}' id='{$dateName}_{$id}' value='{$dateValue}' placeholder='DD/MM/YYYY' class='mt-1 block w-full form-input date-input'>";
                     $html .= "</div></div>";
                     return $html;
                 }
@@ -79,12 +94,16 @@
                             <input type="text" name="no_repot_polis" id="no_repot_polis" value="{{ old('no_repot_polis', $paper->no_repot_polis) }}" class="mt-1 block w-full form-input">
                         </div>
                         <div>
+                            <label for="no_lmm_t" class="block text-sm font-medium text-gray-700">No.L.M.M (T)</label>
+                            <input type="text" name="no_lmm_t" id="no_lmm_t" value="{{ old('no_lmm_t', $paper->no_lmm_t) }}" class="mt-1 block w-full form-input">
+                        </div>
+                        <div>
                             <label for="pegawai_penyiasat" class="block text-sm font-medium text-gray-700">Pegawai Penyiasat</label>
                             <input type="text" name="pegawai_penyiasat" id="pegawai_penyiasat" value="{{ old('pegawai_penyiasat', $paper->pegawai_penyiasat) }}" class="mt-1 block w-full form-input">
                         </div>
                         <div>
                             <label for="tarikh_laporan_polis_dibuka" class="block text-sm font-medium text-gray-700">Tarikh Laporan Polis Dibuka</label>
-                            <input type="date" name="tarikh_laporan_polis_dibuka" id="tarikh_laporan_polis_dibuka" value="{{ old('tarikh_laporan_polis_dibuka', optional($paper->tarikh_laporan_polis_dibuka)->format('Y-m-d')) }}" class="mt-1 block w-full form-input">
+                            <input type="text" name="tarikh_laporan_polis_dibuka" id="tarikh_laporan_polis_dibuka" value="{{ old('tarikh_laporan_polis_dibuka', optional($paper->tarikh_laporan_polis_dibuka)->format('d/m/Y')) }}" placeholder="DD/MM/YYYY" class="mt-1 block w-full form-input date-input">
                         </div>
                         <div>
                             <label for="seksyen" class="block text-sm font-medium text-gray-700">Seksyen</label>
@@ -103,11 +122,11 @@
                         </div>
                         <div>
                             <label for="tarikh_edaran_minit_ks_pertama" class="block text-sm font-medium text-gray-700">Tarikh Edaran Minit KS Pertama (A)</label>
-                            <input type="date" name="tarikh_edaran_minit_ks_pertama" id="tarikh_edaran_minit_ks_pertama" value="{{ old('tarikh_edaran_minit_ks_pertama', optional($paper->tarikh_edaran_minit_ks_pertama)->format('Y-m-d')) }}" class="mt-1 block w-full form-input">
+                            <input type="text" name="tarikh_edaran_minit_ks_pertama" id="tarikh_edaran_minit_ks_pertama" value="{{ old('tarikh_edaran_minit_ks_pertama', optional($paper->tarikh_edaran_minit_ks_pertama)->format('d/m/Y')) }}" placeholder="DD/MM/YYYY" class="mt-1 block w-full form-input date-input">
                         </div>
                         <div>
                             <label for="tarikh_edaran_minit_ks_kedua" class="block text-sm font-medium text-gray-700">Tarikh Edaran Minit KS Kedua (B)</label>
-                            <input type="date" name="tarikh_edaran_minit_ks_kedua" id="tarikh_edaran_minit_ks_kedua" value="{{ old('tarikh_edaran_minit_ks_kedua', optional($paper->tarikh_edaran_minit_ks_kedua)->format('Y-m-d')) }}" class="mt-1 block w-full form-input">
+                            <input type="text" name="tarikh_edaran_minit_ks_kedua" id="tarikh_edaran_minit_ks_kedua" value="{{ old('tarikh_edaran_minit_ks_kedua', optional($paper->tarikh_edaran_minit_ks_kedua)->format('d/m/Y')) }}" placeholder="DD/MM/YYYY" class="mt-1 block w-full form-input date-input">
                         </div>
                         <div>
                             <label for="tarikh_edaran_minit_ks_sebelum_akhir" class="block text-sm font-medium text-gray-700">Tarikh Edaran Minit KS Sebelum Minit Akhir (C)</label>
@@ -198,6 +217,22 @@
                         <div class="md:col-span-2">
                             <label for="ulasan_keseluruhan_pegawai_pemeriksa" class="block text-sm font-medium text-gray-700">Ulasan Keseluruhan Pegawai Pemeriksa (Jika Ada)</label>
                             <textarea name="ulasan_keseluruhan_pegawai_pemeriksa" id="ulasan_keseluruhan_pegawai_pemeriksa" rows="4" class="mt-1 block w-full form-textarea">{{ old('ulasan_keseluruhan_pegawai_pemeriksa', $paper->ulasan_keseluruhan_pegawai_pemeriksa) }}</textarea>
+                        </div>
+                        
+                        <!-- Fail L.M.M (T) Section --> 
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Adakah M/S 2 L.M.M(T) Telah Disahkan Oleh KPD</label>
+                            {!! render_boolean_radio('adakah_ms2_lmm_t_disahkan_oleh_kpd', $paper->adakah_ms2_lmm_t_disahkan_oleh_kpd, 'Ya', 'Tidak') !!}
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Adakah L.M.M(T) Telah Di Rujuk Kepada YA Koroner Setelah Ada Arahan Oleh YA TPR</label>
+                            {!! render_boolean_radio('adakah_lmm_t_dirujuk_kepada_ya_koroner', $paper->adakah_lmm_t_dirujuk_kepada_ya_koroner, 'Ya', 'Tidak') !!}
+                        </div>
+                        
+                        <div>
+                            <label for="keputusan_ya_koroner_lmm_t" class="block text-sm font-medium text-gray-700">Keputusan YA Koroner (L.M.M T)</label>
+                            <textarea name="keputusan_ya_koroner_lmm_t" id="keputusan_ya_koroner_lmm_t" rows="3" class="mt-1 block w-full form-textarea" placeholder="">{{ old('keputusan_ya_koroner_lmm_t', $paper->keputusan_ya_koroner_lmm_t) }}</textarea>
                         </div>
                     </div>
                 </div>
@@ -546,16 +581,16 @@
 
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">Semboyan Usaha Pemakluman Pertama Wanted Person</label>
-                                {!! render_status_with_date_radio('wp1', 'status_semboyan_pertama_wanted_person', 'tarikh_semboyan_pertama_wanted_person', $paper->status_semboyan_pertama_wanted_person, $paper->tarikh_semboyan_pertama_wanted_person) !!}
+                                <label class="block text-sm font-medium text-gray-700">Semboyan Pemakluman Pertama Wanted Person Ke Daerah Untuk Kesan / Tangkap</label>
+                                {!! render_status_with_date_radio('wp1', 'status_semboyan_pertama_wanted_person', 'tarikh_semboyan_pertama_wanted_person', $paper->status_semboyan_pertama_wanted_person, $paper->tarikh_semboyan_pertama_wanted_person, 'Ada / Cipta', 'Tiada / Tidak Cipta', true) !!}
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">Semboyan Usaha Pemakluman Kedua Wanted Person</label>
-                                {!! render_status_with_date_radio('wp2', 'status_semboyan_kedua_wanted_person', 'tarikh_semboyan_kedua_wanted_person', $paper->status_semboyan_kedua_wanted_person, $paper->tarikh_semboyan_kedua_wanted_person) !!}
+                                <label class="block text-sm font-medium text-gray-700">Semboyan Pemakluman Kedua Wanted Person Ke Daerah Untuk Kesan / Tangkap</label>
+                                {!! render_status_with_date_radio('wp2', 'status_semboyan_kedua_wanted_person', 'tarikh_semboyan_kedua_wanted_person', $paper->status_semboyan_kedua_wanted_person, $paper->tarikh_semboyan_kedua_wanted_person, 'Ada / Cipta', 'Tiada / Tidak Cipta', true) !!}
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">Semboyan Usaha Pemakluman Ketiga Wanted Person</label>
-                                {!! render_status_with_date_radio('wp3', 'status_semboyan_ketiga_wanted_person', 'tarikh_semboyan_ketiga_wanted_person', $paper->status_semboyan_ketiga_wanted_person, $paper->tarikh_semboyan_ketiga_wanted_person) !!}
+                                <label class="block text-sm font-medium text-gray-700">Semboyan Pemakluman Ketiga Wanted Person Ke Daerah Untuk Kesan</label>
+                                {!! render_status_with_date_radio('wp3', 'status_semboyan_ketiga_wanted_person', 'tarikh_semboyan_ketiga_wanted_person', $paper->status_semboyan_ketiga_wanted_person, $paper->tarikh_semboyan_ketiga_wanted_person, 'Ada / Cipta', 'Tiada / Tidak Cipta', true) !!}
                             </div>
                         </div>
 
@@ -789,17 +824,20 @@
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Keputusan Akhir Oleh Mahkamah Sebelum Kertas Siasatan Di KUS/FAIL Atau Disimpan</label>
-                             <select name="keputusan_akhir_mahkamah" class="mt-1 block w-full form-select">
-                                <option value="">-- Sila Pilih --</option>
-                                <option value="Jatuh Hukum" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'Jatuh Hukum' ? 'selected' : '' }}>Jatuh Hukum</option>
-                                <option value="NFA" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'NFA' ? 'selected' : '' }}>NFA</option>
-                                <option value="DNA" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'DNA' ? 'selected' : '' }}>DNA</option>
-                                <option value="DNAA" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'DNAA' ? 'selected' : '' }}>DNAA</option>
-                                <option value="KUS/Sementara" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'KUS/Sementara' ? 'selected' : '' }}>KUS/Sementara</option>
-                                <option value="Masih Dalam Siasatan OYDS Gagal Dikesan" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'Masih Dalam Siasatan OYDS Gagal Dikesan' ? 'selected' : '' }}>Masih Dalam Siasatan OYDS Gagal Dikesan</option>
-                                <option value="Masih Dalam Siasatan Untuk Lengkapkan Dokumentasi" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'Masih Dalam Siasatan Untuk Lengkapkan Dokumentasi' ? 'selected' : '' }}>Masih Dalam Siasatan Untuk Lengkapkan Dokumentasi</option>
-                                <option value="Terbengkalai/Tiada Tindakan" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'Terbengkalai/Tiada Tindakan' ? 'selected' : '' }}>Terbengkalai/Tiada Tindakan</option>
-                            </select>
+                            @php
+                                $mahkamahOptions = [
+                                    'Jatuh Hukum' => 'Jatuh Hukum',
+                                    'NFA' => 'NFA', 
+                                    'DNA' => 'DNA',
+                                    'DNAA' => 'DNAA',
+                                    'KUS/Sementara' => 'KUS/Sementara',
+                                    'KUS / FAIL' => 'KUS / FAIL',
+                                    'MASIH DALAM SIASATAN / OYDS GAGAL DIKESAN' => 'MASIH DALAM SIASATAN / OYDS GAGAL DIKESAN',
+                                    'MASIH DALAM SIASATAN / LENGKAPKAN DOKUMEN SIASATAN' => 'MASIH DALAM SIASATAN / LENGKAPKAN DOKUMEN SIASATAN',
+                                    'Terbengkalai/Tiada Tindakan' => 'Terbengkalai/Tiada Tindakan'
+                                ];
+                            @endphp
+                            {!! render_json_checkboxes('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah, $mahkamahOptions) !!}
                         </div>
 
                         <div>
@@ -953,6 +991,30 @@ document.addEventListener('DOMContentLoaded', function () {
         'kaedah_lain_trafik',
         'kaedah_pelupusan_barang_kes_lain_trafik'
     );
+
+    // Date input formatting for DD/MM/YYYY
+    document.querySelectorAll('.date-input').forEach(function(input) {
+        input.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+            
+            if (value.length >= 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2);
+            }
+            if (value.length >= 5) {
+                value = value.substring(0, 5) + '/' + value.substring(5, 9);
+            }
+            
+            e.target.value = value;
+        });
+
+        input.addEventListener('blur', function(e) {
+            let value = e.target.value;
+            if (value && !/^\d{2}\/\d{2}\/\d{4}$/.test(value)) {
+                alert('Sila masukkan tarikh dalam format DD/MM/YYYY');
+                e.target.focus();
+            }
+        });
+    });
 });
 </script>
 @endpush

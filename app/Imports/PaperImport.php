@@ -514,6 +514,7 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
                 // BAHAGIAN 1: Maklumat Asas
                 'no_kertas_siasatan' => 'no_kertas_siasatan',
                 'no_repot_polis' => 'no_repot_polis',
+                'no_lmm_t' => 'no_lmm_t',
                 'pegawai_penyiasat' => 'pegawai_penyiasat',
                 'tarikh_laporan_polis_dibuka' => 'tarikh_laporan_polis_dibuka',
                 'seksyen' => 'seksyen',
@@ -541,6 +542,11 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
                 'keputusan_siasatan_oleh_ya_koroner' => 'keputusan_siasatan_oleh_ya_koroner',
                 'ulasan_keputusan_oleh_ya_koroner' => 'ulasan_keputusan_oleh_ya_koroner',
                 'ulasan_keseluruhan_pegawai_pemeriksa' => 'ulasan_keseluruhan_pegawai_pemeriksa',
+                
+                // Fail L.M.M (T)
+                'adakah_ms2_lmm_t_disahkan_oleh_kpd' => 'adakah_ms2_lmm_t_disahkan_oleh_kpd',
+                'adakah_lmm_t_dirujuk_kepada_ya_koroner' => 'adakah_lmm_t_dirujuk_kepada_ya_koroner',
+                'keputusan_ya_koroner_lmm_t' => 'keputusan_ya_koroner_lmm_t',
 
                 // BAHAGIAN 4: Barang Kes
                 'adakah_barang_kes_didaftarkan' => 'adakah_barang_kes_didaftarkan',
@@ -773,6 +779,11 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
                 'arahan_tuduh_oleh_ya_tpr' => 'arahan_tuduh_oleh_ya_tpr',
                 'ulasan_keputusan_siasatan_tpr' => 'ulasan_keputusan_siasatan_tpr',
                 'ulasan_keseluruhan_pegawai_pemeriksa' => 'ulasan_keseluruhan_pegawai_pemeriksa',
+                
+                // BAHAGIAN 3: Fail L.M.M (T)
+                'adakah_ms2_lmm_t_disahkan_oleh_kpd' => 'adakah_ms2_lmm_t_disahkan_oleh_kpd',
+                'adakah_lmm_t_dirujuk_kepada_ya_koroner' => 'adakah_lmm_t_dirujuk_kepada_ya_koroner',
+                'keputusan_ya_koroner_lmm_t' => 'keputusan_ya_koroner_lmm_t',
 
                 // BAHAGIAN 4: Barang Kes
                 'adakah_barang_kes_didaftarkan' => 'adakah_barang_kes_didaftarkan',
