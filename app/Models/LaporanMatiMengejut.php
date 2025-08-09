@@ -25,6 +25,8 @@ class LaporanMatiMengejut extends Model
         
         // BAHAGIAN 1: Maklumat Asas - Date fields
         'tarikh_laporan_polis_dibuka' => 'date:Y-m-d',
+        'adakah_ms_2_lmm_telah_disahkan_oleh_kpd' => 'boolean',
+        'adakah_lmm_telah_di_rujuk_kepada_ya_koroner' => 'boolean',
         
         // BAHAGIAN 2: Pemeriksaan & Status - Date fields
         'tarikh_edaran_minit_ks_pertama' => 'date:Y-m-d',
@@ -36,7 +38,6 @@ class LaporanMatiMengejut extends Model
         'tarikh_edaran_minit_fail_lmm_t_kedua' => 'date:Y-m-d',
         'tarikh_edaran_minit_fail_lmm_t_sebelum_minit_akhir' => 'date:Y-m-d',
         'tarikh_edaran_minit_fail_lmm_t_akhir' => 'date:Y-m-d',
-        'fail_lmm_bahagian_pengurusan_pada_muka_surat_2' => 'boolean',
         
         // BAHAGIAN 3: Arahan & Keputusan - Boolean and Date fields
         'arahan_minit_oleh_sio_status' => 'boolean',
@@ -69,10 +70,18 @@ class LaporanMatiMengejut extends Model
         
         // BAHAGIAN 6: Borang & Semakan - Boolean, Date and JSON fields
         'status_pem' => 'array',
-        'status_rj2' => 'boolean',
+        'status_rj2' => 'integer',
         'tarikh_rj2' => 'date:Y-m-d',
-        'status_rj2b' => 'boolean',
+        'status_rj2b' => 'integer',
         'tarikh_rj2b' => 'date:Y-m-d',
+        'status_rj9' => 'integer',
+        'tarikh_rj9' => 'date:Y-m-d',
+        'status_rj99' => 'integer',
+        'tarikh_rj99' => 'date:Y-m-d',
+        'status_rj10a' => 'integer',
+        'tarikh_rj10a' => 'date:Y-m-d',
+        'status_rj10b' => 'integer',
+        'tarikh_rj10b' => 'date:Y-m-d',
         'status_semboyan_pemakluman_ke_kedutaan_bagi_kes_mati' => 'boolean',
         
         // BAHAGIAN 7: Permohonan Laporan Agensi Luar - Boolean and Date fields
@@ -88,17 +97,23 @@ class LaporanMatiMengejut extends Model
         'tarikh_permohonan_laporan_jabatan_patalogi' => 'date:Y-m-d',
         'status_laporan_penuh_jabatan_patalogi' => 'boolean',
         'tarikh_laporan_penuh_jabatan_patalogi' => 'date:Y-m-d',
-        'status_permohonan_laporan_imigresen' => 'boolean',
         'tarikh_permohonan_laporan_imigresen' => 'date:Y-m-d',
         'status_laporan_penuh_imigresen' => 'boolean',
         'tarikh_laporan_penuh_imigresen' => 'date:Y-m-d',
+        
+        // New simplified Imigresen fields
+        'permohonan_laporan_pengesahan_masuk_keluar_malaysia' => 'boolean',
+        'permohonan_laporan_permit_kerja_di_malaysia' => 'boolean',
+        'permohonan_laporan_agensi_pekerjaan_di_malaysia' => 'boolean',
+        'permohonan_status_kewarganegaraan' => 'boolean',
         
         // BAHAGIAN 8: Status Fail - Boolean fields
         'status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar' => 'boolean',
         'status_barang_kes_arahan_tpr' => 'boolean',
         'adakah_muka_surat_4_keputusan_kes_dicatat' => 'boolean',
         'adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan' => 'boolean',
-        'adakah_ks_kus_fail_selesai' => 'boolean',
+        'adakah_ks_kus_fail_selesai' => 'string',
+        'keputusan_akhir_mahkamah' => 'array',
         
         // System fields
         'created_at' => 'datetime',
@@ -119,7 +134,8 @@ class LaporanMatiMengejut extends Model
         'tempoh_dikemaskini',
 
         // Text versions of boolean fields
-        'fail_lmm_bahagian_pengurusan_pada_muka_surat_2_text',
+        'adakah_ms_2_lmm_telah_disahkan_oleh_kpd_text',
+        'adakah_lmm_telah_di_rujuk_kepada_ya_koroner_text',
         'arahan_minit_oleh_sio_status_text',
         'arahan_minit_ketua_bahagian_status_text',
         'arahan_minit_ketua_jabatan_status_text',
@@ -138,6 +154,10 @@ class LaporanMatiMengejut extends Model
         'status_gambar_barang_kes_darah_text',
         'status_rj2_text',
         'status_rj2b_text',
+        'status_rj9_text',
+        'status_rj99_text',
+        'status_rj10a_text',
+        'status_rj10b_text',
         'status_semboyan_pemakluman_ke_kedutaan_bagi_kes_mati_text',
         'status_permohonan_laporan_post_mortem_mayat_text',
         'status_laporan_penuh_bedah_siasat_text',
@@ -145,8 +165,11 @@ class LaporanMatiMengejut extends Model
         'status_laporan_penuh_jabatan_kimia_text',
         'status_permohonan_laporan_jabatan_patalogi_text',
         'status_laporan_penuh_jabatan_patalogi_text',
-        'status_permohonan_laporan_imigresen_text',
         'status_laporan_penuh_imigresen_text',
+        'permohonan_laporan_pengesahan_masuk_keluar_malaysia_text',
+        'permohonan_laporan_permit_kerja_di_malaysia_text',
+        'permohonan_laporan_agensi_pekerjaan_di_malaysia_text',
+        'permohonan_status_kewarganegaraan_text',
         'status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar_text',
         'status_barang_kes_arahan_tpr_text',
         'adakah_muka_surat_4_keputusan_kes_dicatat_text',
@@ -261,10 +284,33 @@ public function getTerbengkalaiStatusDcAttribute(): string
         return $value ? $trueText : $falseText;
     }
 
+    /**
+     * Helper function to format three-state integer values for RJ fields.
+     */
+    private function formatThreeStateToMalay(?int $value, string $adaText = 'Ada/Cipta', string $tiadaText = 'Tiada/Tidak Cipta', string $tidakBerkaitanText = 'Tidak Berkaitan', string $nullText = '-') : string
+    {
+        if (is_null($value)) {
+            return $nullText;
+        }
+        
+        switch ($value) {
+            case 1:
+                return $adaText;
+            case 2:
+                return $tidakBerkaitanText;
+            case 0:
+            default:
+                return $tiadaText;
+        }
+    }
+
     // --- Accessors for Boolean Fields to display Malay Text ---
     
-    public function getFailLmmBahagianPengurusanPadaMukaSurat2TextAttribute(): string {
-        return $this->formatBooleanToMalay($this->fail_lmm_bahagian_pengurusan_pada_muka_surat_2, 'Ada', 'Tiada');
+    public function getAdakahMs2LmmTelahDisahkanOlehKpdTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->adakah_ms_2_lmm_telah_disahkan_oleh_kpd);
+    }
+    public function getAdakahLmmTelahDiRujukKepadaYaKoronerTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->adakah_lmm_telah_di_rujuk_kepada_ya_koroner);
     }
     public function getArahanMinitOlehSioStatusTextAttribute(): string {
         return $this->formatBooleanToMalay($this->arahan_minit_oleh_sio_status, 'Ada', 'Tiada');
@@ -315,10 +361,22 @@ public function getTerbengkalaiStatusDcAttribute(): string
         return $this->formatBooleanToMalay($this->status_gambar_barang_kes_darah, 'Ada', 'Tiada');
     }
     public function getStatusRj2TextAttribute(): string {
-        return $this->formatBooleanToMalay($this->status_rj2, 'Cipta', 'Tidak');
+        return $this->formatThreeStateToMalay($this->status_rj2);
     }
     public function getStatusRj2bTextAttribute(): string {
-        return $this->formatBooleanToMalay($this->status_rj2b, 'Cipta', 'Tidak');
+        return $this->formatThreeStateToMalay($this->status_rj2b);
+    }
+    public function getStatusRj9TextAttribute(): string {
+        return $this->formatThreeStateToMalay($this->status_rj9);
+    }
+    public function getStatusRj99TextAttribute(): string {
+        return $this->formatThreeStateToMalay($this->status_rj99);
+    }
+    public function getStatusRj10aTextAttribute(): string {
+        return $this->formatThreeStateToMalay($this->status_rj10a);
+    }
+    public function getStatusRj10bTextAttribute(): string {
+        return $this->formatThreeStateToMalay($this->status_rj10b);
     }
     public function getStatusSemboyanPemaklumanKeKedutaanBagiKesMatiTextAttribute(): string {
         return $this->formatBooleanToMalay($this->status_semboyan_pemakluman_ke_kedutaan_bagi_kes_mati);
@@ -341,11 +399,20 @@ public function getTerbengkalaiStatusDcAttribute(): string
     public function getStatusLaporanPenuhJabatanPatalogiTextAttribute(): string {
         return $this->formatBooleanToMalay($this->status_laporan_penuh_jabatan_patalogi, 'Diterima', 'Tidak');
     }
-    public function getStatusPermohonanLaporanImigresenTextAttribute(): string {
-        return $this->formatBooleanToMalay($this->status_permohonan_laporan_imigresen, 'Dibuat', 'Tidak');
-    }
     public function getStatusLaporanPenuhImigresenTextAttribute(): string {
         return $this->formatBooleanToMalay($this->status_laporan_penuh_imigresen, 'Diterima', 'Tidak');
+    }
+    public function getPermohonanLaporanPengesahanMasukKeluarMalaysiaTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->permohonan_laporan_pengesahan_masuk_keluar_malaysia, 'Ada', 'Tiada');
+    }
+    public function getPermohonanLaporanPermitKerjaDiMalaysiaTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->permohonan_laporan_permit_kerja_di_malaysia, 'Ada', 'Tiada');
+    }
+    public function getPermohonanLaporanAgensiPekerjaanDiMalaysiaTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->permohonan_laporan_agensi_pekerjaan_di_malaysia, 'Ada', 'Tiada');
+    }
+    public function getPermohonanStatusKewarganegaraanTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->permohonan_status_kewarganegaraan, 'Ada', 'Tiada');
     }
     public function getStatusMukaSurat4BarangKesDitulisBersamaNoDaftarTextAttribute(): string {
         return $this->formatBooleanToMalay($this->status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar);
@@ -360,6 +427,6 @@ public function getTerbengkalaiStatusDcAttribute(): string
         return $this->formatBooleanToMalay($this->adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan);
     }
     public function getAdakahKsKusFailSelesaiTextAttribute(): string {
-        return $this->formatBooleanToMalay($this->adakah_ks_kus_fail_selesai);
+        return $this->adakah_ks_kus_fail_selesai ?? '-';
     }
 }

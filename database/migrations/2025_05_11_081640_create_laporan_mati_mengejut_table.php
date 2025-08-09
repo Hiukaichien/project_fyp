@@ -22,6 +22,11 @@ return new class extends Migration
             $table->string('pegawai_penyiasat')->nullable();
             $table->date('tarikh_laporan_polis_dibuka')->nullable();
             $table->string('seksyen')->nullable();
+            
+            // New LMM fields
+            $table->boolean('adakah_ms_2_lmm_telah_disahkan_oleh_kpd')->nullable();
+            $table->boolean('adakah_lmm_telah_di_rujuk_kepada_ya_koroner')->nullable();
+            $table->text('keputusan_ya_koroner')->nullable();
 
             // BAHAGIAN 2: Pemeriksaan & Status
             $table->string('pegawai_pemeriksa')->nullable();
@@ -36,7 +41,7 @@ return new class extends Migration
             $table->date('tarikh_edaran_minit_fail_lmm_t_kedua')->nullable();
             $table->date('tarikh_edaran_minit_fail_lmm_t_sebelum_minit_akhir')->nullable();
             $table->date('tarikh_edaran_minit_fail_lmm_t_akhir')->nullable();
-            $table->boolean('fail_lmm_bahagian_pengurusan_pada_muka_surat_2')->nullable();
+            // Removed: fail_lmm_bahagian_pengurusan_pada_muka_surat_2
 
             // BAHAGIAN 3: Arahan & Keputusan
             $table->boolean('arahan_minit_oleh_sio_status')->nullable();
@@ -86,10 +91,19 @@ return new class extends Migration
 
             // BAHAGIAN 6: Borang & Semakan
             $table->json('status_pem')->nullable();
-            $table->boolean('status_rj2')->nullable();
+            $table->tinyInteger('status_rj2')->nullable(); // 0=Tiada, 1=Ada, 2=Tidak Berkaitan
             $table->date('tarikh_rj2')->nullable();
-            $table->boolean('status_rj2b')->nullable();
+            $table->tinyInteger('status_rj2b')->nullable(); // 0=Tiada, 1=Ada, 2=Tidak Berkaitan
             $table->date('tarikh_rj2b')->nullable();
+            $table->tinyInteger('status_rj9')->nullable(); // 0=Tiada, 1=Ada, 2=Tidak Berkaitan
+            $table->date('tarikh_rj9')->nullable();
+            $table->tinyInteger('status_rj99')->nullable(); // 0=Tiada, 1=Ada, 2=Tidak Berkaitan
+            $table->date('tarikh_rj99')->nullable();
+            $table->tinyInteger('status_rj10a')->nullable(); // 0=Tiada, 1=Ada, 2=Tidak Berkaitan
+            $table->date('tarikh_rj10a')->nullable();
+            $table->tinyInteger('status_rj10b')->nullable(); // 0=Tiada, 1=Ada, 2=Tidak Berkaitan
+            $table->date('tarikh_rj10b')->nullable();
+            $table->text('lain_lain_rj_dikesan')->nullable();
             $table->boolean('status_semboyan_pemakluman_ke_kedutaan_bagi_kes_mati')->nullable();
             $table->text('ulasan_keseluruhan_pegawai_pemeriksa_borang')->nullable();
 
@@ -116,10 +130,15 @@ return new class extends Migration
             $table->text('keputusan_laporan_jabatan_patalogi')->nullable();
             
             // Imigresen
-            $table->boolean('status_permohonan_laporan_imigresen')->nullable();
             $table->date('tarikh_permohonan_laporan_imigresen')->nullable();
             $table->boolean('status_laporan_penuh_imigresen')->nullable();
             $table->date('tarikh_laporan_penuh_imigresen')->nullable();
+            
+            // Updated Imigresen fields - simplified structure
+            $table->boolean('permohonan_laporan_pengesahan_masuk_keluar_malaysia')->nullable();
+            $table->boolean('permohonan_laporan_permit_kerja_di_malaysia')->nullable();
+            $table->boolean('permohonan_laporan_agensi_pekerjaan_di_malaysia')->nullable();
+            $table->boolean('permohonan_status_kewarganegaraan')->nullable();
             
             $table->text('lain_lain_permohonan_laporan')->nullable();
 
@@ -128,8 +147,8 @@ return new class extends Migration
             $table->boolean('status_barang_kes_arahan_tpr')->nullable(); // M/S 4 - Barang Kes Ditulis Bersama No Daftar & Arahan TPR
             $table->boolean('adakah_muka_surat_4_keputusan_kes_dicatat')->nullable();
             $table->boolean('adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan')->nullable();
-            $table->boolean('adakah_ks_kus_fail_selesai')->nullable();
-            $table->string('keputusan_akhir_mahkamah')->nullable();
+            $table->string('adakah_ks_kus_fail_selesai')->nullable(); // 'KUS' or 'FAIL'
+            $table->json('keputusan_akhir_mahkamah')->nullable(); // Changed to JSON for multiple selections
             $table->text('ulasan_keseluruhan_pegawai_pemeriksa_fail')->nullable();
 
             // System Calculated Status Fields

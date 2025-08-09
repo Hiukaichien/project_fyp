@@ -456,6 +456,9 @@ public function exportPapers(Request $request, Project $project)
                 'pegawai_penyiasat' => 'Pegawai Penyiasat',
                 'tarikh_laporan_polis_dibuka' => 'Tarikh Laporan Polis Dibuka',
                 'seksyen' => 'Seksyen',
+                'adakah_ms_2_lmm_telah_disahkan_oleh_kpd' => 'Adakah M/S 2 L.M.M Telah Disahkan Oleh KPD',
+                'adakah_lmm_telah_di_rujuk_kepada_ya_koroner' => 'Adakah L.M.M Telah Di Rujuk Kepada YA Koroner',
+                'keputusan_ya_koroner' => 'Keputusan YA Koroner',
                 
                 // BAHAGIAN 2: Pemeriksaan & Status
                 'pegawai_pemeriksa' => 'Pegawai Pemeriksa',
@@ -468,7 +471,6 @@ public function exportPapers(Request $request, Project $project)
                 'tarikh_edaran_minit_fail_lmm_t_kedua' => 'Tarikh Edaran Minit Fail LMM(T) Kedua',
                 'tarikh_edaran_minit_fail_lmm_t_sebelum_minit_akhir' => 'Tarikh Edaran Minit Fail LMM(T) Sebelum Akhir',
                 'tarikh_edaran_minit_fail_lmm_t_akhir' => 'Tarikh Edaran Minit Fail LMM(T) Akhir',
-                'fail_lmm_bahagian_pengurusan_pada_muka_surat_2' => 'Fail LMM Bahagian Pengurusan M/S 2',
                 
                 // BAHAGIAN 3: Arahan & Keputusan
                 'arahan_minit_oleh_sio_status' => 'Arahan Minit Oleh SIO',
@@ -530,6 +532,7 @@ public function exportPapers(Request $request, Project $project)
                 'tarikh_rj10a' => 'Tarikh RJ10A',
                 'status_rj10b' => 'RJ10B',
                 'tarikh_rj10b' => 'Tarikh RJ10B',
+                'lain_lain_rj_dikesan' => 'Lain-lain RJ Dikesan',
                 'status_semboyan_pemakluman_ke_kedutaan_bagi_kes_mati' => 'Semboyan Pemakluman ke Kedutaan',
                 'ulasan_keseluruhan_pegawai_pemeriksa_borang' => 'Ulasan Keseluruhan (Borang)',
                 
@@ -553,6 +556,12 @@ public function exportPapers(Request $request, Project $project)
                 'tarikh_permohonan_laporan_imigresen' => 'Tarikh Permohonan Imigresen',
                 'status_laporan_penuh_imigresen' => 'Laporan Penuh Imigresen',
                 'tarikh_laporan_penuh_imigresen' => 'Tarikh Laporan Imigresen',
+                
+                // New simplified Imigresen fields
+                'permohonan_laporan_pengesahan_masuk_keluar_malaysia' => 'Permohonan Laporan Pengesahan Masuk/Keluar Malaysia',
+                'permohonan_laporan_permit_kerja_di_malaysia' => 'Permohonan Laporan Permit Kerja Di Malaysia',
+                'permohonan_laporan_agensi_pekerjaan_di_malaysia' => 'Permohonan Laporan Agensi Pekerjaan Di Malaysia',
+                'permohonan_status_kewarganegaraan' => 'Permohonan Status Kewarganegaraan',
                 'lain_lain_permohonan_laporan' => 'Lain-lain Permohonan Laporan',
                 
                 // BAHAGIAN 8: Status Fail
@@ -630,15 +639,16 @@ public function exportPapers(Request $request, Project $project)
                 'semboyan_pemakluman_ke_kedutaan_bukan_warganegara' => 'Semboyan Pemakluman ke Kedutaan (Bukan Warganegara)',
                 'ulasan_keseluruhan_pegawai_pemeriksa_borang' => 'Ulasan Keseluruhan Pegawai Pemeriksa (Borang)',
                 
-                // BAHAGIAN 7: Permohonan Laporan Agensi Luar
-                'status_permohonan_laporan_imigresen' => 'Permohonan Laporan Imigresen',
-                'tarikh_permohonan_laporan_imigresen' => 'Tarikh Permohonan Laporan Imigresen',
-                'status_laporan_penuh_imigresen' => 'Status Laporan Penuh Imigresen',
-                'tarikh_laporan_penuh_imigresen' => 'Tarikh Laporan Penuh Imigresen',
+                // BAHAGIAN 7: Imigresen
+                'permohonan_laporan_permit_kerja' => 'Permohonan Laporan Permit Kerja',
+                'permohonan_laporan_agensi_pekerjaan' => 'Permohonan Laporan Agensi Pekerjaan',
+                'permohonan_status_kewarganegaraan' => 'Permohonan Status Kewarganegaraan',
+                'status_permohonan_laporan_imigresen' => 'Permohonan_Laporan_Pengesahan_Masuk/Keluar_Malaysia',
+                'tarikh_permohonan_laporan_imigresen' => 'Tarikh_Permohonan_Laporan_Pengesahan_Masuk/Keluar_Malaysia',
                 
                 // BAHAGIAN 8: Status Fail
                 'adakah_muka_surat_4_keputusan_kes_dicatat' => 'M/S 4 - Keputusan Kes Dicatat',
-                'adakah_ks_kus_fail_selesai' => 'KS KUS/FAIL Selesai',
+                'adakah_ks_kus_fail_selesai' => 'KS Telah di KUS/FAIL',
                 'keputusan_akhir_mahkamah' => 'Keputusan Akhir Mahkamah',
                 'ulasan_keseluruhan_pegawai_pemeriksa_fail' => 'Ulasan Keseluruhan Pegawai Pemeriksa (Fail)',
             ];
@@ -686,6 +696,26 @@ public function exportPapers(Request $request, Project $project)
                             $row[] = implode(', ', $value);
                         } elseif (is_bool($value)) { // Handle boolean values for CSV export
                             $row[] = $value ? 'Ya' : 'Tidak';
+                        } elseif (in_array($column, ['status_rj2', 'status_rj2b', 'status_rj9', 'status_rj99', 'status_rj10a', 'status_rj10b'])) {
+                            // Handle three-state RJ fields for CSV export - use text attribute
+                            $textAttribute = $column . '_text';
+                            if (isset($paper->{$textAttribute})) {
+                                $row[] = $paper->{$textAttribute};
+                            } else {
+                                // Fallback to manual conversion if text attribute not available
+                                switch ((int)$value) {
+                                    case 1:
+                                        $row[] = 'Ada/Cipta';
+                                        break;
+                                    case 2:
+                                        $row[] = 'Tidak Berkaitan';
+                                        break;
+                                    case 0:
+                                    default:
+                                        $row[] = 'Tiada/Tidak Cipta';
+                                        break;
+                                }
+                            }
                         } elseif (is_null($value)) {
                             $row[] = '';
                         } else {
@@ -817,23 +847,23 @@ public function getJenayahData(Project $project)
 
         // --- BAHAGIAN 6: Borang & Semakan ---
         ->editColumn('status_pem', fn($row) => $this->formatArrayField($row->status_pem))
-        ->editColumn('status_rj2', fn($row) => $this->formatBoolean($row->status_rj2, 'Cipta', 'Tidak'))
+        ->editColumn('status_rj2', fn($row) => $this->formatThreeState($row->status_rj2, 'Ada/Cipta', 'Tiada/Tidak Cipta', 'Tidak Berkaitan'))
         ->editColumn('tarikh_rj2', fn($r) => optional($r->tarikh_rj2)->format('d/m/Y') ?? '-')
-        ->editColumn('status_rj2b', fn($row) => $this->formatBoolean($row->status_rj2b, 'Cipta', 'Tidak'))
+        ->editColumn('status_rj2b', fn($row) => $this->formatThreeState($row->status_rj2b, 'Ada/Cipta', 'Tiada/Tidak Cipta', 'Tidak Berkaitan'))
         ->editColumn('tarikh_rj2b', fn($r) => optional($r->tarikh_rj2b)->format('d/m/Y') ?? '-')
-        ->editColumn('status_rj9', fn($row) => $this->formatBoolean($row->status_rj9, 'Cipta', 'Tidak'))
+        ->editColumn('status_rj9', fn($row) => $this->formatThreeState($row->status_rj9, 'Ada/Cipta', 'Tiada/Tidak Cipta', 'Tidak Berkaitan'))
         ->editColumn('tarikh_rj9', fn($r) => optional($r->tarikh_rj9)->format('d/m/Y') ?? '-')
-        ->editColumn('status_rj99', fn($row) => $this->formatBoolean($row->status_rj99, 'Cipta', 'Tidak'))
+        ->editColumn('status_rj99', fn($row) => $this->formatThreeState($row->status_rj99, 'Ada/Cipta', 'Tiada/Tidak Cipta', 'Tidak Berkaitan'))
         ->editColumn('tarikh_rj99', fn($r) => optional($r->tarikh_rj99)->format('d/m/Y') ?? '-')
-        ->editColumn('status_rj10a', fn($row) => $this->formatBoolean($row->status_rj10a, 'Cipta', 'Tidak'))
+        ->editColumn('status_rj10a', fn($row) => $this->formatThreeState($row->status_rj10a, 'Ada/Cipta', 'Tiada/Tidak Cipta', 'Tidak Berkaitan'))
         ->editColumn('tarikh_rj10a', fn($r) => optional($r->tarikh_rj10a)->format('d/m/Y') ?? '-')
-        ->editColumn('status_rj10b', fn($row) => $this->formatBoolean($row->status_rj10b, 'Cipta', 'Tidak'))
+        ->editColumn('status_rj10b', fn($row) => $this->formatThreeState($row->status_rj10b, 'Ada/Cipta', 'Tiada/Tidak Cipta', 'Tidak Berkaitan'))
         ->editColumn('tarikh_rj10b', fn($r) => optional($r->tarikh_rj10b)->format('d/m/Y') ?? '-')
-        ->editColumn('status_semboyan_pertama_wanted_person', fn($row) => $this->formatWantedPersonStatus($row->status_semboyan_pertama_wanted_person))
+        ->editColumn('status_semboyan_pertama_wanted_person', fn($row) => $this->formatBoolean($row->status_semboyan_pertama_wanted_person, 'Ada', 'Tiada'))
         ->editColumn('tarikh_semboyan_pertama_wanted_person', fn($r) => optional($r->tarikh_semboyan_pertama_wanted_person)->format('d/m/Y') ?? '-')
-        ->editColumn('status_semboyan_kedua_wanted_person', fn($row) => $this->formatWantedPersonStatus($row->status_semboyan_kedua_wanted_person))
+        ->editColumn('status_semboyan_kedua_wanted_person', fn($row) => $this->formatBoolean($row->status_semboyan_kedua_wanted_person, 'Ada', 'Tiada'))
         ->editColumn('tarikh_semboyan_kedua_wanted_person', fn($r) => optional($r->tarikh_semboyan_kedua_wanted_person)->format('d/m/Y') ?? '-')
-        ->editColumn('status_semboyan_ketiga_wanted_person', fn($row) => $this->formatWantedPersonStatus($row->status_semboyan_ketiga_wanted_person))
+        ->editColumn('status_semboyan_ketiga_wanted_person', fn($row) => $this->formatBoolean($row->status_semboyan_ketiga_wanted_person, 'Ada', 'Tiada'))
         ->editColumn('tarikh_semboyan_ketiga_wanted_person', fn($r) => optional($r->tarikh_semboyan_ketiga_wanted_person)->format('d/m/Y') ?? '-')
         ->editColumn('status_penandaan_kelas_warna', fn($row) => $this->formatBoolean($row->status_penandaan_kelas_warna))
 
@@ -854,23 +884,15 @@ public function getJenayahData(Project $project)
         ->editColumn('tarikh_permohonan_laporan_jabatan_patalogi', fn($r) => optional($r->tarikh_permohonan_laporan_jabatan_patalogi)->format('d/m/Y') ?? '-')
         ->editColumn('status_laporan_penuh_jabatan_patalogi', fn($row) => $this->formatBoolean($row->status_laporan_penuh_jabatan_patalogi, 'Diterima', 'Tidak'))
         ->editColumn('tarikh_laporan_penuh_jabatan_patalogi', fn($r) => optional($r->tarikh_laporan_penuh_jabatan_patalogi)->format('d/m/Y') ?? '-')
-        ->editColumn('status_permohonan_laporan_puspakom', fn($row) => $this->formatBoolean($row->status_permohonan_laporan_puspakom, 'Ada', 'Tiada'))
+        ->editColumn('status_permohonan_laporan_puspakom', fn($row) => $this->formatBoolean($row->status_permohonan_laporan_puspakom, 'Dibuat', 'Tidak'))
         ->editColumn('tarikh_permohonan_laporan_puspakom', fn($r) => optional($r->tarikh_permohonan_laporan_puspakom)->format('d/m/Y') ?? '-')
-        ->editColumn('status_laporan_penuh_puspakom', fn($row) => $this->formatBoolean($row->status_laporan_penuh_puspakom, 'Dilampirkan', 'Tiada'))
+        ->editColumn('status_laporan_penuh_puspakom', fn($row) => $this->formatBoolean($row->status_laporan_penuh_puspakom, 'Diterima', 'Tidak'))
         ->editColumn('tarikh_laporan_penuh_puspakom', fn($r) => optional($r->tarikh_laporan_penuh_puspakom)->format('d/m/Y') ?? '-')
-        ->editColumn('status_permohonan_laporan_jkjr', fn($row) => $this->formatBoolean($row->status_permohonan_laporan_jkjr, 'Ada', 'Tiada'))
-        ->editColumn('tarikh_permohonan_laporan_jkjr', fn($r) => optional($r->tarikh_permohonan_laporan_jkjr)->format('d/m/Y') ?? '-')
-        ->editColumn('status_laporan_penuh_jkjr', fn($row) => $this->formatBoolean($row->status_laporan_penuh_jkjr, 'Dilampirkan', 'Tiada'))
-        ->editColumn('tarikh_laporan_penuh_jkjr', fn($r) => optional($r->tarikh_laporan_penuh_jkjr)->format('d/m/Y') ?? '-')
-        ->editColumn('status_permohonan_laporan_hospital', fn($row) => $this->formatBoolean($row->status_permohonan_laporan_hospital, 'Ada', 'Tiada'))
-        ->editColumn('tarikh_permohonan_laporan_hospital', fn($r) => optional($r->tarikh_permohonan_laporan_hospital)->format('d/m/Y') ?? '-')
-        ->editColumn('status_laporan_penuh_hospital', fn($row) => $this->formatBoolean($row->status_laporan_penuh_hospital, 'Dilampirkan', 'Tiada'))
-        ->editColumn('tarikh_laporan_penuh_hospital', fn($r) => optional($r->tarikh_laporan_penuh_hospital)->format('d/m/Y') ?? '-')
         ->editColumn('status_permohonan_laporan_jpj', fn($row) => $this->formatBoolean($row->status_permohonan_laporan_jpj, 'Dibuat', 'Tidak'))
         ->editColumn('tarikh_permohonan_laporan_jpj', fn($r) => optional($r->tarikh_permohonan_laporan_jpj)->format('d/m/Y') ?? '-')
         ->editColumn('status_laporan_penuh_jpj', fn($row) => $this->formatBoolean($row->status_laporan_penuh_jpj, 'Diterima', 'Tidak'))
         ->editColumn('tarikh_laporan_penuh_jpj', fn($r) => optional($r->tarikh_laporan_penuh_jpj)->format('d/m/Y') ?? '-')
-        ->editColumn('status_permohonan_laporan_imigresen', fn($row) => $this->formatBoolean($row->status_permohonan_laporan_imigresen, 'Dibuat', 'Tidak'))
+        ->editColumn('permohonan_laporan_pengesahan_masuk_keluar_malaysia', fn($row) => $this->formatBoolean($row->permohonan_laporan_pengesahan_masuk_keluar_malaysia, 'Ada', 'Tiada'))
         ->editColumn('tarikh_permohonan_laporan_imigresen', fn($r) => optional($r->tarikh_permohonan_laporan_imigresen)->format('d/m/Y') ?? '-')
         ->editColumn('status_laporan_penuh_imigresen', fn($row) => $this->formatBoolean($row->status_laporan_penuh_imigresen, 'Diterima', 'Tidak'))
         ->editColumn('tarikh_laporan_penuh_imigresen', fn($r) => optional($r->tarikh_laporan_penuh_imigresen)->format('d/m/Y') ?? '-')
@@ -903,7 +925,7 @@ public function getJenayahData(Project $project)
             'status_laporan_penuh_pakar_judi', 'status_permohonan_laporan_post_mortem_mayat', 'status_laporan_penuh_bedah_siasat',
             'status_permohonan_laporan_jabatan_kimia', 'status_laporan_penuh_jabatan_kimia', 'status_permohonan_laporan_jabatan_patalogi',
             'status_laporan_penuh_jabatan_patalogi', 'status_permohonan_laporan_puspakom', 'status_laporan_penuh_puspakom',
-            'status_permohonan_laporan_jpj', 'status_laporan_penuh_jpj', 'status_permohonan_laporan_imigresen',
+            'status_permohonan_laporan_jpj', 'status_laporan_penuh_jpj', 'permohonan_laporan_pengesahan_masuk_keluar_malaysia',
             'status_laporan_penuh_imigresen', 'status_permohonan_laporan_kastam', 'status_laporan_penuh_kastam',
             'status_permohonan_laporan_forensik_pdrm', 'status_laporan_penuh_forensik_pdrm', 'muka_surat_4_barang_kes_ditulis',
             'muka_surat_4_dengan_arahan_tpr', 'muka_surat_4_keputusan_kes_dicatat', 'fail_lmm_ada_keputusan_koroner', 'status_kus_fail'
@@ -2266,7 +2288,7 @@ public function getKomersilData(Project $project)
             ->make(true);
     }
     
-    public function getOrangHilangData(Project $project) {
+public function getOrangHilangData(Project $project) {
         Gate::authorize('access-project', $project);
         $query = OrangHilang::where('project_id', $project->id);
         
@@ -2391,11 +2413,18 @@ public function getKomersilData(Project $project)
             ->editColumn('status_permohonan_laporan_imigresen', function($row) {
                 return $this->formatBoolean($row->status_permohonan_laporan_imigresen);
             })
-            ->editColumn('status_laporan_penuh_imigresen', function($row) {
-                return $this->formatBoolean($row->status_laporan_penuh_imigresen);
+            // BAHAGIAN 7: New Imigresen fields
+            ->editColumn('permohonan_laporan_permit_kerja', function($row) {
+                return $this->formatBoolean($row->permohonan_laporan_permit_kerja, 'Ada', 'Tiada');
+            })
+            ->editColumn('permohonan_laporan_agensi_pekerjaan', function($row) {
+                return $this->formatBoolean($row->permohonan_laporan_agensi_pekerjaan, 'Ada', 'Tiada');
+            })
+            ->editColumn('permohonan_status_kewarganegaraan', function($row) {
+                return $this->formatBoolean($row->permohonan_status_kewarganegaraan, 'Ada', 'Tiada');
             })
             ->editColumn('adakah_ks_kus_fail_selesai', function($row) {
-                return $this->formatBoolean($row->adakah_ks_kus_fail_selesai);
+                return $row->adakah_ks_kus_fail_selesai ?? '-';
             })
             ->editColumn('adakah_muka_surat_4_keputusan_kes_dicatat', function($row) {
                 return $this->formatBoolean($row->adakah_muka_surat_4_keputusan_kes_dicatat);
@@ -2411,6 +2440,9 @@ public function getKomersilData(Project $project)
             // Format JSON array fields (render_json_checkboxes fields)
             ->editColumn('status_pem', function($row) {
                 return $this->formatArrayField($row->status_pem);
+            })
+            ->editColumn('keputusan_akhir_mahkamah', function($row) {
+                return $this->formatArrayField($row->keputusan_akhir_mahkamah);
             })
             
             ->rawColumns([
@@ -2433,8 +2465,11 @@ public function getKomersilData(Project $project)
                 'semboyan_pemakluman_ke_kedutaan_bukan_warganegara',
                 'status_permohonan_laporan_imigresen',
                 'status_laporan_penuh_imigresen',
-                'adakah_ks_kus_fail_selesai',
+                'permohonan_laporan_permit_kerja',
+                'permohonan_laporan_agensi_pekerjaan',
+                'permohonan_status_kewarganegaraan',
                 'adakah_muka_surat_4_keputusan_kes_dicatat',
+                'keputusan_akhir_mahkamah',
                 'orang_hilang_dijumpai_mati_mengejut_bukan_jenayah',
                 'orang_hilang_dijumpai_mati_mengejut_jenayah'
             ])
@@ -2495,6 +2530,10 @@ public function getLaporanMatiMengejutData(Project $project) {
         ->editColumn('arahan_minit_oleh_ya_tpr_tarikh', fn($r) => optional($r->arahan_minit_oleh_ya_tpr_tarikh)->format('d/m/Y') ?? '-')
         ->editColumn('tarikh_rj2', fn($r) => optional($r->tarikh_rj2)->format('d/m/Y') ?? '-')
         ->editColumn('tarikh_rj2b', fn($r) => optional($r->tarikh_rj2b)->format('d/m/Y') ?? '-')
+        ->editColumn('tarikh_rj9', fn($r) => optional($r->tarikh_rj9)->format('d/m/Y') ?? '-')
+        ->editColumn('tarikh_rj99', fn($r) => optional($r->tarikh_rj99)->format('d/m/Y') ?? '-')
+        ->editColumn('tarikh_rj10a', fn($r) => optional($r->tarikh_rj10a)->format('d/m/Y') ?? '-')
+        ->editColumn('tarikh_rj10b', fn($r) => optional($r->tarikh_rj10b)->format('d/m/Y') ?? '-')
         ->editColumn('tarikh_permohonan_laporan_post_mortem_mayat', fn($r) => optional($r->tarikh_permohonan_laporan_post_mortem_mayat)->format('d/m/Y') ?? '-')
         ->editColumn('tarikh_laporan_penuh_bedah_siasat', fn($r) => optional($r->tarikh_laporan_penuh_bedah_siasat)->format('d/m/Y') ?? '-')
         ->editColumn('tarikh_permohonan_laporan_jabatan_kimia', fn($r) => optional($r->tarikh_permohonan_laporan_jabatan_kimia)->format('d/m/Y') ?? '-')
@@ -2503,9 +2542,16 @@ public function getLaporanMatiMengejutData(Project $project) {
         ->editColumn('tarikh_laporan_penuh_jabatan_patalogi', fn($r) => optional($r->tarikh_laporan_penuh_jabatan_patalogi)->format('d/m/Y') ?? '-')
         ->editColumn('tarikh_permohonan_laporan_imigresen', fn($r) => optional($r->tarikh_permohonan_laporan_imigresen)->format('d/m/Y') ?? '-')
         ->editColumn('tarikh_laporan_penuh_imigresen', fn($r) => optional($r->tarikh_laporan_penuh_imigresen)->format('d/m/Y') ?? '-')
+        ->editColumn('permit_kerja_tarikh', fn($r) => optional($r->permit_kerja_tarikh)->format('d/m/Y') ?? '-')
+        ->editColumn('permit_kerja_tarikh_tamat', fn($r) => optional($r->permit_kerja_tarikh_tamat)->format('d/m/Y') ?? '-')
+        ->editColumn('agensi_pekerjaan_tarikh', fn($r) => optional($r->agensi_pekerjaan_tarikh)->format('d/m/Y') ?? '-')
+        ->editColumn('agensi_pekerjaan_tarikh_tamat', fn($r) => optional($r->agensi_pekerjaan_tarikh_tamat)->format('d/m/Y') ?? '-')
+        ->editColumn('status_kewarganegaraan_tarikh', fn($r) => optional($r->status_kewarganegaraan_tarikh)->format('d/m/Y') ?? '-')
+        ->editColumn('status_kewarganegaraan_tarikh_tamat', fn($r) => optional($r->status_kewarganegaraan_tarikh_tamat)->format('d/m/Y') ?? '-')
 
         // --- BOOLEAN FORMATTING (Using the helper function) ---
-        ->editColumn('fail_lmm_bahagian_pengurusan_pada_muka_surat_2', fn($row) => $this->formatBoolean($row->fail_lmm_bahagian_pengurusan_pada_muka_surat_2))
+        ->editColumn('adakah_ms_2_lmm_telah_disahkan_oleh_kpd', fn($row) => $this->formatBoolean($row->adakah_ms_2_lmm_telah_disahkan_oleh_kpd))
+        ->editColumn('adakah_lmm_telah_di_rujuk_kepada_ya_koroner', fn($row) => $this->formatBoolean($row->adakah_lmm_telah_di_rujuk_kepada_ya_koroner))
         ->editColumn('arahan_minit_oleh_sio_status', fn($row) => $this->formatBoolean($row->arahan_minit_oleh_sio_status, 'Ada', 'Tiada'))
         ->editColumn('arahan_minit_ketua_bahagian_status', fn($row) => $this->formatBoolean($row->arahan_minit_ketua_bahagian_status, 'Ada', 'Tiada'))
         ->editColumn('arahan_minit_ketua_jabatan_status', fn($row) => $this->formatBoolean($row->arahan_minit_ketua_jabatan_status, 'Ada', 'Tiada'))
@@ -2522,8 +2568,16 @@ public function getLaporanMatiMengejutData(Project $project) {
         ->editColumn('status_gambar_barang_kes_am', fn($row) => $this->formatBoolean($row->status_gambar_barang_kes_am, 'Ada', 'Tiada'))
         ->editColumn('status_gambar_barang_kes_berharga', fn($row) => $this->formatBoolean($row->status_gambar_barang_kes_berharga, 'Ada', 'Tiada'))
         ->editColumn('status_gambar_barang_kes_darah', fn($row) => $this->formatBoolean($row->status_gambar_barang_kes_darah, 'Ada', 'Tiada'))
-        ->editColumn('status_rj2', fn($row) => $this->formatBoolean($row->status_rj2, 'Cipta', 'Tidak'))
-        ->editColumn('status_rj2b', fn($row) => $this->formatBoolean($row->status_rj2b, 'Cipta', 'Tidak'))
+        
+        // --- THREE-STATE RJ FIELDS (Using the new formatThreeState function) ---
+        ->editColumn('status_rj2', fn($row) => $this->formatThreeState($row->status_rj2))
+        ->editColumn('status_rj2b', fn($row) => $this->formatThreeState($row->status_rj2b))
+        ->editColumn('status_rj9', fn($row) => $this->formatThreeState($row->status_rj9))
+        ->editColumn('status_rj99', fn($row) => $this->formatThreeState($row->status_rj99))
+        ->editColumn('status_rj10a', fn($row) => $this->formatThreeState($row->status_rj10a))
+        ->editColumn('status_rj10b', fn($row) => $this->formatThreeState($row->status_rj10b))
+        
+        // --- OTHER BOOLEAN FIELDS ---
         ->editColumn('status_semboyan_pemakluman_ke_kedutaan_bagi_kes_mati', fn($row) => $this->formatBoolean($row->status_semboyan_pemakluman_ke_kedutaan_bagi_kes_mati, 'Dibuat', 'Tidak'))
         ->editColumn('status_permohonan_laporan_post_mortem_mayat', fn($row) => $this->formatBoolean($row->status_permohonan_laporan_post_mortem_mayat, 'Dibuat', 'Tidak'))
         ->editColumn('status_laporan_penuh_bedah_siasat', fn($row) => $this->formatBoolean($row->status_laporan_penuh_bedah_siasat, 'Diterima', 'Tidak'))
@@ -2531,17 +2585,30 @@ public function getLaporanMatiMengejutData(Project $project) {
         ->editColumn('status_laporan_penuh_jabatan_kimia', fn($row) => $this->formatBoolean($row->status_laporan_penuh_jabatan_kimia, 'Diterima', 'Tidak'))
         ->editColumn('status_permohonan_laporan_jabatan_patalogi', fn($row) => $this->formatBoolean($row->status_permohonan_laporan_jabatan_patalogi, 'Dibuat', 'Tidak'))
         ->editColumn('status_laporan_penuh_jabatan_patalogi', fn($row) => $this->formatBoolean($row->status_laporan_penuh_jabatan_patalogi, 'Diterima', 'Tidak'))
-        ->editColumn('status_permohonan_laporan_imigresen', fn($row) => $this->formatBoolean($row->status_permohonan_laporan_imigresen, 'Dibuat', 'Tidak'))
         ->editColumn('status_laporan_penuh_imigresen', fn($row) => $this->formatBoolean($row->status_laporan_penuh_imigresen, 'Diterima', 'Tidak'))
+        // New simplified Imigresen fields formatting
+        ->editColumn('permohonan_laporan_pengesahan_masuk_keluar_malaysia', fn($row) => $this->formatBoolean($row->permohonan_laporan_pengesahan_masuk_keluar_malaysia, 'Ada', 'Tiada'))
+        ->editColumn('permohonan_laporan_permit_kerja_di_malaysia', fn($row) => $this->formatBoolean($row->permohonan_laporan_permit_kerja_di_malaysia, 'Ada', 'Tiada'))
+        ->editColumn('permohonan_laporan_agensi_pekerjaan_di_malaysia', fn($row) => $this->formatBoolean($row->permohonan_laporan_agensi_pekerjaan_di_malaysia, 'Ada', 'Tiada'))
+        ->editColumn('permohonan_status_kewarganegaraan', fn($row) => $this->formatBoolean($row->permohonan_status_kewarganegaraan, 'Ada', 'Tiada'))
         ->editColumn('status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar', fn($row) => $this->formatBoolean($row->status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar))
         ->editColumn('status_barang_kes_arahan_tpr', fn($row) => $this->formatBoolean($row->status_barang_kes_arahan_tpr))
         ->editColumn('adakah_muka_surat_4_keputusan_kes_dicatat', fn($row) => $this->formatBoolean($row->adakah_muka_surat_4_keputusan_kes_dicatat))
         ->editColumn('adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan', fn($row) => $this->formatBoolean($row->adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan))
-        ->editColumn('adakah_ks_kus_fail_selesai', fn($row) => $this->formatBoolean($row->adakah_ks_kus_fail_selesai))
         
-        // --- Custom Text & Array Formatting ---
+        // --- SPECIAL STRING FIELD (KUS/FAIL) ---
+        ->editColumn('adakah_ks_kus_fail_selesai', function($row) {
+            $value = $row->adakah_ks_kus_fail_selesai;
+            if (is_null($value) || $value === '') {
+                return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">-</span>';
+            }
+            $color = $value === 'KUS' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800';
+            return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ' . $color . '">' . $value . '</span>';
+        })
+        
+        // --- JSON ARRAY FORMATTING ---
         ->editColumn('status_pem', fn($row) => $this->formatArrayField($row->status_pem))
-        ->editColumn('arahan_pelupusan_barang_kes', fn($row) => $this->formatArrayField($row->arahan_pelupusan_barang_kes))
+        ->editColumn('keputusan_akhir_mahkamah', fn($row) => $this->formatArrayField($row->keputusan_akhir_mahkamah))
 
         // Add additional columns needed for special fields (but not separate _lain columns)
         ->addColumn('ujian_makmal_details', function($row) {
@@ -2552,20 +2619,23 @@ public function getLaporanMatiMengejutData(Project $project) {
         })
 
         ->rawColumns([
-            'action', 'status_pem', 'arahan_pelupusan_barang_kes',
-            'fail_lmm_bahagian_pengurusan_pada_muka_surat_2', 'arahan_minit_oleh_sio_status', 'arahan_minit_ketua_bahagian_status', 
+            'action', 'status_pem', 'keputusan_akhir_mahkamah',
+            'adakah_ms_2_lmm_telah_disahkan_oleh_kpd', 'adakah_lmm_telah_di_rujuk_kepada_ya_koroner',
+            'arahan_minit_oleh_sio_status', 'arahan_minit_ketua_bahagian_status', 
             'arahan_minit_ketua_jabatan_status', 'arahan_minit_oleh_ya_tpr_status', 'adakah_barang_kes_didaftarkan',
             'adakah_borang_serah_terima_pegawai_tangkapan_io', 'adakah_borang_serah_terima_penyiasat_pemilik_saksi',
             'adakah_sijil_surat_kebenaran_ipd', 'adakah_gambar_pelupusan', 'status_id_siasatan_dikemaskini',
             'status_rajah_kasar_tempat_kejadian', 'status_gambar_tempat_kejadian', 'status_gambar_post_mortem_mayat_di_hospital',
             'status_gambar_barang_kes_am', 'status_gambar_barang_kes_berharga', 'status_gambar_barang_kes_darah',
-            'status_rj2', 'status_rj2b', 'status_semboyan_pemakluman_ke_kedutaan_bagi_kes_mati',
+            'status_rj2', 'status_rj2b', 'status_rj9', 'status_rj99', 'status_rj10a', 'status_rj10b',
+            'status_semboyan_pemakluman_ke_kedutaan_bagi_kes_mati',
             'status_permohonan_laporan_post_mortem_mayat', 'status_laporan_penuh_bedah_siasat',
             'status_permohonan_laporan_jabatan_kimia', 'status_laporan_penuh_jabatan_kimia',
             'status_permohonan_laporan_jabatan_patalogi', 'status_laporan_penuh_jabatan_patalogi',
             'status_permohonan_laporan_imigresen', 'status_laporan_penuh_imigresen',
-            'status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar',
-            'status_barang_kes_arahan_tpr',
+            'permohonan_laporan_pengesahan_masuk_keluar_malaysia', 'permohonan_laporan_permit_kerja_di_malaysia', 
+            'permohonan_laporan_agensi_pekerjaan_di_malaysia', 'permohonan_status_kewarganegaraan',
+            'status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar', 'status_barang_kes_arahan_tpr',
             'adakah_muka_surat_4_keputusan_kes_dicatat', 'adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan',
             'adakah_ks_kus_fail_selesai'
         ])
@@ -2586,21 +2656,25 @@ public function getLaporanMatiMengejutData(Project $project) {
             : '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">' . $falseText . '</span>';
     }
 
-    private function formatWantedPersonStatus($value)
+    /**
+     * Format three-state integer values for display in DataTables (specifically for RJ fields)
+     */
+    private function formatThreeState($value, $adaText = 'Ada/Cipta', $tiadaText = 'Tiada/Tidak Cipta', $tidakBerkaitanText = 'Tidak Berkaitan')
     {
-        if (is_null($value) || $value === '') {
+        if (is_null($value)) {
             return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">-</span>';
         }
         
-        if ($value === 'Ada / Cipta') {
-            return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Ada / Cipta</span>';
-        } elseif ($value === 'Tidak Berkaitan') {
-            return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">Tidak Berkaitan</span>';
-        } else {
-            return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Tiada / Tidak Cipta</span>';
+        switch ((int)$value) {
+            case 1:
+                return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">' . $adaText . '</span>';
+            case 2:
+                return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">' . $tidakBerkaitanText . '</span>';
+            case 0:
+            default:
+                return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">' . $tiadaText . '</span>';
         }
     }
-
     /**
      * Format string status values for display in DataTables (specifically for E-FSA fields)
      */

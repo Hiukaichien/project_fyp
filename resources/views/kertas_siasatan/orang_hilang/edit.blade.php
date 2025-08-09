@@ -286,7 +286,7 @@
 
                         <!-- Rakaman Percakapan (Multiple Options) -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Rakaman Percakapan Orang Hilang</label>
+                            <label class="block text-sm font-medium text-gray-700">Rakaman Percakapan Orang Hilang (OH) Dijumpai Semula</label>
                             <div class="mt-2 space-y-2">
                                 <label class="flex items-center">
                                     <input type="radio" name="rakaman_percakapan_orang_hilang" value="Telah Diambil" 
@@ -311,7 +311,7 @@
 
                         <!-- Laporan Polis (Multiple Options) -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Laporan Polis Orang Hilang Dijumpai</label>
+                            <label class="block text-sm font-medium text-gray-700">Laporan Polis Orang Hilang (OH) Dijumpai Semula</label>
                             <div class="mt-2 space-y-2">
                                 <label class="flex items-center">
                                     <input type="radio" name="laporan_polis_orang_hilang_dijumpai" value="Ada Dilampirkan" 
@@ -341,53 +341,59 @@
                         </div>
 
                         <div x-data="{
-                    showAlasanBukanJenayah: {{ !$paper->orang_hilang_dijumpai_mati_mengejut_bukan_jenayah ? 'true' : 'false' }},
-                    showAlasanJenayah: {{ !$paper->orang_hilang_dijumpai_mati_mengejut_jenayah ? 'true' : 'false' }},
-                    toggleBukanJenayah() {
-                        this.showAlasanBukanJenayah = (this.$refs.bukanJenayahTidak.checked);
-                    },
-                    toggleJenayah() {
-                        this.showAlasanJenayah = (this.$refs.jenayahTidak.checked);
-                    }
-                }">
-                    <!-- Orang Hilang Dijumpai (Mati Mengejut Bukan Jenayah) with reason -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Orang Hilang Dijumpai (Mati Mengejut Bukan Jenayah)</label>
-                        <div class="mt-2 flex items-center space-x-6">
-                            <label class="flex items-center cursor-pointer">
-                                <input type="radio" x-ref="bukanJenayahYa" name="orang_hilang_dijumpai_mati_mengejut_bukan_jenayah" value="1" x-model="!showAlasanBukanJenayah" @change="toggleBukanJenayah" class="form-radio h-4 w-4 text-indigo-600">
-                                <span class="ml-2 text-gray-700">Ya</span>
-                            </label>
-                            <label class="flex items-center cursor-pointer">
-                                <input type="radio" x-ref="bukanJenayahTidak" name="orang_hilang_dijumpai_mati_mengejut_bukan_jenayah" value="0" x-model="!showAlasanBukanJenayah" @change="toggleBukanJenayah" class="form-radio h-4 w-4 text-indigo-600">
-                                <span class="ml-2 text-gray-700">Tidak</span>
-                            </label>
-                        </div>
-                        <div x-show="showAlasanBukanJenayah" x-transition class="mt-2">
-                            <label for="alasan_orang_hilang_dijumpai_mati_mengejut_bukan_jenayah" class="text-sm text-gray-600">Alasan/Sebab:</label>
-                            <textarea name="alasan_orang_hilang_dijumpai_mati_mengejut_bukan_jenayah" id="alasan_orang_hilang_dijumpai_mati_mengejut_bukan_jenayah" rows="2" class="mt-1 block w-full form-textarea">{{ old('alasan_orang_hilang_dijumpai_mati_mengejut_bukan_jenayah', $paper->alasan_orang_hilang_dijumpai_mati_mengejut_bukan_jenayah) }}</textarea>
-                        </div>
-                    </div>
+                            bukanJenayah: '{{ old('orang_hilang_dijumpai_mati_mengejut_bukan_jenayah', $paper->orang_hilang_dijumpai_mati_mengejut_bukan_jenayah) }}',
+                            jenayah: '{{ old('orang_hilang_dijumpai_mati_mengejut_jenayah', $paper->orang_hilang_dijumpai_mati_mengejut_jenayah) }}'
+                        }">
+                            <!-- Orang Hilang Dijumpai (Mati Mengejut Bukan Jenayah) with reason -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Orang Hilang Dijumpai (Mati Mengejut Bukan Jenayah)</label>
+                                <div class="mt-2 flex items-center space-x-6">
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="radio" name="orang_hilang_dijumpai_mati_mengejut_bukan_jenayah" value="1" 
+                                            x-model="bukanJenayah" 
+                                            {{ old('orang_hilang_dijumpai_mati_mengejut_bukan_jenayah', $paper->orang_hilang_dijumpai_mati_mengejut_bukan_jenayah) == '1' ? 'checked' : '' }} 
+                                            class="form-radio h-4 w-4 text-indigo-600">
+                                        <span class="ml-2 text-gray-700">Ya</span>
+                                    </label>
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="radio" name="orang_hilang_dijumpai_mati_mengejut_bukan_jenayah" value="0" 
+                                            x-model="bukanJenayah" 
+                                            {{ old('orang_hilang_dijumpai_mati_mengejut_bukan_jenayah', $paper->orang_hilang_dijumpai_mati_mengejut_bukan_jenayah) == '0' ? 'checked' : '' }} 
+                                            class="form-radio h-4 w-4 text-indigo-600">
+                                        <span class="ml-2 text-gray-700">Tidak</span>
+                                    </label>
+                                </div>
+                                <div x-show="bukanJenayah === '0'" x-transition class="mt-2">
+                                    <label for="alasan_orang_hilang_dijumpai_mati_mengejut_bukan_jenayah" class="text-sm text-gray-600">Alasan/Sebab:</label>
+                                    <textarea name="alasan_orang_hilang_dijumpai_mati_mengejut_bukan_jenayah" id="alasan_orang_hilang_dijumpai_mati_mengejut_bukan_jenayah" rows="2" class="mt-1 block w-full form-textarea">{{ old('alasan_orang_hilang_dijumpai_mati_mengejut_bukan_jenayah', $paper->alasan_orang_hilang_dijumpai_mati_mengejut_bukan_jenayah) }}</textarea>
+                                </div>
+                            </div>
 
-                    <!-- Orang Hilang Dijumpai (Mati Mengejut Jenayah) with reason -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Orang Hilang Dijumpai (Mati Mengejut Jenayah)</label>
-                        <div class="mt-2 flex items-center space-x-6">
-                            <label class="flex items-center cursor-pointer">
-                                <input type="radio" x-ref="jenayahYa" name="orang_hilang_dijumpai_mati_mengejut_jenayah" value="1" x-model="!showAlasanJenayah" @change="toggleJenayah" class="form-radio h-4 w-4 text-indigo-600">
-                                <span class="ml-2 text-gray-700">Ya</span>
-                            </label>
-                            <label class="flex items-center cursor-pointer">
-                                <input type="radio" x-ref="jenayahTidak" name="orang_hilang_dijumpai_mati_mengejut_jenayah" value="0" x-model="!showAlasanJenayah" @change="toggleJenayah" class="form-radio h-4 w-4 text-indigo-600">
-                                <span class="ml-2 text-gray-700">Tidak</span>
-                            </label>
+                            <!-- Orang Hilang Dijumpai (Mati Mengejut Jenayah) with reason -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Orang Hilang Dijumpai (Mati Mengejut Jenayah)</label>
+                                <div class="mt-2 flex items-center space-x-6">
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="radio" name="orang_hilang_dijumpai_mati_mengejut_jenayah" value="1" 
+                                            x-model="jenayah" 
+                                            {{ old('orang_hilang_dijumpai_mati_mengejut_jenayah', $paper->orang_hilang_dijumpai_mati_mengejut_jenayah) == '1' ? 'checked' : '' }} 
+                                            class="form-radio h-4 w-4 text-indigo-600">
+                                        <span class="ml-2 text-gray-700">Ya</span>
+                                    </label>
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="radio" name="orang_hilang_dijumpai_mati_mengejut_jenayah" value="0" 
+                                            x-model="jenayah" 
+                                            {{ old('orang_hilang_dijumpai_mati_mengejut_jenayah', $paper->orang_hilang_dijumpai_mati_mengejut_jenayah) == '0' ? 'checked' : '' }} 
+                                            class="form-radio h-4 w-4 text-indigo-600">
+                                        <span class="ml-2 text-gray-700">Tidak</span>
+                                    </label>
+                                </div>
+                                <div x-show="jenayah === '0'" x-transition class="mt-2">
+                                    <label for="alasan_orang_hilang_dijumpai_mati_mengejut_jenayah" class="text-sm text-gray-600">Alasan/Sebab:</label>
+                                    <textarea name="alasan_orang_hilang_dijumpai_mati_mengejut_jenayah" id="alasan_orang_hilang_dijumpai_mati_mengejut_jenayah" rows="2" class="mt-1 block w-full form-textarea">{{ old('alasan_orang_hilang_dijumpai_mati_mengejut_jenayah', $paper->alasan_orang_hilang_dijumpai_mati_mengejut_jenayah) }}</textarea>
+                                </div>
+                            </div>
                         </div>
-                        <div x-show="showAlasanJenayah" x-transition class="mt-2">
-                            <label for="alasan_orang_hilang_dijumpai_mati_mengejut_jenayah" class="text-sm text-gray-600">Alasan/Sebab:</label>
-                            <textarea name="alasan_orang_hilang_dijumpai_mati_mengejut_jenayah" id="alasan_orang_hilang_dijumpai_mati_mengejut_jenayah" rows="2" class="mt-1 block w-full form-textarea">{{ old('alasan_orang_hilang_dijumpai_mati_mengejut_jenayah', $paper->alasan_orang_hilang_dijumpai_mati_mengejut_jenayah) }}</textarea>
-                        </div>
-                    </div>
-                </div>
 
                         <!-- Semboyan Pemakluman ke Kedutaan -->
                         <div>
@@ -409,14 +415,22 @@
                     <div class="space-y-8">
                         <div class="p-4 border rounded-md">
                             <h4 class="font-semibold text-md text-gray-700">Imigresen</h4>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                            <div class="grid grid-cols-1 gap-6 mt-4">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700">Permohonan Laporan</label>
+                                    <label class="block text-sm font-medium text-gray-700">Permohonan Laporan Pengesahan Masuk / Keluar Malaysia</label>
                                     {!! render_status_with_date_radio('imigresen_permohonan', 'status_permohonan_laporan_imigresen', 'tarikh_permohonan_laporan_imigresen', $paper->status_permohonan_laporan_imigresen, $paper->tarikh_permohonan_laporan_imigresen) !!}
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700">Laporan Penuh</label>
-                                    {!! render_status_with_date_radio('imigresen_penuh', 'status_laporan_penuh_imigresen', 'tarikh_laporan_penuh_imigresen', $paper->status_laporan_penuh_imigresen, $paper->tarikh_laporan_penuh_imigresen) !!}
+                                    <label class="block text-sm font-medium text-gray-700">Permohonan Laporan Permit Kerja di Malaysia</label>
+                                    {!! render_boolean_radio('permohonan_laporan_permit_kerja', $paper->permohonan_laporan_permit_kerja) !!}
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Permohonan Laporan Agensi Pekerjaan di Malaysia</label>
+                                    {!! render_boolean_radio('permohonan_laporan_agensi_pekerjaan', $paper->permohonan_laporan_agensi_pekerjaan) !!}
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700">Permohonan Status Kewarganegaraan</label>
+                                    {!! render_boolean_radio('permohonan_status_kewarganegaraan', $paper->permohonan_status_kewarganegaraan) !!}
                                 </div>
                             </div>
                         </div>
@@ -434,25 +448,30 @@
         </div>
 
         <!-- 2. KS Telah di KUS/FAIL (Excel 标记为 Y) -->
-        <div>
+        <div x-data="{
+            kusFailStatus: '{{ old('adakah_ks_kus_fail_selesai', $paper->adakah_ks_kus_fail_selesai) }}'
+        }">
             <label class="block text-sm font-medium text-gray-700">KS Telah di KUS/FAIL</label>
-            {!! render_boolean_radio('adakah_ks_kus_fail_selesai', $paper->adakah_ks_kus_fail_selesai) !!}
+            <select name="adakah_ks_kus_fail_selesai" x-model="kusFailStatus" class="mt-1 block w-full form-select">
+                <option value="">-- Sila Pilih --</option>
+                <option value="KUS" {{ old('adakah_ks_kus_fail_selesai', $paper->adakah_ks_kus_fail_selesai) == 'KUS' ? 'selected' : '' }}>KUS</option>
+                <option value="FAIL" {{ old('adakah_ks_kus_fail_selesai', $paper->adakah_ks_kus_fail_selesai) == 'FAIL' ? 'selected' : '' }}>FAIL</option>
+            </select>
         </div>
 
         <!-- 3. Keputusan Akhir Mahkamah (Excel 标记为 Y) -->
         <div>
-            <label class="block text-sm font-medium text-gray-700">Keputusan Akhir Mahkamah</label>
-            <select name="keputusan_akhir_mahkamah" class="mt-1 block w-full form-select">
-                <option value="">-- Sila Pilih --</option>
-                <option value="Jatuh Hukum" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'Jatuh Hukum' ? 'selected' : '' }}>Jatuh Hukum</option>
-                <option value="NFA" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'NFA' ? 'selected' : '' }}>NFA</option>
-                <option value="DNA" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'DNA' ? 'selected' : '' }}>DNA</option>
-                <option value="DNAA" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'DNAA' ? 'selected' : '' }}>DNAA</option>
-                <option value="KUS/SEMENTARA" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'KUS/SEMENTARA' ? 'selected' : '' }}>KUS/SEMENTARA</option>
-                <option value="MASIH DALAM SIASATAN OYDS GAGAL DIKESAN" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'MASIH DALAM SIASATAN OYDS GAGAL DIKESAN' ? 'selected' : '' }}>MASIH DALAM SIASATAN OYDS GAGAL DIKESAN</option>
-                <option value="MASIH DALAM SIASATAN UNTUK LENGKAPKAN DOKUMENTASI" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'MASIH DALAM SIASATAN UNTUK LENGKAPKAN DOKUMENTASI' ? 'selected' : '' }}>MASIH DALAM SIASATAN UNTUK LENGKAPKAN DOKUMENTASI</option>
-                <option value="TERBENGKALAI/ TIADA TINDAKAN" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'TERBENGKALAI/ TIADA TINDAKAN' ? 'selected' : '' }}>TERBENGKALAI/ TIADA TINDAKAN</option>
-            </select>
+            <label class="block text-sm font-medium text-gray-700">Keputusan Akhir Mahkamah (boleh pilih lebih dari satu)</label>
+            {!! render_json_checkboxes('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah, [
+                'Jatuh Hukum' => 'Jatuh Hukum',
+                'NFA' => 'NFA',
+                'DNA' => 'DNA',
+                'DNAA' => 'DNAA',
+                'KUS/SEMENTARA' => 'KUS/SEMENTARA',
+                'MASIH DALAM SIASATAN / OYDS GAGAL DIKESAN' => 'MASIH DALAM SIASATAN / OYDS GAGAL DIKESAN',
+                'MASIH DALAM SIASATAN / LENGKAPKAN DOKUMEN SIASATAN' => 'MASIH DALAM SIASATAN / LENGKAPKAN DOKUMEN SIASATAN',
+                'TERBENGKALAI/ TIADA TINDAKAN' => 'TERBENGKALAI/ TIADA TINDAKAN'
+            ]) !!}
         </div>
 
         <!-- 4. Ulasan Keseluruhan Pegawai Pemeriksa (Excel 标记为 Y) -->

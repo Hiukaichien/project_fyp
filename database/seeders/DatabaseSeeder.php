@@ -347,40 +347,226 @@ class DatabaseSeeder extends Seeder
             );
         }
         
-        // 8. Seed Orang Hilang Papers (15 records) - Basic fields only
+        // 8. Seed Orang Hilang Papers (15 records) - Updated with new fields
         for ($i = 1; $i <= 15; $i++) {
             OrangHilang::updateOrCreate(
                 ['no_kertas_siasatan' => 'OH/KS/' . str_pad($i, 4, '0', STR_PAD_LEFT) . '/24'],
                 [
+                    // BAHAGIAN 1: Maklumat Asas
                     'project_id' => $project->id,
                     'no_repot_polis' => 'IPD/CID/' . str_pad(rand(1000, 99999), 5, '0', STR_PAD_LEFT) . '/' . date('y'),
                     'pegawai_penyiasat' => ['SGT FATIMAH', 'INSP KAMAL', 'SGT ROZANA', 'ASP CHONG', 'INSP RAVI'][array_rand(['SGT FATIMAH', 'INSP KAMAL', 'SGT ROZANA', 'ASP CHONG', 'INSP RAVI'])],
                     'tarikh_laporan_polis_dibuka' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30)),
                     'seksyen' => '365 KANUN KESEKSAAN',
-                    'pegawai_pemeriksa' => ['INSP NORAIDAH', 'ASP SALLEH', 'SGT FAIZAH'][array_rand(['INSP NORAIDAH', 'ASP SALLEH', 'SGT FAIZAH'])],
-                    'tarikh_edaran_minit_ks_pertama' => Carbon::now()->subMonths(rand(1, 6))->subDays(rand(1, 15)),
-                ]
-            );
-        }
-
-        // 9. Seed Laporan Mati Mengejut Papers (10 records) - Basic fields only
-        for ($i = 1; $i <= 10; $i++) {
-            LaporanMatiMengejut::updateOrCreate(
-                ['no_kertas_siasatan' => 'LMM/KS/' . str_pad($i, 4, '0', STR_PAD_LEFT) . '/24'],
-                [
-                    'project_id' => $project->id,
-                    'no_fail_lmm_sdr' => 'LMM/SDR/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '/24',
-                    'no_repot_polis' => 'IPD/CID/' . str_pad(rand(1000, 99999), 5, '0', STR_PAD_LEFT) . '/' . date('y'),
-                    'pegawai_penyiasat' => ['SGT AZLINA', 'INSP HAFIZ', 'SGT KAMARUL', 'ASP LINA', 'INSP SURESH'][array_rand(['SGT AZLINA', 'INSP HAFIZ', 'SGT KAMARUL', 'ASP LINA', 'INSP SURESH'])],
-                    'tarikh_laporan_polis_dibuka' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30)),
-                    'seksyen' => '174 KANUN ACARA JENAYAH',
+                    
+                    // BAHAGIAN 2: Pemeriksaan & Status
                     'pegawai_pemeriksa' => ['INSP NORAIDAH', 'ASP SALLEH', 'SGT FAIZAH'][array_rand(['INSP NORAIDAH', 'ASP SALLEH', 'SGT FAIZAH'])],
                     'tarikh_edaran_minit_ks_pertama' => Carbon::now()->subMonths(rand(1, 6))->subDays(rand(1, 15)),
                     'tarikh_edaran_minit_ks_kedua' => Carbon::now()->subMonths(rand(1, 5))->subDays(rand(1, 10)),
                     'tarikh_edaran_minit_ks_sebelum_akhir' => Carbon::now()->subMonths(rand(1, 4))->subDays(rand(1, 8)),
                     'tarikh_edaran_minit_ks_akhir' => Carbon::now()->subMonths(rand(1, 3))->subDays(rand(1, 5)),
+                    'tarikh_semboyan_pemeriksaan_jips_ke_daerah' => Carbon::now()->subMonths(rand(1, 2))->subDays(rand(1, 3)),
+
+                    // BAHAGIAN 3: Arahan & Keputusan
+                    'arahan_minit_oleh_sio_status' => rand(0, 1),
+                    'arahan_minit_oleh_sio_tarikh' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 30)) : null,
+                    'arahan_minit_ketua_bahagian_status' => rand(0, 1),
+                    'arahan_minit_ketua_bahagian_tarikh' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 25)) : null,
+                    'arahan_minit_ketua_jabatan_status' => rand(0, 1),
+                    'arahan_minit_ketua_jabatan_tarikh' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 20)) : null,
+                    'arahan_minit_oleh_ya_tpr_status' => rand(0, 1),
+                    'arahan_minit_oleh_ya_tpr_tarikh' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 15)) : null,
+                    'keputusan_siasatan_oleh_ya_tpr' => ['Tuduh', 'Tidak Tuduh', 'Siasatan Lanjut'][array_rand(['Tuduh', 'Tidak Tuduh', 'Siasatan Lanjut'])],
+                    'ulasan_keputusan_siasatan_tpr' => 'Siasatan telah dilakukan dengan teliti dan mengikut prosedur yang betul.',
+                    'ulasan_keseluruhan_pegawai_pemeriksa' => 'Kertas siasatan lengkap dan mengikut format yang ditetapkan.',
+
+                    // BAHAGIAN 4: Barang Kes
+                    'adakah_barang_kes_didaftarkan' => rand(0, 1),
+                    'no_daftar_barang_kes_am' => rand(0, 1) ? 'BK/AM/' . str_pad(rand(1, 999), 3, '0', STR_PAD_LEFT) . '/24' : null,
+                    'no_daftar_barang_kes_berharga' => rand(0, 1) ? 'BK/BH/' . str_pad(rand(1, 999), 3, '0', STR_PAD_LEFT) . '/24' : null,
+
+                    // BAHAGIAN 5: Dokumen Siasatan
+                    'status_id_siasatan_dikemaskini' => rand(0, 1),
+                    'status_rajah_kasar_tempat_kejadian' => rand(0, 1),
+                    'status_gambar_tempat_kejadian' => rand(0, 1),
+                    'status_gambar_barang_kes_am' => rand(0, 1),
+                    'status_gambar_barang_kes_berharga' => rand(0, 1),
+                    'status_gambar_orang_hilang' => rand(0, 1),
+
+                    // BAHAGIAN 6: Borang & Semakan
+                    'status_pem' => json_encode(['PEM 1', 'PEM 2']),
+                    'status_mps1' => rand(0, 1),
+                    'tarikh_mps1' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 60)) : null,
+                    'status_mps2' => rand(0, 1),
+                    'tarikh_mps2' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 55)) : null,
+                    'pemakluman_nur_alert_jsj_bawah_18_tahun' => ['Dibuat', 'Tidak Dibuat', 'Tidak Berkaitan'][array_rand(['Dibuat', 'Tidak Dibuat', 'Tidak Berkaitan'])],
+                    'rakaman_percakapan_orang_hilang' => ['Ada', 'Tiada', 'Tidak Berkaitan'][array_rand(['Ada', 'Tiada', 'Tidak Berkaitan'])],
+                    'laporan_polis_orang_hilang_dijumpai' => ['Dibuat', 'Tidak Dibuat', 'Tidak Berkaitan'][array_rand(['Dibuat', 'Tidak Dibuat', 'Tidak Berkaitan'])],
+                    'hebahan_media_massa' => rand(0, 1),
+                    'orang_hilang_dijumpai_mati_mengejut_bukan_jenayah' => rand(0, 1),
+                    'alasan_orang_hilang_dijumpai_mati_mengejut_bukan_jenayah' => rand(0, 1) ? 'Sakit kronik yang tidak diketahui' : null,
+                    'orang_hilang_dijumpai_mati_mengejut_jenayah' => rand(0, 1),
+                    'alasan_orang_hilang_dijumpai_mati_mengejut_jenayah' => rand(0, 1) ? 'Kes pembunuhan' : null,
+                    'semboyan_pemakluman_ke_kedutaan_bukan_warganegara' => rand(0, 1),
+                    'ulasan_keseluruhan_pegawai_pemeriksa_borang' => 'Borang siasatan lengkap dan telah diisi dengan betul.',
+
+                    // BAHAGIAN 7: Permohonan Laporan Agensi Luar (Updated with new fields)
+                    'status_permohonan_laporan_imigresen' => rand(0, 1),
+                    'tarikh_permohonan_laporan_imigresen' => rand(0, 1) ? Carbon::now()->subDays(rand(1, 30)) : null,
+                    // New fields added for BAHAGIAN 7
+                    'permohonan_laporan_permit_kerja' => rand(0, 1),
+                    'permohonan_laporan_agensi_pekerjaan' => rand(0, 1),
+                    'permohonan_status_kewarganegaraan' => rand(0, 1),
+
+                    // BAHAGIAN 8: Status Fail (Updated field types)
+                    'adakah_muka_surat_4_keputusan_kes_dicatat' => rand(0, 1),
+                    'adakah_ks_kus_fail_selesai' => ['KUS', 'FAIL', null][array_rand(['KUS', 'FAIL', null])], // String dropdown
+                    'keputusan_akhir_mahkamah' => json_encode([ // JSON array for multiple checkboxes
+                        ['Jatuh Hukum', 'NFA'],
+                        ['DNA', 'DNAA'], 
+                        ['KUS/SEMENTARA'],
+                        ['MASIH DALAM SIASATAN / OYDS GAGAL DIKESAN'],
+                        ['TERBENGKALAI/ TIADA TINDAKAN'],
+                        null
+                    ][array_rand([
+                        ['Jatuh Hukum', 'NFA'],
+                        ['DNA', 'DNAA'], 
+                        ['KUS/SEMENTARA'],
+                        ['MASIH DALAM SIASATAN / OYDS GAGAL DIKESAN'],
+                        ['TERBENGKALAI/ TIADA TINDAKAN'],
+                        null
+                    ])]),
+                    'ulasan_keseluruhan_pegawai_pemeriksa_fail' => 'Fail kertas siasatan telah lengkap dan disimpan mengikut prosedur yang ditetapkan.',
                 ]
             );
+        }
+
+        // 9. Seed Laporan Mati Mengejut Papers (5 records) - Enhanced with complete field structure matching edit.blade.php
+        // Clear existing LMM data first
+        LaporanMatiMengejut::truncate();
+        
+        for ($i = 1; $i <= 5; $i++) {
+            LaporanMatiMengejut::create([
+                'project_id' => $project->id,
+                'no_kertas_siasatan' => 'LMM/' . date('Y') . '/' . str_pad($i, 4, '0', STR_PAD_LEFT),
+                
+                // BAHAGIAN 1: Maklumat Asas (using actual migration field names)
+                'no_fail_lmm_sdr' => 'LMM-SDR-' . str_pad($i, 4, '0', STR_PAD_LEFT),
+                'no_repot_polis' => 'RP' . date('Y') . str_pad($i, 6, '0', STR_PAD_LEFT),
+                'pegawai_penyiasat' => 'Pegawai Penyiasat ' . $i,
+                'tarikh_laporan_polis_dibuka' => Carbon::now()->subDays(rand(30, 90)),
+                'seksyen' => 'Seksyen ' . rand(1, 10),
+
+                // BAHAGIAN 2: Status Edaran & Pemeriksaan
+                'pegawai_pemeriksa' => 'Pegawai Pemeriksa ' . $i,
+                'tarikh_edaran_minit_ks_pertama' => Carbon::now()->subDays(rand(25, 85)),
+                'tarikh_edaran_minit_ks_kedua' => Carbon::now()->subDays(rand(20, 80)),
+                'tarikh_edaran_minit_ks_sebelum_akhir' => Carbon::now()->subDays(rand(15, 75)),
+                'tarikh_edaran_minit_ks_akhir' => Carbon::now()->subDays(rand(10, 70)),
+                'adakah_ms_2_lmm_telah_disahkan_oleh_kpd' => (bool)rand(0, 1),
+                'adakah_lmm_telah_di_rujuk_kepada_ya_koroner' => (bool)rand(0, 1),
+                'keputusan_ya_koroner' => 'Keputusan koroner untuk kes ' . $i,
+                'tarikh_semboyan_pemeriksaan_jips_ke_daerah' => Carbon::now()->subDays(rand(5, 65)),
+                'tarikh_edaran_minit_fail_lmm_t_pertama' => Carbon::now()->subDays(rand(20, 60)),
+                'tarikh_edaran_minit_fail_lmm_t_kedua' => Carbon::now()->subDays(rand(15, 55)),
+                'tarikh_edaran_minit_fail_lmm_t_sebelum_minit_akhir' => Carbon::now()->subDays(rand(10, 50)),
+                'tarikh_edaran_minit_fail_lmm_t_akhir' => Carbon::now()->subDays(rand(5, 45)),
+
+                // BAHAGIAN 3: Arahan Minit
+                'arahan_minit_oleh_sio_status' => (bool)rand(0, 1),
+                'arahan_minit_oleh_sio_tarikh' => Carbon::now()->subDays(rand(15, 40)),
+                'arahan_minit_ketua_bahagian_status' => (bool)rand(0, 1),
+                'arahan_minit_ketua_bahagian_tarikh' => Carbon::now()->subDays(rand(10, 35)),
+                'arahan_minit_ketua_jabatan_status' => (bool)rand(0, 1),
+                'arahan_minit_ketua_jabatan_tarikh' => Carbon::now()->subDays(rand(5, 30)),
+                'arahan_minit_oleh_ya_tpr_status' => (bool)rand(0, 1),
+                'arahan_minit_oleh_ya_tpr_tarikh' => Carbon::now()->subDays(rand(1, 25)),
+
+                // BAHAGIAN 4: Borang RJ & Status
+                'status_rj2' => rand(0, 2), // 0=Tiada, 1=Ada, 2=Tidak Berkaitan
+                'tarikh_rj2' => rand(0, 1) ? Carbon::now()->subDays(rand(5, 20)) : null,
+                'status_rj2b' => rand(0, 2),
+                'tarikh_rj2b' => rand(0, 1) ? Carbon::now()->subDays(rand(5, 20)) : null,
+                'status_rj9' => rand(0, 2),
+                'tarikh_rj9' => rand(0, 1) ? Carbon::now()->subDays(rand(5, 20)) : null,
+                'status_rj99' => rand(0, 2),
+                'tarikh_rj99' => rand(0, 1) ? Carbon::now()->subDays(rand(5, 20)) : null,
+                'status_rj10a' => rand(0, 2),
+                'tarikh_rj10a' => rand(0, 1) ? Carbon::now()->subDays(rand(5, 20)) : null,
+                'status_rj10b' => rand(0, 2),
+                'tarikh_rj10b' => rand(0, 1) ? Carbon::now()->subDays(rand(5, 20)) : null,
+                
+                'status_semboyan_pemakluman_ke_kedutaan_bagi_kes_mati' => (bool)rand(0, 1),
+                'adakah_barang_kes_didaftarkan' => (bool)rand(0, 1),
+                'adakah_borang_serah_terima_pegawai_tangkapan_io' => (bool)rand(0, 1),
+                'adakah_borang_serah_terima_penyiasat_pemilik_saksi' => (bool)rand(0, 1),
+                'adakah_sijil_surat_kebenaran_ipd' => (bool)rand(0, 1),
+                'adakah_gambar_pelupusan' => (bool)rand(0, 1),
+                'status_id_siasatan_dikemaskini' => (bool)rand(0, 1),
+
+                // BAHAGIAN 5: Status Gambar
+                'status_rajah_kasar_tempat_kejadian' => (bool)rand(0, 1),
+                'status_gambar_tempat_kejadian' => (bool)rand(0, 1),
+                'status_gambar_post_mortem_mayat_di_hospital' => (bool)rand(0, 1),
+                'status_gambar_barang_kes_am' => (bool)rand(0, 1),
+                'status_gambar_barang_kes_berharga' => (bool)rand(0, 1),
+                'status_gambar_barang_kes_darah' => (bool)rand(0, 1),
+
+                // BAHAGIAN 6: Status PEM
+                'status_pem' => json_encode(['Dilepaskan', 'Disimpan']), // Multiple selection
+
+                // BAHAGIAN 7: Laporan-laporan
+                // Post Mortem
+                'status_permohonan_laporan_post_mortem_mayat' => (bool)rand(0, 1),
+                'tarikh_permohonan_laporan_post_mortem_mayat' => Carbon::now()->subDays(rand(10, 30)),
+                'status_laporan_penuh_bedah_siasat' => (bool)rand(0, 1),
+                'tarikh_laporan_penuh_bedah_siasat' => Carbon::now()->subDays(rand(5, 25)),
+                'keputusan_laporan_post_mortem' => 'Keputusan post mortem untuk kes ' . $i,
+
+                // Jabatan Kimia
+                'status_permohonan_laporan_jabatan_kimia' => (bool)rand(0, 1),
+                'tarikh_permohonan_laporan_jabatan_kimia' => Carbon::now()->subDays(rand(10, 30)),
+                'status_laporan_penuh_jabatan_kimia' => (bool)rand(0, 1),
+                'tarikh_laporan_penuh_jabatan_kimia' => Carbon::now()->subDays(rand(5, 25)),
+                'keputusan_laporan_jabatan_kimia' => 'Keputusan kimia untuk kes ' . $i,
+
+                // Jabatan Patalogi
+                'status_permohonan_laporan_jabatan_patalogi' => (bool)rand(0, 1),
+                'tarikh_permohonan_laporan_jabatan_patalogi' => Carbon::now()->subDays(rand(10, 30)),
+                'status_laporan_penuh_jabatan_patalogi' => (bool)rand(0, 1),
+                'tarikh_laporan_penuh_jabatan_patalogi' => Carbon::now()->subDays(rand(5, 25)),
+                'keputusan_laporan_jabatan_patalogi' => 'Keputusan patalogi untuk kes ' . $i,
+
+                // Imigresen - using the CORRECTED field names from migration
+                'tarikh_permohonan_laporan_imigresen' => Carbon::now()->subDays(rand(10, 30)),
+                'status_laporan_penuh_imigresen' => (bool)rand(0, 1),
+                'tarikh_laporan_penuh_imigresen' => Carbon::now()->subDays(rand(5, 25)),
+
+                // Updated Imigresen fields - simplified boolean fields only
+                'permohonan_laporan_pengesahan_masuk_keluar_malaysia' => (bool)rand(0, 1),
+                'permohonan_laporan_permit_kerja_di_malaysia' => (bool)rand(0, 1),
+                'permohonan_laporan_agensi_pekerjaan_di_malaysia' => (bool)rand(0, 1),
+                'permohonan_status_kewarganegaraan' => (bool)rand(0, 1),
+
+                'lain_lain_permohonan_laporan' => 'Lain-lain laporan untuk kes ' . $i,
+
+                // BAHAGIAN 8: Status Fail
+                'status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar' => (bool)rand(0, 1),
+                'status_barang_kes_arahan_tpr' => (bool)rand(0, 1),
+                'adakah_muka_surat_4_keputusan_kes_dicatat' => (bool)rand(0, 1),
+                'adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan' => (bool)rand(0, 1),
+                'adakah_ks_kus_fail_selesai' => ['KUS', 'FAIL'][rand(0, 1)],
+                'keputusan_akhir_mahkamah' => json_encode(['Bunuh diri', 'Mati mengejut']),
+                'ulasan_keseluruhan_pegawai_pemeriksa_fail' => 'Ulasan keseluruhan untuk kes ' . $i,
+
+                // System generated fields
+                'edar_lebih_24_jam_status' => rand(0, 1) ? 'Ya' : 'Tidak',
+                'terbengkalai_3_bulan_status' => rand(0, 1) ? 'Ya' : 'Tidak',
+                'baru_kemaskini_status' => rand(0, 1) ? 'Ya' : 'Tidak',
+
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ]);
         }
     }
 }

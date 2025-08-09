@@ -58,12 +58,17 @@ class OrangHilang extends Model
         'orang_hilang_dijumpai_mati_mengejut_jenayah' => 'boolean',
         'semboyan_pemakluman_ke_kedutaan_bukan_warganegara' => 'boolean',
         'status_permohonan_laporan_imigresen' => 'boolean',
-        'status_laporan_penuh_imigresen' => 'boolean',
+        // New BAHAGIAN 7 fields
+        'permohonan_laporan_permit_kerja' => 'boolean',
+        'permohonan_laporan_agensi_pekerjaan' => 'boolean',
+        'permohonan_status_kewarganegaraan' => 'boolean',
         'adakah_muka_surat_4_keputusan_kes_dicatat' => 'boolean',
-        'adakah_ks_kus_fail_selesai' => 'boolean',
+        // Updated BAHAGIAN 8 field types
+        // 'adakah_ks_kus_fail_selesai' is now string (KUS/FAIL dropdown), not boolean
         
         // JSON fields
         'status_pem' => 'array',
+        'keputusan_akhir_mahkamah' => 'array', // Changed from string to array for multiple checkboxes
         
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
@@ -101,9 +106,12 @@ class OrangHilang extends Model
         'orang_hilang_dijumpai_mati_mengejut_jenayah_text',
         'semboyan_pemakluman_ke_kedutaan_bukan_warganegara_text',
         'status_permohonan_laporan_imigresen_text',
-        'status_laporan_penuh_imigresen_text',
+        // New BAHAGIAN 7 field text versions
+        'permohonan_laporan_permit_kerja_text',
+        'permohonan_laporan_agensi_pekerjaan_text',
+        'permohonan_status_kewarganegaraan_text',
         'adakah_muka_surat_4_keputusan_kes_dicatat_text',
-        'adakah_ks_kus_fail_selesai_text',
+        // Updated BAHAGIAN 8 field (adakah_ks_kus_fail_selesai is now string, no boolean text needed)
     ];
 
     /**
@@ -277,13 +285,18 @@ public function getTerbengkalaiStatusDcAttribute(): string
     public function getStatusPermohonanLaporanImigresenTextAttribute(): string {
         return $this->formatBooleanToMalay($this->status_permohonan_laporan_imigresen);
     }
-    public function getStatusLaporanPenuhImigresenTextAttribute(): string {
-        return $this->formatBooleanToMalay($this->status_laporan_penuh_imigresen, 'Diterima', 'Tidak');
+    // New BAHAGIAN 7 field text accessors
+    public function getPermohonanLaporanPermitKerjaTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->permohonan_laporan_permit_kerja, 'Ada', 'Tiada');
+    }
+    public function getPermohonanLaporanAgensiPekerjaanTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->permohonan_laporan_agensi_pekerjaan, 'Ada', 'Tiada');
+    }
+    public function getPermohonanStatusKewarganegaraanTextAttribute(): string {
+        return $this->formatBooleanToMalay($this->permohonan_status_kewarganegaraan, 'Ada', 'Tiada');
     }
     public function getAdakahMukaSurat4KeputusanKesDicatatTextAttribute(): string {
         return $this->formatBooleanToMalay($this->adakah_muka_surat_4_keputusan_kes_dicatat);
     }
-    public function getAdakahKsKusFailSelesaiTextAttribute(): string {
-        return $this->formatBooleanToMalay($this->adakah_ks_kus_fail_selesai);
-    }
+    // Note: adakah_ks_kus_fail_selesai is now a string field (KUS/FAIL), so no boolean text accessor needed
 }

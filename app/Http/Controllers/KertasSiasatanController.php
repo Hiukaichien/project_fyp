@@ -128,6 +128,68 @@ class KertasSiasatanController extends Controller
             $data[$mainField] = $value ?? null;
         }
     }
+
+    
+    // --- START: SPECIAL HANDLING FOR ORANG HILANG JSON ARRAYS ---
+    if ($paperType === 'OrangHilang') {
+        // Handle JSON array fields that come from checkboxes
+        $jsonArrayFields = [
+            'status_pem',
+            'keputusan_akhir_mahkamah'
+        ];
+
+        foreach ($jsonArrayFields as $field) {
+            if ($request->has($field)) {
+                // Get the array of selected values from checkboxes
+                $selectedValues = $request->input($field, []);
+                // Ensure it's an array and filter out empty values
+                $data[$field] = is_array($selectedValues) ? array_filter($selectedValues) : [];
+            } else {
+                // If no checkboxes were selected, set as empty array
+                $data[$field] = [];
+            }
+        }
+    }
+
+    // --- START: SPECIAL HANDLING FOR LAPORAN MATI MENGEJUT JSON ARRAYS ---
+    if ($paperType === 'LaporanMatiMengejut') {
+        // Handle JSON array fields that come from checkboxes
+        $jsonArrayFields = [
+            'status_pem',
+            'keputusan_akhir_mahkamah'
+        ];
+
+        foreach ($jsonArrayFields as $field) {
+            if ($request->has($field)) {
+                // Get the array of selected values from checkboxes
+                $selectedValues = $request->input($field, []);
+                // Ensure it's an array and filter out empty values
+                $data[$field] = is_array($selectedValues) ? array_filter($selectedValues) : [];
+            } else {
+                // If no checkboxes were selected, set as empty array
+                $data[$field] = [];
+            }
+        }
+
+        // Handle three-state RJ fields (0=Tiada, 1=Ada, 2=Tidak Berkaitan)
+        $threeStateFields = [
+            'status_rj9',
+            'status_rj99', 
+            'status_rj10a',
+            'status_rj10b'
+        ];
+
+        foreach ($threeStateFields as $field) {
+            if ($request->has($field)) {
+                $value = $request->input($field);
+                // Ensure the value is a valid integer (0, 1, or 2)
+                $data[$field] = in_array($value, ['0', '1', '2']) ? (int)$value : 0;
+            } else {
+                // Default to 0 (Tiada) if not provided
+                $data[$field] = 0;
+            }
+        }
+    }
         // --- END: SPECIAL HANDLING ---
 
 

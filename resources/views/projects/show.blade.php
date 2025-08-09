@@ -375,8 +375,8 @@
         'status_mps2' => 'Status MPS2',
         'tarikh_mps2' => 'Tarikh MPS2',
         'pemakluman_nur_alert_jsj_bawah_18_tahun' => 'Pemakluman NUR-Alert JSJ (Bawah 18 Tahun)',
-        'rakaman_percakapan_orang_hilang' => 'Rakaman Percakapan Orang Hilang',
-        'laporan_polis_orang_hilang_dijumpai' => 'Laporan Polis Orang Hilang Dijumpai',
+        'rakaman_percakapan_orang_hilang' => 'Rakaman Percakapan Orang Hilang(OH) Dijumpai Semula',
+        'laporan_polis_orang_hilang_dijumpai' => 'Laporan Polis Orang Hilang(OH) Dijumpai Semula',
         'hebahan_media_massa' => 'Hebahan Media Massa',
         'orang_hilang_dijumpai_mati_mengejut_bukan_jenayah' => 'Orang Hilang Dijumpai (Mati Mengejut Bukan Jenayah)',
         'alasan_orang_hilang_dijumpai_mati_mengejut_bukan_jenayah' => 'Alasan Mati Mengejut Bukan Jenayah',
@@ -385,15 +385,16 @@
         'semboyan_pemakluman_ke_kedutaan_bukan_warganegara' => 'Semboyan Pemakluman ke Kedutaan (Bukan Warganegara)',
         'ulasan_keseluruhan_pegawai_pemeriksa_borang' => 'Ulasan Keseluruhan Pegawai Pemeriksa (Borang)',
         
-        // BAHAGIAN 7: Permohonan Laporan Agensi Luar
-        'status_permohonan_laporan_imigresen' => 'Permohonan Laporan Imigresen',
-        'tarikh_permohonan_laporan_imigresen' => 'Tarikh Permohonan Laporan Imigresen',
-        'status_laporan_penuh_imigresen' => 'Status Laporan Penuh Imigresen',
-        'tarikh_laporan_penuh_imigresen' => 'Tarikh Laporan Penuh Imigresen',
+        // BAHAGIAN 7: Imigresen
+        'status_permohonan_laporan_imigresen' => 'Permohonan Laporan Pengesahan Masuk / Keluar Malaysia',
+        'tarikh_permohonan_laporan_imigresen' => 'Tarikh Permohonan Laporan Pengesahan Masuk / Keluar Malaysia',
+        'permohonan_laporan_permit_kerja' => 'Permohonan Laporan Permit Kerja di Malaysia',
+        'permohonan_laporan_agensi_pekerjaan' => 'Permohonan Laporan Agensi Pekerjaan di Malaysia',
+        'permohonan_status_kewarganegaraan' => 'Permohonan Status Kewarganegaraan',
         
         // BAHAGIAN 8: Status Fail
         'adakah_muka_surat_4_keputusan_kes_dicatat' => 'M/S 4 - Keputusan Kes Dicatat',
-        'adakah_ks_kus_fail_selesai' => 'KS KUS/FAIL Selesai',
+        'adakah_ks_kus_fail_selesai' => 'KS Telah di KUS/FAIL',
         'keputusan_akhir_mahkamah' => 'Keputusan Akhir Mahkamah',
         'ulasan_keseluruhan_pegawai_pemeriksa_fail' => 'Ulasan Keseluruhan Pegawai Pemeriksa (Fail)',
 
@@ -411,6 +412,11 @@
             'pegawai_penyiasat' => 'Pegawai Penyiasat',
             'tarikh_laporan_polis_dibuka' => 'Tarikh Laporan Polis Dibuka',
             'seksyen' => 'Seksyen',
+            
+            // New LMM fields
+            'adakah_ms_2_lmm_telah_disahkan_oleh_kpd' => 'M/S 2 LMM Disahkan KPD',
+            'adakah_lmm_telah_di_rujuk_kepada_ya_koroner' => 'LMM Rujuk Kepada YA Koroner',
+            'keputusan_ya_koroner' => 'Keputusan YA Koroner',
 
             // BAHAGIAN 2: Pemeriksaan & Status
             'pegawai_pemeriksa' => 'Pegawai Pemeriksa',
@@ -427,7 +433,6 @@
             'tarikh_edaran_minit_fail_lmm_t_kedua' => 'Tarikh Minit LMM(T) Kedua',
             'tarikh_edaran_minit_fail_lmm_t_sebelum_minit_akhir' => 'Tarikh Minit LMM(T) Sebelum Akhir',
             'tarikh_edaran_minit_fail_lmm_t_akhir' => 'Tarikh Minit LMM(T) Akhir',
-            'fail_lmm_bahagian_pengurusan_pada_muka_surat_2' => 'Fail LMM Bhg. Pengurusan M/S 2',
 
             // BAHAGIAN 3: Arahan & Keputusan
             'arahan_minit_oleh_sio_status' => 'Arahan Minit SIO',
@@ -481,6 +486,15 @@
             'tarikh_rj2' => 'Tarikh RJ2',
             'status_rj2b' => 'Status RJ2B',
             'tarikh_rj2b' => 'Tarikh RJ2B',
+            'status_rj9' => 'Status RJ9',
+            'tarikh_rj9' => 'Tarikh RJ9',
+            'status_rj99' => 'Status RJ99',
+            'tarikh_rj99' => 'Tarikh RJ99',
+            'status_rj10a' => 'Status RJ10A',
+            'tarikh_rj10a' => 'Tarikh RJ10A',
+            'status_rj10b' => 'Status RJ10B',
+            'tarikh_rj10b' => 'Tarikh RJ10B',
+            'lain_lain_rj_dikesan' => 'Lain-lain RJ Dikesan',
             'status_semboyan_pemakluman_ke_kedutaan_bagi_kes_mati' => 'Semboyan Pemakluman Kedutaan',
             'ulasan_keseluruhan_pegawai_pemeriksa_borang' => 'Ulasan Pegawai Pemeriksa (Borang)',
 
@@ -500,10 +514,16 @@
             'status_laporan_penuh_jabatan_patalogi' => 'Laporan Penuh Jabatan Patalogi',
             'tarikh_laporan_penuh_jabatan_patalogi' => 'Tarikh Laporan Penuh Jabatan Patalogi',
             'keputusan_laporan_jabatan_patalogi' => 'Keputusan Laporan Patalogi',
-            'status_permohonan_laporan_imigresen' => 'Permohonan Laporan Imigresen',
-            'tarikh_permohonan_laporan_imigresen' => 'Tarikh Permohonan Imigresen',
+            'permohonan_laporan_pengesahan_masuk_keluar_malaysia' => 'Permohonan Laporan Pengesahan Masuk/Keluar Malaysia',
+            'tarikh_permohonan_laporan_imigresen' => 'Tarikh Permohonan Laporan Pengesahan Masuk/Keluar Malaysia',
             'status_laporan_penuh_imigresen' => 'Laporan Penuh Imigresen',
             'tarikh_laporan_penuh_imigresen' => 'Tarikh Laporan Penuh Imigresen',
+            
+            // New simplified Imigresen fields
+            'permohonan_laporan_permit_kerja_di_malaysia' => 'Permohonan Laporan Permit Kerja Di Malaysia',
+            'permohonan_laporan_agensi_pekerjaan_di_malaysia' => 'Permohonan Laporan Agensi Pekerjaan Di Malaysia',
+            'permohonan_status_kewarganegaraan' => 'Permohonan Status Kewarganegaraan',
+            
             'lain_lain_permohonan_laporan' => 'Lain-lain Permohonan Laporan',
 
             // BAHAGIAN 8: Status Fail

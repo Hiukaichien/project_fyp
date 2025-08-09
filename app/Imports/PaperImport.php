@@ -805,11 +805,6 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
                 'arahan_tuduh_oleh_ya_tpr' => 'arahan_tuduh_oleh_ya_tpr',
                 'ulasan_keputusan_siasatan_tpr' => 'ulasan_keputusan_siasatan_tpr',
                 'ulasan_keseluruhan_pegawai_pemeriksa' => 'ulasan_keseluruhan_pegawai_pemeriksa',
-                
-                // BAHAGIAN 3: Fail L.M.M (T)
-                'adakah_ms2_lmm_t_disahkan_oleh_kpd' => 'adakah_ms2_lmm_t_disahkan_oleh_kpd',
-                'adakah_lmm_t_dirujuk_kepada_ya_koroner' => 'adakah_lmm_t_dirujuk_kepada_ya_koroner',
-                'keputusan_ya_koroner_lmm_t' => 'keputusan_ya_koroner_lmm_t',
 
                 // BAHAGIAN 4: Barang Kes
                 'adakah_barang_kes_didaftarkan' => 'adakah_barang_kes_didaftarkan',
@@ -841,11 +836,12 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
                 'semboyan_pemakluman_ke_kedutaan_bukan_warganegara' => 'semboyan_pemakluman_ke_kedutaan_bukan_warganegara',
                 'ulasan_keseluruhan_pegawai_pemeriksa_borang' => 'ulasan_keseluruhan_pegawai_pemeriksa_borang',
 
-                // BAHAGIAN 7: Permohonan Laporan Agensi Luar
+                // BAHAGIAN 7: Imigresen
+                'permohonan_laporan_permit_kerja' => 'permohonan_laporan_permit_kerja',
+                'permohonan_laporan_agensi_pekerjaan' => 'permohonan_laporan_agensi_pekerjaan',
+                'permohonan_status_kewarganegaraan' => 'permohonan_status_kewarganegaraan',
                 'status_permohonan_laporan_imigresen' => 'status_permohonan_laporan_imigresen',
                 'tarikh_permohonan_laporan_imigresen' => 'tarikh_permohonan_laporan_imigresen',
-                'status_laporan_penuh_imigresen' => 'status_laporan_penuh_imigresen',
-                'tarikh_laporan_penuh_imigresen' => 'tarikh_laporan_penuh_imigresen',
 
                 // BAHAGIAN 8: Status Fail
                 'adakah_muka_surat_4_keputusan_kes_dicatat' => 'adakah_muka_surat_4_keputusan_kes_dicatat',
@@ -865,6 +861,10 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
                 'pegawai_penyiasat' => 'pegawai_penyiasat',
                 'tarikh_laporan_polis_dibuka' => 'tarikh_laporan_polis_dibuka',
                 'seksyen' => 'seksyen',
+                // New LMM fields
+                'adakah_ms_2_lmm_telah_disahkan_oleh_kpd' => 'adakah_ms_2_lmm_telah_disahkan_oleh_kpd',
+                'adakah_lmm_telah_di_rujuk_kepada_ya_koroner' => 'adakah_lmm_telah_di_rujuk_kepada_ya_koroner',
+                'keputusan_ya_koroner' => 'keputusan_ya_koroner',
 
                 // BAHAGIAN 2: Pemeriksaan & Status
                 'pegawai_pemeriksa' => 'pegawai_pemeriksa',
@@ -877,7 +877,6 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
                 'tarikh_edaran_minit_fail_lmm_t_kedua' => 'tarikh_edaran_minit_fail_lmm_t_kedua',
                 'tarikh_edaran_minit_fail_lmm_t_sebelum_minit_akhir' => 'tarikh_edaran_minit_fail_lmm_t_sebelum_minit_akhir',
                 'tarikh_edaran_minit_fail_lmm_t_akhir' => 'tarikh_edaran_minit_fail_lmm_t_akhir',
-                'fail_lmm_bahagian_pengurusan_pada_muka_surat_2' => 'fail_lmm_bahagian_pengurusan_pada_muka_surat_2',
 
                 // BAHAGIAN 3: Arahan & Keputusan
                 'arahan_minit_oleh_sio_status' => 'arahan_minit_oleh_sio_status',
@@ -931,6 +930,15 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
                 'tarikh_rj2' => 'tarikh_rj2',
                 'status_rj2b' => 'status_rj2b',
                 'tarikh_rj2b' => 'tarikh_rj2b',
+                'status_rj9' => 'status_rj9',
+                'tarikh_rj9' => 'tarikh_rj9',
+                'status_rj99' => 'status_rj99',
+                'tarikh_rj99' => 'tarikh_rj99',
+                'status_rj10a' => 'status_rj10a',
+                'tarikh_rj10a' => 'tarikh_rj10a',
+                'status_rj10b' => 'status_rj10b',
+                'tarikh_rj10b' => 'tarikh_rj10b',
+                'lain_lain_rj_dikesan' => 'lain_lain_rj_dikesan',
                 'status_semboyan_pemakluman_ke_kedutaan_bagi_kes_mati' => 'status_semboyan_pemakluman_ke_kedutaan_bagi_kes_mati',
                 'ulasan_keseluruhan_pegawai_pemeriksa_borang' => 'ulasan_keseluruhan_pegawai_pemeriksa_borang',
 
@@ -950,10 +958,16 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
                 'status_laporan_penuh_jabatan_patalogi' => 'status_laporan_penuh_jabatan_patalogi',
                 'tarikh_laporan_penuh_jabatan_patalogi' => 'tarikh_laporan_penuh_jabatan_patalogi',
                 'keputusan_laporan_jabatan_patalogi' => 'keputusan_laporan_jabatan_patalogi',
-                'status_permohonan_laporan_imigresen' => 'status_permohonan_laporan_imigresen',
                 'tarikh_permohonan_laporan_imigresen' => 'tarikh_permohonan_laporan_imigresen',
                 'status_laporan_penuh_imigresen' => 'status_laporan_penuh_imigresen',
                 'tarikh_laporan_penuh_imigresen' => 'tarikh_laporan_penuh_imigresen',
+                
+                // New simplified Imigresen fields
+                'permohonan_laporan_pengesahan_masuk_keluar_malaysia' => 'permohonan_laporan_pengesahan_masuk_keluar_malaysia',
+                'permohonan_laporan_permit_kerja_di_malaysia' => 'permohonan_laporan_permit_kerja_di_malaysia',
+                'permohonan_laporan_agensi_pekerjaan_di_malaysia' => 'permohonan_laporan_agensi_pekerjaan_di_malaysia',
+                'permohonan_status_kewarganegaraan' => 'permohonan_status_kewarganegaraan',
+                
                 'lain_lain_permohonan_laporan' => 'lain_lain_permohonan_laporan',
 
                 // BAHAGIAN 8: Status Fail
@@ -1075,17 +1089,23 @@ public function collection(Collection $rows)
 
                 // Transform the value based on its expected cast type
                 // The transform functions will handle empty/null values correctly
-                switch ($castType) {
-                    case 'date:Y-m-d': case 'date': case 'datetime':
-                        $dataForDb[$dbColumn] = $this->transformDate($value); break;
-                    case 'boolean':
-                        $dataForDb[$dbColumn] = $this->transformBoolean($value); break;
-                    case 'decimal:2':
-                        $dataForDb[$dbColumn] = $this->transformDecimal($value); break;
-                    case 'array': case 'json':
-                        $dataForDb[$dbColumn] = $this->transformJsonArray($value); break;
-                    default:
-                        $dataForDb[$dbColumn] = is_string($value) ? trim($value) : $value; break;
+                
+                // Special handling for three-state RJ fields
+                if (in_array($dbColumn, ['status_rj9', 'status_rj99', 'status_rj10a', 'status_rj10b'])) {
+                    $dataForDb[$dbColumn] = $this->transformThreeStateField($value);
+                } else {
+                    switch ($castType) {
+                        case 'date:Y-m-d': case 'date': case 'datetime':
+                            $dataForDb[$dbColumn] = $this->transformDate($value); break;
+                        case 'boolean':
+                            $dataForDb[$dbColumn] = $this->transformBoolean($value); break;
+                        case 'decimal:2':
+                            $dataForDb[$dbColumn] = $this->transformDecimal($value); break;
+                        case 'array': case 'json':
+                            $dataForDb[$dbColumn] = $this->transformJsonArray($value); break;
+                        default:
+                            $dataForDb[$dbColumn] = is_string($value) ? trim($value) : $value; break;
+                    }
                 }
             }
         }
@@ -1330,6 +1350,30 @@ private function transformDate($value, $format = 'Y-m-d')
         return null;
     }
 
+    
+    /**
+     * Transform three-state field values for RJ fields
+     * Handles: 0 = Tiada/Tidak Cipta, 1 = Ada/Cipta, 2 = Tidak Berkaitan
+     */
+    private function transformThreeStateField($value)
+    {
+        if (is_null($value) || $value === '') return 0; // Default to Tiada
+        
+        $value = is_string($value) ? trim(strtolower($value)) : $value;
+        
+        // Handle "Ada/Cipta" variants (value = 1)
+        if (in_array($value, ['ada', 'cipta', 'ya', 'yes', '1', 1, 'ada/cipta', 'dicipta'])) {
+            return 1;
+        }
+        
+        // Handle "Tidak Berkaitan" variants (value = 2)
+        if (in_array($value, ['tidak berkaitan', 'tidak_berkaitan', 'tidak-berkaitan', '2', 2, 'n/a', 'na'])) {
+            return 2;
+        }
+        
+        // Default to "Tiada/Tidak Cipta" (value = 0)
+        return 0;
+    }
     private function valuesAreDifferent($oldValue, $newValue)
     {
         // Handle null comparisons

@@ -106,13 +106,16 @@ return new class extends Migration
             // Imigresen
             $table->boolean('status_permohonan_laporan_imigresen')->nullable();
             $table->date('tarikh_permohonan_laporan_imigresen')->nullable();
-            $table->boolean('status_laporan_penuh_imigresen')->nullable();
-            $table->date('tarikh_laporan_penuh_imigresen')->nullable();
+            
+            // New fields added for BAHAGIAN 7
+            $table->boolean('permohonan_laporan_permit_kerja')->nullable();
+            $table->boolean('permohonan_laporan_agensi_pekerjaan')->nullable();
+            $table->boolean('permohonan_status_kewarganegaraan')->nullable();
 
             // == BAHAGIAN 8: Status Fail ==
             $table->boolean('adakah_muka_surat_4_keputusan_kes_dicatat')->nullable();
-            $table->boolean('adakah_ks_kus_fail_selesai')->nullable();
-            $table->string('keputusan_akhir_mahkamah')->nullable();
+            $table->string('adakah_ks_kus_fail_selesai')->nullable(); // Changed from boolean to string for KUS/FAIL dropdown
+            $table->json('keputusan_akhir_mahkamah')->nullable(); // Changed from string to json for multiple checkboxes
             $table->text('ulasan_keseluruhan_pegawai_pemeriksa_fail')->nullable();
 
             $table->timestamps();

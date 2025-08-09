@@ -267,11 +267,11 @@
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->pemakluman_nur_alert_jsj_bawah_18_tahun ?? '-' }}</dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">Rakaman Percakapan Orang Hilang</dt>
+                            <dt class="text-sm font-medium text-gray-500">Rakaman Percakapan Orang Hilang (OH) Dijumpai Semula</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->rakaman_percakapan_orang_hilang ?? '-' }}</dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">Laporan Polis Orang Hilang Dijumpai</dt>
+                            <dt class="text-sm font-medium text-gray-500">Laporan Polis Orang Hilang (OH) Dijumpai Semula</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->laporan_polis_orang_hilang_dijumpai ?? '-' }}</dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -316,7 +316,7 @@
                 <div class="border-t border-gray-200">
                     <dl class="sm:divide-y sm:divide-gray-200">
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">Permohonan Laporan Imigresen</dt>
+                            <dt class="text-sm font-medium text-gray-500">Permohonan Laporan Pengesahan Masuk / Keluar Malaysia</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                 {{ $paper->status_permohonan_laporan_imigresen ? 'Ada' : 'Tiada' }}
                                 @if($paper->tarikh_permohonan_laporan_imigresen)
@@ -325,13 +325,16 @@
                             </dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">Laporan Penuh Imigresen</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                {{ $paper->status_laporan_penuh_imigresen ? 'Ada' : 'Tiada' }}
-                                @if($paper->tarikh_laporan_penuh_imigresen)
-                                    ({{ optional($paper->tarikh_laporan_penuh_imigresen)->format('d/m/Y') }})
-                                @endif
-                            </dd>
+                            <dt class="text-sm font-medium text-gray-500">Permohonan Laporan Permit Kerja di Malaysia</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->permohonan_laporan_permit_kerja ? 'Ada' : 'Tiada' }}</dd>
+                        </div>
+                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt class="text-sm font-medium text-gray-500">Permohonan Laporan Agensi Pekerjaan di Malaysia</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->permohonan_laporan_agensi_pekerjaan ? 'Ada' : 'Tiada' }}</dd>
+                        </div>
+                        <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt class="text-sm font-medium text-gray-500">Permohonan Status Kewarganegaraan</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->permohonan_status_kewarganegaraan ? 'Ada' : 'Tiada' }}</dd>
                         </div>
                     </dl>
                 </div>
@@ -350,11 +353,17 @@
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">KS Telah di KUS/FAIL</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->adakah_ks_kus_fail_selesai ? 'Ya' : 'Tidak' }}</dd>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->adakah_ks_kus_fail_selesai ?? '-' }}</dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">Keputusan Akhir Mahkamah</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->keputusan_akhir_mahkamah ?? '-' }}</dd>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                @if($paper->keputusan_akhir_mahkamah)
+                                    {{ is_array($paper->keputusan_akhir_mahkamah) ? implode(', ', $paper->keputusan_akhir_mahkamah) : $paper->keputusan_akhir_mahkamah }}
+                                @else
+                                    -
+                                @endif
+                            </dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">Ulasan Keseluruhan Pegawai Pemeriksa (Fail)</dt>
