@@ -731,9 +731,18 @@
         
         // BAHAGIAN 6: Borang & Semakan
         'status_pem' => 'Borang PEM',
+        'status_rj2' => 'Status RJ2',
+        'tarikh_rj2' => 'Tarikh RJ2',
+        'status_rj2b' => 'Status RJ2B',
+        'tarikh_rj2b' => 'Tarikh RJ2B',
+        'status_rj9' => 'Status RJ9',
+        'tarikh_rj9' => 'Tarikh RJ9',
+        'status_rj99' => 'Status RJ99',
+        'tarikh_rj99' => 'Tarikh RJ99',
+        'status_rj10a' => 'Status RJ10A',
+        'tarikh_rj10a' => 'Tarikh RJ10A',
         'status_rj10b' => 'Status RJ10B',
         'tarikh_rj10b' => 'Tarikh RJ10B',
-        'lain_lain_rj_dikesan' => 'Lain-lain RJ Dikesan',
         'status_saman_pdrm_s_257' => 'Status Saman PDRM S.257',
         'no_saman_pdrm_s_257' => 'No Saman PDRM S.257',
         'status_saman_pdrm_s_167' => 'Status Saman PDRM S.167',
@@ -753,6 +762,14 @@
         'tarikh_permohonan_laporan_jkjr' => 'Tarikh Permohonan JKJR',
         'status_laporan_penuh_jkjr' => 'Laporan Penuh JKJR',
         'tarikh_laporan_penuh_jkjr' => 'Tarikh Laporan Penuh JKJR',
+        'status_permohonan_laporan_puspakom' => 'Permohonan Laporan PUSPAKOM',
+        'tarikh_permohonan_laporan_puspakom' => 'Tarikh Permohonan PUSPAKOM',
+        'status_laporan_penuh_puspakom' => 'Laporan Penuh PUSPAKOM',
+        'tarikh_laporan_penuh_puspakom' => 'Tarikh Laporan Penuh PUSPAKOM',
+        'status_permohonan_laporan_hospital' => 'Permohonan Laporan HOSPITAL',
+        'tarikh_permohonan_laporan_hospital' => 'Tarikh Permohonan HOSPITAL',
+        'status_laporan_penuh_hospital' => 'Laporan Penuh HOSPITAL',
+        'tarikh_laporan_penuh_hospital' => 'Tarikh Laporan Penuh HOSPITAL',
         'lain_lain_permohonan_laporan' => 'Lain-lain Permohonan Laporan',
         
         // BAHAGIAN 8: Status Fail
@@ -2230,6 +2247,8 @@
         ];
         
         $lainLainFields = [ 'lain_lain_permohonan_laporan' ];
+
+        $jsonFields = [ 'keputusan_akhir_mahkamah' ]; 
         
         foreach($trafikSeksyenColumns as $column => $label) {
             $columnConfig = [
@@ -2256,6 +2275,21 @@
         return 'Lain-lain ; ' + data;
     };
 
+    const jsonRenderFunction = function(data, type, row) {
+        if (data === null || data === undefined) return "-";
+        try {
+            // Attempt to parse the data as JSON
+            const parsedData = JSON.parse(data);
+            if (Array.isArray(parsedData)) {
+                // If it's an array, join elements with a comma, or return "-" if empty
+                return parsedData.join(", ") || "-";
+            }
+        } catch (e) { 
+            // If it's not valid JSON, just return the data as is
+        }
+        return data || "-";
+    };
+    
     // *** FIX STARTS HERE: Use the complete rendering logic ***
     const combinedRenderFunction = function(data, type, row, meta) {
         if (!data || data === '-') return '-';

@@ -715,9 +715,22 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
 
                 // BAHAGIAN 6: Borang & Semakan
                 'status_pem' => 'status_pem',
+                
+                // RJ Fields - Added as per client requirements
+                'status_rj2' => 'status_rj2',
+                'tarikh_rj2' => 'tarikh_rj2',
+                'status_rj2b' => 'status_rj2b',
+                'tarikh_rj2b' => 'tarikh_rj2b',
+                'status_rj9' => 'status_rj9',
+                'tarikh_rj9' => 'tarikh_rj9',
+                'status_rj99' => 'status_rj99',
+                'tarikh_rj99' => 'tarikh_rj99',
+                'status_rj10a' => 'status_rj10a',
+                'tarikh_rj10a' => 'tarikh_rj10a',
+                
                 'status_rj10b' => 'status_rj10b',
                 'tarikh_rj10b' => 'tarikh_rj10b',
-                'lain_lain_rj_dikesan' => 'lain_lain_rj_dikesan',
+                // Note: "lain_lain_rj_dikesan" removed as per client requirements
                 'status_saman_pdrm_s_257' => 'status_saman_pdrm_s_257',
                 'no_saman_pdrm_s_257' => 'no_saman_pdrm_s_257',
                 'status_saman_pdrm_s_167' => 'status_saman_pdrm_s_167',
@@ -737,6 +750,19 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
                 'tarikh_permohonan_laporan_jkjr' => 'tarikh_permohonan_laporan_jkjr',
                 'status_laporan_penuh_jkjr' => 'status_laporan_penuh_jkjr',
                 'tarikh_laporan_penuh_jkjr' => 'tarikh_laporan_penuh_jkjr',
+                
+                // PUSPAKOM - Added as per client requirements
+                'status_permohonan_laporan_puspakom' => 'status_permohonan_laporan_puspakom',
+                'tarikh_permohonan_laporan_puspakom' => 'tarikh_permohonan_laporan_puspakom',
+                'status_laporan_penuh_puspakom' => 'status_laporan_penuh_puspakom',
+                'tarikh_laporan_penuh_puspakom' => 'tarikh_laporan_penuh_puspakom',
+                
+                // HOSPITAL - Added as per client requirements
+                'status_permohonan_laporan_hospital' => 'status_permohonan_laporan_hospital',
+                'tarikh_permohonan_laporan_hospital' => 'tarikh_permohonan_laporan_hospital',
+                'status_laporan_penuh_hospital' => 'status_laporan_penuh_hospital',
+                'tarikh_laporan_penuh_hospital' => 'tarikh_laporan_penuh_hospital',
+                
                 'lain_lain_permohonan_laporan' => 'lain_lain_permohonan_laporan',
 
                 // BAHAGIAN 8: Status Fail
