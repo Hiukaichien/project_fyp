@@ -164,7 +164,7 @@ class DatabaseSeeder extends Seeder
                     'adakah_borang_serah_terima_pegawai_tangkapan' => 'Ada Dilampirkan',
                     // OK: These columns are STRING and BOOLEAN
                     'adakah_borang_serah_terima_pemilik_saksi' => 'Ada Dilampirkan',
-                    'adakah_sijil_surat_kebenaran_ipo' => rand(0, 1),
+                    'adakah_sijil_surat_kebenaran_ipd' => rand(0, 2),
                     'adakah_gambar_pelupusan' => 'Ada Dilampirkan',
                     'status_saman_pdrm_s_257' => rand(0, 1),
                     'no_saman_pdrm_s_257' => rand(0, 1) ? 'S257/' . str_pad(rand(1000, 9999), 4, '0', STR_PAD_LEFT) . '/24' : null,

@@ -30,6 +30,19 @@
                     return $booleanValue ? "<span class='px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800'>{$trueText}</span>" : "<span class='px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800'>{$falseText}</span>";
                 }
 
+                function show_triple_badge($value, $trueText = 'Ya', $falseText = 'Tidak', $neutralText = 'Tidak Berkaitan')
+                {
+                    if (is_null($value))
+                        return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">-</span>';
+                    
+                    if ($value == '2' || $value === 2)
+                        return "<span class='px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800'>{$neutralText}</span>";
+                    
+                    // Convert potential 0/1 strings to boolean for consistent display
+                    $booleanValue = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+                    return $booleanValue ? "<span class='px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800'>{$trueText}</span>" : "<span class='px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800'>{$falseText}</span>";
+                }
+
                 function show_status_and_date($status, $date = null, $trueText = 'Ada', $falseText = 'Tiada')
                 {
                     // Convert potential 0/1 strings to boolean for consistent display
@@ -382,7 +395,7 @@
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">Sijil/Surat Kebenaran IPD</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                {!! show_boolean_badge($paper->adakah_sijil_surat_kebenaran_ipo, 'Ada Dilampirkan', 'Tidak Dilampirkan') !!}
+                                {!! show_triple_badge($paper->adakah_sijil_surat_kebenaran_ipd, 'Ada Dilampirkan', 'Tidak Dilampirkan', neutralText: 'Tidak Berkaitan') !!}
                             </dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">

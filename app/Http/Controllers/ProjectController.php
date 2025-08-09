@@ -1064,13 +1064,18 @@ public function getKomersilData(Project $project)
         ->editColumn('resit_kew_38e_bagi_pelupusan', fn($row) => $this->formatArrayField($row->resit_kew_38e_bagi_pelupusan))
         ->editColumn('adakah_borang_serah_terima_pegawai_tangkapan', fn($row) => $this->formatArrayField($row->adakah_borang_serah_terima_pegawai_tangkapan))
 
+        // Format specific boolean field for three-value system
+        ->editColumn('adakah_sijil_surat_kebenaran_ipd', function($row) {
+            return $this->formatBoolean($row->adakah_sijil_surat_kebenaran_ipd, 'Ada', 'Tidak', 'Tidak Berkaitan');
+        })
+
         // --- RawColumns must include all columns with HTML ---
         ->rawColumns(array_merge(
             [
                 'action', 'status_pem', 'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan', 'status_pergerakan_barang_kes', 
                 'status_barang_kes_selesai_siasatan', 'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan', 
                 'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan', 'resit_kew_38e_bagi_pelupusan', 
-                'adakah_borang_serah_terima_pegawai_tangkapan',
+                'adakah_borang_serah_terima_pegawai_tangkapan', 'adakah_sijil_surat_kebenaran_ipd',
                 // E-FSA string fields that use formatString method
                 'status_permohonan_E_FSA_1_oleh_IO_AIO', 'status_laporan_penuh_E_FSA_1_oleh_IO_AIO',
                 'status_permohonan_E_FSA_2_oleh_IO_AIO', 'status_laporan_penuh_E_FSA_2_oleh_IO_AIO',
@@ -2423,12 +2428,24 @@ public function getLaporanMatiMengejutData(Project $project) {
     /**
      * Format boolean values for display in DataTables
      */
-    private function formatBoolean($value, $trueText = 'Ya', $falseText = 'Tidak')
+    private function formatBoolean($value, $trueText = 'Ya', $falseText = 'Tidak', $neutralText = null)
     {
         if (is_null($value)) {
             return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">-</span>';
         }
         
+        // Handle three-value system (0, 1, 2)
+        if (!is_null($neutralText)) {
+            if ($value == 2) {
+                return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">' . $neutralText . '</span>';
+            } elseif ($value == 1) {
+                return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">' . $trueText . '</span>';
+            } else {
+                return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">' . $falseText . '</span>';
+            }
+        }
+        
+        // Handle standard boolean system
         return $value 
             ? '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">' . $trueText . '</span>'
             : '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">' . $falseText . '</span>';

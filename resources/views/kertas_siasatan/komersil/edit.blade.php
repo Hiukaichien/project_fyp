@@ -37,7 +37,7 @@
                         $html .= "</select>";
                         $html .= "<div x-show='status' x-transition class='mt-2'>";
                         $html .= "<label for='{$dateName}_{$id}' class='text-sm text-gray-600'>Jika Ada, nyatakan tarikh:</label>";
-                        $html .= "<input type='date' name='{$dateName}' id='{$dateName}_{$id}' value='" . old($dateName, optional($currentDate)->format('Y-m-d')) . "' class='mt-1 block w-full form-input'>";
+                        $html .= "<input type='date' name='{$dateName}' id='{$dateName}_{$id}' value='" . old($dateName, optional($currentDate)->format('d/m/Y')) . "' class='mt-1 block w-full form-input'>";
                         $html .= "</div></div>";
                         return $html;
                     }
@@ -101,10 +101,36 @@
                         // Conditionally shown date input
                         $html .= "<div x-show='status === \"1\"' x-transition class='mt-2'>";
                         $html .= "<label for='{$dateName}_{$id}' class='text-sm text-gray-600'>Jika Ada, nyatakan tarikh:</label>";
-                        $html .= "<input type='date' name='{$dateName}' id='{$dateName}_{$id}' value='" . old($dateName, optional($currentDate)->format('Y-m-d')) . "' class='mt-1 block w-full form-input'>";
+                        $html .= "<input type='date' name='{$dateName}' id='{$dateName}_{$id}' value='" . old($dateName, optional($currentDate)->format('d/m/Y')) . "' class='mt-1 block w-full form-input'>";
                         $html .= "</div></div>";
                         return $html;
                     }
+                @endphp
+
+                @php
+                // Helper function for triple choices (Ya/Ada, Tidak/Tiada, Tidak Berkaitan)
+                function render_triple_radio($name, $currentValue, $YaLabel = 'Ada / Ya', $TidakLabel = 'Tiada / Tidak', $TidakBerkaitanLabel = 'Tidak Berkaitan')
+                {
+                    // Determine the effective value to check against, prioritizing old input over current model value.
+                    $effectiveValue = old($name, $currentValue);
+
+                    $html = "<div class='mt-2 flex items-center space-x-6'>";
+
+                    // Option 1: Ya/Ada (value='1')
+                    $checkedYa = (($effectiveValue === true || $effectiveValue === 1 || $effectiveValue === '1') ? 'checked' : '');
+                    $html .= "<label class='flex items-center cursor-pointer'><input type='radio' name='{$name}' value='1' class='form-radio h-4 w-4 text-indigo-600' {$checkedYa}><span class='ml-2 text-gray-700'>{$YaLabel}</span></label>";
+
+                    // Option 2: Tidak/Tiada (value='0')
+                    $checkedTidak = (($effectiveValue === false || $effectiveValue === 0 || $effectiveValue === '0') && $effectiveValue !== null ? 'checked' : '');
+                    $html .= "<label class='flex items-center cursor-pointer'><input type='radio' name='{$name}' value='0' class='form-radio h-4 w-4 text-indigo-600' {$checkedTidak}><span class='ml-2 text-gray-700'>{$TidakLabel}</span></label>";
+
+                    // Option 3: Tidak Berkaitan (value='2')
+                    $checkedTidakBerkaitan = (($effectiveValue === 2 || $effectiveValue === '2') ? 'checked' : '');
+                    $html .= "<label class='flex items-center cursor-pointer'><input type='radio' name='{$name}' value='2' class='form-radio h-4 w-4 text-indigo-600' {$checkedTidakBerkaitan}><span class='ml-2 text-gray-700'>{$TidakBerkaitanLabel}</span></label>";
+
+                    $html .= "</div>";
+                    return $html;
+                }
                 @endphp
 
                 <!-- BAHAGIAN 1 -->
@@ -134,7 +160,7 @@
                             <label for="tarikh_laporan_polis_dibuka"
                                 class="block text-sm font-medium text-gray-700">Tarikh Laporan Polis Dibuka</label>
                             <input type="date" name="tarikh_laporan_polis_dibuka" id="tarikh_laporan_polis_dibuka"
-                                value="{{ old('tarikh_laporan_polis_dibuka', optional($paper->tarikh_laporan_polis_dibuka)->format('Y-m-d')) }}"
+                                value="{{ old('tarikh_laporan_polis_dibuka', optional($paper->tarikh_laporan_polis_dibuka)->format('d/m/Y')) }}"
                                 class="mt-1 block w-full form-input">
                         </div>
                         <div>
@@ -160,14 +186,14 @@
                                 class="block text-sm font-medium text-gray-700">Tarikh Edaran Minit KS Pertama
                                 (A)</label>
                             <input type="date" name="tarikh_edaran_minit_ks_pertama" id="tarikh_edaran_minit_ks_pertama"
-                                value="{{ old('tarikh_edaran_minit_ks_pertama', optional($paper->tarikh_edaran_minit_ks_pertama)->format('Y-m-d')) }}"
+                                value="{{ old('tarikh_edaran_minit_ks_pertama', optional($paper->tarikh_edaran_minit_ks_pertama)->format('d/m/Y')) }}"
                                 class="mt-1 block w-full form-input">
                         </div>
                         <div>
                             <label for="tarikh_edaran_minit_ks_kedua"
                                 class="block text-sm font-medium text-gray-700">Tarikh Edaran Minit KS Kedua (B)</label>
                             <input type="date" name="tarikh_edaran_minit_ks_kedua" id="tarikh_edaran_minit_ks_kedua"
-                                value="{{ old('tarikh_edaran_minit_ks_kedua', optional($paper->tarikh_edaran_minit_ks_kedua)->format('Y-m-d')) }}"
+                                value="{{ old('tarikh_edaran_minit_ks_kedua', optional($paper->tarikh_edaran_minit_ks_kedua)->format('d/m/Y')) }}"
                                 class="mt-1 block w-full form-input">
                         </div>
                         <div>
@@ -176,14 +202,14 @@
                                 Akhir (C)</label>
                             <input type="date" name="tarikh_edaran_minit_ks_sebelum_akhir"
                                 id="tarikh_edaran_minit_ks_sebelum_akhir"
-                                value="{{ old('tarikh_edaran_minit_ks_sebelum_akhir', optional($paper->tarikh_edaran_minit_ks_sebelum_akhir)->format('Y-m-d')) }}"
+                                value="{{ old('tarikh_edaran_minit_ks_sebelum_akhir', optional($paper->tarikh_edaran_minit_ks_sebelum_akhir)->format('d/m/Y')) }}"
                                 class="mt-1 block w-full form-input">
                         </div>
                         <div>
                             <label for="tarikh_edaran_minit_ks_akhir"
                                 class="block text-sm font-medium text-gray-700">Tarikh Edaran Minit KS Akhir (D)</label>
                             <input type="date" name="tarikh_edaran_minit_ks_akhir" id="tarikh_edaran_minit_ks_akhir"
-                                value="{{ old('tarikh_edaran_minit_ks_akhir', optional($paper->tarikh_edaran_minit_ks_akhir)->format('Y-m-d')) }}"
+                                value="{{ old('tarikh_edaran_minit_ks_akhir', optional($paper->tarikh_edaran_minit_ks_akhir)->format('d/m/Y')) }}"
                                 class="mt-1 block w-full form-input">
                         </div>
                         <div>
@@ -192,7 +218,7 @@
                                 Daerah (E)</label>
                             <input type="date" name="tarikh_semboyan_pemeriksaan_jips_ke_daerah"
                                 id="tarikh_semboyan_pemeriksaan_jips_ke_daerah"
-                                value="{{ old('tarikh_semboyan_pemeriksaan_jips_ke_daerah', optional($paper->tarikh_semboyan_pemeriksaan_jips_ke_daerah)->format('Y-m-d')) }}"
+                                value="{{ old('tarikh_semboyan_pemeriksaan_jips_ke_daerah', optional($paper->tarikh_semboyan_pemeriksaan_jips_ke_daerah)->format('d/m/Y')) }}"
                                 class="mt-1 block w-full form-input">
                         </div>
                     </div>
@@ -514,6 +540,7 @@
                                         class="form-radio h-4 w-4 text-blue-600">
                                     <span class="ml-2 text-gray-700">Tidak Dilampirkan</span>
                                 </label>
+                                
                             </div>
                         </div>
 
@@ -549,7 +576,7 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Adakah Sijil Atau Surat Arahan
                                 Kebenaran Oleh IPD Bagi Melaksanakan Pelupusan Barang Kes Dilampirkan</label>
-                            {!! render_boolean_radio('adakah_sijil_surat_kebenaran_ipo', $paper->adakah_sijil_surat_kebenaran_ipo, 'Ada Dilampirkan', 'Tidak Dilampirkan') !!}
+                            {!! render_triple_radio('adakah_sijil_surat_kebenaran_ipd', $paper->adakah_sijil_surat_kebenaran_ipd, 'Ada Dilampirkan', 'Tidak Dilampirkan', 'Tidak Berkaitan') !!}
                         </div>
 
                         <!-- Adakah Gambar Pelupusan Barang Kes Dilampirkan -->
@@ -752,7 +779,7 @@
                                                     class="block text-sm text-gray-600">Tarikh:</label>
                                                 <input type="date" name="tarikh_laporan_penuh_E_FSA_1_oleh_IO_AIO"
                                                     id="tarikh_laporan_penuh_E_FSA_1_oleh_IO_AIO"
-                                                    value="{{ old('tarikh_laporan_penuh_E_FSA_1_oleh_IO_AIO', optional($paper->tarikh_laporan_penuh_E_FSA_1_oleh_IO_AIO)->format('Y-m-d')) }}"
+                                                    value="{{ old('tarikh_laporan_penuh_E_FSA_1_oleh_IO_AIO', optional($paper->tarikh_laporan_penuh_E_FSA_1_oleh_IO_AIO)->format('d/m/Y')) }}"
                                                     class="mt-1 block w-full form-input">
                                             </div>
                                         </div>
@@ -824,7 +851,7 @@
                                                     class="block text-sm text-gray-600">Tarikh:</label>
                                                 <input type="date" name="tarikh_laporan_penuh_E_FSA_2_oleh_IO_AIO"
                                                     id="tarikh_laporan_penuh_E_FSA_2_oleh_IO_AIO"
-                                                    value="{{ old('tarikh_laporan_penuh_E_FSA_2_oleh_IO_AIO', optional($paper->tarikh_laporan_penuh_E_FSA_2_oleh_IO_AIO)->format('Y-m-d')) }}"
+                                                    value="{{ old('tarikh_laporan_penuh_E_FSA_2_oleh_IO_AIO', optional($paper->tarikh_laporan_penuh_E_FSA_2_oleh_IO_AIO)->format('d/m/Y')) }}"
                                                     class="mt-1 block w-full form-input">
                                             </div>
                                         </div>
@@ -896,7 +923,7 @@
                                                     class="block text-sm text-gray-600">Tarikh:</label>
                                                 <input type="date" name="tarikh_laporan_penuh_E_FSA_3_oleh_IO_AIO"
                                                     id="tarikh_laporan_penuh_E_FSA_3_oleh_IO_AIO"
-                                                    value="{{ old('tarikh_laporan_penuh_E_FSA_3_oleh_IO_AIO', optional($paper->tarikh_laporan_penuh_E_FSA_3_oleh_IO_AIO)->format('Y-m-d')) }}"
+                                                    value="{{ old('tarikh_laporan_penuh_E_FSA_3_oleh_IO_AIO', optional($paper->tarikh_laporan_penuh_E_FSA_3_oleh_IO_AIO)->format('d/m/Y')) }}"
                                                     class="mt-1 block w-full form-input">
                                             </div>
                                         </div>
@@ -967,7 +994,7 @@
                                                     class="block text-sm text-gray-600">Tarikh:</label>
                                                 <input type="date" name="tarikh_laporan_penuh_E_FSA_4_oleh_IO_AIO"
                                                     id="tarikh_laporan_penuh_E_FSA_4_oleh_IO_AIO"
-                                                    value="{{ old('tarikh_laporan_penuh_E_FSA_4_oleh_IO_AIO', optional($paper->tarikh_laporan_penuh_E_FSA_4_oleh_IO_AIO)->format('Y-m-d')) }}"
+                                                    value="{{ old('tarikh_laporan_penuh_E_FSA_4_oleh_IO_AIO', optional($paper->tarikh_laporan_penuh_E_FSA_4_oleh_IO_AIO)->format('d/m/Y')) }}"
                                                     class="mt-1 block w-full form-input">
                                             </div>
                                         </div>
@@ -1038,7 +1065,7 @@
                                                     class="block text-sm text-gray-600">Tarikh:</label>
                                                 <input type="date" name="tarikh_laporan_penuh_E_FSA_5_oleh_IO_AIO"
                                                     id="tarikh_laporan_penuh_E_FSA_5_oleh_IO_AIO"
-                                                    value="{{ old('tarikh_laporan_penuh_E_FSA_5_oleh_IO_AIO', optional($paper->tarikh_laporan_penuh_E_FSA_5_oleh_IO_AIO)->format('Y-m-d')) }}"
+                                                    value="{{ old('tarikh_laporan_penuh_E_FSA_5_oleh_IO_AIO', optional($paper->tarikh_laporan_penuh_E_FSA_5_oleh_IO_AIO)->format('d/m/Y')) }}"
                                                     class="mt-1 block w-full form-input">
                                             </div>
                                         </div>
@@ -1115,7 +1142,7 @@
                                                     class="block text-sm text-gray-600">Tarikh:</label>
                                                 <input type="date" name="tarikh_laporan_penuh_E_FSA_1_oleh_IO_AIO"
                                                     id="tarikh_laporan_penuh_E_FSA_1_oleh_IO_AIO"
-                                                    value="{{ old('tarikh_laporan_penuh_E_FSA_1_oleh_IO_AIO', optional($paper->tarikh_laporan_penuh_E_FSA_1_oleh_IO_AIO)->format('Y-m-d')) }}"
+                                                    value="{{ old('tarikh_laporan_penuh_E_FSA_1_oleh_IO_AIO', optional($paper->tarikh_laporan_penuh_E_FSA_1_oleh_IO_AIO)->format('d/m/Y')) }}"
                                                     class="mt-1 block w-full form-input">
                                             </div>
                                         </div>
@@ -1187,7 +1214,7 @@
                                                     class="block text-sm text-gray-600">Tarikh:</label>
                                                 <input type="date" name="tarikh_laporan_penuh_E_FSA_2_oleh_IO_AIO"
                                                     id="tarikh_laporan_penuh_E_FSA_2_oleh_IO_AIO"
-                                                    value="{{ old('tarikh_laporan_penuh_E_FSA_2_oleh_IO_AIO', optional($paper->tarikh_laporan_penuh_E_FSA_2_oleh_IO_AIO)->format('Y-m-d')) }}"
+                                                    value="{{ old('tarikh_laporan_penuh_E_FSA_2_oleh_IO_AIO', optional($paper->tarikh_laporan_penuh_E_FSA_2_oleh_IO_AIO)->format('d/m/Y')) }}"
                                                     class="mt-1 block w-full form-input">
                                             </div>
                                         </div>
@@ -1259,7 +1286,7 @@
                                                     class="block text-sm text-gray-600">Tarikh:</label>
                                                 <input type="date" name="tarikh_laporan_penuh_E_FSA_3_oleh_IO_AIO"
                                                     id="tarikh_laporan_penuh_E_FSA_3_oleh_IO_AIO"
-                                                    value="{{ old('tarikh_laporan_penuh_E_FSA_3_oleh_IO_AIO', optional($paper->tarikh_laporan_penuh_E_FSA_3_oleh_IO_AIO)->format('Y-m-d')) }}"
+                                                    value="{{ old('tarikh_laporan_penuh_E_FSA_3_oleh_IO_AIO', optional($paper->tarikh_laporan_penuh_E_FSA_3_oleh_IO_AIO)->format('d/m/Y')) }}"
                                                     class="mt-1 block w-full form-input">
                                             </div>
                                         </div>
@@ -1331,7 +1358,7 @@
                                                     class="block text-sm text-gray-600">Tarikh:</label>
                                                 <input type="date" name="tarikh_laporan_penuh_E_FSA_4_oleh_IO_AIO"
                                                     id="tarikh_laporan_penuh_E_FSA_4_oleh_IO_AIO"
-                                                    value="{{ old('tarikh_laporan_penuh_E_FSA_4_oleh_IO_AIO', optional($paper->tarikh_laporan_penuh_E_FSA_4_oleh_IO_AIO)->format('Y-m-d')) }}"
+                                                    value="{{ old('tarikh_laporan_penuh_E_FSA_4_oleh_IO_AIO', optional($paper->tarikh_laporan_penuh_E_FSA_4_oleh_IO_AIO)->format('d/m/Y')) }}"
                                                     class="mt-1 block w-full form-input">
                                             </div>
                                         </div>
@@ -1403,7 +1430,7 @@
                                                     class="block text-sm text-gray-600">Tarikh:</label>
                                                 <input type="date" name="tarikh_laporan_penuh_E_FSA_5_oleh_IO_AIO"
                                                     id="tarikh_laporan_penuh_E_FSA_5_oleh_IO_AIO"
-                                                    value="{{ old('tarikh_laporan_penuh_E_FSA_5_oleh_IO_AIO', optional($paper->tarikh_laporan_penuh_E_FSA_5_oleh_IO_AIO)->format('Y-m-d')) }}"
+                                                    value="{{ old('tarikh_laporan_penuh_E_FSA_5_oleh_IO_AIO', optional($paper->tarikh_laporan_penuh_E_FSA_5_oleh_IO_AIO)->format('d/m/Y')) }}"
                                                     class="mt-1 block w-full form-input">
                                             </div>
                                         </div>
@@ -1437,7 +1464,7 @@
                                             class="block text-sm text-gray-600">Jika Ada, nyatakan tarikh:</label>
                                         <input type="date" name="tarikh_permohonan_laporan_puspakom"
                                             id="tarikh_permohonan_laporan_puspakom"
-                                            value="{{ old('tarikh_permohonan_laporan_puspakom', optional($paper->tarikh_permohonan_laporan_puspakom)->format('Y-m-d')) }}"
+                                            value="{{ old('tarikh_permohonan_laporan_puspakom', optional($paper->tarikh_permohonan_laporan_puspakom)->format('d/m/Y')) }}"
                                             class="mt-1 block w-full form-input">
                                     </div>
                                 </div>
@@ -1464,7 +1491,7 @@
                                             tarikh:</label>
                                         <input type="date" name="tarikh_laporan_penuh_puspakom"
                                             id="tarikh_laporan_penuh_puspakom"
-                                            value="{{ old('tarikh_laporan_penuh_puspakom', optional($paper->tarikh_laporan_penuh_puspakom)->format('Y-m-d')) }}"
+                                            value="{{ old('tarikh_laporan_penuh_puspakom', optional($paper->tarikh_laporan_penuh_puspakom)->format('d/m/Y')) }}"
                                             class="mt-1 block w-full form-input">
                                     </div>
                                 </div>
@@ -1496,7 +1523,7 @@
                                             class="block text-sm text-gray-600">Jika Ada, nyatakan tarikh:</label>
                                         <input type="date" name="tarikh_permohonan_laporan_jpj"
                                             id="tarikh_permohonan_laporan_jpj"
-                                            value="{{ old('tarikh_permohonan_laporan_jpj', optional($paper->tarikh_permohonan_laporan_jpj)->format('Y-m-d')) }}"
+                                            value="{{ old('tarikh_permohonan_laporan_jpj', optional($paper->tarikh_permohonan_laporan_jpj)->format('d/m/Y')) }}"
                                             class="mt-1 block w-full form-input">
                                     </div>
                                 </div>
@@ -1520,7 +1547,7 @@
                                         <label for="tarikh_laporan_penuh_jpj" class="block text-sm text-gray-600">Jika
                                             Dilampirkan, nyatakan tarikh:</label>
                                         <input type="date" name="tarikh_laporan_penuh_jpj" id="tarikh_laporan_penuh_jpj"
-                                            value="{{ old('tarikh_laporan_penuh_jpj', optional($paper->tarikh_laporan_penuh_jpj)->format('Y-m-d')) }}"
+                                            value="{{ old('tarikh_laporan_penuh_jpj', optional($paper->tarikh_laporan_penuh_jpj)->format('d/m/Y')) }}"
                                             class="mt-1 block w-full form-input">
                                     </div>
                                 </div>
@@ -1553,7 +1580,7 @@
                                                 class="block text-sm text-gray-600">Jika Ada, nyatakan tarikh:</label>
                                             <input type="date" name="tarikh_permohonan_laporan_forensik_pdrm"
                                                 id="tarikh_permohonan_laporan_forensik_pdrm"
-                                                value="{{ old('tarikh_permohonan_laporan_forensik_pdrm', optional($paper->tarikh_permohonan_laporan_forensik_pdrm)->format('Y-m-d')) }}"
+                                                value="{{ old('tarikh_permohonan_laporan_forensik_pdrm', optional($paper->tarikh_permohonan_laporan_forensik_pdrm)->format('d/m/Y')) }}"
                                                 class="mt-1 block w-full form-input">
                                         </div>
                                         <div class="mt-2">
@@ -1589,7 +1616,7 @@
                                             tarikh:</label>
                                         <input type="date" name="tarikh_laporan_penuh_forensik_pdrm"
                                             id="tarikh_laporan_penuh_forensik_pdrm"
-                                            value="{{ old('tarikh_laporan_penuh_forensik_pdrm', optional($paper->tarikh_laporan_penuh_forensik_pdrm)->format('Y-m-d')) }}"
+                                            value="{{ old('tarikh_laporan_penuh_forensik_pdrm', optional($paper->tarikh_laporan_penuh_forensik_pdrm)->format('d/m/Y')) }}"
                                             class="mt-1 block w-full form-input">
                                     </div>
                                 </div>

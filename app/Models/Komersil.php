@@ -15,24 +15,24 @@ class Komersil extends Model
 
  protected $casts = [
            // B1 - Dates
-            'tarikh_laporan_polis_dibuka' => 'date:Y-m-d',
+            'tarikh_laporan_polis_dibuka' => 'date:d/m/Y',
             
             // B2 - Dates
-            'tarikh_edaran_minit_ks_pertama' => 'date:Y-m-d',
-            'tarikh_edaran_minit_ks_kedua' => 'date:Y-m-d',
-            'tarikh_edaran_minit_ks_sebelum_akhir' => 'date:Y-m-d',
-            'tarikh_edaran_minit_ks_akhir' => 'date:Y-m-d',
-            'tarikh_semboyan_pemeriksaan_jips_ke_daerah' => 'date:Y-m-d',
+            'tarikh_edaran_minit_ks_pertama' => 'date:d/m/Y',
+            'tarikh_edaran_minit_ks_kedua' => 'date:d/m/Y',
+            'tarikh_edaran_minit_ks_sebelum_akhir' => 'date:d/m/Y',
+            'tarikh_edaran_minit_ks_akhir' => 'date:d/m/Y',
+            'tarikh_semboyan_pemeriksaan_jips_ke_daerah' => 'date:d/m/Y',
             
             // B3 - Arahan & Keputusan
             'arahan_minit_oleh_sio_status' => 'boolean',
-            'arahan_minit_oleh_sio_tarikh' => 'date:Y-m-d',
+            'arahan_minit_oleh_sio_tarikh' => 'date:d/m/Y',
             'arahan_minit_ketua_bahagian_status' => 'boolean',
-            'arahan_minit_ketua_bahagian_tarikh' => 'date:Y-m-d',
+            'arahan_minit_ketua_bahagian_tarikh' => 'date:d/m/Y',
             'arahan_minit_ketua_jabatan_status' => 'boolean',
-            'arahan_minit_ketua_jabatan_tarikh' => 'date:Y-m-d',
+            'arahan_minit_ketua_jabatan_tarikh' => 'date:d/m/Y',
             'arahan_minit_oleh_ya_tpr_status' => 'boolean',
-            'arahan_minit_oleh_ya_tpr_tarikh' => 'date:Y-m-d',
+            'arahan_minit_oleh_ya_tpr_tarikh' => 'date:d/m/Y',
             'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan' => 'array', // KEPT as array - still JSON in migration
 
             // B4 - Barang Kes
@@ -48,7 +48,7 @@ class Komersil extends Model
             'resit_kew_38e_bagi_pelupusan' => 'string', // CHANGED: From array to string
             'adakah_borang_serah_terima_pegawai_tangkapan' => 'string', // CHANGED: From array to string
             'adakah_borang_serah_terima_pemilik_saksi' => 'string', 
-            'adakah_sijil_surat_kebenaran_ipo' => 'boolean',
+            'adakah_sijil_surat_kebenaran_ipd' => 'integer',
             'adakah_gambar_pelupusan' => 'string',
 
         // B5 - Dokumen Siasatan
@@ -64,78 +64,78 @@ class Komersil extends Model
         // B6 - Borang & Semakan
         'status_pem' => 'array', // This one is correct because it's for multiple checkboxes
         'status_rj2' => 'boolean',
-        'tarikh_rj2' => 'date:Y-m-d',
+        'tarikh_rj2' => 'date:d/m/Y',
         'status_rj2b' => 'boolean',
-        'tarikh_rj2b' => 'date:Y-m-d',
+        'tarikh_rj2b' => 'date:d/m/Y',
         'status_rj9' => 'boolean',
-        'tarikh_rj9' => 'date:Y-m-d',
+        'tarikh_rj9' => 'date:d/m/Y',
         'status_rj99' => 'boolean',
-        'tarikh_rj99' => 'date:Y-m-d',
+        'tarikh_rj99' => 'date:d/m/Y',
         'status_rj10a' => 'boolean',
-        'tarikh_rj10a' => 'date:Y-m-d',
+        'tarikh_rj10a' => 'date:d/m/Y',
         'status_rj10b' => 'boolean',
-        'tarikh_rj10b' => 'date:Y-m-d',
+        'tarikh_rj10b' => 'date:d/m/Y',
         'status_saman_pdrm_s_257' => 'boolean',
         'status_saman_pdrm_s_167' => 'boolean',
         'status_semboyan_pertama_wanted_person' => 'boolean',
-        'tarikh_semboyan_pertama_wanted_person' => 'date:Y-m-d',
+        'tarikh_semboyan_pertama_wanted_person' => 'date:d/m/Y',
         'status_semboyan_kedua_wanted_person' => 'boolean',
-        'tarikh_semboyan_kedua_wanted_person' => 'date:Y-m-d',
+        'tarikh_semboyan_kedua_wanted_person' => 'date:d/m/Y',
         'status_semboyan_ketiga_wanted_person' => 'boolean',
-        'tarikh_semboyan_ketiga_wanted_person' => 'date:Y-m-d',
+        'tarikh_semboyan_ketiga_wanted_person' => 'date:d/m/Y',
         'status_penandaan_kelas_warna' => 'boolean',
 
         // B7 - E-FSA & Agensi Luar
         'status_permohonan_laporan_post_mortem_mayat' => 'boolean',
-        'tarikh_permohonan_laporan_post_mortem_mayat' => 'date:Y-m-d',
+        'tarikh_permohonan_laporan_post_mortem_mayat' => 'date:d/m/Y',
         
         // E-FSA fields are now strings, but dates still need casting
-        'tarikh_laporan_penuh_E_FSA_1_oleh_IO_AIO' => 'date:Y-m-d',
-        'tarikh_laporan_penuh_E_FSA_2_oleh_IO_AIO' => 'date:Y-m-d',
-        'tarikh_laporan_penuh_E_FSA_3_oleh_IO_AIO' => 'date:Y-m-d',
-        'tarikh_laporan_penuh_E_FSA_4_oleh_IO_AIO' => 'date:Y-m-d',
-        'tarikh_laporan_penuh_E_FSA_5_oleh_IO_AIO' => 'date:Y-m-d',
-        'tarikh_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO' => 'date:Y-m-d',
-        'tarikh_laporan_penuh_E_FSA_2_telco_oleh_IO_AIO' => 'date:Y-m-d',
-        'tarikh_laporan_penuh_E_FSA_3_telco_oleh_IO_AIO' => 'date:Y-m-d',
-        'tarikh_laporan_penuh_E_FSA_4_telco_oleh_IO_AIO' => 'date:Y-m-d',
-        'tarikh_laporan_penuh_E_FSA_5_telco_oleh_IO_AIO' => 'date:Y-m-d',
+        'tarikh_laporan_penuh_E_FSA_1_oleh_IO_AIO' => 'date:d/m/Y',
+        'tarikh_laporan_penuh_E_FSA_2_oleh_IO_AIO' => 'date:d/m/Y',
+        'tarikh_laporan_penuh_E_FSA_3_oleh_IO_AIO' => 'date:d/m/Y',
+        'tarikh_laporan_penuh_E_FSA_4_oleh_IO_AIO' => 'date:d/m/Y',
+        'tarikh_laporan_penuh_E_FSA_5_oleh_IO_AIO' => 'date:d/m/Y',
+        'tarikh_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO' => 'date:d/m/Y',
+        'tarikh_laporan_penuh_E_FSA_2_telco_oleh_IO_AIO' => 'date:d/m/Y',
+        'tarikh_laporan_penuh_E_FSA_3_telco_oleh_IO_AIO' => 'date:d/m/Y',
+        'tarikh_laporan_penuh_E_FSA_4_telco_oleh_IO_AIO' => 'date:d/m/Y',
+        'tarikh_laporan_penuh_E_FSA_5_telco_oleh_IO_AIO' => 'date:d/m/Y',
         
         // Puspakom
         'status_permohonan_laporan_puspakom' => 'boolean',
-        'tarikh_permohonan_laporan_puspakom' => 'date:Y-m-d',
+        'tarikh_permohonan_laporan_puspakom' => 'date:d/m/Y',
         'status_laporan_penuh_puspakom' => 'boolean',
-        'tarikh_laporan_penuh_puspakom' => 'date:Y-m-d',
+        'tarikh_laporan_penuh_puspakom' => 'date:d/m/Y',
         
         // JKR
         'status_permohonan_laporan_jkr' => 'boolean',
-        'tarikh_permohonan_laporan_jkr' => 'date:Y-m-d',
+        'tarikh_permohonan_laporan_jkr' => 'date:d/m/Y',
         'status_laporan_penuh_jkr' => 'boolean',
-        'tarikh_laporan_penuh_jkr' => 'date:Y-m-d',
+        'tarikh_laporan_penuh_jkr' => 'date:d/m/Y',
         
         // JPJ
         'status_permohonan_laporan_jpj' => 'boolean',
-        'tarikh_permohonan_laporan_jpj' => 'date:Y-m-d',
+        'tarikh_permohonan_laporan_jpj' => 'date:d/m/Y',
         'status_laporan_penuh_jpj' => 'boolean',
-        'tarikh_laporan_penuh_jpj' => 'date:Y-m-d',
+        'tarikh_laporan_penuh_jpj' => 'date:d/m/Y',
         
         // Imigresen
         'status_permohonan_laporan_imigresen' => 'boolean',
-        'tarikh_permohonan_laporan_imigresen' => 'date:Y-m-d',
+        'tarikh_permohonan_laporan_imigresen' => 'date:d/m/Y',
         'status_laporan_penuh_imigresen' => 'boolean',
-        'tarikh_laporan_penuh_imigresen' => 'date:Y-m-d',
+        'tarikh_laporan_penuh_imigresen' => 'date:d/m/Y',
         
         // Kastam
         'status_permohonan_laporan_kastam' => 'boolean',
-        'tarikh_permohonan_laporan_kastam' => 'date:Y-m-d',
+        'tarikh_permohonan_laporan_kastam' => 'date:d/m/Y',
         'status_laporan_penuh_kastam' => 'boolean',
-        'tarikh_laporan_penuh_kastam' => 'date:Y-m-d',
+        'tarikh_laporan_penuh_kastam' => 'date:d/m/Y',
         
         // Forensik PDRM
         'status_permohonan_laporan_forensik_pdrm' => 'boolean',
-        'tarikh_permohonan_laporan_forensik_pdrm' => 'date:Y-m-d',
+        'tarikh_permohonan_laporan_forensik_pdrm' => 'date:d/m/Y',
         'status_laporan_penuh_forensik_pdrm' => 'boolean',
-        'tarikh_laporan_penuh_forensik_pdrm' => 'date:Y-m-d',
+        'tarikh_laporan_penuh_forensik_pdrm' => 'date:d/m/Y',
         
         // B8 - Status Fail
         'muka_surat_4_barang_kes_ditulis' => 'boolean',
@@ -169,7 +169,7 @@ class Komersil extends Model
         // B4 - Barang Kes text versions
         'adakah_barang_kes_didaftarkan_text',
         'adakah_borang_serah_terima_pemilik_saksi_text',
-        'adakah_sijil_surat_kebenaran_ipo_text',
+        'adakah_sijil_surat_kebenaran_ipd_text',
         'adakah_gambar_pelupusan_text',
         
         // B5 - Dokumen Siasatan text versions
@@ -250,6 +250,23 @@ class Komersil extends Model
         if (is_null($value)) {
             return $nullText;
         }
+        return $value ? $trueText : $falseText;
+    }
+
+    /**
+     * Format three-value fields (0 = false, 1 = true, 2 = neutral)
+     */
+    private function formatTripleValueToMalay($value, string $trueText = 'Ya', string $falseText = 'Tidak', string $neutralText = 'Tidak Berkaitan', string $nullText = '-'): string
+    {
+        if (is_null($value)) {
+            return $nullText;
+        }
+        
+        // Handle three-value system
+        if ($value === 2) {
+            return $neutralText;
+        }
+        
         return $value ? $trueText : $falseText;
     }
 
@@ -395,9 +412,9 @@ public function getTerbengkalaiStatusDcAttribute(): string
         return $this->formatStringValue($this->adakah_borang_serah_terima_pemilik_saksi);
     }
 
-    public function getAdakahSijilSuratKebenaranIpoTextAttribute(): string 
+    public function getAdakahSijilSuratKebenaranIpdTextAttribute(): string 
     {
-        return $this->formatBooleanToMalay($this->adakah_sijil_surat_kebenaran_ipo, 'Ada Dilampirkan', 'Tidak Dilampirkan');
+        return $this->formatTripleValueToMalay($this->adakah_sijil_surat_kebenaran_ipd, 'Ada Dilampirkan', 'Tidak Dilampirkan', 'Tidak Berkaitan');
     }
 
     public function getAdakahGambarPelupusanTextAttribute(): string 

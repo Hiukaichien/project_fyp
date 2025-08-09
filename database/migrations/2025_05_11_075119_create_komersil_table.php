@@ -61,7 +61,7 @@ return new class extends Migration
             $table->text('resit_kew_38e_bagi_pelupusan')->nullable()->comment('B4,resit_kew_38e_bagi_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan');
             $table->text('adakah_borang_serah_terima_pegawai_tangkapan')->nullable()->comment('B4');
             $table->text('adakah_borang_serah_terima_pemilik_saksi')->nullable()->comment('B4');
-            $table->boolean('adakah_sijil_surat_kebenaran_ipo')->nullable()->comment('B4');
+            $table->tinyInteger('adakah_sijil_surat_kebenaran_ipd')->nullable()->comment('B4 - 0: Tidak Dilampirkan, 1: Ada Dilampirkan, 2: Tidak Berkaitan');
             $table->string('adakah_gambar_pelupusan')->nullable()->comment('B4');
 
             // BAHAGIAN 5: Bukti & Rajah (B5)
