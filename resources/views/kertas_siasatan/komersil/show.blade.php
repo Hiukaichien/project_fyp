@@ -703,7 +703,7 @@
                             </div>
                         </div>
 
-                        <!-- JKR -->
+                        <!-- JKR 
                         <div class="py-3 sm:py-4 sm:px-6">
                             <h4 class="text-sm font-semibold text-gray-700 mb-2">JKR</h4>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -720,7 +720,7 @@
                                     </dd>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
                         <!-- JPJ -->
                         <div class="py-3 sm:py-4 sm:px-6 bg-gray-50">
@@ -859,7 +859,7 @@
                             <dt class="text-sm font-medium text-gray-500">Keputusan Akhir Mahkamah Sebelum KS di
                                 KUS/FAIL</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                {{ $paper->keputusan_akhir_mahkamah ?? '-' }}
+                                {!! show_json_list($paper->keputusan_akhir_mahkamah) !!}
                             </dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">

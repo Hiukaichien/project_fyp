@@ -190,7 +190,29 @@ class KertasSiasatanController extends Controller
             }
         }
     }
-        // --- END: SPECIAL HANDLING ---
+    // --- END: SPECIAL HANDLING FOR LAPORAN MATI MENGEJUT JSON ARRAYS ---
+
+    // --- START: SPECIAL HANDLING FOR KOMERSIL JSON ARRAYS ---
+    if ($paperType === 'Komersil') {
+        // Handle JSON array fields that come from checkboxes
+        $jsonArrayFields = [
+            'status_pem',
+            'keputusan_akhir_mahkamah'
+        ];
+
+        foreach ($jsonArrayFields as $field) {
+            if ($request->has($field)) {
+                // Get the array of selected values from checkboxes
+                $selectedValues = $request->input($field, []);
+                // Ensure it's an array and filter out empty values
+                $data[$field] = is_array($selectedValues) ? array_filter($selectedValues) : [];
+            } else {
+                // If no checkboxes were selected, set as empty array
+                $data[$field] = [];
+            }
+        }
+    }
+    // --- END: SPECIAL HANDLING FOR KOMERSIL JSON ARRAYS ---
 
 
         // --- START: DATE FORMAT CONVERSION DD/MM/YYYY to Y-m-d ---

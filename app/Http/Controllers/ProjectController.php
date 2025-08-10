@@ -1024,12 +1024,12 @@ public function getKomersilData(Project $project)
         ->editColumn('status_gambar_barang_kes_kenderaan', fn($row) => $this->formatBoolean($row->status_gambar_barang_kes_kenderaan, 'Ada', 'Tiada'))
         ->editColumn('status_gambar_barang_kes_darah', fn($row) => $this->formatBoolean($row->status_gambar_barang_kes_darah, 'Ada', 'Tiada'))
         ->editColumn('status_gambar_barang_kes_kontraban', fn($row) => $this->formatBoolean($row->status_gambar_barang_kes_kontraban, 'Ada', 'Tiada'))
-        ->editColumn('status_rj2', fn($row) => $this->formatBoolean($row->status_rj2, 'Cipta', 'Tidak'))
-        ->editColumn('status_rj2b', fn($row) => $this->formatBoolean($row->status_rj2b, 'Cipta', 'Tidak'))
-        ->editColumn('status_rj9', fn($row) => $this->formatBoolean($row->status_rj9, 'Cipta', 'Tidak'))
-        ->editColumn('status_rj99', fn($row) => $this->formatBoolean($row->status_rj99, 'Cipta', 'Tidak'))
-        ->editColumn('status_rj10a', fn($row) => $this->formatBoolean($row->status_rj10a, 'Cipta', 'Tidak'))
-        ->editColumn('status_rj10b', fn($row) => $this->formatBoolean($row->status_rj10b, 'Cipta', 'Tidak'))
+        ->editColumn('status_rj2', fn($row) => $this->formatThreeState($row->status_rj2, 'Ada/Cipta', 'Tiada/Tidak Cipta', 'Tidak Berkaitan'))
+        ->editColumn('status_rj2b', fn($row) => $this->formatThreeState($row->status_rj2b, 'Ada/Cipta', 'Tiada/Tidak Cipta', 'Tidak Berkaitan'))
+        ->editColumn('status_rj9', fn($row) => $this->formatThreeState($row->status_rj9, 'Ada/Cipta', 'Tiada/Tidak Cipta', 'Tidak Berkaitan'))
+        ->editColumn('status_rj99', fn($row) => $this->formatThreeState($row->status_rj99, 'Ada/Cipta', 'Tiada/Tidak Cipta', 'Tidak Berkaitan'))
+        ->editColumn('status_rj10a', fn($row) => $this->formatThreeState($row->status_rj10a, 'Ada/Cipta', 'Tiada/Tidak Cipta', 'Tidak Berkaitan'))
+        ->editColumn('status_rj10b', fn($row) => $this->formatThreeState($row->status_rj10b, 'Ada/Cipta', 'Tiada/Tidak Cipta', 'Tidak Berkaitan'))
         ->editColumn('status_semboyan_pertama_wanted_person', fn($row) => $this->formatWantedPersonStatus($row->status_semboyan_pertama_wanted_person))
         ->editColumn('status_semboyan_kedua_wanted_person', fn($row) => $this->formatWantedPersonStatus($row->status_semboyan_kedua_wanted_person))
         ->editColumn('status_semboyan_ketiga_wanted_person', fn($row) => $this->formatWantedPersonStatus($row->status_semboyan_ketiga_wanted_person))
@@ -1100,7 +1100,11 @@ public function getKomersilData(Project $project)
         })
         ->editColumn('adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan', fn($row) => $this->formatArrayField($row->adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan))
         ->editColumn('resit_kew_38e_bagi_pelupusan', fn($row) => $this->formatArrayField($row->resit_kew_38e_bagi_pelupusan))
-        ->editColumn('adakah_borang_serah_terima_pegawai_tangkapan', fn($row) => $this->formatArrayField($row->adakah_borang_serah_terima_pegawai_tangkapan))
+        ->editColumn('adakah_borang_serah_terima_pegawai_tangkapan', fn($row) => $this->formatString($row->adakah_borang_serah_terima_pegawai_tangkapan, 'Ada', 'Tiada'))
+        ->editColumn('adakah_borang_serah_terima_pemilik_saksi', fn($row) => $this->formatThreeState($row->adakah_borang_serah_terima_pemilik_saksi, 'Ada Dilampirkan', 'Tidak Dilampirkan', 'Tidak Berkaitan'))
+        ->editColumn('adakah_sijil_surat_kebenaran_ipd', fn($row) => $this->formatThreeState($row->adakah_sijil_surat_kebenaran_ipd, 'Ada Dilampirkan', 'Tidak Dilampirkan', 'Tidak Berkaitan'))
+        ->editColumn('adakah_gambar_pelupusan', fn($row) => $this->formatThreeState($row->adakah_gambar_pelupusan, 'Ada Dilampirkan', 'Tidak Dilampirkan', 'Tidak Berkaitan'))
+        ->editColumn('keputusan_akhir_mahkamah', fn($row) => $this->formatArrayField($row->keputusan_akhir_mahkamah))
 
         // --- RawColumns must include all columns with HTML ---
         ->rawColumns(array_merge(
@@ -1108,7 +1112,10 @@ public function getKomersilData(Project $project)
                 'action', 'status_pem', 'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan', 'status_pergerakan_barang_kes', 
                 'status_barang_kes_selesai_siasatan', 'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan', 
                 'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan', 'resit_kew_38e_bagi_pelupusan', 
-                'adakah_borang_serah_terima_pegawai_tangkapan',
+                'adakah_borang_serah_terima_pegawai_tangkapan', 'adakah_borang_serah_terima_pemilik_saksi',
+                'adakah_sijil_surat_kebenaran_ipd', 'adakah_gambar_pelupusan', 'keputusan_akhir_mahkamah',
+                // RJ status fields that use formatThreeState (need to be in rawColumns for HTML badges)
+                'status_rj2', 'status_rj2b', 'status_rj9', 'status_rj99', 'status_rj10a', 'status_rj10b',
                 // E-FSA string fields that use formatString method
                 'status_permohonan_E_FSA_1_oleh_IO_AIO', 'status_laporan_penuh_E_FSA_1_oleh_IO_AIO',
                 'status_permohonan_E_FSA_2_oleh_IO_AIO', 'status_laporan_penuh_E_FSA_2_oleh_IO_AIO',
@@ -1119,7 +1126,15 @@ public function getKomersilData(Project $project)
                 'status_permohonan_E_FSA_2_telco_oleh_IO_AIO', 'status_laporan_penuh_E_FSA_2_telco_oleh_IO_AIO',
                 'status_permohonan_E_FSA_3_telco_oleh_IO_AIO', 'status_laporan_penuh_E_FSA_3_telco_oleh_IO_AIO',
                 'status_permohonan_E_FSA_4_telco_oleh_IO_AIO', 'status_laporan_penuh_E_FSA_4_telco_oleh_IO_AIO',
-                'status_permohonan_E_FSA_5_telco_oleh_IO_AIO', 'status_laporan_penuh_E_FSA_5_telco_oleh_IO_AIO'
+                'status_permohonan_E_FSA_5_telco_oleh_IO_AIO', 'status_laporan_penuh_E_FSA_5_telco_oleh_IO_AIO',
+                // Boolean status fields that use formatBoolean (need to be in rawColumns for HTML badges)
+                'status_permohonan_laporan_puspakom', 'status_laporan_penuh_puspakom',
+                'status_permohonan_laporan_jkr', 'status_laporan_penuh_jkr',
+                'status_permohonan_laporan_jpj', 'status_laporan_penuh_jpj',
+                'status_permohonan_laporan_imigresen', 'status_laporan_penuh_imigresen',
+                'status_permohonan_laporan_kastam', 'status_laporan_penuh_kastam',
+                'status_permohonan_laporan_forensik_pdrm', 'status_laporan_penuh_forensik_pdrm',
+                'status_permohonan_laporan_post_mortem_mayat'
             ],
             collect((new Komersil)->getCasts())->filter(fn($type) => $type === 'boolean')->keys()->all()
         ))
@@ -2723,17 +2738,31 @@ public function getLaporanMatiMengejutData(Project $project) {
         if (is_null($value) || $value === '') {
             return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">-</span>';
         }
+
+        // --- FIX ---
+        // Add all possible "positive" string values from your forms to this array.
+        $positiveValues = [
+            'Permohonan Dibuat',
+            'Dilampirkan',
+            'Dibuat', 
+            'Diterima', 
+            'Ya', 
+            'Ada', 
+            'Cipta', 
+            'Dicipta', 
+            '1', 
+            'true', 
+            'YES'
+        ];
         
-        // Check if the value indicates a positive status
-        $positiveValues = ['Dibuat', 'Diterima', 'Ya', 'Ada', 'Cipta', 'Dicipta', '1', 'true', 'YES'];
-        $isPositive = in_array(strtolower($value), array_map('strtolower', $positiveValues)) || 
-                      in_array($value, $positiveValues) ||
+        // Check case-insensitively if the value is in the positive list
+        $isPositive = in_array(strtolower($value), array_map('strtolower', $positiveValues)) ||
                       (is_numeric($value) && $value > 0);
-        
-        // Display the actual value, not the parameter text
-        $displayText = $value;
-        
-        return $isPositive 
+
+        // Display the actual value from the database, wrapped in htmlspecialchars for security.
+        $displayText = htmlspecialchars($value);
+
+        return $isPositive
             ? '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">' . $displayText . '</span>'
             : '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">' . $displayText . '</span>';
     }

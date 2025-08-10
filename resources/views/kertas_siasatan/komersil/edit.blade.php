@@ -720,22 +720,22 @@
                             <h5 class="font-medium text-gray-700 mb-3">E-FSA (BANK) - 1</h5>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <!-- Permohonan E-FSA BANK 1 -->
-                                <div x-data="{ status: '{{ $paper->status_permohonan_E_FSA_1_oleh_IO_AIO ? 1 : 0 }}' }">
+                                <div x-data="{ status: '{{ $paper->status_permohonan_E_FSA_1_oleh_IO_AIO == 'Permohonan Dibuat' ? 'Permohonan Dibuat' : 'Tiada Permohonan' }}' }">
                                     <label class="block text-sm font-medium text-gray-700">Permohonan E-FSA (BANK) - 1
                                         oleh IO/AIO</label>
                                     <div class="mt-2 flex items-center space-x-6">
                                         <label class="flex items-center cursor-pointer">
-                                            <input type="radio" name="status_permohonan_E_FSA_1_oleh_IO_AIO" value="1"
+                                            <input type="radio" name="status_permohonan_E_FSA_1_oleh_IO_AIO" value="Permohonan Dibuat"
                                                 x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Ada</span>
                                         </label>
                                         <label class="flex items-center cursor-pointer">
-                                            <input type="radio" name="status_permohonan_E_FSA_1_oleh_IO_AIO" value="0"
+                                            <input type="radio" name="status_permohonan_E_FSA_1_oleh_IO_AIO" value="Tiada Permohonan"
                                                 x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Tiada</span>
                                         </label>
                                     </div>
-                                    <div x-show="status == '1'" x-transition class="mt-2">
+                                    <div x-show="status == 'Permohonan Dibuat'" x-transition class="mt-2">
                                         <label for="nama_bank_permohonan_E_FSA_1"
                                             class="block text-sm text-gray-600">Jika Ada, nyatakan bank:</label>
                                         <input type="text" name="nama_bank_permohonan_E_FSA_1"
@@ -747,22 +747,22 @@
 
                                 <!-- Laporan Penuh E-FSA BANK 1 -->
                                 <div
-                                    x-data="{ status: '{{ $paper->status_laporan_penuh_E_FSA_1_oleh_IO_AIO ? 1 : 0 }}' }">
+                                    x-data="{ status: '{{ $paper->status_laporan_penuh_E_FSA_1_oleh_IO_AIO == 'Dilampirkan' ? 'Dilampirkan' : 'Tidak Dilampirkan' }}' }">
                                     <label class="block text-sm font-medium text-gray-700">Laporan Penuh E-FSA (BANK) -
                                         1 oleh IO/AIO</label>
                                     <div class="mt-2 flex items-center space-x-6">
                                         <label class="flex items-center cursor-pointer">
                                             <input type="radio" name="status_laporan_penuh_E_FSA_1_oleh_IO_AIO"
-                                                value="1" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                                value="Dilampirkan" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Dilampirkan</span>
                                         </label>
                                         <label class="flex items-center cursor-pointer">
                                             <input type="radio" name="status_laporan_penuh_E_FSA_1_oleh_IO_AIO"
-                                                value="0" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                                value="Tidak Dilampirkan" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Tiada</span>
                                         </label>
                                     </div>
-                                    <div x-show="status == '1'" x-transition class="mt-2">
+                                    <div x-show="status == 'Dilampirkan'" x-transition class="mt-2">
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div>
                                                 <label for="nama_bank_laporan_E_FSA_1_oleh_IO_AIO"
@@ -792,22 +792,22 @@
                             <h5 class="font-medium text-gray-700 mb-3">E-FSA (BANK) - 2</h5>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <!-- Permohonan E-FSA BANK 2 -->
-                                <div x-data="{ status: '{{ $paper->status_permohonan_E_FSA_2_oleh_IO_AIO ? 1 : 0 }}' }">
+                                <div x-data="{ status: '{{ $paper->status_permohonan_E_FSA_2_oleh_IO_AIO == 'Permohonan Dibuat' ? 'Permohonan Dibuat' : 'Tiada Permohonan' }}' }">
                                     <label class="block text-sm font-medium text-gray-700">Permohonan E-FSA (BANK) - 2
                                         oleh IO/AIO</label>
                                     <div class="mt-2 flex items-center space-x-6">
                                         <label class="flex items-center cursor-pointer">
-                                            <input type="radio" name="status_permohonan_E_FSA_2_oleh_IO_AIO" value="1"
+                                            <input type="radio" name="status_permohonan_E_FSA_2_oleh_IO_AIO" value="Permohonan Dibuat"
                                                 x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Ada</span>
                                         </label>
                                         <label class="flex items-center cursor-pointer">
-                                            <input type="radio" name="status_permohonan_E_FSA_2_oleh_IO_AIO" value="0"
+                                            <input type="radio" name="status_permohonan_E_FSA_2_oleh_IO_AIO" value="Tiada Permohonan"
                                                 x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Tiada</span>
                                         </label>
                                     </div>
-                                    <div x-show="status == '1'" x-transition class="mt-2">
+                                    <div x-show="status == 'Permohonan Dibuat'" x-transition class="mt-2">
                                         <label for="nama_bank_permohonan_E_FSA_2_BANK"
                                             class="block text-sm text-gray-600">Jika Ada, nyatakan bank:</label>
                                         <input type="text" name="nama_bank_permohonan_E_FSA_2_BANK"
@@ -819,22 +819,22 @@
 
                                 <!-- Laporan Penuh E-FSA BANK 2 -->
                                 <div
-                                    x-data="{ status: '{{ $paper->status_laporan_penuh_E_FSA_2_oleh_IO_AIO ? 1 : 0 }}' }">
+                                    x-data="{ status: '{{ $paper->status_laporan_penuh_E_FSA_2_oleh_IO_AIO == 'Dilampirkan' ? 'Dilampirkan' : 'Tidak Dilampirkan' }}' }">
                                     <label class="block text-sm font-medium text-gray-700">Laporan Penuh E-FSA (BANK) -
                                         2 oleh IO/AIO</label>
                                     <div class="mt-2 flex items-center space-x-6">
                                         <label class="flex items-center cursor-pointer">
                                             <input type="radio" name="status_laporan_penuh_E_FSA_2_oleh_IO_AIO"
-                                                value="1" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                                value="Dilampirkan" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Dilampirkan</span>
                                         </label>
                                         <label class="flex items-center cursor-pointer">
                                             <input type="radio" name="status_laporan_penuh_E_FSA_2_oleh_IO_AIO"
-                                                value="0" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                                value="Tidak Dilampirkan" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Tiada</span>
                                         </label>
                                     </div>
-                                    <div x-show="status == '1'" x-transition class="mt-2">
+                                    <div x-show="status == 'Dilampirkan'" x-transition class="mt-2">
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div>
                                                 <label for="nama_bank_laporan_E_FSA_2_oleh_IO_AIO"
@@ -864,22 +864,22 @@
                             <h5 class="font-medium text-gray-700 mb-3">E-FSA (BANK) - 3</h5>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <!-- Permohonan E-FSA BANK 3 -->
-                                <div x-data="{ status: '{{ $paper->status_permohonan_E_FSA_3_oleh_IO_AIO ? 1 : 0 }}' }">
+                                <div x-data="{ status: '{{ $paper->status_permohonan_E_FSA_3_oleh_IO_AIO == 'Permohonan Dibuat' ? 'Permohonan Dibuat' : 'Tiada Permohonan' }}' }">
                                     <label class="block text-sm font-medium text-gray-700">Permohonan E-FSA (BANK) - 3
                                         oleh IO/AIO</label>
                                     <div class="mt-2 flex items-center space-x-6">
                                         <label class="flex items-center cursor-pointer">
-                                            <input type="radio" name="status_permohonan_E_FSA_3_oleh_IO_AIO" value="1"
+                                            <input type="radio" name="status_permohonan_E_FSA_3_oleh_IO_AIO" value="Permohonan Dibuat"
                                                 x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Ada</span>
                                         </label>
                                         <label class="flex items-center cursor-pointer">
-                                            <input type="radio" name="status_permohonan_E_FSA_3_oleh_IO_AIO" value="0"
+                                            <input type="radio" name="status_permohonan_E_FSA_3_oleh_IO_AIO" value="Tiada Permohonan"
                                                 x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Tiada</span>
                                         </label>
                                     </div>
-                                    <div x-show="status == '1'" x-transition class="mt-2">
+                                    <div x-show="status == 'Permohonan Dibuat'" x-transition class="mt-2">
                                         <label for="nama_bank_permohonan_E_FSA_3_BANK"
                                             class="block text-sm text-gray-600">Jika Ada, nyatakan bank:</label>
                                         <input type="text" name="nama_bank_permohonan_E_FSA_3_BANK"
@@ -891,22 +891,22 @@
 
                                 <!-- Laporan Penuh E-FSA BANK 3 -->
                                 <div
-                                    x-data="{ status: '{{ $paper->status_laporan_penuh_E_FSA_3_oleh_IO_AIO ? 1 : 0 }}' }">
+                                    x-data="{ status: '{{ $paper->status_laporan_penuh_E_FSA_3_oleh_IO_AIO == 'Dilampirkan' ? 'Dilampirkan' : 'Tidak Dilampirkan' }}' }">
                                     <label class="block text-sm font-medium text-gray-700">Laporan Penuh E-FSA (BANK) -
                                         3 oleh IO/AIO</label>
                                     <div class="mt-2 flex items-center space-x-6">
                                         <label class="flex items-center cursor-pointer">
                                             <input type="radio" name="status_laporan_penuh_E_FSA_3_oleh_IO_AIO"
-                                                value="1" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                                value="Dilampirkan" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Dilampirkan</span>
                                         </label>
                                         <label class="flex items-center cursor-pointer">
                                             <input type="radio" name="status_laporan_penuh_E_FSA_3_oleh_IO_AIO"
-                                                value="0" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                                value="Tidak Dilampirkan" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Tiada</span>
                                         </label>
                                     </div>
-                                    <div x-show="status == '1'" x-transition class="mt-2">
+                                    <div x-show="status == 'Dilampirkan'" x-transition class="mt-2">
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div>
                                                 <label for="nama_bank_laporan_E_FSA_3_oleh_IO_AIO"
@@ -935,22 +935,22 @@
                             <h5 class="font-medium text-gray-700 mb-3">E-FSA (BANK) - 4</h5>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <!-- Permohonan E-FSA BANK 4 -->
-                                <div x-data="{ status: '{{ $paper->status_permohonan_E_FSA_4_oleh_IO_AIO ? 1 : 0 }}' }">
+                                <div x-data="{ status: '{{ $paper->status_permohonan_E_FSA_4_oleh_IO_AIO == 'Permohonan Dibuat' ? 'Permohonan Dibuat' : 'Tiada Permohonan' }}' }">
                                     <label class="block text-sm font-medium text-gray-700">Permohonan E-FSA (BANK) - 4
                                         oleh IO/AIO</label>
                                     <div class="mt-2 flex items-center space-x-6">
                                         <label class="flex items-center cursor-pointer">
-                                            <input type="radio" name="status_permohonan_E_FSA_4_oleh_IO_AIO" value="1"
+                                            <input type="radio" name="status_permohonan_E_FSA_4_oleh_IO_AIO" value="Permohonan Dibuat"
                                                 x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Ada</span>
                                         </label>
                                         <label class="flex items-center cursor-pointer">
-                                            <input type="radio" name="status_permohonan_E_FSA_4_oleh_IO_AIO" value="0"
+                                            <input type="radio" name="status_permohonan_E_FSA_4_oleh_IO_AIO" value="Tiada Permohonan"
                                                 x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Tiada</span>
                                         </label>
                                     </div>
-                                    <div x-show="status == '1'" x-transition class="mt-2">
+                                    <div x-show="status == 'Permohonan Dibuat'" x-transition class="mt-2">
                                         <label for="nama_bank_permohonan_E_FSA_4_BANK"
                                             class="block text-sm text-gray-600">Jika Ada, nyatakan bank:</label>
                                         <input type="text" name="nama_bank_permohonan_E_FSA_4_BANK"
@@ -962,22 +962,22 @@
 
                                 <!-- Laporan Penuh E-FSA BANK 4 -->
                                 <div
-                                    x-data="{ status: '{{ $paper->status_laporan_penuh_E_FSA_4_oleh_IO_AIO ? 1 : 0 }}' }">
+                                    x-data="{ status: '{{ $paper->status_laporan_penuh_E_FSA_4_oleh_IO_AIO == 'Dilampirkan' ? 'Dilampirkan' : 'Tidak Dilampirkan' }}' }">
                                     <label class="block text-sm font-medium text-gray-700">Laporan Penuh E-FSA (BANK) -
                                         4 oleh IO/AIO</label>
                                     <div class="mt-2 flex items-center space-x-6">
                                         <label class="flex items-center cursor-pointer">
                                             <input type="radio" name="status_laporan_penuh_E_FSA_4_oleh_IO_AIO"
-                                                value="1" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                                value="Dilampirkan" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Dilampirkan</span>
                                         </label>
                                         <label class="flex items-center cursor-pointer">
                                             <input type="radio" name="status_laporan_penuh_E_FSA_4_oleh_IO_AIO"
-                                                value="0" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                                value="Tidak Dilampirkan" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Tiada</span>
                                         </label>
                                     </div>
-                                    <div x-show="status == '1'" x-transition class="mt-2">
+                                    <div x-show="status == 'Dilampirkan'" x-transition class="mt-2">
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div>
                                                 <label for="nama_bank_laporan_E_FSA_4_oleh_IO_AIO"
@@ -1006,22 +1006,22 @@
                             <h5 class="font-medium text-gray-700 mb-3">E-FSA (BANK) - 5</h5>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <!-- Permohonan E-FSA BANK 5 -->
-                                <div x-data="{ status: '{{ $paper->status_permohonan_E_FSA_5_oleh_IO_AIO ? 1 : 0 }}' }">
+                                <div x-data="{ status: '{{ $paper->status_permohonan_E_FSA_5_oleh_IO_AIO == 'Permohonan Dibuat' ? 'Permohonan Dibuat' : 'Tiada Permohonan' }}' }">
                                     <label class="block text-sm font-medium text-gray-700">Permohonan E-FSA (BANK) - 5
                                         oleh IO/AIO</label>
                                     <div class="mt-2 flex items-center space-x-6">
                                         <label class="flex items-center cursor-pointer">
-                                            <input type="radio" name="status_permohonan_E_FSA_5_oleh_IO_AIO" value="1"
+                                            <input type="radio" name="status_permohonan_E_FSA_5_oleh_IO_AIO" value="Permohonan Dibuat"
                                                 x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Ada</span>
                                         </label>
                                         <label class="flex items-center cursor-pointer">
-                                            <input type="radio" name="status_permohonan_E_FSA_5_oleh_IO_AIO" value="0"
+                                            <input type="radio" name="status_permohonan_E_FSA_5_oleh_IO_AIO" value="Tiada Permohonan"
                                                 x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Tiada</span>
                                         </label>
                                     </div>
-                                    <div x-show="status == '1'" x-transition class="mt-2">
+                                    <div x-show="status == 'Permohonan Dibuat'" x-transition class="mt-2">
                                         <label for="nama_bank_permohonan_E_FSA_5_BANK"
                                             class="block text-sm text-gray-600">Jika Ada, nyatakan bank:</label>
                                         <input type="text" name="nama_bank_permohonan_E_FSA_5_BANK"
@@ -1033,22 +1033,22 @@
 
                                 <!-- Laporan Penuh E-FSA BANK 5 -->
                                 <div
-                                    x-data="{ status: '{{ $paper->status_laporan_penuh_E_FSA_5_oleh_IO_AIO ? 1 : 0 }}' }">
+                                    x-data="{ status: '{{ $paper->status_laporan_penuh_E_FSA_5_oleh_IO_AIO == 'Dilampirkan' ? 'Dilampirkan' : 'Tidak Dilampirkan' }}' }">
                                     <label class="block text-sm font-medium text-gray-700">Laporan Penuh E-FSA (BANK) -
                                         5 oleh IO/AIO</label>
                                     <div class="mt-2 flex items-center space-x-6">
                                         <label class="flex items-center cursor-pointer">
                                             <input type="radio" name="status_laporan_penuh_E_FSA_5_oleh_IO_AIO"
-                                                value="1" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                                value="Dilampirkan" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Dilampirkan</span>
                                         </label>
                                         <label class="flex items-center cursor-pointer">
                                             <input type="radio" name="status_laporan_penuh_E_FSA_5_oleh_IO_AIO"
-                                                value="0" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                                value="Tidak Dilampirkan" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Tiada</span>
                                         </label>
                                     </div>
-                                    <div x-show="status == '1'" x-transition class="mt-2">
+                                    <div x-show="status == 'Dilampirkan'" x-transition class="mt-2">
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div>
                                                 <label for="nama_bank_laporan_E_FSA_5_oleh_IO_AIO"
@@ -1083,22 +1083,22 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <!-- Permohonan E-FSA TELCO 1 -->
                                 <div
-                                    x-data="{ status: '{{ $paper->status_permohonan_E_FSA_1_telco_oleh_IO_AIO ? 1 : 0 }}' }">
+                                    x-data="{ status: '{{ $paper->status_permohonan_E_FSA_1_telco_oleh_IO_AIO == 'Permohonan Dibuat' ? 'Permohonan Dibuat' : 'Tiada Permohonan' }}' }">
                                     <label class="block text-sm font-medium text-gray-700">Permohonan E-FSA (TELCO) - 1
                                         oleh IO/AIO</label>
                                     <div class="mt-2 flex items-center space-x-6">
                                         <label class="flex items-center cursor-pointer">
                                             <input type="radio" name="status_permohonan_E_FSA_1_telco_oleh_IO_AIO"
-                                                value="1" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                                value="Permohonan Dibuat" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Ada</span>
                                         </label>
                                         <label class="flex items-center cursor-pointer">
                                             <input type="radio" name="status_permohonan_E_FSA_1_telco_oleh_IO_AIO"
-                                                value="0" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                                value="Tiada Permohonan" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Tiada</span>
                                         </label>
                                     </div>
-                                    <div x-show="status == '1'" x-transition class="mt-2">
+                                    <div x-show="status == 'Permohonan Dibuat'" x-transition class="mt-2">
                                         <label for="nama_telco_permohonan_E_FSA_1_oleh_IO_AIO"
                                             class="block text-sm text-gray-600">Jika Ada, nyatakan telco:</label>
                                         <input type="text" name="nama_telco_permohonan_E_FSA_1_oleh_IO_AIO"
@@ -1110,22 +1110,22 @@
 
                                 <!-- Laporan Penuh E-FSA TELCO 1 -->
                                 <div
-                                    x-data="{ status: '{{ $paper->status_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO ? 1 : 0 }}' }">
+                                    x-data="{ status: '{{ $paper->status_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO == 'Dilampirkan' ? 'Dilampirkan' : 'Tidak Dilampirkan' }}' }">
                                     <label class="block text-sm font-medium text-gray-700">Laporan Penuh E-FSA (TELCO) -
                                         1 oleh IO/AIO</label>
                                     <div class="mt-2 flex items-center space-x-6">
                                         <label class="flex items-center cursor-pointer">
                                             <input type="radio" name="status_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO"
-                                                value="1" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                                value="Dilampirkan" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Dilampirkan</span>
                                         </label>
                                         <label class="flex items-center cursor-pointer">
                                             <input type="radio" name="status_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO"
-                                                value="0" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                                value="Tidak Dilampirkan" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Tiada</span>
                                         </label>
                                     </div>
-                                    <div x-show="status == '1'" x-transition class="mt-2">
+                                    <div x-show="status == 'Dilampirkan'" x-transition class="mt-2">
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div>
                                                 <label for="nama_telco_laporan_E_FSA_1_oleh_IO_AIO"
@@ -1139,9 +1139,9 @@
                                             <div>
                                                 <label for="tarikh_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO"
                                                     class="block text-sm text-gray-600">Tarikh:</label>
-                                                <input type="date" name="tarikh_laporan_penuh_E_FSA_1_oleh_IO_AIO"
-                                                    id="tarikh_laporan_penuh_E_FSA_1_oleh_IO_AIO"
-                                                    value="{{ old('tarikh_laporan_penuh_E_FSA_1_oleh_IO_AIO', optional($paper->tarikh_laporan_penuh_E_FSA_1_oleh_IO_AIO)->format('Y-m-d')) }}"
+                                                <input type="date" name="tarikh_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO"
+                                                    id="tarikh_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO"
+                                                    value="{{ old('tarikh_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO', optional($paper->tarikh_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO)->format('Y-m-d')) }}"
                                                     class="mt-1 block w-full form-input">
                                             </div>
                                         </div>
@@ -1155,22 +1155,22 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <!-- Permohonan E-FSA TELCO 2 -->
                                 <div
-                                    x-data="{ status: '{{ $paper->status_permohonan_E_FSA_2_telco_oleh_IO_AIO ? 1 : 0 }}' }">
+                                    x-data="{ status: '{{ $paper->status_permohonan_E_FSA_2_telco_oleh_IO_AIO == 'Permohonan Dibuat' ? 'Permohonan Dibuat' : 'Tiada Permohonan' }}' }">
                                     <label class="block text-sm font-medium text-gray-700">Permohonan E-FSA (TELCO) - 2
                                         oleh IO/AIO</label>
                                     <div class="mt-2 flex items-center space-x-6">
                                         <label class="flex items-center cursor-pointer">
                                             <input type="radio" name="status_permohonan_E_FSA_2_telco_oleh_IO_AIO"
-                                                value="1" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                                value="Permohonan Dibuat" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Ada</span>
                                         </label>
                                         <label class="flex items-center cursor-pointer">
                                             <input type="radio" name="status_permohonan_E_FSA_2_telco_oleh_IO_AIO"
-                                                value="0" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                                value="Tiada Permohonan" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Tiada</span>
                                         </label>
                                     </div>
-                                    <div x-show="status == '1'" x-transition class="mt-2">
+                                    <div x-show="status == 'Permohonan Dibuat'" x-transition class="mt-2">
                                         <label for="nama_telco_permohonan_E_FSA_2_oleh_IO_AIO"
                                             class="block text-sm text-gray-600">Jika Ada, nyatakan telco:</label>
                                         <input type="text" name="nama_telco_permohonan_E_FSA_2_oleh_IO_AIO"
@@ -1182,22 +1182,22 @@
 
                                 <!-- Laporan Penuh E-FSA TELCO 2 -->
                                 <div
-                                    x-data="{ status: '{{ $paper->status_laporan_penuh_E_FSA_2_telco_oleh_IO_AIO ? 1 : 0 }}' }">
+                                    x-data="{ status: '{{ $paper->status_laporan_penuh_E_FSA_2_telco_oleh_IO_AIO == 'Dilampirkan' ? 'Dilampirkan' : 'Tidak Dilampirkan' }}' }">
                                     <label class="block text-sm font-medium text-gray-700">Laporan Penuh E-FSA (TELCO) -
                                         2 oleh IO/AIO</label>
                                     <div class="mt-2 flex items-center space-x-6">
                                         <label class="flex items-center cursor-pointer">
                                             <input type="radio" name="status_laporan_penuh_E_FSA_2_oleh_IO_AIO"
-                                                value="1" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                                value="Dilampirkan" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Dilampirkan</span>
                                         </label>
                                         <label class="flex items-center cursor-pointer">
                                             <input type="radio" name="status_laporan_penuh_E_FSA_2_oleh_IO_AIO"
-                                                value="0" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                                value="Tidak Dilampirkan" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Tiada</span>
                                         </label>
                                     </div>
-                                    <div x-show="status == '1'" x-transition class="mt-2">
+                                    <div x-show="status == 'Dilampirkan'" x-transition class="mt-2">
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div>
                                                 <label for="nama_telco_laporan_E_FSA_2_oleh_IO_AIO"
@@ -1211,9 +1211,9 @@
                                             <div>
                                                 <label for="tarikh_laporan_penuh_E_FSA_2_telco_oleh_IO_AIO"
                                                     class="block text-sm text-gray-600">Tarikh:</label>
-                                                <input type="date" name="tarikh_laporan_penuh_E_FSA_2_oleh_IO_AIO"
-                                                    id="tarikh_laporan_penuh_E_FSA_2_oleh_IO_AIO"
-                                                    value="{{ old('tarikh_laporan_penuh_E_FSA_2_oleh_IO_AIO', optional($paper->tarikh_laporan_penuh_E_FSA_2_oleh_IO_AIO)->format('Y-m-d')) }}"
+                                                <input type="date" name="tarikh_laporan_penuh_E_FSA_2_telco_oleh_IO_AIO"
+                                                    id="tarikh_laporan_penuh_E_FSA_2_telco_oleh_IO_AIO"
+                                                    value="{{ old('tarikh_laporan_penuh_E_FSA_2_telco_oleh_IO_AIO', optional($paper->tarikh_laporan_penuh_E_FSA_2_telco_oleh_IO_AIO)->format('Y-m-d')) }}"
                                                     class="mt-1 block w-full form-input">
                                             </div>
                                         </div>
@@ -1227,22 +1227,22 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <!-- Permohonan E-FSA TELCO 3 -->
                                 <div
-                                    x-data="{ status: '{{ $paper->status_permohonan_E_FSA_3_telco_oleh_IO_AIO ? 1 : 0 }}' }">
+                                    x-data="{ status: '{{ $paper->status_permohonan_E_FSA_3_telco_oleh_IO_AIO == 'Permohonan Dibuat' ? 'Permohonan Dibuat' : 'Tiada Permohonan' }}' }">
                                     <label class="block text-sm font-medium text-gray-700">Permohonan E-FSA (TELCO) - 3
                                         oleh IO/AIO</label>
                                     <div class="mt-2 flex items-center space-x-6">
                                         <label class="flex items-center cursor-pointer">
                                             <input type="radio" name="status_permohonan_E_FSA_3_telco_oleh_IO_AIO"
-                                                value="1" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                                value="Permohonan Dibuat" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Ada</span>
                                         </label>
                                         <label class="flex items-center cursor-pointer">
                                             <input type="radio" name="status_permohonan_E_FSA_3_telco_oleh_IO_AIO"
-                                                value="0" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                                value="Tiada Permohonan" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Tiada</span>
                                         </label>
                                     </div>
-                                    <div x-show="status == '1'" x-transition class="mt-2">
+                                    <div x-show="status == 'Permohonan Dibuat'" x-transition class="mt-2">
                                         <label for="nama_telco_permohonan_E_FSA_3_oleh_IO_AIO"
                                             class="block text-sm text-gray-600">Jika Ada, nyatakan telco:</label>
                                         <input type="text" name="nama_telco_permohonan_E_FSA_3_oleh_IO_AIO"
@@ -1254,27 +1254,27 @@
 
                                 <!-- Laporan Penuh E-FSA TELCO 3 -->
                                 <div
-                                    x-data="{ status: '{{ $paper->status_laporan_penuh_E_FSA_3_telco_oleh_IO_AIO ? 1 : 0 }}' }">
+                                    x-data="{ status: '{{ $paper->status_laporan_penuh_E_FSA_3_telco_oleh_IO_AIO == 'Dilampirkan' ? 'Dilampirkan' : 'Tidak Dilampirkan' }}' }">
                                     <label class="block text-sm font-medium text-gray-700">Laporan Penuh E-FSA (TELCO) -
                                         3 oleh IO/AIO</label>
                                     <div class="mt-2 flex items-center space-x-6">
                                         <label class="flex items-center cursor-pointer">
                                             <input type="radio" name="status_laporan_penuh_E_FSA_3_oleh_IO_AIO"
-                                                value="1" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                                value="Dilampirkan" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Dilampirkan</span>
                                         </label>
                                         <label class="flex items-center cursor-pointer">
                                             <input type="radio" name="status_laporan_penuh_E_FSA_3_oleh_IO_AIO"
-                                                value="0" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                                value="Tidak Dilampirkan" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Tiada</span>
                                         </label>
                                     </div>
-                                    <div x-show="status == '1'" x-transition class="mt-2">
+                                    <div x-show="status == 'Dilampirkan'" x-transition class="mt-2">
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div>
                                                 <label for="nama_telco_laporan_E_FSA_3_oleh_IO_AIO"
                                                     class="block text-sm text-gray-600">Jika Dilampirkan, nyatakan
-                                                    bank:</label>
+                                                    telco:</label>
                                                 <input type="text" name="nama_telco_laporan_E_FSA_3_oleh_IO_AIO"
                                                     id="nama_telco_laporan_E_FSA_3_oleh_IO_AIO"
                                                     value="{{ old('nama_telco_laporan_E_FSA_3_oleh_IO_AIO', $paper->nama_telco_laporan_E_FSA_3_oleh_IO_AIO) }}"
@@ -1283,9 +1283,9 @@
                                             <div>
                                                 <label for="tarikh_laporan_penuh_E_FSA_3_telco_oleh_IO_AIO"
                                                     class="block text-sm text-gray-600">Tarikh:</label>
-                                                <input type="date" name="tarikh_laporan_penuh_E_FSA_3_oleh_IO_AIO"
-                                                    id="tarikh_laporan_penuh_E_FSA_3_oleh_IO_AIO"
-                                                    value="{{ old('tarikh_laporan_penuh_E_FSA_3_oleh_IO_AIO', optional($paper->tarikh_laporan_penuh_E_FSA_3_oleh_IO_AIO)->format('Y-m-d')) }}"
+                                                <input type="date" name="tarikh_laporan_penuh_E_FSA_3_telco_oleh_IO_AIO"
+                                                    id="tarikh_laporan_penuh_E_FSA_3_telco_oleh_IO_AIO"
+                                                    value="{{ old('tarikh_laporan_penuh_E_FSA_3_telco_oleh_IO_AIO', optional($paper->tarikh_laporan_penuh_E_FSA_3_telco_oleh_IO_AIO)->format('Y-m-d')) }}"
                                                     class="mt-1 block w-full form-input">
                                             </div>
                                         </div>
@@ -1299,22 +1299,22 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <!-- Permohonan E-FSA TELCO 4 -->
                                 <div
-                                    x-data="{ status: '{{ $paper->status_permohonan_E_FSA_4_telco_oleh_IO_AIO ? 1 : 0 }}' }">
+                                    x-data="{ status: '{{ $paper->status_permohonan_E_FSA_4_telco_oleh_IO_AIO == 'Permohonan Dibuat' ? 'Permohonan Dibuat' : 'Tiada Permohonan' }}' }">
                                     <label class="block text-sm font-medium text-gray-700">Permohonan E-FSA (TELCO) - 4
                                         oleh IO/AIO</label>
                                     <div class="mt-2 flex items-center space-x-6">
                                         <label class="flex items-center cursor-pointer">
                                             <input type="radio" name="status_permohonan_E_FSA_4_telco_oleh_IO_AIO"
-                                                value="1" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                                value="Permohonan Dibuat" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Ada</span>
                                         </label>
                                         <label class="flex items-center cursor-pointer">
                                             <input type="radio" name="status_permohonan_E_FSA_4_telco_oleh_IO_AIO"
-                                                value="0" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                                value="Tiada Permohonan" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Tiada</span>
                                         </label>
                                     </div>
-                                    <div x-show="status == '1'" x-transition class="mt-2">
+                                    <div x-show="status == 'Permohonan Dibuat'" x-transition class="mt-2">
                                         <label for="nama_telco_permohonan_E_FSA_4_oleh_IO_AIO"
                                             class="block text-sm text-gray-600">Jika Ada, nyatakan telco:</label>
                                         <input type="text" name="nama_telco_permohonan_E_FSA_4_oleh_IO_AIO"
@@ -1326,22 +1326,22 @@
 
                                 <!-- Laporan Penuh E-FSA TELCO 4 -->
                                 <div
-                                    x-data="{ status: '{{ $paper->status_laporan_penuh_E_FSA_4_telco_oleh_IO_AIO ? 1 : 0 }}' }">
+                                    x-data="{ status: '{{ $paper->status_laporan_penuh_E_FSA_4_telco_oleh_IO_AIO == 'Dilampirkan' ? 'Dilampirkan' : 'Tidak Dilampirkan' }}' }">
                                     <label class="block text-sm font-medium text-gray-700">Laporan Penuh E-FSA (TELCO) -
                                         4 oleh IO/AIO</label>
                                     <div class="mt-2 flex items-center space-x-6">
                                         <label class="flex items-center cursor-pointer">
                                             <input type="radio" name="status_laporan_penuh_E_FSA_4_oleh_IO_AIO"
-                                                value="1" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                                value="Dilampirkan" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Dilampirkan</span>
                                         </label>
                                         <label class="flex items-center cursor-pointer">
                                             <input type="radio" name="status_laporan_penuh_E_FSA_4_oleh_IO_AIO"
-                                                value="0" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                                value="Tidak Dilampirkan" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Tiada</span>
                                         </label>
                                     </div>
-                                    <div x-show="status == '1'" x-transition class="mt-2">
+                                    <div x-show="status == 'Dilampirkan'" x-transition class="mt-2">
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div>
                                                 <label for="nama_telco_laporan_E_FSA_4_oleh_IO_AIO"
@@ -1371,22 +1371,22 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <!-- Permohonan E-FSA TELCO 5 -->
                                 <div
-                                    x-data="{ status: '{{ $paper->status_permohonan_E_FSA_5_telco_oleh_IO_AIO ? 1 : 0 }}' }">
+                                    x-data="{ status: '{{ $paper->status_permohonan_E_FSA_5_telco_oleh_IO_AIO == 'Permohonan Dibuat' ? 'Permohonan Dibuat' : 'Tiada Permohonan' }}' }">
                                     <label class="block text-sm font-medium text-gray-700">Permohonan E-FSA (TELCO) - 5
                                         oleh IO/AIO</label>
                                     <div class="mt-2 flex items-center space-x-6">
                                         <label class="flex items-center cursor-pointer">
                                             <input type="radio" name="status_permohonan_E_FSA_5_telco_oleh_IO_AIO"
-                                                value="1" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                                value="Permohonan Dibuat" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Ada</span>
                                         </label>
                                         <label class="flex items-center cursor-pointer">
                                             <input type="radio" name="status_permohonan_E_FSA_5_telco_oleh_IO_AIO"
-                                                value="0" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                                value="Tiada Permohonan" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Tiada</span>
                                         </label>
                                     </div>
-                                    <div x-show="status == '1'" x-transition class="mt-2">
+                                    <div x-show="status == 'Permohonan Dibuat'" x-transition class="mt-2">
                                         <label for="nama_telco_permohonan_E_FSA_5_oleh_IO_AIO"
                                             class="block text-sm text-gray-600">Jika Ada, nyatakan telco:</label>
                                         <input type="text" name="nama_telco_permohonan_E_FSA_5_oleh_IO_AIO"
@@ -1398,22 +1398,22 @@
 
                                 <!-- Laporan Penuh E-FSA TELCO 5 -->
                                 <div
-                                    x-data="{ status: '{{ $paper->status_laporan_penuh_E_FSA_5_telco_oleh_IO_AIO ? 1 : 0 }}' }">
+                                    x-data="{ status: '{{ $paper->status_laporan_penuh_E_FSA_5_telco_oleh_IO_AIO == 'Dilampirkan' ? 'Dilampirkan' : 'Tidak Dilampirkan' }}' }">
                                     <label class="block text-sm font-medium text-gray-700">Laporan Penuh E-FSA (TELCO) -
                                         5 oleh IO/AIO</label>
                                     <div class="mt-2 flex items-center space-x-6">
                                         <label class="flex items-center cursor-pointer">
                                             <input type="radio" name="status_laporan_penuh_E_FSA_5_oleh_IO_AIO"
-                                                value="1" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                                value="Dilampirkan" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Dilampirkan</span>
                                         </label>
                                         <label class="flex items-center cursor-pointer">
                                             <input type="radio" name="status_laporan_penuh_E_FSA_5_oleh_IO_AIO"
-                                                value="0" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                                value="Tidak Dilampirkan" x-model="status" class="form-radio h-4 w-4 text-indigo-600">
                                             <span class="ml-2 text-gray-700">Tiada</span>
                                         </label>
                                     </div>
-                                    <div x-show="status == '1'" x-transition class="mt-2">
+                                    <div x-show="status == 'Dilampirkan'" x-transition class="mt-2">
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div>
                                                 <label for="nama_telco_laporan_E_FSA_5_oleh_IO_AIO"
@@ -1458,7 +1458,7 @@
                                             <span class="ml-2 text-gray-700">Tiada</span>
                                         </label>
                                     </div>
-                                    <div x-show="status == '1'" x-transition class="mt-2">
+                                    <div x-show="status == 'Permohonan Dibuat'" x-transition class="mt-2">
                                         <label for="tarikh_permohonan_laporan_puspakom"
                                             class="block text-sm text-gray-600">Jika Ada, nyatakan tarikh:</label>
                                         <input type="date" name="tarikh_permohonan_laporan_puspakom"
@@ -1484,7 +1484,7 @@
                                             <span class="ml-2 text-gray-700">Tiada</span>
                                         </label>
                                     </div>
-                                    <div x-show="status == '1'" x-transition class="mt-2">
+                                    <div x-show="status == 'Permohonan Dibuat'" x-transition class="mt-2">
                                         <label for="tarikh_laporan_penuh_puspakom"
                                             class="block text-sm text-gray-600">Jika Dilampirkan, nyatakan
                                             tarikh:</label>
@@ -1517,7 +1517,7 @@
                                             <span class="ml-2 text-gray-700">Tiada</span>
                                         </label>
                                     </div>
-                                    <div x-show="status == '1'" x-transition class="mt-2">
+                                    <div x-show="status == 'Permohonan Dibuat'" x-transition class="mt-2">
                                         <label for="tarikh_permohonan_laporan_jpj"
                                             class="block text-sm text-gray-600">Jika Ada, nyatakan tarikh:</label>
                                         <input type="date" name="tarikh_permohonan_laporan_jpj"
@@ -1542,7 +1542,7 @@
                                             <span class="ml-2 text-gray-700">Tiada</span>
                                         </label>
                                     </div>
-                                    <div x-show="status == '1'" x-transition class="mt-2">
+                                    <div x-show="status == 'Permohonan Dibuat'" x-transition class="mt-2">
                                         <label for="tarikh_laporan_penuh_jpj" class="block text-sm text-gray-600">Jika
                                             Dilampirkan, nyatakan tarikh:</label>
                                         <input type="date" name="tarikh_laporan_penuh_jpj" id="tarikh_laporan_penuh_jpj"
@@ -1552,6 +1552,186 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- 
+                        
+                        JKR Reports Section
+
+                        <div class="bg-gray-50 p-4 rounded-lg mt-4">
+                            <h5 class="font-medium text-gray-700 mb-3">Laporan JKR</h5>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                                Permohonan Laporan JKR 
+
+                                <div x-data="{ status: '{{ $paper->status_permohonan_laporan_jkr ? 1 : 0 }}' }">
+                                    <label class="block text-sm font-medium text-gray-700">Permohonan Laporan
+                                        JKR</label>
+                                    <div class="mt-2 flex items-center space-x-6">
+                                        <label class="flex items-center cursor-pointer">
+                                            <input type="radio" name="status_permohonan_laporan_jkr" value="1"
+                                                x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                            <span class="ml-2 text-gray-700">Ada</span>
+                                        </label>
+                                        <label class="flex items-center cursor-pointer">
+                                            <input type="radio" name="status_permohonan_laporan_jkr" value="0"
+                                                x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                            <span class="ml-2 text-gray-700">Tiada</span>
+                                        </label>
+                                    </div>
+                                    <div x-show="status == 'Permohonan Dibuat'" x-transition class="mt-2">
+                                        <label for="tarikh_permohonan_laporan_jkr"
+                                            class="block text-sm text-gray-600">Jika Ada, nyatakan tarikh:</label>
+                                        <input type="date" name="tarikh_permohonan_laporan_jkr"
+                                            id="tarikh_permohonan_laporan_jkr"
+                                            value="{{ old('tarikh_permohonan_laporan_jkr', optional($paper->tarikh_permohonan_laporan_jkr)->format('Y-m-d')) }}"
+                                            class="mt-1 block w-full form-input">
+                                    </div>
+                                </div> 
+                                
+                                -->
+
+                                <!-- 
+                                
+                                Laporan Penuh JKR 
+                                <div x-data="{ status: '{{ $paper->status_laporan_penuh_jkr ? 1 : 0 }}' }">
+                                    <label class="block text-sm font-medium text-gray-700">Laporan Penuh JKR</label>
+                                    <div class="mt-2 flex items-center space-x-6">
+                                        <label class="flex items-center cursor-pointer">
+                                            <input type="radio" name="status_laporan_penuh_jkr" value="1"
+                                                x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                            <span class="ml-2 text-gray-700">Dilampirkan</span>
+                                        </label>
+                                        <label class="flex items-center cursor-pointer">
+                                            <input type="radio" name="status_laporan_penuh_jkr" value="0"
+                                                x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                            <span class="ml-2 text-gray-700">Tiada</span>
+                                        </label>
+                                    </div>
+                                    <div x-show="status == 'Permohonan Dibuat'" x-transition class="mt-2">
+                                        <label for="tarikh_laporan_penuh_jkr" class="block text-sm text-gray-600">Jika
+                                            Dilampirkan, nyatakan tarikh:</label>
+                                        <input type="date" name="tarikh_laporan_penuh_jkr" id="tarikh_laporan_penuh_jkr"
+                                            value="{{ old('tarikh_laporan_penuh_jkr', optional($paper->tarikh_laporan_penuh_jkr)->format('Y-m-d')) }}"
+                                            class="mt-1 block w-full form-input">
+                                    </div>
+                                </div> 
+                                
+                                 -->
+                            </div>
+                        </div>
+
+                        <!-- IMIGRESEN Reports Section -->
+                        <div class="bg-gray-50 p-4 rounded-lg mt-4">
+                            <h5 class="font-medium text-gray-700 mb-3">Laporan IMIGRESEN</h5>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Permohonan Laporan IMIGRESEN -->
+                                <div x-data="{ status: '{{ $paper->status_permohonan_laporan_imigresen ? 1 : 0 }}' }">
+                                    <label class="block text-sm font-medium text-gray-700">Permohonan Laporan
+                                        IMIGRESEN</label>
+                                    <div class="mt-2 flex items-center space-x-6">
+                                        <label class="flex items-center cursor-pointer">
+                                            <input type="radio" name="status_permohonan_laporan_imigresen" value="1"
+                                                x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                            <span class="ml-2 text-gray-700">Ada</span>
+                                        </label>
+                                        <label class="flex items-center cursor-pointer">
+                                            <input type="radio" name="status_permohonan_laporan_imigresen" value="0"
+                                                x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                            <span class="ml-2 text-gray-700">Tiada</span>
+                                        </label>
+                                    </div>
+                                    <div x-show="status == 'Permohonan Dibuat'" x-transition class="mt-2">
+                                        <label for="tarikh_permohonan_laporan_imigresen"
+                                            class="block text-sm text-gray-600">Jika Ada, nyatakan tarikh:</label>
+                                        <input type="date" name="tarikh_permohonan_laporan_imigresen"
+                                            id="tarikh_permohonan_laporan_imigresen"
+                                            value="{{ old('tarikh_permohonan_laporan_imigresen', optional($paper->tarikh_permohonan_laporan_imigresen)->format('Y-m-d')) }}"
+                                            class="mt-1 block w-full form-input">
+                                    </div>
+                                </div>
+
+                                <!-- Laporan Penuh IMIGRESEN -->
+                                <div x-data="{ status: '{{ $paper->status_laporan_penuh_imigresen ? 1 : 0 }}' }">
+                                    <label class="block text-sm font-medium text-gray-700">Laporan Penuh IMIGRESEN</label>
+                                    <div class="mt-2 flex items-center space-x-6">
+                                        <label class="flex items-center cursor-pointer">
+                                            <input type="radio" name="status_laporan_penuh_imigresen" value="1"
+                                                x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                            <span class="ml-2 text-gray-700">Dilampirkan</span>
+                                        </label>
+                                        <label class="flex items-center cursor-pointer">
+                                            <input type="radio" name="status_laporan_penuh_imigresen" value="0"
+                                                x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                            <span class="ml-2 text-gray-700">Tiada</span>
+                                        </label>
+                                    </div>
+                                    <div x-show="status == 'Permohonan Dibuat'" x-transition class="mt-2">
+                                        <label for="tarikh_laporan_penuh_imigresen" class="block text-sm text-gray-600">Jika
+                                            Dilampirkan, nyatakan tarikh:</label>
+                                        <input type="date" name="tarikh_laporan_penuh_imigresen" id="tarikh_laporan_penuh_imigresen"
+                                            value="{{ old('tarikh_laporan_penuh_imigresen', optional($paper->tarikh_laporan_penuh_imigresen)->format('Y-m-d')) }}"
+                                            class="mt-1 block w-full form-input">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- KASTAM Reports Section -->
+                        <div class="bg-gray-50 p-4 rounded-lg mt-4">
+                            <h5 class="font-medium text-gray-700 mb-3">Laporan KASTAM</h5>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Permohonan Laporan KASTAM -->
+                                <div x-data="{ status: '{{ $paper->status_permohonan_laporan_kastam ? 1 : 0 }}' }">
+                                    <label class="block text-sm font-medium text-gray-700">Permohonan Laporan
+                                        KASTAM</label>
+                                    <div class="mt-2 flex items-center space-x-6">
+                                        <label class="flex items-center cursor-pointer">
+                                            <input type="radio" name="status_permohonan_laporan_kastam" value="1"
+                                                x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                            <span class="ml-2 text-gray-700">Ada</span>
+                                        </label>
+                                        <label class="flex items-center cursor-pointer">
+                                            <input type="radio" name="status_permohonan_laporan_kastam" value="0"
+                                                x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                            <span class="ml-2 text-gray-700">Tiada</span>
+                                        </label>
+                                    </div>
+                                    <div x-show="status == 'Permohonan Dibuat'" x-transition class="mt-2">
+                                        <label for="tarikh_permohonan_laporan_kastam"
+                                            class="block text-sm text-gray-600">Jika Ada, nyatakan tarikh:</label>
+                                        <input type="date" name="tarikh_permohonan_laporan_kastam"
+                                            id="tarikh_permohonan_laporan_kastam"
+                                            value="{{ old('tarikh_permohonan_laporan_kastam', optional($paper->tarikh_permohonan_laporan_kastam)->format('Y-m-d')) }}"
+                                            class="mt-1 block w-full form-input">
+                                    </div>
+                                </div>
+
+                                <!-- Laporan Penuh KASTAM -->
+                                <div x-data="{ status: '{{ $paper->status_laporan_penuh_kastam ? 1 : 0 }}' }">
+                                    <label class="block text-sm font-medium text-gray-700">Laporan Penuh KASTAM</label>
+                                    <div class="mt-2 flex items-center space-x-6">
+                                        <label class="flex items-center cursor-pointer">
+                                            <input type="radio" name="status_laporan_penuh_kastam" value="1"
+                                                x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                            <span class="ml-2 text-gray-700">Dilampirkan</span>
+                                        </label>
+                                        <label class="flex items-center cursor-pointer">
+                                            <input type="radio" name="status_laporan_penuh_kastam" value="0"
+                                                x-model="status" class="form-radio h-4 w-4 text-indigo-600">
+                                            <span class="ml-2 text-gray-700">Tiada</span>
+                                        </label>
+                                    </div>
+                                    <div x-show="status == 'Permohonan Dibuat'" x-transition class="mt-2">
+                                        <label for="tarikh_laporan_penuh_kastam" class="block text-sm text-gray-600">Jika
+                                            Dilampirkan, nyatakan tarikh:</label>
+                                        <input type="date" name="tarikh_laporan_penuh_kastam" id="tarikh_laporan_penuh_kastam"
+                                            value="{{ old('tarikh_laporan_penuh_kastam', optional($paper->tarikh_laporan_penuh_kastam)->format('Y-m-d')) }}"
+                                            class="mt-1 block w-full form-input">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Forensik PDRM Reports Section -->
                         <div class="bg-gray-50 p-4 rounded-lg mt-4">
                             <h5 class="font-medium text-gray-700 mb-3">Laporan Forensik PDRM</h5>
@@ -1573,7 +1753,7 @@
                                             <span class="ml-2 text-gray-700">Tiada</span>
                                         </label>
                                     </div>
-                                    <div x-show="status == '1'" x-transition class="mt-2">
+                                    <div x-show="status == 'Permohonan Dibuat'" x-transition class="mt-2">
                                         <div>
                                             <label for="tarikh_permohonan_laporan_forensik_pdrm"
                                                 class="block text-sm text-gray-600">Jika Ada, nyatakan tarikh:</label>
@@ -1609,7 +1789,7 @@
                                             <span class="ml-2 text-gray-700">Tiada</span>
                                         </label>
                                     </div>
-                                    <div x-show="status == '1'" x-transition class="mt-2">
+                                    <div x-show="status == 'Permohonan Dibuat'" x-transition class="mt-2">
                                         <label for="tarikh_laporan_penuh_forensik_pdrm"
                                             class="block text-sm text-gray-600">Jika Dilampirkan, nyatakan
                                             tarikh:</label>
@@ -1671,21 +1851,19 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Keputusan Akhir Oleh Mahkamah Sebelum
                                 Kertas Siasatan Di KUS/FAIL Atau Disimpan</label>
-                            <select name="keputusan_akhir_mahkamah" class="mt-1 block w-full form-select">
-                                <option value="">-- Sila Pilih --</option>
-                                <option value="Jatuh Hukum" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'Jatuh Hukum' ? 'selected' : '' }}>Jatuh Hukum
-                                </option>
-                                <option value="NFA" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'NFA' ? 'selected' : '' }}>NFA</option>
-                                <option value="DNA" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'DNA' ? 'selected' : '' }}>DNA</option>
-                                <option value="DNAA" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'DNAA' ? 'selected' : '' }}>DNAA</option>
-                                <option value="KUS/Sementara" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'KUS/Sementara' ? 'selected' : '' }}>
-                                    KUS/Sementara</option>
-                                <option value="Masih Dalam Siasatan OYDS Gagal Dikesan" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'Masih Dalam Siasatan OYDS Gagal Dikesan' ? 'selected' : '' }}>Masih Dalam Siasatan OYDS Gagal
-                                    Dikesan</option>
-                                <option value="Masih Dalam Siasatan Untuk Lengkapkan Dokumentasi" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'Masih Dalam Siasatan Untuk Lengkapkan Dokumentasi' ? 'selected' : '' }}>Masih Dalam Siasatan
-                                    Untuk Lengkapkan Dokumentasi</option>
-                                <option value="Terbengkalai/Tiada Tindakan" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'Terbengkalai/Tiada Tindakan' ? 'selected' : '' }}>Terbengkalai/Tiada Tindakan</option>
-                            </select>
+                            @php
+                                $mahkamahOptions = [
+                                    'Jatuh Hukum' => 'Jatuh Hukum',
+                                    'NFA' => 'NFA',
+                                    'DNA' => 'DNA',
+                                    'DNAA' => 'DNAA',
+                                    'KUS / FAIL' => 'KUS / FAIL',
+                                    'MASIH DALAM SIASATAN / OYDS GAGAL DIKESAN' => 'MASIH DALAM SIASATAN / OYDS GAGAL DIKESAN',
+                                    'MASIH DALAM SIASATAN / LENGKAPKAN DOKUMEN SIASATAN' => 'MASIH DALAM SIASATAN / LENGKAPKAN DOKUMEN SIASATAN',
+                                    'Terbengkalai/Tiada Tindakan' => 'Terbengkalai/Tiada Tindakan'
+                                ];
+                            @endphp
+                            {!! render_json_checkboxes('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah, $mahkamahOptions) !!}
                         </div>
 
                         <div>

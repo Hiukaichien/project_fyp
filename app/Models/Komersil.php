@@ -89,7 +89,31 @@ class Komersil extends Model
         'status_permohonan_laporan_post_mortem_mayat' => 'boolean',
         'tarikh_permohonan_laporan_post_mortem_mayat' => 'date:d/m/Y',
         
-        // E-FSA fields are now strings, but dates still need casting
+        // E-FSA Bank fields - explicitly cast as strings
+        'status_permohonan_E_FSA_1_oleh_IO_AIO' => 'string',
+        'status_laporan_penuh_E_FSA_1_oleh_IO_AIO' => 'string',
+        'status_permohonan_E_FSA_2_oleh_IO_AIO' => 'string',
+        'status_laporan_penuh_E_FSA_2_oleh_IO_AIO' => 'string',
+        'status_permohonan_E_FSA_3_oleh_IO_AIO' => 'string',
+        'status_laporan_penuh_E_FSA_3_oleh_IO_AIO' => 'string',
+        'status_permohonan_E_FSA_4_oleh_IO_AIO' => 'string',
+        'status_laporan_penuh_E_FSA_4_oleh_IO_AIO' => 'string',
+        'status_permohonan_E_FSA_5_oleh_IO_AIO' => 'string',
+        'status_laporan_penuh_E_FSA_5_oleh_IO_AIO' => 'string',
+        
+        // E-FSA Telco fields - explicitly cast as strings
+        'status_permohonan_E_FSA_1_telco_oleh_IO_AIO' => 'string',
+        'status_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO' => 'string',
+        'status_permohonan_E_FSA_2_telco_oleh_IO_AIO' => 'string',
+        'status_laporan_penuh_E_FSA_2_telco_oleh_IO_AIO' => 'string',
+        'status_permohonan_E_FSA_3_telco_oleh_IO_AIO' => 'string',
+        'status_laporan_penuh_E_FSA_3_telco_oleh_IO_AIO' => 'string',
+        'status_permohonan_E_FSA_4_telco_oleh_IO_AIO' => 'string',
+        'status_laporan_penuh_E_FSA_4_telco_oleh_IO_AIO' => 'string',
+        'status_permohonan_E_FSA_5_telco_oleh_IO_AIO' => 'string',
+        'status_laporan_penuh_E_FSA_5_telco_oleh_IO_AIO' => 'string',
+        
+        // E-FSA dates still need casting
         'tarikh_laporan_penuh_E_FSA_1_oleh_IO_AIO' => 'date:d/m/Y',
         'tarikh_laporan_penuh_E_FSA_2_oleh_IO_AIO' => 'date:d/m/Y',
         'tarikh_laporan_penuh_E_FSA_3_oleh_IO_AIO' => 'date:d/m/Y',
@@ -108,10 +132,10 @@ class Komersil extends Model
         'tarikh_laporan_penuh_puspakom' => 'date:d/m/Y',
         
         // JKR
-        'status_permohonan_laporan_jkr' => 'boolean',
-        'tarikh_permohonan_laporan_jkr' => 'date:d/m/Y',
-        'status_laporan_penuh_jkr' => 'boolean',
-        'tarikh_laporan_penuh_jkr' => 'date:d/m/Y',
+        //'status_permohonan_laporan_jkr' => 'boolean',
+        //'tarikh_permohonan_laporan_jkr' => 'date:d/m/Y',
+        //'status_laporan_penuh_jkr' => 'boolean',
+        //'tarikh_laporan_penuh_jkr' => 'date:d/m/Y',
         
         // JPJ
         'status_permohonan_laporan_jpj' => 'boolean',
@@ -143,6 +167,7 @@ class Komersil extends Model
         'muka_surat_4_keputusan_kes_dicatat' => 'boolean',
         'fail_lmm_ada_keputusan_koroner' => 'boolean',
         'status_kus_fail' => 'boolean',
+        'keputusan_akhir_mahkamah' => 'array', // Changed to array for checkbox handling
 
         // Common timestamps
         'created_at' => 'datetime',
@@ -220,8 +245,8 @@ class Komersil extends Model
         'status_laporan_penuh_E_FSA_5_telco_oleh_IO_AIO_text',
         'status_permohonan_laporan_puspakom_text',
         'status_laporan_penuh_puspakom_text',
-        'status_permohonan_laporan_jkr_text',
-        'status_laporan_penuh_jkr_text',
+        //'status_permohonan_laporan_jkr_text',
+        //'status_laporan_penuh_jkr_text',
         'status_permohonan_laporan_jpj_text',
         'status_laporan_penuh_jpj_text',
         'status_permohonan_laporan_imigresen_text',
@@ -640,7 +665,7 @@ public function getTerbengkalaiStatusDcAttribute(): string
         return $this->formatBooleanToMalay($this->status_laporan_penuh_puspakom, 'Dilampirkan', 'Tidak Dilampirkan');
     }
 
-    public function getStatusPermohonanLaporanJkrTextAttribute(): string 
+    /*public function getStatusPermohonanLaporanJkrTextAttribute(): string 
     {
         return $this->formatBooleanToMalay($this->status_permohonan_laporan_jkr, 'Permohonan Dibuat', 'Tiada Permohonan');
     }
@@ -649,7 +674,7 @@ public function getTerbengkalaiStatusDcAttribute(): string
     {
         return $this->formatBooleanToMalay($this->status_laporan_penuh_jkr, 'Dilampirkan', 'Tidak Dilampirkan');
     }
-
+*/
     public function getStatusPermohonanLaporanJpjTextAttribute(): string 
     {
         return $this->formatBooleanToMalay($this->status_permohonan_laporan_jpj, 'Permohonan Dibuat', 'Tiada Permohonan');

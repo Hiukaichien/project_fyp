@@ -186,10 +186,10 @@ return new class extends Migration
             $table->date('tarikh_laporan_penuh_puspakom')->nullable(); // B7
 
             //JKR & JPJ
-            $table->boolean('status_permohonan_laporan_jkr')->nullable()->comment('status_permohonan_laporan_jkr: BOOLEAN');
-            $table->date('tarikh_permohonan_laporan_jkr')->nullable()->comment('tarikh_permohonan_laporan_jkr: DATE');
-            $table->boolean('status_laporan_penuh_jkr')->nullable()->comment('status_laporan_penuh_jkr: BOOLEAN');
-            $table->date('tarikh_laporan_penuh_jkr')->nullable()->comment('tarikh_laporan_penuh_jkr: DATE');
+            //$table->boolean('status_permohonan_laporan_jkr')->nullable()->comment('status_permohonan_laporan_jkr: BOOLEAN');
+            //$table->date('tarikh_permohonan_laporan_jkr')->nullable()->comment('tarikh_permohonan_laporan_jkr: DATE');
+            //$table->boolean('status_laporan_penuh_jkr')->nullable()->comment('status_laporan_penuh_jkr: BOOLEAN');
+            //$table->date('tarikh_laporan_penuh_jkr')->nullable()->comment('tarikh_laporan_penuh_jkr: DATE');
             $table->boolean('status_permohonan_laporan_jpj')->nullable()->comment('status_permohonan_laporan_jpj: BOOLEAN');
             $table->date('tarikh_permohonan_laporan_jpj')->nullable()->comment('tarikh_permohonan_laporan_jpj: DATE');
             $table->boolean('status_laporan_penuh_jpj')->nullable()->comment('status_laporan_penuh_jpj: BOOLEAN');
@@ -221,7 +221,7 @@ return new class extends Migration
             $table->boolean('muka_surat_4_keputusan_kes_dicatat')->nullable()->comment('ADAKAH MUKA SURAT 4 - KEPUTUSAN KES DICATAT SELENGKAPNYA...');
             $table->boolean('fail_lmm_ada_keputusan_koroner')->nullable()->comment('ADAKAH FAIL L.M.M (T) ATAU L.M.M TELAH ADA KEPUTUSAN SIASATAN OLEH YA KORONER');
             $table->boolean('status_kus_fail')->nullable()->comment('ADAKAH KERTAS SIASATAN TELAH DI KUS/FAIL...');
-            $table->text('keputusan_akhir_mahkamah')->nullable()->comment('KEPUTUSAN AKHIR OLEH MAHKAMAH...');
+            $table->json('keputusan_akhir_mahkamah')->nullable()->comment('B8 - Keputusan Akhir Mahkamah sebagai checkbox array');
             $table->text('ulasan_pegawai_pemeriksa_fail')->nullable()->comment('ULASAN KESELURUHAN PEGAWAI PEMERIKSA (JIKA ADA)');
 
             $table->timestamps();

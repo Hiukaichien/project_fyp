@@ -859,17 +859,21 @@
         'jenis_barang_kes_berharga' => 'Jenis Barang Kes Berharga',
         'jenis_barang_kes_kenderaan' => 'Jenis Barang Kes Kenderaan',
         'status_pergerakan_barang_kes' => 'Status Pergerakan Barang Kes',
-        //'status_pergerakan_barang_kes_lain' => 'Pergerakan Barang Kes Lain',
+        //'status_pergerakan_barang_kes_ujian_makmal' => 'Status Pergerakan Barang Kes Ujian Makmal',
+        //'status_pergerakan_barang_kes_lain' => 'Status Pergerakan Barang Kes Lain',
+        //'status_pergerakan_barang_kes_makmal' => 'Status Pergerakan Barang Kes Makmal',
         'status_barang_kes_selesai_siasatan' => 'Status Barang Kes Selesai Siasatan',
-        //'status_barang_kes_selesai_siasatan_lain' => 'Siasatan Selesai Lain',
+        //'status_barang_kes_selesai_siasatan_RM' => 'Status Barang Kes Selesai Siasatan RM',
+        //'status_barang_kes_selesai_siasatan_lain' => 'Status Barang Kes Selesai Siasatan Lain',
         'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan' => 'Kaedah Pelupusan Barang Kes',
         //'kaedah_pelupusan_lain' => 'Kaedah Pelupusan Lain',
         'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan' => 'Arahan Pelupusan ke Perbendaharaan',
         'resit_kew_38e_bagi_pelupusan' => 'Resit Kew.38e Pelupusan',
         'adakah_borang_serah_terima_pegawai_tangkapan' => 'Borang Serah Terima Pegawai Tangkapan',
         'adakah_borang_serah_terima_pemilik_saksi' => 'Borang Serah Terima Pemilik Saksi',
-        'adakah_sijil_surat_kebenaran_ipo' => 'Sijil Surat Kebenaran IPO',
+        'adakah_sijil_surat_kebenaran_ipd' => 'Sijil Surat Kebenaran IPD',
         'adakah_gambar_pelupusan' => 'Gambar Pelupusan',
+        'ulasan_keseluruhan_pegawai_pemeriksa_barang_kes' => 'Ulasan Pegawai Pemeriksa (Barang Kes)',
         
         // BAHAGIAN 5: Bukti & Rajah
         'status_id_siasatan_dikemaskini' => 'ID Siasatan Dikemaskini',
@@ -905,27 +909,58 @@
         'ulasan_keseluruhan_pegawai_pemeriksa_borang' => 'Ulasan Pegawai Pemeriksa (Borang)',
         'status_penandaan_kelas_warna' => 'Penandaan Kelas Warna',
         
+        // BAHAGIAN 6 (Saman): Missing fields from migration  
+        'status_saman_pdrm_s_257' => 'Status Saman PDRM S.257',
+        'no_saman_pdrm_s_257' => 'No Saman PDRM S.257',
+        'status_saman_pdrm_s_167' => 'Status Saman PDRM S.167',
+        'no_saman_pdrm_s_167' => 'No Saman PDRM S.167',
+        
         // BAHAGIAN 7: Permohonan Laporan Agensi Luar
-        'status_permohonan_E_FSA_1_oleh_IO_AIO' => 'Permohonan E-FSA (BANK) - 1',
-        'nama_bank_permohonan_E_FSA_1' => 'Nama Bank E-FSA 1',
-        'status_laporan_penuh_E_FSA_1_oleh_IO_AIO' => 'Laporan Penuh E-FSA (BANK) - 1',
+        'status_permohonan_E_FSA_1_oleh_IO_AIO' => 'Status Mohon E-FSA Bank 1',
+        'nama_bank_permohonan_E_FSA_1' => 'Nama Bank Mohon E-FSA 1',
+        'status_laporan_penuh_E_FSA_1_oleh_IO_AIO' => 'Status Laporan E-FSA Bank 1',
         'nama_bank_laporan_E_FSA_1_oleh_IO_AIO' => 'Nama Bank Laporan E-FSA 1',
-        'tarikh_laporan_penuh_E_FSA_1_oleh_IO_AIO' => 'Tarikh Laporan E-FSA 1',
-        'status_permohonan_E_FSA_2_oleh_IO_AIO' => 'Permohonan E-FSA (BANK) - 2',
-        'nama_bank_permohonan_E_FSA_2_BANK' => 'Nama Bank E-FSA 2',
-        'status_laporan_penuh_E_FSA_2_oleh_IO_AIO' => 'Laporan Penuh E-FSA (BANK) - 2',
-        'nama_bank_laporan_E_FSA_2_oleh_IO_AIO' => 'Nama Bank Laporan E-FSA 2',
-        'tarikh_laporan_penuh_E_FSA_2_oleh_IO_AIO' => 'Tarikh Laporan E-FSA 2',
-        'status_permohonan_E_FSA_3_oleh_IO_AIO' => 'Permohonan E-FSA (BANK) - 3',
-        'nama_bank_permohonan_E_FSA_3_BANK' => 'Nama Bank E-FSA 3',
-        'status_laporan_penuh_E_FSA_3_oleh_IO_AIO' => 'Laporan Penuh E-FSA (BANK) - 3',
-        'status_permohonan_E_FSA_4_oleh_IO_AIO' => 'Permohonan E-FSA (BANK) - 4',
-        'nama_bank_permohonan_E_FSA_4_BANK' => 'Nama Bank E-FSA 4',
-        'status_laporan_penuh_E_FSA_4_oleh_IO_AIO' => 'Laporan Penuh E-FSA (BANK) - 4',
-        'status_permohonan_E_FSA_5_oleh_IO_AIO' => 'Permohonan E-FSA (BANK) - 5',
-        'status_laporan_penuh_E_FSA_5_oleh_IO_AIO' => 'Laporan Penuh E-FSA (BANK) - 5',
-        'status_permohonan_E_FSA_1_telco_oleh_IO_AIO' => 'Permohonan E-FSA (TELCO) - 1',
-        'status_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO' => 'Laporan Penuh E-FSA (TELCO) - 1',
+        'tarikh_laporan_penuh_E_FSA_1_oleh_IO_AIO' => 'Tarikh Laporan E-FSA Bank 1',
+        'status_permohonan_E_FSA_1_telco_oleh_IO_AIO' => 'Status Mohon E-FSA Telco 1',
+        'nama_telco_permohonan_E_FSA_1_oleh_IO_AIO' => 'Nama Telco Mohon E-FSA 1',
+        'status_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO' => 'Status Laporan E-FSA Telco 1',
+        'nama_telco_laporan_E_FSA_1_oleh_IO_AIO' => 'Nama Telco Laporan E-FSA 1',
+        'tarikh_laporan_penuh_E_FSA_1_telco_oleh_IO_AIO' => 'Tarikh Laporan E-FSA Telco 1',
+        'status_permohonan_laporan_puspakom' => 'Mohon Laporan Puspakom',
+        'tarikh_permohonan_laporan_puspakom' => 'Tarikh Mohon Puspakom',
+        'status_laporan_penuh_puspakom' => 'Laporan Penuh Puspakom',
+        'tarikh_laporan_penuh_puspakom' => 'Tarikh Laporan Puspakom',
+        //'status_permohonan_laporan_jkr' => 'Mohon Laporan JKR',
+       // 'tarikh_permohonan_laporan_jkr' => 'Tarikh Mohon JKR',
+       // 'status_laporan_penuh_jkr' => 'Laporan Penuh JKR',
+       // 'tarikh_laporan_penuh_jkr' => 'Tarikh Laporan JKR',
+        'status_permohonan_laporan_jpj' => 'Mohon Laporan JPJ',
+        'tarikh_permohonan_laporan_jpj' => 'Tarikh Mohon JPJ',
+        'status_laporan_penuh_jpj' => 'Laporan Penuh JPJ',
+        'tarikh_laporan_penuh_jpj' => 'Tarikh Laporan JPJ',
+        'status_permohonan_laporan_imigresen' => 'Mohon Laporan Imigresen',
+        'tarikh_permohonan_laporan_imigresen' => 'Tarikh Mohon Imigresen',
+        'status_laporan_penuh_imigresen' => 'Laporan Penuh Imigresen',
+        'tarikh_laporan_penuh_imigresen' => 'Tarikh Laporan Imigresen',
+        'status_permohonan_laporan_kastam' => 'Mohon Laporan Kastam',
+        'tarikh_permohonan_laporan_kastam' => 'Tarikh Mohon Kastam',
+        'status_laporan_penuh_kastam' => 'Laporan Penuh Kastam',
+        'tarikh_laporan_penuh_kastam' => 'Tarikh Laporan Kastam',
+        'status_permohonan_laporan_forensik_pdrm' => 'Mohon Laporan Forensik',
+        'tarikh_permohonan_laporan_forensik_pdrm' => 'Tarikh Mohon Forensik',
+        'status_laporan_penuh_forensik_pdrm' => 'Laporan Penuh Forensik',
+        'tarikh_laporan_penuh_forensik_pdrm' => 'Tarikh Laporan Forensik',
+        'jenis_barang_kes_forensik' => 'Jenis BK Forensik',
+        'lain_lain_permohonan_laporan' => 'Lain-lain Permohonan Laporan',
+
+        // BAHAGIAN 8: Status Fail
+        'muka_surat_4_barang_kes_ditulis' => 'M/S 4 - Barang Kes Ditulis Bersama No Daftar',
+        'muka_surat_4_dengan_arahan_tpr' => 'M/S 4 - Dengan Arahan TPR Untuk Pelupusan/Serahan',
+        'muka_surat_4_keputusan_kes_dicatat' => 'M/S 4 - Keputusan Kes Dicatat',
+        'fail_lmm_ada_keputusan_koroner' => 'Fail L.M.M Ada Keputusan Siasatan Oleh YA Koroner',
+        'status_kus_fail' => 'Status KS di KUS/FAIL',
+        'keputusan_akhir_mahkamah' => 'Keputusan Akhir Mahkamah',
+        'ulasan_pegawai_pemeriksa_fail' => 'Ulasan Pegawai Pemeriksa (Fail)',
 
         // Date columns
         'created_at' => 'Tarikh Dicipta',
@@ -2009,109 +2044,92 @@
 {{-- FILE: resources/views/projects/show.blade.php (Part 5 of 5) --}}
 
 @elseif($key === 'Komersil')
-    {{-- Use custom columns for Komersil --}}
-    @php
-        $dtColumns = [
-            ['data' => 'action', 'name' => 'action', 'orderable' => false, 'searchable' => false, 'title' => 'Tindakan', 'width' => '100px'],
-            ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'title' => 'No.']
-        ];
-        
-        $lainLainFields = [ 'lain_lain_rj_dikesan', 'lain_lain_permohonan_laporan' ];
-        $combinedRenderFields = [
-            'status_pergerakan_barang_kes',
-            'status_barang_kes_selesai_siasatan',
-            'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan'
-        ];
-        $jsonFields = [
-            'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan', 'status_pem'
-        ];
-        
-        foreach($komersilColumns as $column => $label) {
-            $columnConfig = [
-                'data' => $column, 'name' => $column, 'title' => $label,
-                'defaultContent' => '-', 'orderable' => true, 'searchable' => true
-            ];
-            
-            if (in_array($column, $lainLainFields)) {
-                $columnConfig['render'] = '%%LAIN_LAIN_RENDER%%';
-            } elseif (in_array($column, $combinedRenderFields)) {
-                $columnConfig['render'] = '%%COMBINED_RENDER%%';
-            } elseif (in_array($column, $jsonFields)) {
-                $columnConfig['render'] = '%%JSON_RENDER%%';
-                $columnConfig['orderable'] = false;
-                $columnConfig['searchable'] = false;
-            }
-            
-            $dtColumns[] = $columnConfig;
-        }
-    @endphp
+                @php
+                    $dtColumns = [
+                        ['data' => 'action', 'name' => 'action', 'orderable' => false, 'searchable' => false, 'title' => 'Tindakan', 'width' => '100px'],
+                        ['data' => 'DT_RowIndex', 'name' => 'DT_RowIndex', 'orderable' => false, 'searchable' => false, 'title' => 'No.']
+                    ];
+                    
+                    $combinedRenderFields = [
+                        'status_pergerakan_barang_kes',
+                        'status_barang_kes_selesai_siasatan',
+                        'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan'
+                    ];
+                    $jsonFields = [
+                        'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan', 'status_pem', 'keputusan_akhir_mahkamah'
+                    ];
+                    
+                    foreach($komersilColumns as $column => $label) {
+                        $columnConfig = [
+                            'data' => $column, 'name' => $column, 'title' => $label,
+                            'defaultContent' => '-', 'orderable' => true, 'searchable' => true
+                        ];
+                        
+                        if (in_array($column, $combinedRenderFields)) {
+                            $columnConfig['render'] = '%%COMBINED_RENDER%%';
+                        } elseif (in_array($column, $jsonFields)) {
+                            $columnConfig['render'] = '%%JSON_RENDER%%';
+                            $columnConfig['orderable'] = false;
+                            $columnConfig['searchable'] = false;
+                        }
+                        
+                        $dtColumns[] = $columnConfig;
+                    }
+                @endphp
 
-    // Step 1: Get the column configuration from PHP
-    let dtColumnsConfig = @json($dtColumns);
+                let dtColumnsConfig = @json($dtColumns);
 
-    // Step 2: Define the render functions in JavaScript
-    const lainLainRenderFunction = function(data, type, row) {
-        if (!data || data === '-') return '-';
-        return 'Lain-lain ; ' + data;
-    };
+                const jsonRenderFunction = function(data, type, row) {
+                    if (data === null || data === undefined) return "-";
+                    let parsedData = data;
+                    if (typeof data === "string" && data.startsWith('[') && data.endsWith(']')) {
+                        try {
+                            parsedData = JSON.parse(data);
+                        } catch (e) { return data; }
+                    }
+                    if (Array.isArray(parsedData)) {
+                        return parsedData.length > 0 ? parsedData.join(", ") : "-";
+                    }
+                    return parsedData;
+                };
 
-    const jsonRenderFunction = function(data, type, row) {
-        if (data === null || data === undefined) return "-";
-        try {
-            const parsedData = JSON.parse(data);
-            if (Array.isArray(parsedData)) {
-                return parsedData.join(", ") || "-";
-            }
-        } catch (e) { /* Not valid JSON, fall through */ }
-        return data || "-";
-    };
+                // *** FIX: Corrected the render function to use exact column names from migration ***
+                const combinedRenderFunction = function(data, type, row, meta) {
+                    if (!data || data === '-') return '-';
 
-    // *** FIX STARTS HERE: Use the correct Komersil field names ***
-    const combinedRenderFunction = function(data, type, row, meta) {
-        if (!data || data === '-') return '-';
+                    let details = '';
+                    const colName = meta.settings.aoColumns[meta.col].name;
 
-        let details = '';
-        const colName = meta.settings.aoColumns[meta.col].name;
+                    if (colName === 'status_pergerakan_barang_kes') {
+                        if (data === 'Ujian Makmal' && row.status_pergerakan_barang_kes_makmal) {
+                            details = `: ${row.status_pergerakan_barang_kes_makmal}`;
+                        } else if (data === 'Lain-Lain' && row.status_pergerakan_barang_kes_lain) {
+                            details = `: ${row.status_pergerakan_barang_kes_lain}`;
+                        }
+                    } 
+                    else if (colName === 'status_barang_kes_selesai_siasatan') {
+                        if (data === 'Dilupuskan ke Perbendaharaan' && row.status_barang_kes_selesai_siasatan_RM) {
+                            details = ` (RM ${row.status_barang_kes_selesai_siasatan_RM})`;
+                        } else if (data === 'Lain-Lain' && row.status_barang_kes_selesai_siasatan_lain) {
+                            details = `: ${row.status_barang_kes_selesai_siasatan_lain}`;
+                        }
+                    }
+                    else if (colName === 'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan') {
+                        if (data === 'Lain-Lain' && row.kaedah_pelupusan_lain) {
+                            details = `: ${row.kaedah_pelupusan_lain}`;
+                        }
+                    }
+                    
+                    return data + details;
+                };
 
-        // Logic for 'status_pergerakan_barang_kes'
-        if (colName === 'status_pergerakan_barang_kes') {
-            // CHECK FOR UJIAN MAKMAL
-            if (data === 'Ujian Makmal' && row.status_pergerakan_barang_kes_ujian_makmal) {
-                details = ` : ${row.status_pergerakan_barang_kes_ujian_makmal}`;
-            } 
-            // CHECK FOR LAIN-LAIN
-            else if (data === 'Lain-Lain' && row.status_pergerakan_barang_kes_lain) {
-                details = ` : ${row.status_pergerakan_barang_kes_lain}`;
-            }
-        } 
-        // Logic for 'status_barang_kes_selesai_siasatan'
-        else if (colName === 'status_barang_kes_selesai_siasatan') {
-            if (data === 'Lain-Lain' && row.status_barang_kes_selesai_siasatan_lain) {
-                details = ` : ${row.status_barang_kes_selesai_siasatan_lain}`;
-            }
-        }
-        // Logic for 'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan'
-        else if (colName === 'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan') {
-            if (data === 'Lain-Lain' && row.kaedah_pelupusan_lain) {
-                details = ` : ${row.kaedah_pelupusan_lain}`;
-            }
-        }
-        
-        return data + details;
-    };
-    // *** FIX ENDS HERE ***
-
-
-    // Step 3: Loop through the config and replace the placeholders
-    dtColumnsConfig.forEach(function(column) {
-        if (column.render === '%%LAIN_LAIN_RENDER%%') {
-            column.render = lainLainRenderFunction;
-        } else if (column.render === '%%JSON_RENDER%%') {
-            column.render = jsonRenderFunction;
-        } else if (column.render === '%%COMBINED_RENDER%%') {
-            column.render = combinedRenderFunction;
-        }
-    });
+                dtColumnsConfig.forEach(function(column) {
+                    if (column.render === '%%JSON_RENDER%%') {
+                        column.render = jsonRenderFunction;
+                    } else if (column.render === '%%COMBINED_RENDER%%') {
+                        column.render = combinedRenderFunction;
+                    }
+                });
 
     // Step 4: Initialize the DataTable with the corrected configuration
     $(tableId).DataTable({
