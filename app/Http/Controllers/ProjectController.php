@@ -774,6 +774,35 @@ public function getJenayahData(Project $project)
             return $row->baru_dikemaskini_status;
         })
 
+                    // Format IPRS Standard Fields (8 columns for standardization)
+            ->editColumn('iprs_no_kertas_siasatan', function($row) {
+                return htmlspecialchars($row->iprs_no_kertas_siasatan ?? '-');
+            })
+            ->editColumn('iprs_tarikh_ks', function($row) {
+                return optional($row->iprs_tarikh_ks)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('iprs_no_repot', function($row) {
+                return htmlspecialchars($row->iprs_no_repot ?? '-');
+            })
+            ->editColumn('iprs_jenis_jabatan_ks', function($row) {
+                // Use '-' as the fallback
+                return htmlspecialchars($row->iprs_jenis_jabatan_ks ?? '-');
+            })
+            ->editColumn('iprs_pegawai_penyiasat', function($row) {
+                return htmlspecialchars($row->iprs_pegawai_penyiasat ?? '-');
+            })
+            ->editColumn('iprs_status_ks', function($row) {
+                // Use '-' as the fallback
+                return htmlspecialchars($row->iprs_status_ks ?? '-');
+            })
+            ->editColumn('iprs_status_kes', function($row) {
+                // Use '-' as the fallback
+                return htmlspecialchars($row->iprs_status_kes ?? '-');
+            })
+            ->editColumn('iprs_seksyen', function($row) {
+                return htmlspecialchars($row->iprs_seksyen ?? '-');
+            })
+            
         ->editColumn('updated_at', function ($row) {
             return optional($row->updated_at)->format('d/m/Y H:i:s') ?? '-';
         })
@@ -961,6 +990,36 @@ public function getKomersilData(Project $project)
         ->editColumn('updated_at', function ($row) {
             return optional($row->created_at)->format('d/m/Y H:i:s') ?? '-';
         })
+
+                    // Format IPRS Standard Fields (8 columns for standardization)
+            ->editColumn('iprs_no_kertas_siasatan', function($row) {
+                return htmlspecialchars($row->iprs_no_kertas_siasatan ?? '-');
+            })
+            ->editColumn('iprs_tarikh_ks', function($row) {
+                return optional($row->iprs_tarikh_ks)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('iprs_no_repot', function($row) {
+                return htmlspecialchars($row->iprs_no_repot ?? '-');
+            })
+            ->editColumn('iprs_jenis_jabatan_ks', function($row) {
+                // Use '-' as the fallback
+                return htmlspecialchars($row->iprs_jenis_jabatan_ks ?? '-');
+            })
+            ->editColumn('iprs_pegawai_penyiasat', function($row) {
+                return htmlspecialchars($row->iprs_pegawai_penyiasat ?? '-');
+            })
+            ->editColumn('iprs_status_ks', function($row) {
+                // Use '-' as the fallback
+                return htmlspecialchars($row->iprs_status_ks ?? '-');
+            })
+            ->editColumn('iprs_status_kes', function($row) {
+                // Use '-' as the fallback
+                return htmlspecialchars($row->iprs_status_kes ?? '-');
+            })
+            ->editColumn('iprs_seksyen', function($row) {
+                return htmlspecialchars($row->iprs_seksyen ?? '-');
+            })
+
         ->editColumn('created_at', function ($row) {
             return optional($row->created_at)->format('d/m/Y H:i:s') ?? '-';
         })
@@ -1162,6 +1221,35 @@ public function getKomersilData(Project $project)
             })
             ->addColumn('baru_dikemaskini_status', function($row) {
                 return $row->baru_dikemaskini_status;
+            })
+
+                        // Format IPRS Standard Fields (8 columns for standardization)
+            ->editColumn('iprs_no_kertas_siasatan', function($row) {
+                return htmlspecialchars($row->iprs_no_kertas_siasatan ?? '-');
+            })
+            ->editColumn('iprs_tarikh_ks', function($row) {
+                return optional($row->iprs_tarikh_ks)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('iprs_no_repot', function($row) {
+                return htmlspecialchars($row->iprs_no_repot ?? '-');
+            })
+            ->editColumn('iprs_jenis_jabatan_ks', function($row) {
+                // Use '-' as the fallback
+                return htmlspecialchars($row->iprs_jenis_jabatan_ks ?? '-');
+            })
+            ->editColumn('iprs_pegawai_penyiasat', function($row) {
+                return htmlspecialchars($row->iprs_pegawai_penyiasat ?? '-');
+            })
+            ->editColumn('iprs_status_ks', function($row) {
+                // Use '-' as the fallback
+                return htmlspecialchars($row->iprs_status_ks ?? '-');
+            })
+            ->editColumn('iprs_status_kes', function($row) {
+                // Use '-' as the fallback
+                return htmlspecialchars($row->iprs_status_kes ?? '-');
+            })
+            ->editColumn('iprs_seksyen', function($row) {
+                return htmlspecialchars($row->iprs_seksyen ?? '-');
             })
 
             // date formatting
@@ -1571,15 +1659,18 @@ public function getKomersilData(Project $project)
                 return htmlspecialchars($row->iprs_no_repot ?? '-');
             })
             ->editColumn('iprs_jenis_jabatan_ks', function($row) {
-                return htmlspecialchars($row->iprs_jenis_jabatan_ks ?: 'TrafikSeksyen');
+                // Use '-' as the fallback
+                return htmlspecialchars($row->iprs_jenis_jabatan_ks ?? '-');
             })
             ->editColumn('iprs_pegawai_penyiasat', function($row) {
                 return htmlspecialchars($row->iprs_pegawai_penyiasat ?? '-');
             })
             ->editColumn('iprs_status_ks', function($row) {
+                // Use '-' as the fallback
                 return htmlspecialchars($row->iprs_status_ks ?? '-');
             })
             ->editColumn('iprs_status_kes', function($row) {
+                // Use '-' as the fallback
                 return htmlspecialchars($row->iprs_status_kes ?? '-');
             })
             ->editColumn('iprs_seksyen', function($row) {
@@ -2028,18 +2119,33 @@ public function getKomersilData(Project $project)
                 return $row->baru_dikemaskini_status;
             })
 
-            // Format IPRS Standard Fields
+            // Format IPRS Standard Fields (8 columns for standardization)
+            ->editColumn('iprs_no_kertas_siasatan', function($row) {
+                return htmlspecialchars($row->iprs_no_kertas_siasatan ?? '-');
+            })
             ->editColumn('iprs_tarikh_ks', function($row) {
                 return optional($row->iprs_tarikh_ks)->format('d/m/Y') ?? '-';
             })
+            ->editColumn('iprs_no_repot', function($row) {
+                return htmlspecialchars($row->iprs_no_repot ?? '-');
+            })
             ->editColumn('iprs_jenis_jabatan_ks', function($row) {
-                return $row->iprs_jenis_jabatan_ks ?: 'TrafikRule';
+                // Use '-' as the fallback
+                return htmlspecialchars($row->iprs_jenis_jabatan_ks ?? '-');
+            })
+            ->editColumn('iprs_pegawai_penyiasat', function($row) {
+                return htmlspecialchars($row->iprs_pegawai_penyiasat ?? '-');
             })
             ->editColumn('iprs_status_ks', function($row) {
-                return $this->formatString($row->iprs_status_ks, 'Selesai Siasatan', 'Dalam Siasatan');
+                // Use '-' as the fallback
+                return htmlspecialchars($row->iprs_status_ks ?? '-');
             })
             ->editColumn('iprs_status_kes', function($row) {
-                return $this->formatString($row->iprs_status_kes, 'Selesai', 'Dalam Proses');
+                // Use '-' as the fallback
+                return htmlspecialchars($row->iprs_status_kes ?? '-');
+            })
+            ->editColumn('iprs_seksyen', function($row) {
+                return htmlspecialchars($row->iprs_seksyen ?? '-');
             })
 
             // Format Date fields
@@ -2329,6 +2435,35 @@ public function getOrangHilangData(Project $project) {
                 return $row->baru_dikemaskini_status;
             })
 
+                        // Format IPRS Standard Fields (8 columns for standardization)
+            ->editColumn('iprs_no_kertas_siasatan', function($row) {
+                return htmlspecialchars($row->iprs_no_kertas_siasatan ?? '-');
+            })
+            ->editColumn('iprs_tarikh_ks', function($row) {
+                return optional($row->iprs_tarikh_ks)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('iprs_no_repot', function($row) {
+                return htmlspecialchars($row->iprs_no_repot ?? '-');
+            })
+            ->editColumn('iprs_jenis_jabatan_ks', function($row) {
+                // Use '-' as the fallback
+                return htmlspecialchars($row->iprs_jenis_jabatan_ks ?? '-');
+            })
+            ->editColumn('iprs_pegawai_penyiasat', function($row) {
+                return htmlspecialchars($row->iprs_pegawai_penyiasat ?? '-');
+            })
+            ->editColumn('iprs_status_ks', function($row) {
+                // Use '-' as the fallback
+                return htmlspecialchars($row->iprs_status_ks ?? '-');
+            })
+            ->editColumn('iprs_status_kes', function($row) {
+                // Use '-' as the fallback
+                return htmlspecialchars($row->iprs_status_kes ?? '-');
+            })
+            ->editColumn('iprs_seksyen', function($row) {
+                return htmlspecialchars($row->iprs_seksyen ?? '-');
+            })
+
             ->editColumn('updated_at', function ($row) {
                 return optional($row->updated_at)->format('d/m/Y H:i:s') ?? '-';
             })
@@ -2523,6 +2658,35 @@ public function getLaporanMatiMengejutData(Project $project) {
         ->addColumn('baru_dikemaskini_status', function($row) {
             return $row->baru_dikemaskini_status;
         })
+
+                    // Format IPRS Standard Fields (8 columns for standardization)
+            ->editColumn('iprs_no_kertas_siasatan', function($row) {
+                return htmlspecialchars($row->iprs_no_kertas_siasatan ?? '-');
+            })
+            ->editColumn('iprs_tarikh_ks', function($row) {
+                return optional($row->iprs_tarikh_ks)->format('d/m/Y') ?? '-';
+            })
+            ->editColumn('iprs_no_repot', function($row) {
+                return htmlspecialchars($row->iprs_no_repot ?? '-');
+            })
+            ->editColumn('iprs_jenis_jabatan_ks', function($row) {
+                // Use '-' as the fallback
+                return htmlspecialchars($row->iprs_jenis_jabatan_ks ?? '-');
+            })
+            ->editColumn('iprs_pegawai_penyiasat', function($row) {
+                return htmlspecialchars($row->iprs_pegawai_penyiasat ?? '-');
+            })
+            ->editColumn('iprs_status_ks', function($row) {
+                // Use '-' as the fallback
+                return htmlspecialchars($row->iprs_status_ks ?? '-');
+            })
+            ->editColumn('iprs_status_kes', function($row) {
+                // Use '-' as the fallback
+                return htmlspecialchars($row->iprs_status_kes ?? '-');
+            })
+            ->editColumn('iprs_seksyen', function($row) {
+                return htmlspecialchars($row->iprs_seksyen ?? '-');
+            })
 
         ->editColumn('created_at', function ($row) {
             return optional($row->created_at)->format('d/m/Y H:i:s') ?? '-';
