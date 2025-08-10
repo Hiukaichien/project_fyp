@@ -125,7 +125,7 @@ class Narkotik extends Model
         'muka_surat_4_dengan_arahan_tpr' => 'boolean',
         'muka_surat_4_keputusan_kes_dicatat' => 'boolean',
         'fail_lmm_ada_keputusan_koroner' => 'boolean',
-        'keputusan_akhir_mahkamah' => 'string',
+        'keputusan_akhir_mahkamah' => 'array',
         // Common timestamps
         'created_at' => 'datetime',
         'updated_at' => 'datetime',

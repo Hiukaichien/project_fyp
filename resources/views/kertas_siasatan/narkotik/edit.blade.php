@@ -46,7 +46,7 @@
                         $html .= "</div>";
                     $html .= "<div x-show='status === \"1\"' x-transition class='mt-2'>";
                         $html .= "<label for='{$dateName}_{$id}' class='text-sm text-gray-600'>Jika Ada, nyatakan tarikh:</label>";
-                       $html .= "<input type='date' name='{$dateName}' id='{$dateName}_{$id}' value='" . old($dateName, optional($currentDate)->format('Y-m-d')) . "' class='mt-1 block w-full form-input'>" ;
+                        $html .= "<input type='date' name='{$dateName}' id='{$dateName}_{$id}' value='" . old($dateName, optional($currentDate)->format(' Y-m-d')) . "' class='mt-1 block w-full form-input'>" ;
                             $html .="</div></div>" ;
                             return $html;
                             }
@@ -738,18 +738,11 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">Keputusan Akhir Oleh Mahkamah Sebelum Kertas Siasatan Di KUS/FAIL Atau Disimpan</label>
-                                <select name="keputusan_akhir_mahkamah" class="mt-1 block w-full form-select">
-                                    <option value="">-- Sila Pilih --</option>
-                                    <option value="Jatuh Hukum" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'Jatuh Hukum' ? 'selected' : '' }}>Jatuh Hukum</option>
-                                    <option value="NFA" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'NFA' ? 'selected' : '' }}>NFA</option>
-                                    <option value="DNA" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'DNA' ? 'selected' : '' }}>DNA</option>
-                                    <option value="DNAA" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'DNAA' ? 'selected' : '' }}>DNAA</option>
-                                    <option value="KUS/Sementara" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'KUS/Sementara' ? 'selected' : '' }}>KUS/Sementara</option>
-                                    <option value="Masih Dalam Siasatan OYDS Gagal Dikesan" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'Masih Dalam Siasatan OYDS Gagal Dikesan' ? 'selected' : '' }}>Masih Dalam Siasatan OYDS Gagal Dikesan</option>
-                                    <option value="Masih Dalam Siasatan Untuk Lengkapkan Dokumentasi" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'Masih Dalam Siasatan Untuk Lengkapkan Dokumentasi' ? 'selected' : '' }}>Masih Dalam Siasatan Untuk Lengkapkan Dokumentasi</option>
-                                    <option value="Terbengkalai/Tiada Tindakan" {{ old('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah) == 'Terbengkalai/Tiada Tindakan' ? 'selected' : '' }}>Terbengkalai/Tiada Tindakan</option>
-                                </select>
+                                <label class="block text-sm font-medium text-gray-700">Keputusan Akhir Mahkamah Sebelum KS di KUS/FAIL Atau Disimpan</label>
+                                @php
+                                $mahkamah_options = [ 'JATUH HUKUM' => 'JATUH HUKUM', 'NFA' => 'NFA', 'DNA' => 'DNA', 'DNAA' => 'DNAA', 'KUS/SEMENTARA' => 'KUS/SEMENTARA', 'MASIH DALAM SIASATAN/OYDS GAGAL DIKESAN' => 'MASIH DALAM SIASATAN/OYDS GAGAL DIKESAN', 'MASIH DALAM SIASATAN/LENGKAPKAN DOKUMEN SIASATAN' => 'MASIH DALAM SIASATAN/LENGKAPKAN DOKUMEN SIASATAN', 'TERBENGKALAI/TIADA TINDAKAN' => 'TERBENGKALAI/TIADA TINDAKAN', 'KUS/FAIL' => 'KUS/FAIL' ];
+                                @endphp
+                                {!! render_json_checkboxes('keputusan_akhir_mahkamah', $paper->keputusan_akhir_mahkamah, $mahkamah_options) !!}
                             </div>
 
                             <div>

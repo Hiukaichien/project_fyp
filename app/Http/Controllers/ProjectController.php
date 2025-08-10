@@ -1416,6 +1416,10 @@ public function getKomersilData(Project $project)
                 return $this->formatArrayField($row->status_pem);
             })
 
+            ->editColumn('keputusan_akhir_mahkamah', function ($row) {
+                return $this->formatArrayField($row->keputusan_akhir_mahkamah);
+            })
+
 
             // string/HTML
             ->editColumn('adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan', function ($row) {
@@ -2675,6 +2679,23 @@ public function getLaporanMatiMengejutData(Project $project) {
                 return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">' . $tiadaText . '</span>';
         }
     }
+
+        private function formatWantedPersonStatus($value)
+    {
+        if (is_null($value) || $value === '') {
+            return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">-</span>';
+        }
+        
+        if ($value === 'Ada / Cipta') {
+            return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Ada / Cipta</span>';
+        } elseif ($value === 'Tidak Berkaitan') {
+            return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">Tidak Berkaitan</span>';
+        } else {
+            return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Tiada / Tidak Cipta</span>';
+        }
+    }
+
+    
     /**
      * Format string status values for display in DataTables (specifically for E-FSA fields)
      */

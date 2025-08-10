@@ -306,7 +306,7 @@
 
                                 @if($paper->barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan === 'Lain-Lain' && !empty($paper->kaedah_pelupusan_barang_kes_lain))
                                 <div class="text-xs text-gray-600 mt-1">
-                                     {{ $paper->kaedah_pelupusan_barang_kes_lain }}
+                                    {{ $paper->kaedah_pelupusan_barang_kes_lain }}
                                 </div>
                                 @endif
                             </dd>
@@ -632,18 +632,18 @@
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_boolean_badge($paper->status_kus_fail, 'Ada', 'Tiada') !!}</dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">Keputusan Akhir Mahkamah Sebelum KS di KUS/FAIL</dt>
+                            <dt class="text-sm font-medium text-gray-500">Keputusan Akhir Mahkamah Sebelum KS di KUS/FAIL Atau Disimpan</dt>
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_json_list($paper->keputusan_akhir_mahkamah) !!}</dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">Ulasan Keseluruhan Pegawai Pemeriksa (Fail)</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 whitespace-pre-wrap">{{ $paper->ulasan_pegawai_pemeriksa_fail ?? '-' }}</dd>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 whitespace-pre-wrap">{{ $paper-> ulasan_keseluruhan_pegawai_pemeriksa_fail ?? '-' }}</dd>
                         </div>
                     </dl>
                 </div>
             </div>
 
-                                 <!-- Maklumat Rekod -->
+            <!-- Maklumat Rekod -->
             <div class="bg-white shadow overflow-hidden sm:rounded-lg">
                 <div class="px-4 py-5 sm:px-6 bg-gray-50">
                     <h3 class="text-lg leading-6 font-medium text-gray-900">
@@ -657,8 +657,8 @@
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                 {{ optional($paper->created_at)->format('d/m/Y H:i:s') }}
                                 @if($paper->created_at)
-                                    {{-- Added ->locale('ms') to translate the output --}}
-                                    <span class="text-gray-500 text-xs">({{ $paper->created_at->locale('ms')->diffForHumans() }})</span>
+                                {{-- Added ->locale('ms') to translate the output --}}
+                                <span class="text-gray-500 text-xs">({{ $paper->created_at->locale('ms')->diffForHumans() }})</span>
                                 @endif
                             </dd>
                         </div>
@@ -667,8 +667,8 @@
                             <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                 {{ optional($paper->updated_at)->format('d/m/Y H:i:s') }}
                                 @if($paper->updated_at)
-                                    {{-- Added ->locale('ms') to translate the output --}}
-                                    <span class="text-gray-500 text-xs">({{ $paper->updated_at->locale('ms')->diffForHumans() }})</span>
+                                {{-- Added ->locale('ms') to translate the output --}}
+                                <span class="text-gray-500 text-xs">({{ $paper->updated_at->locale('ms')->diffForHumans() }})</span>
                                 @endif
                             </dd>
                         </div>
