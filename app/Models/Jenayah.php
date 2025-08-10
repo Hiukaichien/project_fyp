@@ -18,6 +18,7 @@ class Jenayah extends Model
      * This is crucial for data integrity and consistency.
      */
     protected $casts = [
+        'iprs_tarikh_ks' => 'date:Y-m-d',
         // BAHAGIAN 1 & 2
         'tarikh_laporan_polis_dibuka' => 'date:Y-m-d',
         'tarikh_edaran_minit_ks_pertama' => 'date:Y-m-d',

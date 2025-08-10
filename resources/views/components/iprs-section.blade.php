@@ -149,7 +149,17 @@
                 </div>
                 <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                     <dt class="text-sm font-medium text-gray-500">Tarikh KS</dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->iprs_tarikh_ks ? $paper->iprs_tarikh_ks->format('d/m/Y') : '-' }}</dd>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                        @if($paper->iprs_tarikh_ks)
+                            @php
+                                // Accepts string or Carbon
+                                $tarikh = $paper->iprs_tarikh_ks instanceof \Carbon\Carbon ? $paper->iprs_tarikh_ks : \Carbon\Carbon::parse($paper->iprs_tarikh_ks);
+                            @endphp
+                            {{ $tarikh->format('d/m/Y') }}
+                        @else
+                            -
+                        @endif
+                    </dd>
                 </div>
                 <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                     <dt class="text-sm font-medium text-gray-500">No. Repot</dt>
@@ -157,7 +167,7 @@
                 </div>
                 <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                     <dt class="text-sm font-medium text-gray-500">Jenis Jabatan / KS</dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->iprs_jenis_jabatan_ks ?: class_basename($paper) }}</dd>
+                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->iprs_jenis_jabatan_ks ?: '-' }}</dd>
                 </div>
                 <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                     <dt class="text-sm font-medium text-gray-500">Pegawai Penyiasat</dt>
@@ -166,13 +176,13 @@
                 <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                     <dt class="text-sm font-medium text-gray-500">Status KS</dt>
                     <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                        {{ $paper->iprs_status_ks ?: 'Tidak Ditetapkan' }}
+                        {{ $paper->iprs_status_ks ?: '-' }}
                     </dd>
                 </div>
                 <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                     <dt class="text-sm font-medium text-gray-500">Status Kes</dt>
                     <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                        {{ $paper->iprs_status_kes ?: 'Tidak Ditetapkan' }}
+                        {{ $paper->iprs_status_kes ?: '-' }}
                     </dd>
                 </div>
                 <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">

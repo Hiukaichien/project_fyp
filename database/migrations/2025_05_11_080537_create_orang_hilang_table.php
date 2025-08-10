@@ -18,6 +18,16 @@ return new class extends Migration
             // Auto-generated field
             $table->string('no_kertas_siasatan')->unique();
 
+                        // MAKLUMAT IPRS (8 Standard Fields)
+            $table->string('iprs_no_kertas_siasatan')->nullable()->comment('IPRS: No. Kertas Siasatan');
+            $table->date('iprs_tarikh_ks')->nullable()->comment('IPRS: Tarikh KS');
+            $table->string('iprs_no_repot')->nullable()->comment('IPRS: No. Repot');
+            $table->string('iprs_jenis_jabatan_ks')->nullable()->comment('IPRS: Jenis Jabatan/KS');
+            $table->string('iprs_pegawai_penyiasat')->nullable()->comment('IPRS: Pegawai Penyiasat');
+            $table->string('iprs_status_ks')->nullable()->comment('IPRS: Status KS');
+            $table->string('iprs_status_kes')->nullable()->comment('IPRS: Status Kes');
+            $table->string('iprs_seksyen')->nullable()->comment('IPRS: Seksyen');
+            
             // == BAHAGIAN 1: Maklumat Asas ==
             $table->string('no_repot_polis')->nullable();
             $table->string('pegawai_penyiasat')->nullable();

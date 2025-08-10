@@ -75,6 +75,15 @@ class DatabaseSeeder extends Seeder
                 ],
                 [
                     'project_id' => $project->id,
+                    // IPRS Standard Fields
+                    'iprs_no_kertas_siasatan' => 'JNY/KS/' . str_pad($i, 4, '0', STR_PAD_LEFT) . '/24',
+                    'iprs_tarikh_ks' => Carbon::now()->subWeeks($i),
+                    'iprs_no_repot' => 'IPD/CRIME/' . str_pad(1000 + $i, 5, '0', STR_PAD_LEFT) . '/24',
+                    'iprs_jenis_jabatan_ks' => 'Jenayah',
+                    'iprs_pegawai_penyiasat' => 'INSPEKTOR KAMAL',
+                    'iprs_status_ks' => ['Selesai Siasatan', 'Dalam Siasatan'][array_rand(['Selesai Siasatan', 'Dalam Siasatan'])],
+                    'iprs_status_kes' => ['Selesai', 'Dalam Proses'][array_rand(['Selesai', 'Dalam Proses'])],
+                    'iprs_seksyen' => '420 Kanun Keseksaan',
                     'no_repot_polis' => 'IPD/CRIME/' . str_pad(1000 + $i, 5, '0', STR_PAD_LEFT) . '/24',
                     'pegawai_penyiasat' => 'INSPEKTOR KAMAL',
                     'tarikh_laporan_polis_dibuka' => Carbon::now()->subWeeks($i),
@@ -92,6 +101,15 @@ class DatabaseSeeder extends Seeder
                 [
                     // BAHAGIAN 1: Maklumat Asas
                     'project_id' => $project->id,
+                    // IPRS Standard Fields
+                    'iprs_no_kertas_siasatan' => 'NAR/KS/' . str_pad($i, 4, '0', STR_PAD_LEFT) . '/24',
+                    'iprs_tarikh_ks' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30)),
+                    'iprs_no_repot' => 'IPD/NARKOTIK/' . str_pad(rand(1000, 99999), 5, '0', STR_PAD_LEFT) . '/' . date('y'),
+                    'iprs_jenis_jabatan_ks' => 'Narkotik',
+                    'iprs_pegawai_penyiasat' => ['SGT MAJID', 'INSP TAN', 'SGT AMIN', 'ASP JULIE', 'INSP AZMI'][array_rand(['SGT MAJID', 'INSP TAN', 'SGT AMIN', 'ASP JULIE', 'INSP AZMI'])],
+                    'iprs_status_ks' => ['Selesai Siasatan', 'Dalam Siasatan'][array_rand(['Selesai Siasatan', 'Dalam Siasatan'])],
+                    'iprs_status_kes' => ['Selesai', 'Dalam Proses'][array_rand(['Selesai', 'Dalam Proses'])],
+                    'iprs_seksyen' => ['12(2) APJ 1987', '15(1)(a) APJ 1987', '39B APJ 1987', '6 APJ 1987'][array_rand(['12(2) APJ 1987', '15(1)(a) APJ 1987', '39B APJ 1987', '6 APJ 1987'])],
                     'no_repot_polis' => 'IPD/NARKOTIK/' . str_pad(rand(1000, 99999), 5, '0', STR_PAD_LEFT) . '/' . date('y'),
                     'pegawai_penyiasat' => ['SGT MAJID', 'INSP TAN', 'SGT AMIN', 'ASP JULIE', 'INSP AZMI'][array_rand(['SGT MAJID', 'INSP TAN', 'SGT AMIN', 'ASP JULIE', 'INSP AZMI'])],
                     'tarikh_laporan_polis_dibuka' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30)),
@@ -119,6 +137,15 @@ class DatabaseSeeder extends Seeder
                 [
                     // BAHAGIAN 1: Maklumat Asas (Data types are correct)
                     'project_id' => $project->id,
+                    // IPRS Standard Fields
+                    'iprs_no_kertas_siasatan' => 'KML/' . str_pad($i, 3, '0', STR_PAD_LEFT) . '/24',
+                    'iprs_tarikh_ks' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30)),
+                    'iprs_no_repot' => 'IPD/REP/' . str_pad(rand(1000, 9999), 5, '0', STR_PAD_LEFT) . '/24',
+                    'iprs_jenis_jabatan_ks' => 'Komersil',
+                    'iprs_pegawai_penyiasat' => ['ASP KUMAR', 'INSP ZAINAB', 'SGT LEE', 'INSP RAHMAN', 'SGT AMINAH'][array_rand(['ASP KUMAR', 'INSP ZAINAB', 'SGT LEE', 'INSP RAHMAN', 'SGT AMINAH'])],
+                    'iprs_status_ks' => ['Selesai Siasatan', 'Dalam Siasatan'][array_rand(['Selesai Siasatan', 'Dalam Siasatan'])],
+                    'iprs_status_kes' => ['Selesai', 'Dalam Proses'][array_rand(['Selesai', 'Dalam Proses'])],
+                    'iprs_seksyen' => ['420 KK', '4(1) AMLA', 'Seksyen 424 KK', '409 KK', '417 KK'][array_rand(['420 KK', '4(1) AMLA', 'Seksyen 424 KK', '409 KK', '417 KK'])],
                     'no_repot_polis' => 'IPD/REP/' . str_pad(rand(1000, 9999), 5, '0', STR_PAD_LEFT) . '/24',
                     'pegawai_penyiasat' => ['ASP KUMAR', 'INSP ZAINAB', 'SGT LEE', 'INSP RAHMAN', 'SGT AMINAH'][array_rand(['ASP KUMAR', 'INSP ZAINAB', 'SGT LEE', 'INSP RAHMAN', 'SGT AMINAH'])],
                     'tarikh_laporan_polis_dibuka' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30)),
@@ -338,6 +365,15 @@ class DatabaseSeeder extends Seeder
                 [
                     // BAHAGIAN 1: Maklumat Asas
                     'project_id' => $project->id,
+                    // IPRS Standard Fields
+                    'iprs_no_kertas_siasatan' => 'TRFR/KS/' . str_pad($i, 4, '0', STR_PAD_LEFT) . '/24',
+                    'iprs_tarikh_ks' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30)),
+                    'iprs_no_repot' => 'IPD/TRAFFIC/' . str_pad(rand(1000, 99999), 5, '0', STR_PAD_LEFT) . '/' . date('y'),
+                    'iprs_jenis_jabatan_ks' => 'TrafikRule',
+                    'iprs_pegawai_penyiasat' => ['SGT FARID', 'INSP MAYA', 'SGT ROSLI', 'ASP DAVID', 'INSP KHADIJAH'][array_rand(['SGT FARID', 'INSP MAYA', 'SGT ROSLI', 'ASP DAVID', 'INSP KHADIJAH'])],
+                    'iprs_status_ks' => ['Selesai Siasatan', 'Dalam Siasatan'][array_rand(['Selesai Siasatan', 'Dalam Siasatan'])],
+                    'iprs_status_kes' => ['Selesai', 'Dalam Proses'][array_rand(['Selesai', 'Dalam Proses'])],
+                    'iprs_seksyen' => ['R.166A LN 166/59', 'R.17 LN 166/59', 'R.10 LN 166/59', 'R.18 LN 166/59'][array_rand(['R.166A LN 166/59', 'R.17 LN 166/59', 'R.10 LN 166/59', 'R.18 LN 166/59'])],
                     'no_fail_lmm_t' => 'LMM(T)/' . rand(100, 999) . '/' . date('y'),
                     'no_repot_polis' => 'IPD/TRAFFIC/' . str_pad(rand(1000, 99999), 5, '0', STR_PAD_LEFT) . '/' . date('y'),
                     'pegawai_penyiasat' => ['SGT FARID', 'INSP MAYA', 'SGT ROSLI', 'ASP DAVID', 'INSP KHADIJAH'][array_rand(['SGT FARID', 'INSP MAYA', 'SGT ROSLI', 'ASP DAVID', 'INSP KHADIJAH'])],
@@ -354,6 +390,15 @@ class DatabaseSeeder extends Seeder
                 [
                     // BAHAGIAN 1: Maklumat Asas
                     'project_id' => $project->id,
+                    // IPRS Standard Fields
+                    'iprs_no_kertas_siasatan' => 'OH/KS/' . str_pad($i, 4, '0', STR_PAD_LEFT) . '/24',
+                    'iprs_tarikh_ks' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30)),
+                    'iprs_no_repot' => 'IPD/CID/' . str_pad(rand(1000, 99999), 5, '0', STR_PAD_LEFT) . '/' . date('y'),
+                    'iprs_jenis_jabatan_ks' => 'OrangHilang',
+                    'iprs_pegawai_penyiasat' => ['SGT FATIMAH', 'INSP KAMAL', 'SGT ROZANA', 'ASP CHONG', 'INSP RAVI'][array_rand(['SGT FATIMAH', 'INSP KAMAL', 'SGT ROZANA', 'ASP CHONG', 'INSP RAVI'])],
+                    'iprs_status_ks' => ['Selesai Siasatan', 'Dalam Siasatan'][array_rand(['Selesai Siasatan', 'Dalam Siasatan'])],
+                    'iprs_status_kes' => ['Selesai', 'Dalam Proses'][array_rand(['Selesai', 'Dalam Proses'])],
+                    'iprs_seksyen' => '365 KANUN KESEKSAAN',
                     'no_repot_polis' => 'IPD/CID/' . str_pad(rand(1000, 99999), 5, '0', STR_PAD_LEFT) . '/' . date('y'),
                     'pegawai_penyiasat' => ['SGT FATIMAH', 'INSP KAMAL', 'SGT ROZANA', 'ASP CHONG', 'INSP RAVI'][array_rand(['SGT FATIMAH', 'INSP KAMAL', 'SGT ROZANA', 'ASP CHONG', 'INSP RAVI'])],
                     'tarikh_laporan_polis_dibuka' => Carbon::now()->subMonths(rand(1, 12))->subDays(rand(1, 30)),
@@ -448,8 +493,16 @@ class DatabaseSeeder extends Seeder
         for ($i = 1; $i <= 5; $i++) {
             LaporanMatiMengejut::create([
                 'project_id' => $project->id,
+                // IPRS Standard Fields
+                'iprs_no_kertas_siasatan' => 'LMM/' . date('Y') . '/' . str_pad($i, 4, '0', STR_PAD_LEFT),
+                'iprs_tarikh_ks' => Carbon::now()->subDays(rand(30, 90)),
+                'iprs_no_repot' => 'RP' . date('Y') . str_pad($i, 6, '0', STR_PAD_LEFT),
+                'iprs_jenis_jabatan_ks' => 'LaporanMatiMengejut',
+                'iprs_pegawai_penyiasat' => 'Pegawai Penyiasat ' . $i,
+                'iprs_status_ks' => ['Selesai Siasatan', 'Dalam Siasatan'][array_rand(['Selesai Siasatan', 'Dalam Siasatan'])],
+                'iprs_status_kes' => ['Selesai', 'Dalam Proses'][array_rand(['Selesai', 'Dalam Proses'])],
+                'iprs_seksyen' => 'Seksyen ' . rand(1, 10),
                 'no_kertas_siasatan' => 'LMM/' . date('Y') . '/' . str_pad($i, 4, '0', STR_PAD_LEFT),
-                
                 // BAHAGIAN 1: Maklumat Asas (using actual migration field names)
                 'no_fail_lmm_sdr' => 'LMM-SDR-' . str_pad($i, 4, '0', STR_PAD_LEFT),
                 'no_repot_polis' => 'RP' . date('Y') . str_pad($i, 6, '0', STR_PAD_LEFT),

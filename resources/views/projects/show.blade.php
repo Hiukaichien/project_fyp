@@ -26,6 +26,17 @@
     $ignoreColumns = ['id', 'user_id', 'project_id'];
 
     $jenayahColumns = [
+
+        // IPRS Standard Fields (8 columns for standardization)
+        'iprs_no_kertas_siasatan' => 'IPRS No. Kertas Siasatan',
+        'iprs_tarikh_ks' => 'IPRS Tarikh KS',
+        'iprs_no_repot' => 'IPRS No. Repot',
+        'iprs_jenis_jabatan_ks' => 'IPRS Jenis Jabatan KS',
+        'iprs_pegawai_penyiasat' => 'IPRS Pegawai Penyiasat',
+        'iprs_status_ks' => 'IPRS Status KS',
+        'iprs_status_kes' => 'IPRS Status Kes',
+        'iprs_seksyen' => 'IPRS Seksyen',
+
         // BAHAGIAN 1: Maklumat Asas
         'no_kertas_siasatan' => 'No. Kertas Siasatan',
         'no_repot_polis' => 'No. Repot Polis',
@@ -174,6 +185,17 @@
 
     // Define custom columns for Narkotik based on actual form fields in edit.blade.php
     $narkotikColumns = [
+
+                // IPRS Standard Fields (8 columns for standardization)
+        'iprs_no_kertas_siasatan' => 'IPRS No. Kertas Siasatan',
+        'iprs_tarikh_ks' => 'IPRS Tarikh KS',
+        'iprs_no_repot' => 'IPRS No. Repot',
+        'iprs_jenis_jabatan_ks' => 'IPRS Jenis Jabatan KS',
+        'iprs_pegawai_penyiasat' => 'IPRS Pegawai Penyiasat',
+        'iprs_status_ks' => 'IPRS Status KS',
+        'iprs_status_kes' => 'IPRS Status Kes',
+        'iprs_seksyen' => 'IPRS Seksyen',
+
     // BAHAGIAN 1: Maklumat Asas
     'no_kertas_siasatan' => 'No. Kertas Siasatan',
     'no_repot_polis' => 'No. Repot Polis',
@@ -322,6 +344,17 @@
     ];
     // Define custom columns for OrangHilang based on actual form fields in edit.blade.php
     $orangHilangColumns = [
+
+        // IPRS Standard Fields (8 columns for standardization)
+        'iprs_no_kertas_siasatan' => 'IPRS No. Kertas Siasatan',
+        'iprs_tarikh_ks' => 'IPRS Tarikh KS',
+        'iprs_no_repot' => 'IPRS No. Repot',
+        'iprs_jenis_jabatan_ks' => 'IPRS Jenis Jabatan KS',
+        'iprs_pegawai_penyiasat' => 'IPRS Pegawai Penyiasat',
+        'iprs_status_ks' => 'IPRS Status KS',
+        'iprs_status_kes' => 'IPRS Status Kes',
+        'iprs_seksyen' => 'IPRS Seksyen',
+
         // BAHAGIAN 1: Maklumat Asas
         'no_kertas_siasatan' => 'No. Kertas Siasatan',
         'no_repot_polis' => 'No. Repot Polis',
@@ -405,6 +438,17 @@
 
     // Define custom columns for LaporanMatiMengejut based on BAHAGIAN 1-8 order from show.blade.php
         $laporanMatiMengejutColumns = [
+
+            // IPRS Standard Fields (8 columns for standardization)
+            'iprs_no_kertas_siasatan' => 'IPRS No. Kertas Siasatan',
+            'iprs_tarikh_ks' => 'IPRS Tarikh KS',
+            'iprs_no_repot' => 'IPRS No. Repot',
+            'iprs_jenis_jabatan_ks' => 'IPRS Jenis Jabatan KS',
+            'iprs_pegawai_penyiasat' => 'IPRS Pegawai Penyiasat',
+            'iprs_status_ks' => 'IPRS Status KS',
+            'iprs_status_kes' => 'IPRS Status Kes',
+            'iprs_seksyen' => 'IPRS Seksyen',
+
             // BAHAGIAN 1: Maklumat Asas
             'no_kertas_siasatan' => 'No. Kertas Siasatan',
             'no_fail_lmm_sdr' => 'No. Fail LMM/SDR',
@@ -715,6 +759,17 @@
 
     // Define custom columns for TrafikRule based on migration structure
     $trafikRuleColumns = [
+
+        // IPRS Standard Fields (8 columns for standardization)
+        'iprs_no_kertas_siasatan' => 'IPRS No. Kertas Siasatan',
+        'iprs_tarikh_ks' => 'IPRS Tarikh KS',
+        'iprs_no_repot' => 'IPRS No. Repot',
+        'iprs_jenis_jabatan_ks' => 'IPRS Jenis Jabatan KS',
+        'iprs_pegawai_penyiasat' => 'IPRS Pegawai Penyiasat',
+        'iprs_status_ks' => 'IPRS Status KS',
+        'iprs_status_kes' => 'IPRS Status Kes',
+        'iprs_seksyen' => 'IPRS Seksyen',
+        
         // BAHAGIAN 1: Maklumat Asas
         'no_kertas_siasatan' => 'No. Kertas Siasatan',
         'no_fail_lmm_t' => 'No. Fail LMM(T)',
@@ -816,6 +871,17 @@
 
     // Define custom columns for Komersil based on migration structure
     $komersilColumns = [
+
+        // IPRS Standard Fields (8 columns for standardization)
+        'iprs_no_kertas_siasatan' => 'IPRS No. Kertas Siasatan',
+        'iprs_tarikh_ks' => 'IPRS Tarikh KS',
+        'iprs_no_repot' => 'IPRS No. Repot',
+        'iprs_jenis_jabatan_ks' => 'IPRS Jenis Jabatan KS',
+        'iprs_pegawai_penyiasat' => 'IPRS Pegawai Penyiasat',
+        'iprs_status_ks' => 'IPRS Status KS',
+        'iprs_status_kes' => 'IPRS Status Kes',
+        'iprs_seksyen' => 'IPRS Seksyen',
+
         // BAHAGIAN 1: Maklumat Asas
         'no_kertas_siasatan' => 'No. Kertas Siasatan',
         'no_repot_polis' => 'No. Repot Polis',
@@ -1223,19 +1289,19 @@
                 </button>
                 <span id="file-name" class="ml-3 text-sm text-gray-500">Sila pilih kategori kertas dahulu</span>
             </div>
-            <p class="mt-2 text-xs text-blue-600">
+         <!--   <p class="mt-2 text-xs text-blue-600">
                 <a id="template-download-link" href="#" download class="underline hover:text-blue-800" style="display: none;">
                     Klik di sini untuk muat turun templat <span id="template-type"></span>
                 </a>
                 <span id="template-placeholder" class="text-gray-500">Sila pilih kategori kertas untuk muat turun templat</span>
-            </p>
+            </p>    !-->
         </div>
 
         {{-- *** NEW DYNAMIC INFO BOX *** --}}
-        <div id="column-info" class="mt-4 p-3 bg-yellow-100 border-l-4 border-yellow-400 text-yellow-800 text-sm rounded" style="display: none;">
+     <!--   <div id="column-info" class="mt-4 p-3 bg-yellow-100 border-l-4 border-yellow-400 text-yellow-800 text-sm rounded" style="display: none;">
             <p class="font-bold">Pastikan fail anda mempunyai lajur berikut:</p>
             <code id="column-list" class="block mt-2 text-xs break-words"></code>
-        </div>
+        </div> !-->
         {{-- *** END OF NEW DYNAMIC INFO BOX *** --}}
 
         {{-- Action Buttons --}}

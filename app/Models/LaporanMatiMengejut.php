@@ -21,6 +21,7 @@ class LaporanMatiMengejut extends Model
      * The attributes that should be cast to native types.
      */
     protected $casts = [
+        'iprs_tarikh_ks' => 'date:Y-m-d',
         'project_id' => 'integer',
         
         // BAHAGIAN 1: Maklumat Asas - Date fields

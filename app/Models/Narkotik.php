@@ -22,6 +22,7 @@ class Narkotik extends Model
      * The attributes that should be cast to native types.
      */
     protected $casts = [
+        'iprs_tarikh_ks' => 'date:Y-m-d',
         // B1
         'tarikh_laporan_polis_dibuka' => 'date:Y-m-d',
         // B2

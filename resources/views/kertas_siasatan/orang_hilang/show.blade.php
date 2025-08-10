@@ -18,6 +18,9 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             
+                        {{-- IPRS Standard Section --}}
+            <x-iprs-section :paper="$paper" mode="view" />
+            
             <!-- BAHAGIAN 1 -->
             <div class="bg-white shadow overflow-hidden sm:rounded-lg">
                 <div class="px-4 py-5 sm:px-6 bg-blue-50">

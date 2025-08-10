@@ -65,14 +65,14 @@
                     return $html;
                 }
                 @endphp
-
+                <x-iprs-section :paper="$paper" mode="view" />
                 <!-- BAHAGIAN 1 -->
                 <div>
                     <h3 class="text-lg font-bold mb-4 text-gray-800 border-b pb-2">BAHAGIAN 1</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <div>
                             <label class="block text-sm font-medium text-gray-500">No. Kertas Siasatan</label>
-                            <div class="mt-1 p-2 bg-gray-100 rounded-md font-mono">{{ $paper->no_kertas_siasatan }}</div>
+                                                            <input type="text" name="no_kertas_siasatan" id="no_kertas_siasatan" value="{{ old('no_kertas_siasatan', $paper->no_kertas_siasatan) }}" class="mt-1 block w-full form-input">
                         </div>
                         <div>
                             <label for="no_fail_lmm_t" class="block text-sm font-medium text-gray-700">No. Fail LMM (T)</label>

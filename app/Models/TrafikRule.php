@@ -18,10 +18,11 @@ class TrafikRule extends Model
      */
     protected $casts = [
         // IPRS Standard Fields
-        'iprs_tarikh_ks' => 'datetime:Y-m-d H:i:s',
+        'iprs_tarikh_ks' => 'datetime',
 
         // B1
         'tarikh_laporan_polis_dibuka' => 'date:Y-m-d',
+        
         // B2
         'tarikh_edaran_minit_ks_pertama' => 'date:Y-m-d',
         'tarikh_edaran_minit_ks_kedua' => 'date:Y-m-d',

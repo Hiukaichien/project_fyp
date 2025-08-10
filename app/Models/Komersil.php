@@ -14,6 +14,7 @@ class Komersil extends Model
     protected $guarded = [];
 
  protected $casts = [
+    'iprs_tarikh_ks' => 'date:Y-m-d',
            // B1 - Dates
             'tarikh_laporan_polis_dibuka' => 'date:d/m/Y',
             

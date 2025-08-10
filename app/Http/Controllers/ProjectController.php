@@ -423,316 +423,108 @@ class ProjectController extends Controller
         return redirect()->route('projects.show', $project)->with('success', $friendlyName . ' telah berjaya dipadam secara kekal.');
     }
 
+// FILE: app/Http/Controllers/ProjectController.php
+
 public function exportPapers(Request $request, Project $project)
-    {
-        Gate::authorize('access-project', $project);
+{
+    Gate::authorize('access-project', $project);
 
-        $validated = $request->validate([
-            'paper_type' => ['required', 'string', Rule::in(['Jenayah', 'Narkotik', 'Komersil', 'TrafikSeksyen', 'TrafikRule', 'OrangHilang', 'LaporanMatiMengejut'])],
-        ]);
+    $validated = $request->validate([
+        'paper_type' => ['required', 'string', Rule::in(['Jenayah', 'Narkotik', 'Komersil', 'TrafikSeksyen', 'TrafikRule', 'OrangHilang', 'LaporanMatiMengejut'])],
+    ]);
 
-        $paperType = $validated['paper_type'];
-        $modelClass = 'App\\Models\\' . $paperType;
-        
-        $papers = $modelClass::where('project_id', $project->id)->get();
+    $paperType = $validated['paper_type'];
+    $modelClass = 'App\\Models\\' . $paperType;
+    
+    $papers = $modelClass::where('project_id', $project->id)->get();
 
-        if ($papers->isEmpty()) {
-            return back()->with('info', 'Tiada data ditemui untuk jenis kertas "' . Str::headline($paperType) . '" dalam projek ini.');
-        }
-
-        $fileName = Str::slug($project->name) . '-' . Str::slug($paperType) . '-' . now()->format('Y-m-d') . '.csv';
-        
-        // Use custom column order for LaporanMatiMengejut, following BAHAGIAN 1-8 structure
-        if ($paperType === 'LaporanMatiMengejut') {
-            // Define columns in BAHAGIAN 1-8 order (same as dashboard)
-            $laporanMatiMengejutColumns = [
-                // Add sequence number first
-                'no' => 'No',
-                
-                // BAHAGIAN 1: Maklumat Asas
-                'no_kertas_siasatan' => 'No. Kertas Siasatan',
-                'no_fail_lmm_sdr' => 'No. Fail LMM SDR',
-                'no_repot_polis' => 'No. Repot Polis',
-                'pegawai_penyiasat' => 'Pegawai Penyiasat',
-                'tarikh_laporan_polis_dibuka' => 'Tarikh Laporan Polis Dibuka',
-                'seksyen' => 'Seksyen',
-                'adakah_ms_2_lmm_telah_disahkan_oleh_kpd' => 'Adakah M/S 2 L.M.M Telah Disahkan Oleh KPD',
-                'adakah_lmm_telah_di_rujuk_kepada_ya_koroner' => 'Adakah L.M.M Telah Di Rujuk Kepada YA Koroner',
-                'keputusan_ya_koroner' => 'Keputusan YA Koroner',
-                
-                // BAHAGIAN 2: Pemeriksaan & Status
-                'pegawai_pemeriksa' => 'Pegawai Pemeriksa',
-                'tarikh_edaran_minit_ks_pertama' => 'Tarikh Edaran Minit KS Pertama (A)',
-                'tarikh_edaran_minit_ks_kedua' => 'Tarikh Edaran Minit KS Kedua (B)',
-                'tarikh_edaran_minit_ks_sebelum_akhir' => 'Tarikh Edaran Minit KS Sebelum Akhir (C)',
-                'tarikh_edaran_minit_ks_akhir' => 'Tarikh Edaran Minit KS Akhir (D)',
-                'tarikh_semboyan_pemeriksaan_jips_ke_daerah' => 'Tarikh Semboyan Pemeriksaan JIPS ke Daerah (E)',
-                'tarikh_edaran_minit_fail_lmm_t_pertama' => 'Tarikh Edaran Minit Fail LMM(T) Pertama',
-                'tarikh_edaran_minit_fail_lmm_t_kedua' => 'Tarikh Edaran Minit Fail LMM(T) Kedua',
-                'tarikh_edaran_minit_fail_lmm_t_sebelum_minit_akhir' => 'Tarikh Edaran Minit Fail LMM(T) Sebelum Akhir',
-                'tarikh_edaran_minit_fail_lmm_t_akhir' => 'Tarikh Edaran Minit Fail LMM(T) Akhir',
-                
-                // BAHAGIAN 3: Arahan & Keputusan
-                'arahan_minit_oleh_sio_status' => 'Arahan Minit Oleh SIO',
-                'arahan_minit_oleh_sio_tarikh' => 'Tarikh Arahan Minit SIO',
-                'arahan_minit_ketua_bahagian_status' => 'Arahan Minit Ketua Bahagian',
-                'arahan_minit_ketua_bahagian_tarikh' => 'Tarikh Arahan Minit Ketua Bahagian',
-                'arahan_minit_ketua_jabatan_status' => 'Arahan Minit Ketua Jabatan',
-                'arahan_minit_ketua_jabatan_tarikh' => 'Tarikh Arahan Minit Ketua Jabatan',
-                'arahan_minit_oleh_ya_tpr_status' => 'Arahan Minit Oleh YA TPR',
-                'arahan_minit_oleh_ya_tpr_tarikh' => 'Tarikh Arahan Minit YA TPR',
-                'keputusan_siasatan_oleh_ya_tpr' => 'Keputusan Siasatan Oleh YA TPR',
-                'arahan_tuduh_oleh_ya_tpr' => 'Arahan Tuduh Oleh YA TPR',
-                'ulasan_keputusan_siasatan_tpr' => 'Ulasan Keputusan Siasatan TPR',
-                'keputusan_siasatan_oleh_ya_koroner' => 'Keputusan Siasatan Oleh YA Koroner',
-                'ulasan_keputusan_oleh_ya_koroner' => 'Ulasan Keputusan Oleh YA Koroner',
-                'ulasan_keseluruhan_pegawai_pemeriksa' => 'Ulasan Keseluruhan Pegawai Pemeriksa',
-                
-                // BAHAGIAN 4: Barang Kes
-                'adakah_barang_kes_didaftarkan' => 'Barang Kes Didaftarkan',
-                'no_daftar_barang_kes_am' => 'No. Daftar Barang Kes Am',
-                'no_daftar_barang_kes_berharga' => 'No. Daftar Barang Kes Berharga',
-                'jenis_barang_kes_am' => 'Jenis Barang Kes Am',
-                'jenis_barang_kes_berharga' => 'Jenis Barang Kes Berharga',
-                'status_pergerakan_barang_kes' => 'Status Pergerakan Barang Kes',
-                'status_pergerakan_barang_kes_lain' => 'Status Pergerakan Barang Kes (Lain-lain)',
-                'ujian_makmal_details' => 'Ujian Makmal',
-                'status_barang_kes_selesai_siasatan' => 'Status Barang Kes Selesai Siasatan',
-                'status_barang_kes_selesai_siasatan_lain' => 'Status Barang Kes Selesai Siasatan (Lain-lain)',
-                'dilupuskan_perbendaharaan_amount' => 'Dilupuskan ke Perbendaharaan',
-                'kaedah_pelupusan_barang_kes' => 'Kaedah Pelupusan Barang Kes',
-                'kaedah_pelupusan_barang_kes_lain' => 'Kaedah Pelupusan Barang Kes (Lain-lain)',
-                'arahan_pelupusan_barang_kes' => 'Arahan Pelupusan Barang Kes',
-                'adakah_borang_serah_terima_pegawai_tangkapan_io' => 'Borang Serah/Terima (Pegawai Tangkapan)',
-                'adakah_borang_serah_terima_penyiasat_pemilik_saksi' => 'Borang Serah/Terima (Penyiasat/Pemilik)',
-                'adakah_sijil_surat_kebenaran_ipd' => 'Sijil/Surat Kebenaran IPD',
-                'adakah_gambar_pelupusan' => 'Gambar Pelupusan',
-                'ulasan_keseluruhan_pegawai_pemeriksa_barang_kes' => 'Ulasan Pegawai Pemeriksa (Barang Kes)',
-                
-                // BAHAGIAN 5: Dokumen Siasatan
-                'status_id_siasatan_dikemaskini' => 'ID Siasatan Dikemaskini',
-                'status_rajah_kasar_tempat_kejadian' => 'Rajah Kasar Tempat Kejadian',
-                'status_gambar_tempat_kejadian' => 'Gambar Tempat Kejadian',
-                'status_gambar_post_mortem_mayat_di_hospital' => 'Gambar Post Mortem Mayat',
-                'status_gambar_barang_kes_am' => 'Gambar Barang Kes Am',
-                'status_gambar_barang_kes_berharga' => 'Gambar Barang Kes Berharga',
-                'status_gambar_barang_kes_darah' => 'Gambar Barang Kes Darah',
-                
-                // BAHAGIAN 6: Borang & Semakan
-                'status_pem' => 'Borang PEM',
-                'status_rj2' => 'RJ2',
-                'tarikh_rj2' => 'Tarikh RJ2',
-                'status_rj2b' => 'RJ2B',
-                'tarikh_rj2b' => 'Tarikh RJ2B',
-                'status_rj9' => 'RJ9',
-                'tarikh_rj9' => 'Tarikh RJ9',
-                'status_rj99' => 'RJ99',
-                'tarikh_rj99' => 'Tarikh RJ99',
-                'status_rj10a' => 'RJ10A',
-                'tarikh_rj10a' => 'Tarikh RJ10A',
-                'status_rj10b' => 'RJ10B',
-                'tarikh_rj10b' => 'Tarikh RJ10B',
-                'lain_lain_rj_dikesan' => 'Lain-lain RJ Dikesan',
-                'status_semboyan_pemakluman_ke_kedutaan_bagi_kes_mati' => 'Semboyan Pemakluman ke Kedutaan',
-                'ulasan_keseluruhan_pegawai_pemeriksa_borang' => 'Ulasan Keseluruhan (Borang)',
-                
-                // BAHAGIAN 7: Permohonan Laporan Agensi Luar
-                'status_permohonan_laporan_post_mortem_mayat' => 'Permohonan Laporan Post Mortem',
-                'tarikh_permohonan_laporan_post_mortem_mayat' => 'Tarikh Permohonan Post Mortem',
-                'status_laporan_penuh_bedah_siasat' => 'Laporan Penuh Bedah Siasat',
-                'tarikh_laporan_penuh_bedah_siasat' => 'Tarikh Laporan Bedah Siasat',
-                'keputusan_laporan_post_mortem' => 'Keputusan Laporan Post Mortem',
-                'status_permohonan_laporan_jabatan_kimia' => 'Permohonan Laporan Jabatan Kimia',
-                'tarikh_permohonan_laporan_jabatan_kimia' => 'Tarikh Permohonan Jabatan Kimia',
-                'status_laporan_penuh_jabatan_kimia' => 'Laporan Penuh Jabatan Kimia',
-                'tarikh_laporan_penuh_jabatan_kimia' => 'Tarikh Laporan Jabatan Kimia',
-                'keputusan_laporan_jabatan_kimia' => 'Keputusan Laporan Jabatan Kimia',
-                'status_permohonan_laporan_jabatan_patalogi' => 'Permohonan Laporan Jabatan Patalogi',
-                'tarikh_permohonan_laporan_jabatan_patalogi' => 'Tarikh Permohonan Jabatan Patalogi',
-                'status_laporan_penuh_jabatan_patalogi' => 'Laporan Penuh Jabatan Patalogi',
-                'tarikh_laporan_penuh_jabatan_patalogi' => 'Tarikh Laporan Jabatan Patalogi',
-                'keputusan_laporan_jabatan_patalogi' => 'Keputusan Laporan Jabatan Patalogi',
-                'status_permohonan_laporan_imigresen' => 'Permohonan Laporan Imigresen',
-                'tarikh_permohonan_laporan_imigresen' => 'Tarikh Permohonan Imigresen',
-                'status_laporan_penuh_imigresen' => 'Laporan Penuh Imigresen',
-                'tarikh_laporan_penuh_imigresen' => 'Tarikh Laporan Imigresen',
-                
-                // New simplified Imigresen fields
-                'permohonan_laporan_pengesahan_masuk_keluar_malaysia' => 'Permohonan Laporan Pengesahan Masuk/Keluar Malaysia',
-                'permohonan_laporan_permit_kerja_di_malaysia' => 'Permohonan Laporan Permit Kerja Di Malaysia',
-                'permohonan_laporan_agensi_pekerjaan_di_malaysia' => 'Permohonan Laporan Agensi Pekerjaan Di Malaysia',
-                'permohonan_status_kewarganegaraan' => 'Permohonan Status Kewarganegaraan',
-                'lain_lain_permohonan_laporan' => 'Lain-lain Permohonan Laporan',
-                
-                // BAHAGIAN 8: Status Fail
-                'status_muka_surat_4_barang_kes_ditulis_bersama_no_daftar' => 'M/S 4 - Barang Kes Ditulis Bersama No Daftar',
-                'status_barang_kes_arahan_tpr' => 'M/S 4 - Barang Kes Ditulis Bersama No Daftar & Arahan TPR',
-                'adakah_muka_surat_4_keputusan_kes_dicatat' => 'M/S 4 - Keputusan Kes Dicatat',
-                'adakah_fail_lmm_t_atau_lmm_telah_ada_keputusan' => 'Fail LMM(T) Telah Ada Keputusan',
-                'adakah_ks_kus_fail_selesai' => 'KS Telah di KUS/FAIL',
-                'keputusan_akhir_mahkamah' => 'Keputusan Akhir Mahkamah',
-                'ulasan_keseluruhan_pegawai_pemeriksa_fail' => 'Ulasan Keseluruhan (Fail)',
-            ];
-            $columns = array_keys($laporanMatiMengejutColumns);
-        } elseif ($paperType === 'OrangHilang') {
-            // Define columns in BAHAGIAN 1-8 order for OrangHilang
-            $orangHilangColumns = [
-                // Add sequence number first
-                'no' => 'No',
-                
-                // BAHAGIAN 1: Maklumat Asas
-                'no_kertas_siasatan' => 'No. Kertas Siasatan',
-                'no_repot_polis' => 'No. Repot Polis',
-                'pegawai_penyiasat' => 'Pegawai Penyiasat',
-                'tarikh_laporan_polis_dibuka' => 'Tarikh Laporan Polis Dibuka',
-                'seksyen' => 'Seksyen',
-                
-                // BAHAGIAN 2: Pemeriksaan & Status
-                'pegawai_pemeriksa' => 'Pegawai Pemeriksa',
-                'tarikh_edaran_minit_ks_pertama' => 'Tarikh Edaran Minit KS Pertama (A)',
-                'tarikh_edaran_minit_ks_kedua' => 'Tarikh Edaran Minit KS Kedua (B)',
-                'tarikh_edaran_minit_ks_sebelum_akhir' => 'Tarikh Edaran Minit KS Sebelum Akhir (C)',
-                'tarikh_edaran_minit_ks_akhir' => 'Tarikh Edaran Minit KS Akhir (D)',
-                'tarikh_semboyan_pemeriksaan_jips_ke_daerah' => 'Tarikh Semboyan Pemeriksaan JIPS ke Daerah (E)',
-                
-                // BAHAGIAN 3: Arahan & Keputusan
-                'arahan_minit_oleh_sio_status' => 'Arahan Minit Oleh SIO',
-                'arahan_minit_oleh_sio_tarikh' => 'Tarikh Arahan Minit SIO',
-                'arahan_minit_ketua_bahagian_status' => 'Arahan Minit Ketua Bahagian',
-                'arahan_minit_ketua_bahagian_tarikh' => 'Tarikh Arahan Minit Ketua Bahagian',
-                'arahan_minit_ketua_jabatan_status' => 'Arahan Minit Ketua Jabatan',
-                'arahan_minit_ketua_jabatan_tarikh' => 'Tarikh Arahan Minit Ketua Jabatan',
-                'arahan_minit_oleh_ya_tpr_status' => 'Arahan Minit Oleh YA TPR',
-                'arahan_minit_oleh_ya_tpr_tarikh' => 'Tarikh Arahan Minit YA TPR',
-                'keputusan_siasatan_oleh_ya_tpr' => 'Keputusan Siasatan Oleh YA TPR',
-                'arahan_tuduh_oleh_ya_tpr' => 'Arahan Tuduh Oleh YA TPR',
-                'ulasan_keputusan_siasatan_tpr' => 'Ulasan Keputusan Siasatan TPR',
-                'ulasan_keseluruhan_pegawai_pemeriksa' => 'Ulasan Keseluruhan Pegawai Pemeriksa',
-                
-                // BAHAGIAN 4: Barang Kes
-                'adakah_barang_kes_didaftarkan' => 'Adakah Barang Kes Didaftarkan',
-                'no_daftar_barang_kes_am' => 'No. Daftar Barang Kes Am',
-                'no_daftar_barang_kes_berharga' => 'No. Daftar Barang Kes Berharga',
-                
-                // BAHAGIAN 5: Dokumen Siasatan
-                'status_id_siasatan_dikemaskini' => 'ID Siasatan Dikemaskini',
-                'status_rajah_kasar_tempat_kejadian' => 'Rajah Kasar Tempat Kejadian',
-                'status_gambar_tempat_kejadian' => 'Gambar Tempat Kejadian',
-                'status_gambar_barang_kes_am' => 'Gambar Barang Kes Am',
-                'status_gambar_barang_kes_berharga' => 'Gambar Barang Kes Berharga',
-                'status_gambar_orang_hilang' => 'Gambar Orang Hilang',
-                
-                // BAHAGIAN 6: Borang & Semakan
-                'status_pem' => 'Borang PEM',
-                'status_mps1' => 'Status MPS1',
-                'tarikh_mps1' => 'Tarikh MPS1',
-                'status_mps2' => 'Status MPS2',
-                'tarikh_mps2' => 'Tarikh MPS2',
-                'pemakluman_nur_alert_jsj_bawah_18_tahun' => 'Pemakluman NUR-Alert JSJ (Bawah 18 Tahun)',
-                'rakaman_percakapan_orang_hilang' => 'Rakaman Percakapan Orang Hilang',
-                'laporan_polis_orang_hilang_dijumpai' => 'Laporan Polis Orang Hilang Dijumpai',
-                'hebahan_media_massa' => 'Hebahan Media Massa',
-                'orang_hilang_dijumpai_mati_mengejut_bukan_jenayah' => 'Orang Hilang Dijumpai (Mati Mengejut Bukan Jenayah)',
-                'alasan_orang_hilang_dijumpai_mati_mengejut_bukan_jenayah' => 'Alasan Mati Mengejut Bukan Jenayah',
-                'orang_hilang_dijumpai_mati_mengejut_jenayah' => 'Orang Hilang Dijumpai (Mati Mengejut Jenayah)',
-                'alasan_orang_hilang_dijumpai_mati_mengejut_jenayah' => 'Alasan Mati Mengejut Jenayah',
-                'semboyan_pemakluman_ke_kedutaan_bukan_warganegara' => 'Semboyan Pemakluman ke Kedutaan (Bukan Warganegara)',
-                'ulasan_keseluruhan_pegawai_pemeriksa_borang' => 'Ulasan Keseluruhan Pegawai Pemeriksa (Borang)',
-                
-                // BAHAGIAN 7: Imigresen
-                'permohonan_laporan_permit_kerja' => 'Permohonan Laporan Permit Kerja',
-                'permohonan_laporan_agensi_pekerjaan' => 'Permohonan Laporan Agensi Pekerjaan',
-                'permohonan_status_kewarganegaraan' => 'Permohonan Status Kewarganegaraan',
-                'status_permohonan_laporan_imigresen' => 'Permohonan_Laporan_Pengesahan_Masuk/Keluar_Malaysia',
-                'tarikh_permohonan_laporan_imigresen' => 'Tarikh_Permohonan_Laporan_Pengesahan_Masuk/Keluar_Malaysia',
-                
-                // BAHAGIAN 8: Status Fail
-                'adakah_muka_surat_4_keputusan_kes_dicatat' => 'M/S 4 - Keputusan Kes Dicatat',
-                'adakah_ks_kus_fail_selesai' => 'KS Telah di KUS/FAIL',
-                'keputusan_akhir_mahkamah' => 'Keputusan Akhir Mahkamah',
-                'ulasan_keseluruhan_pegawai_pemeriksa_fail' => 'Ulasan Keseluruhan Pegawai Pemeriksa (Fail)',
-            ];
-            $columns = array_keys($orangHilangColumns);
-        } else {
-            // For other paper types, get all database columns and appended accessors
-            $modelInstance = new $modelClass;
-            $dbColumns = Schema::getColumnListing($modelInstance->getTable());
-            $appendedColumns = $modelInstance->getAppends();
-            $columns = array_merge(['no'], $dbColumns, $appendedColumns); // Add 'no' at the beginning
-        }
-
-        $headers = [
-            "Content-type"        => "text/csv",
-            "Content-Disposition" => "attachment; filename=$fileName",
-            "Pragma"              => "no-cache",
-            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
-            "Expires"             => "0"
-        ];
-
-        $callback = function() use ($papers, $columns) {
-            $file = fopen('php://output', 'w');
-            
-            // Add BOM for Excel compatibility with UTF-8
-            fputs($file, $bom =( chr(0xEF) . chr(0xBB) . chr(0xBF) ));
-
-            // Write the headers
-            fputcsv($file, $columns);
-
-            // Write the data rows
-            $rowNumber = 1;
-            foreach ($papers as $paper) {
-                $row = [];
-                foreach ($columns as $column) {
-                    // Handle sequence number
-                    if ($column === 'no') {
-                        $row[] = $rowNumber;
-                    } else {
-                        $value = $paper->{$column};
-
-                        // --- THIS IS THE FIX ---
-                        // Check if the value is an array (from a JSON column)
-                        if (is_array($value)) {
-                            // Convert array to a comma-separated string
-                            $row[] = implode(', ', $value);
-                        } elseif (is_bool($value)) { // Handle boolean values for CSV export
-                            $row[] = $value ? 'Ya' : 'Tidak';
-                        } elseif (in_array($column, ['status_rj2', 'status_rj2b', 'status_rj9', 'status_rj99', 'status_rj10a', 'status_rj10b'])) {
-                            // Handle three-state RJ fields for CSV export - use text attribute
-                            $textAttribute = $column . '_text';
-                            if (isset($paper->{$textAttribute})) {
-                                $row[] = $paper->{$textAttribute};
-                            } else {
-                                // Fallback to manual conversion if text attribute not available
-                                switch ((int)$value) {
-                                    case 1:
-                                        $row[] = 'Ada/Cipta';
-                                        break;
-                                    case 2:
-                                        $row[] = 'Tidak Berkaitan';
-                                        break;
-                                    case 0:
-                                    default:
-                                        $row[] = 'Tiada/Tidak Cipta';
-                                        break;
-                                }
-                            }
-                        } elseif (is_null($value)) {
-                            $row[] = '';
-                        } else {
-                            // Otherwise, add the value as is
-                            $row[] = $value;
-                        }
-                    }
-                }
-                fputcsv($file, $row);
-                $rowNumber++;
-            }
-            fclose($file);
-        };
-
-        return new StreamedResponse($callback, 200, $headers);
+    if ($papers->isEmpty()) {
+        return back()->with('info', 'Tiada data ditemui untuk jenis kertas "' . Str::headline($paperType) . '" dalam projek ini.');
     }
 
+    $fileName = Str::slug($project->name) . '-' . Str::slug($paperType) . '-' . now()->format('Y-m-d') . '.csv';
+
+    // --- FINAL UNIFIED LOGIC WITH MANUAL ORDERING ---
+
+    // 1. Get all available attributes from the model's database table.
+    $modelInstance = new $modelClass;
+    $dbColumns = Schema::getColumnListing($modelInstance->getTable());
+
+    // 2. Define the Bahagian 1 columns that need their headers changed to `_b1`.
+    $bahagian1DbColumns = [ 'no_kertas_siasatan', 'no_repot_polis', 'pegawai_penyiasat', 'tarikh_laporan_polis_dibuka', 'seksyen', 'no_lmm_t', 'no_fail_lmm_t', 'no_fail_lmm_sdr' ];
+
+    // 3. Define the timestamp columns that must go at the end.
+    $timestampColumns = ['created_at', 'updated_at'];
+    
+    // 4. Create the final, ordered list of database columns for the export.
+    // Start with all columns, then remove the timestamps to re-add them at the end.
+    $orderedColumns = array_diff($dbColumns, $timestampColumns);
+
+    // Re-add the timestamps to the end of the list to enforce order.
+    $orderedColumns = array_merge($orderedColumns, $timestampColumns);
+    
+    // Also add any "appended" attributes from the model to the very end.
+    $orderedColumns = array_merge($orderedColumns, $modelInstance->getAppends());
+
+    // 5. Build the final mapping of CSV_Header => db_column based on our controlled order.
+    $finalColumnMap = [];
+    $finalColumnMap['no'] = 'no'; // Add sequence number first.
+
+    foreach ($orderedColumns as $dbColumn) {
+        if (in_array($dbColumn, $bahagian1DbColumns)) {
+            // For Bahagian 1, create the '_b1' header.
+            $csvHeader = $dbColumn . '_b1';
+            $finalColumnMap[$csvHeader] = $dbColumn;
+        } else {
+            // For all others, the header and DB column name are the same.
+            $finalColumnMap[$dbColumn] = $dbColumn;
+        }
+    }
+
+    $headers = [
+        "Content-type"        => "text/csv",
+        "Content-Disposition" => "attachment; filename=$fileName",
+        "Pragma"              => "no-cache",
+        "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+        "Expires"             => "0"
+    ];
+    
+    // The callback function remains the same and will use the correctly ordered map.
+    $callback = function() use ($papers, $finalColumnMap) {
+        $file = fopen('php://output', 'w');
+        fputs($file, $bom =( chr(0xEF) . chr(0xBB) . chr(0xBF) ));
+        fputcsv($file, array_keys($finalColumnMap));
+
+        $rowNumber = 1;
+        foreach ($papers as $paper) {
+            $row = [];
+            foreach ($finalColumnMap as $header => $dbColumn) {
+                if ($dbColumn === 'no') {
+                    $row[] = $rowNumber;
+                    continue;
+                }
+                $value = $paper->{$dbColumn};
+                if (is_array($value)) {
+                    $row[] = implode(', ', $value);
+                } elseif (is_bool($value)) {
+                    $row[] = $value ? 'Ya' : 'Tidak';
+                } elseif (in_array($dbColumn, ['status_rj2', 'status_rj2b', 'status_rj9', 'status_rj99', 'status_rj10a', 'status_rj10b'])) {
+                    $textAttribute = $dbColumn . '_text';
+                    $row[] = $paper->{$textAttribute} ?? $value;
+                } elseif (is_null($value)) {
+                    $row[] = '';
+                } else {
+                    $row[] = $value;
+                }
+            }
+            fputcsv($file, $row);
+            $rowNumber++;
+        }
+        fclose($file);
+    };
+
+    return new StreamedResponse($callback, 200, $headers);
+}
     private function buildActionButtons($row, $paperType)
     {
         $destroyUrl = route('projects.destroy_paper', ['project' => $row->project_id, 'paperType' => $paperType, 'paperId' => $row->id]);
@@ -774,35 +566,8 @@ public function getJenayahData(Project $project)
             return $row->baru_dikemaskini_status;
         })
 
-                    // Format IPRS Standard Fields (8 columns for standardization)
-            ->editColumn('iprs_no_kertas_siasatan', function($row) {
-                return htmlspecialchars($row->iprs_no_kertas_siasatan ?? '-');
-            })
-            ->editColumn('iprs_tarikh_ks', function($row) {
-                return optional($row->iprs_tarikh_ks)->format('d/m/Y') ?? '-';
-            })
-            ->editColumn('iprs_no_repot', function($row) {
-                return htmlspecialchars($row->iprs_no_repot ?? '-');
-            })
-            ->editColumn('iprs_jenis_jabatan_ks', function($row) {
-                // Use '-' as the fallback
-                return htmlspecialchars($row->iprs_jenis_jabatan_ks ?? '-');
-            })
-            ->editColumn('iprs_pegawai_penyiasat', function($row) {
-                return htmlspecialchars($row->iprs_pegawai_penyiasat ?? '-');
-            })
-            ->editColumn('iprs_status_ks', function($row) {
-                // Use '-' as the fallback
-                return htmlspecialchars($row->iprs_status_ks ?? '-');
-            })
-            ->editColumn('iprs_status_kes', function($row) {
-                // Use '-' as the fallback
-                return htmlspecialchars($row->iprs_status_kes ?? '-');
-            })
-            ->editColumn('iprs_seksyen', function($row) {
-                return htmlspecialchars($row->iprs_seksyen ?? '-');
-            })
-            
+        ->editColumn('iprs_tarikh_ks', fn($r) => optional($r->iprs_tarikh_ks)->format('d/m/Y') ?? '-')
+
         ->editColumn('updated_at', function ($row) {
             return optional($row->updated_at)->format('d/m/Y H:i:s') ?? '-';
         })
@@ -987,38 +752,11 @@ public function getKomersilData(Project $project)
             return $row->baru_dikemaskini_status;
         })
 
+        ->editColumn('iprs_tarikh_ks', fn($r) => optional($r->iprs_tarikh_ks)->format('d/m/Y') ?? '-')
+
         ->editColumn('updated_at', function ($row) {
             return optional($row->created_at)->format('d/m/Y H:i:s') ?? '-';
         })
-
-                    // Format IPRS Standard Fields (8 columns for standardization)
-            ->editColumn('iprs_no_kertas_siasatan', function($row) {
-                return htmlspecialchars($row->iprs_no_kertas_siasatan ?? '-');
-            })
-            ->editColumn('iprs_tarikh_ks', function($row) {
-                return optional($row->iprs_tarikh_ks)->format('d/m/Y') ?? '-';
-            })
-            ->editColumn('iprs_no_repot', function($row) {
-                return htmlspecialchars($row->iprs_no_repot ?? '-');
-            })
-            ->editColumn('iprs_jenis_jabatan_ks', function($row) {
-                // Use '-' as the fallback
-                return htmlspecialchars($row->iprs_jenis_jabatan_ks ?? '-');
-            })
-            ->editColumn('iprs_pegawai_penyiasat', function($row) {
-                return htmlspecialchars($row->iprs_pegawai_penyiasat ?? '-');
-            })
-            ->editColumn('iprs_status_ks', function($row) {
-                // Use '-' as the fallback
-                return htmlspecialchars($row->iprs_status_ks ?? '-');
-            })
-            ->editColumn('iprs_status_kes', function($row) {
-                // Use '-' as the fallback
-                return htmlspecialchars($row->iprs_status_kes ?? '-');
-            })
-            ->editColumn('iprs_seksyen', function($row) {
-                return htmlspecialchars($row->iprs_seksyen ?? '-');
-            })
 
         ->editColumn('created_at', function ($row) {
             return optional($row->created_at)->format('d/m/Y H:i:s') ?? '-';
@@ -1223,34 +961,7 @@ public function getKomersilData(Project $project)
                 return $row->baru_dikemaskini_status;
             })
 
-                        // Format IPRS Standard Fields (8 columns for standardization)
-            ->editColumn('iprs_no_kertas_siasatan', function($row) {
-                return htmlspecialchars($row->iprs_no_kertas_siasatan ?? '-');
-            })
-            ->editColumn('iprs_tarikh_ks', function($row) {
-                return optional($row->iprs_tarikh_ks)->format('d/m/Y') ?? '-';
-            })
-            ->editColumn('iprs_no_repot', function($row) {
-                return htmlspecialchars($row->iprs_no_repot ?? '-');
-            })
-            ->editColumn('iprs_jenis_jabatan_ks', function($row) {
-                // Use '-' as the fallback
-                return htmlspecialchars($row->iprs_jenis_jabatan_ks ?? '-');
-            })
-            ->editColumn('iprs_pegawai_penyiasat', function($row) {
-                return htmlspecialchars($row->iprs_pegawai_penyiasat ?? '-');
-            })
-            ->editColumn('iprs_status_ks', function($row) {
-                // Use '-' as the fallback
-                return htmlspecialchars($row->iprs_status_ks ?? '-');
-            })
-            ->editColumn('iprs_status_kes', function($row) {
-                // Use '-' as the fallback
-                return htmlspecialchars($row->iprs_status_kes ?? '-');
-            })
-            ->editColumn('iprs_seksyen', function($row) {
-                return htmlspecialchars($row->iprs_seksyen ?? '-');
-            })
+            ->editColumn('iprs_tarikh_ks', fn($r) => optional($r->iprs_tarikh_ks)->format('d/m/Y') ?? '-')
 
             // date formatting
             ->editColumn('tarikh_laporan_polis_dibuka', function ($row) {
@@ -1628,7 +1339,8 @@ public function getKomersilData(Project $project)
 
     public function getTrafikSeksyenData(Project $project) {
         Gate::authorize('access-project', $project);
-        $query = TrafikSeksyen::where('project_id', $project->id);
+         $query = TrafikSeksyen::where('project_id', $project->id)
+                ->select('trafik_seksyen.*');
         
         return DataTables::of($query)
             ->addIndexColumn()
@@ -1648,34 +1360,8 @@ public function getKomersilData(Project $project)
                 return $row->baru_dikemaskini_status;
             })
 
-            // Format IPRS Standard Fields (8 columns for standardization)
-            ->editColumn('iprs_no_kertas_siasatan', function($row) {
-                return htmlspecialchars($row->iprs_no_kertas_siasatan ?? '-');
-            })
-            ->editColumn('iprs_tarikh_ks', function($row) {
-                return optional($row->iprs_tarikh_ks)->format('d/m/Y') ?? '-';
-            })
-            ->editColumn('iprs_no_repot', function($row) {
-                return htmlspecialchars($row->iprs_no_repot ?? '-');
-            })
-            ->editColumn('iprs_jenis_jabatan_ks', function($row) {
-                // Use '-' as the fallback
-                return htmlspecialchars($row->iprs_jenis_jabatan_ks ?? '-');
-            })
-            ->editColumn('iprs_pegawai_penyiasat', function($row) {
-                return htmlspecialchars($row->iprs_pegawai_penyiasat ?? '-');
-            })
-            ->editColumn('iprs_status_ks', function($row) {
-                // Use '-' as the fallback
-                return htmlspecialchars($row->iprs_status_ks ?? '-');
-            })
-            ->editColumn('iprs_status_kes', function($row) {
-                // Use '-' as the fallback
-                return htmlspecialchars($row->iprs_status_kes ?? '-');
-            })
-            ->editColumn('iprs_seksyen', function($row) {
-                return htmlspecialchars($row->iprs_seksyen ?? '-');
-            })
+
+            ->editColumn('iprs_tarikh_ks', fn($r) => optional($r->iprs_tarikh_ks)->format('d/m/Y') ?? '-')
 
             // Format Date fields
             ->editColumn('tarikh_laporan_polis_dibuka', function($row) {
@@ -2119,34 +1805,8 @@ public function getKomersilData(Project $project)
                 return $row->baru_dikemaskini_status;
             })
 
-            // Format IPRS Standard Fields (8 columns for standardization)
-            ->editColumn('iprs_no_kertas_siasatan', function($row) {
-                return htmlspecialchars($row->iprs_no_kertas_siasatan ?? '-');
-            })
-            ->editColumn('iprs_tarikh_ks', function($row) {
-                return optional($row->iprs_tarikh_ks)->format('d/m/Y') ?? '-';
-            })
-            ->editColumn('iprs_no_repot', function($row) {
-                return htmlspecialchars($row->iprs_no_repot ?? '-');
-            })
-            ->editColumn('iprs_jenis_jabatan_ks', function($row) {
-                // Use '-' as the fallback
-                return htmlspecialchars($row->iprs_jenis_jabatan_ks ?? '-');
-            })
-            ->editColumn('iprs_pegawai_penyiasat', function($row) {
-                return htmlspecialchars($row->iprs_pegawai_penyiasat ?? '-');
-            })
-            ->editColumn('iprs_status_ks', function($row) {
-                // Use '-' as the fallback
-                return htmlspecialchars($row->iprs_status_ks ?? '-');
-            })
-            ->editColumn('iprs_status_kes', function($row) {
-                // Use '-' as the fallback
-                return htmlspecialchars($row->iprs_status_kes ?? '-');
-            })
-            ->editColumn('iprs_seksyen', function($row) {
-                return htmlspecialchars($row->iprs_seksyen ?? '-');
-            })
+            ->editColumn('iprs_tarikh_ks', fn($r) => optional($r->iprs_tarikh_ks)->format('d/m/Y') ?? '-')
+
 
             // Format Date fields
             ->editColumn('tarikh_laporan_polis_dibuka', function($row) {
@@ -2435,41 +2095,14 @@ public function getOrangHilangData(Project $project) {
                 return $row->baru_dikemaskini_status;
             })
 
-                        // Format IPRS Standard Fields (8 columns for standardization)
-            ->editColumn('iprs_no_kertas_siasatan', function($row) {
-                return htmlspecialchars($row->iprs_no_kertas_siasatan ?? '-');
-            })
-            ->editColumn('iprs_tarikh_ks', function($row) {
-                return optional($row->iprs_tarikh_ks)->format('d/m/Y') ?? '-';
-            })
-            ->editColumn('iprs_no_repot', function($row) {
-                return htmlspecialchars($row->iprs_no_repot ?? '-');
-            })
-            ->editColumn('iprs_jenis_jabatan_ks', function($row) {
-                // Use '-' as the fallback
-                return htmlspecialchars($row->iprs_jenis_jabatan_ks ?? '-');
-            })
-            ->editColumn('iprs_pegawai_penyiasat', function($row) {
-                return htmlspecialchars($row->iprs_pegawai_penyiasat ?? '-');
-            })
-            ->editColumn('iprs_status_ks', function($row) {
-                // Use '-' as the fallback
-                return htmlspecialchars($row->iprs_status_ks ?? '-');
-            })
-            ->editColumn('iprs_status_kes', function($row) {
-                // Use '-' as the fallback
-                return htmlspecialchars($row->iprs_status_kes ?? '-');
-            })
-            ->editColumn('iprs_seksyen', function($row) {
-                return htmlspecialchars($row->iprs_seksyen ?? '-');
-            })
-
             ->editColumn('updated_at', function ($row) {
                 return optional($row->updated_at)->format('d/m/Y H:i:s') ?? '-';
             })
             ->editColumn('created_at', function ($row) {
                 return optional($row->created_at)->format('d/m/Y H:i:s') ?? '-';
             })
+
+            ->editColumn('iprs_tarikh_ks', fn($r) => optional($r->iprs_tarikh_ks)->format('d/m/Y') ?? '-')
 
             // Format date fields
             ->editColumn('tarikh_laporan_polis_dibuka', function($row) {
@@ -2659,35 +2292,8 @@ public function getLaporanMatiMengejutData(Project $project) {
             return $row->baru_dikemaskini_status;
         })
 
-                    // Format IPRS Standard Fields (8 columns for standardization)
-            ->editColumn('iprs_no_kertas_siasatan', function($row) {
-                return htmlspecialchars($row->iprs_no_kertas_siasatan ?? '-');
-            })
-            ->editColumn('iprs_tarikh_ks', function($row) {
-                return optional($row->iprs_tarikh_ks)->format('d/m/Y') ?? '-';
-            })
-            ->editColumn('iprs_no_repot', function($row) {
-                return htmlspecialchars($row->iprs_no_repot ?? '-');
-            })
-            ->editColumn('iprs_jenis_jabatan_ks', function($row) {
-                // Use '-' as the fallback
-                return htmlspecialchars($row->iprs_jenis_jabatan_ks ?? '-');
-            })
-            ->editColumn('iprs_pegawai_penyiasat', function($row) {
-                return htmlspecialchars($row->iprs_pegawai_penyiasat ?? '-');
-            })
-            ->editColumn('iprs_status_ks', function($row) {
-                // Use '-' as the fallback
-                return htmlspecialchars($row->iprs_status_ks ?? '-');
-            })
-            ->editColumn('iprs_status_kes', function($row) {
-                // Use '-' as the fallback
-                return htmlspecialchars($row->iprs_status_kes ?? '-');
-            })
-            ->editColumn('iprs_seksyen', function($row) {
-                return htmlspecialchars($row->iprs_seksyen ?? '-');
-            })
-
+        ->editColumn('iprs_tarikh_ks', fn($r) => optional($r->iprs_tarikh_ks)->format('d/m/Y') ?? '-')
+        
         ->editColumn('created_at', function ($row) {
             return optional($row->created_at)->format('d/m/Y H:i:s') ?? '-';
         })

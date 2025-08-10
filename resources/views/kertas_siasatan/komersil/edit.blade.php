@@ -128,6 +128,9 @@
                     }
                 @endphp
 
+                        {{-- IPRS Standard Section --}}
+            <x-iprs-section :paper="$paper" mode="view" />
+            
                 <!-- BAHAGIAN 1 -->
                 <div>
                     <h3 class="text-lg font-bold mb-4 text-gray-800 border-b pb-2">BAHAGIAN 1</h3>
