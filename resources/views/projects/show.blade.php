@@ -168,6 +168,8 @@
         'tarikh_permohonan_laporan_forensik_pdrm' => 'Tarikh Mohon Forensik',
         'status_laporan_penuh_forensik_pdrm' => 'Laporan Penuh Forensik',
         'tarikh_laporan_penuh_forensik_pdrm' => 'Tarikh Laporan Forensik',
+        'keputusan_laporan_forensik_pdrm' => 'Keputusan Laporan Forensik',
+        'jenis_ujian_analisis_forensik' => 'Jenis Ujian Analisis Forensik',
         'lain_lain_permohonan_laporan' => 'Lain-lain Permohonan Laporan',
         
         // BAHAGIAN 8: Status Fail

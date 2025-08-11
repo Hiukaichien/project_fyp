@@ -73,7 +73,15 @@
                 }
                 function render_json_checkboxes($name, $currentJson, $options) {
                     $currentValues = old($name, $currentJson ?? []);
-                    if (!is_array($currentValues)) $currentValues = [];
+                    
+                    // Handle JSON strings from database
+                    if (is_string($currentValues)) {
+                        $decoded = json_decode($currentValues, true);
+                        $currentValues = is_array($decoded) ? $decoded : [];
+                    } elseif (!is_array($currentValues)) {
+                        $currentValues = [];
+                    }
+                    
                     $html = "<div class='mt-2 space-y-2 rounded-md border p-4 bg-gray-50'>";
                     foreach ($options as $optionValue => $optionLabel) {
                         $checked = in_array($optionValue, $currentValues) ? 'checked' : '';

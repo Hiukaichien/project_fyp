@@ -699,8 +699,8 @@ public function getJenayahData(Project $project)
         ->editColumn('tarikh_permohonan_laporan_forensik_pdrm', fn($r) => optional($r->tarikh_permohonan_laporan_forensik_pdrm)->format('d/m/Y') ?? '-')
         ->editColumn('status_laporan_penuh_forensik_pdrm', fn($row) => $this->formatBoolean($row->status_laporan_penuh_forensik_pdrm, 'Diterima', 'Tidak'))
         ->editColumn('tarikh_laporan_penuh_forensik_pdrm', fn($r) => optional($r->tarikh_laporan_penuh_forensik_pdrm)->format('d/m/Y') ?? '-')
-        ->editColumn('keputusan_laporan_forensik_pdrm', fn($row) => $this->formatArrayField($row->keputusan_laporan_forensik_pdrm))
-        ->editColumn('jenis_ujian_analisis_forensik', fn($row) => $this->formatArrayField($row->jenis_ujian_analisis_forensik))
+        ->editColumn('keputusan_laporan_forensik_pdrm', fn($row) => $row->keputusan_laporan_forensik_pdrm ?? '-')
+        ->editColumn('jenis_ujian_analisis_forensik', fn($row) => $row->jenis_ujian_analisis_forensik ?? '-')
 
         // --- BAHAGIAN 8: Status Fail ---
         ->editColumn('muka_surat_4_barang_kes_ditulis', fn($row) => $this->formatBoolean($row->muka_surat_4_barang_kes_ditulis))
@@ -725,7 +725,7 @@ public function getJenayahData(Project $project)
             'status_laporan_penuh_jabatan_patalogi', 'status_permohonan_laporan_puspakom', 'status_laporan_penuh_puspakom',
             'status_permohonan_laporan_jpj', 'status_laporan_penuh_jpj', 'permohonan_laporan_pengesahan_masuk_keluar_malaysia',
             'status_laporan_penuh_imigresen', 'status_permohonan_laporan_kastam', 'status_laporan_penuh_kastam',
-            'status_permohonan_laporan_forensik_pdrm', 'status_laporan_penuh_forensik_pdrm', 'keputusan_laporan_forensik_pdrm', 'jenis_ujian_analisis_forensik', 'muka_surat_4_barang_kes_ditulis',
+            'status_permohonan_laporan_forensik_pdrm', 'status_laporan_penuh_forensik_pdrm', 'muka_surat_4_barang_kes_ditulis',
             'muka_surat_4_dengan_arahan_tpr', 'muka_surat_4_keputusan_kes_dicatat', 'fail_lmm_ada_keputusan_koroner', 'status_kus_fail'
         ])
         ->make(true);
