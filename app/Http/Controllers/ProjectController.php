@@ -699,7 +699,8 @@ public function getJenayahData(Project $project)
         ->editColumn('tarikh_permohonan_laporan_forensik_pdrm', fn($r) => optional($r->tarikh_permohonan_laporan_forensik_pdrm)->format('d/m/Y') ?? '-')
         ->editColumn('status_laporan_penuh_forensik_pdrm', fn($row) => $this->formatBoolean($row->status_laporan_penuh_forensik_pdrm, 'Diterima', 'Tidak'))
         ->editColumn('tarikh_laporan_penuh_forensik_pdrm', fn($r) => optional($r->tarikh_laporan_penuh_forensik_pdrm)->format('d/m/Y') ?? '-')
-        // keputusan_laporan_forensik_pdrm and jenis_ujian_analisis_forensik will be handled by frontend JSON processing
+        ->editColumn('keputusan_laporan_forensik_pdrm', fn($row) => $this->formatArrayField($row->keputusan_laporan_forensik_pdrm))
+        ->editColumn('jenis_ujian_analisis_forensik', fn($row) => $this->formatArrayField($row->jenis_ujian_analisis_forensik))
 
         // --- BAHAGIAN 8: Status Fail ---
         ->editColumn('muka_surat_4_barang_kes_ditulis', fn($row) => $this->formatBoolean($row->muka_surat_4_barang_kes_ditulis))
@@ -707,9 +708,10 @@ public function getJenayahData(Project $project)
         ->editColumn('muka_surat_4_keputusan_kes_dicatat', fn($row) => $this->formatBoolean($row->muka_surat_4_keputusan_kes_dicatat))
         ->editColumn('fail_lmm_ada_keputusan_koroner', fn($row) => $this->formatBoolean($row->fail_lmm_ada_keputusan_koroner))
         ->editColumn('status_kus_fail', fn($row) => $this->formatBoolean($row->status_kus_fail))
+        ->editColumn('keputusan_akhir_mahkamah', fn($row) => $this->formatArrayField($row->keputusan_akhir_mahkamah))
 
         ->rawColumns([
-            'action', 'status_pem',
+            'action', 'status_pem', 'keputusan_akhir_mahkamah',
             'arahan_minit_oleh_sio_status', 'arahan_minit_ketua_bahagian_status', 'arahan_minit_ketua_jabatan_status',
             'arahan_minit_oleh_ya_tpr_status', 'adakah_barang_kes_didaftarkan', 'adakah_borang_serah_terima_pemilik_saksi',
             'adakah_sijil_surat_kebenaran_ipo', 'adakah_gambar_pelupusan', 'status_id_siasatan_dikemaskini',
@@ -723,7 +725,7 @@ public function getJenayahData(Project $project)
             'status_laporan_penuh_jabatan_patalogi', 'status_permohonan_laporan_puspakom', 'status_laporan_penuh_puspakom',
             'status_permohonan_laporan_jpj', 'status_laporan_penuh_jpj', 'permohonan_laporan_pengesahan_masuk_keluar_malaysia',
             'status_laporan_penuh_imigresen', 'status_permohonan_laporan_kastam', 'status_laporan_penuh_kastam',
-            'status_permohonan_laporan_forensik_pdrm', 'status_laporan_penuh_forensik_pdrm', 'muka_surat_4_barang_kes_ditulis',
+            'status_permohonan_laporan_forensik_pdrm', 'status_laporan_penuh_forensik_pdrm', 'keputusan_laporan_forensik_pdrm', 'jenis_ujian_analisis_forensik', 'muka_surat_4_barang_kes_ditulis',
             'muka_surat_4_dengan_arahan_tpr', 'muka_surat_4_keputusan_kes_dicatat', 'fail_lmm_ada_keputusan_koroner', 'status_kus_fail'
         ])
         ->make(true);
@@ -903,7 +905,7 @@ public function getKomersilData(Project $project)
         ->editColumn('adakah_borang_serah_terima_pemilik_saksi', fn($row) => $this->formatThreeStateString($row->adakah_borang_serah_terima_pemilik_saksi, 'Ada Dilampirkan', 'Tidak Dilampirkan', 'Tidak Berkaitan'))
         ->editColumn('adakah_sijil_surat_kebenaran_ipd', fn($row) => $this->formatBoolean($row->adakah_sijil_surat_kebenaran_ipd, 'Ada Dilampirkan', 'Tidak'))
         ->editColumn('adakah_gambar_pelupusan', fn($row) => $this->formatBoolean($row->adakah_gambar_pelupusan, 'Ada Dilampirkan', 'Tidak'))
-        // keputusan_akhir_mahkamah will be handled by frontend JSON processing
+        ->editColumn('keputusan_akhir_mahkamah', fn($row) => $this->formatArrayField($row->keputusan_akhir_mahkamah))
 
         // --- RawColumns must include all columns with HTML ---
         ->rawColumns(array_merge(
@@ -912,7 +914,7 @@ public function getKomersilData(Project $project)
                 'status_barang_kes_selesai_siasatan', 'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan', 
                 'adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan', 'resit_kew_38e_bagi_pelupusan', 
                 'adakah_borang_serah_terima_pegawai_tangkapan', 'adakah_borang_serah_terima_pemilik_saksi',
-                'adakah_sijil_surat_kebenaran_ipd', 'adakah_gambar_pelupusan',
+                'adakah_sijil_surat_kebenaran_ipd', 'adakah_gambar_pelupusan', 'keputusan_akhir_mahkamah',
                 // RJ status fields that use formatThreeState (need to be in rawColumns for HTML badges)
                 'status_rj2', 'status_rj2b', 'status_rj9', 'status_rj99', 'status_rj10a', 'status_rj10b',
                 // E-FSA string fields that use formatString method
@@ -932,7 +934,7 @@ public function getKomersilData(Project $project)
                 'status_permohonan_laporan_jpj', 'status_laporan_penuh_jpj',
                 'status_permohonan_laporan_imigresen', 'status_laporan_penuh_imigresen',
                 'status_permohonan_laporan_kastam', 'status_laporan_penuh_kastam',
-                'status_permohonan_laporan_forensik_pdrm', 'status_laporan_penuh_forensik_pdrm',
+                'status_permohonan_laporan_forensik_pdrm', 'status_laporan_penuh_forensik_pdrm', 'keputusan_laporan_forensik_pdrm', 'jenis_ujian_analisis_forensik',
                 'status_permohonan_laporan_post_mortem_mayat'
             ],
             collect((new Komersil)->getCasts())->filter(fn($type) => $type === 'boolean')->keys()->all()

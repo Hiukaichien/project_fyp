@@ -1744,14 +1744,8 @@
                         'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan'
                     ];
 
-                    // JSON fields that need badge rendering (same as TrafikSeksyen approach)
-                    $jsonFields = [
-                        'keputusan_akhir_mahkamah',
-                        'keputusan_laporan_forensik_pdrm',
-                        'jenis_ujian_analisis_forensik'
-                    ];
-
-                    // NOTE: status_pem is correctly handled by controller formatArrayField - do NOT include in jsonFields
+                    // Fields that are already formatted by controller (no need for frontend processing)
+                    // keputusan_akhir_mahkamah is already processed by formatArrayField in controller
 
                     foreach($jenayahColumns as $columnKey => $label) {
                         $columnConfig = [
@@ -1767,12 +1761,6 @@
                         if (in_array($columnKey, $combinedRenderFields)) {
                             $columnConfig['render'] = '%%COMBINED_RENDER%%';
                         }
-                        // Add JSON render function for array fields
-                        elseif (in_array($columnKey, $jsonFields)) {
-                            $columnConfig['render'] = '%%JSON_RENDER%%';
-                            $columnConfig['orderable'] = false;
-                            $columnConfig['searchable'] = false;
-                        }
                         
                         $dtColumns[] = $columnConfig;
                     }
@@ -1780,7 +1768,7 @@
 
                 let dtColumnsConfig = @json($dtColumns);
 
-                // Define render functions
+                // Define the combined render function in JavaScript
                 const combinedRenderFunction = function(data, type, row, meta) {
                     if (!data) return '-';
 
@@ -1810,42 +1798,10 @@
                     return data + details;
                 };
 
-                const jsonRenderFunction = function(data, type, row) {
-                    if (data === null || data === undefined) return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">-</span>';
-                    
-                    let parsedData = data;
-                    
-                    // Try to parse JSON string
-                    if (typeof data === "string" && data.startsWith('[') && data.endsWith(']')) {
-                        try {
-                            parsedData = JSON.parse(data);
-                        } catch (e) {
-                            // If parsing fails, treat as single badge
-                            return `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">${data}</span>`;
-                        }
-                    }
-                    
-                    // Handle array data
-                    if (Array.isArray(parsedData)) {
-                        if (parsedData.length === 0) {
-                            return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">-</span>';
-                        }
-                        const badges = parsedData.map(item => 
-                            `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 mr-1 mb-1">${item}</span>`
-                        );
-                        return `<div class="flex flex-wrap">${badges.join(' ')}</div>`;
-                    }
-                    
-                    // Handle single value
-                    return `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">${parsedData}</span>`;
-                };
-
                 // Loop through the config and replace the placeholders
                 dtColumnsConfig.forEach(function(column) {
                     if (column.render === '%%COMBINED_RENDER%%') {
                         column.render = combinedRenderFunction;
-                    } else if (column.render === '%%JSON_RENDER%%') {
-                        column.render = jsonRenderFunction;
                     }
                 });
 
@@ -2423,10 +2379,6 @@
                 $columnConfig['render'] = '%%COMBINED_RENDER%%';
             } elseif (in_array($column, $lainLainFields)) {
                 $columnConfig['render'] = '%%LAIN_LAIN_RENDER%%';
-            } elseif (in_array($column, $jsonFields)) {
-                $columnConfig['render'] = '%%JSON_RENDER%%';
-                $columnConfig['orderable'] = false;
-                $columnConfig['searchable'] = false;
             }
             
             $dtColumns[] = $columnConfig;
@@ -2510,8 +2462,6 @@
             column.render = combinedRenderFunction;
         } else if (column.render === '%%LAIN_LAIN_RENDER%%') {
             column.render = lainLainRenderFunction;
-        } else if (column.render === '%%JSON_RENDER%%') {
-            column.render = jsonRenderFunction;
         }
     });
 
