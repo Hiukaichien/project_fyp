@@ -938,11 +938,78 @@
         .form-radio, .form-checkbox {
             @apply rounded-full border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500;
         }
+        
+        /* Force dd/mm/yyyy format for all date inputs */
+        input[type="date"] {
+            position: relative;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-variant-numeric: tabular-nums;
+        }
+        
+        /* Force dd/mm/yyyy format regardless of browser locale */
+        input[type="date"]::-webkit-datetime-edit {
+            display: block;
+        }
+        
+        input[type="date"]::-webkit-datetime-edit-fields-wrapper {
+            display: flex;
+        }
+        
+        input[type="date"]::-webkit-datetime-edit-day-field {
+            order: 1;
+        }
+        
+        input[type="date"]::-webkit-datetime-edit-month-field {
+            order: 2;
+        }
+        
+        input[type="date"]::-webkit-datetime-edit-year-field {
+            order: 3;
+        }
+        
+        input[type="date"]::-webkit-datetime-edit-text {
+            order: 2;
+        }
+        
+        /* Add placeholder text to show format */
+        input[type="date"]:invalid::-webkit-datetime-edit {
+            color: transparent;
+        }
+        
+        input[type="date"]:invalid::before {
+            content: "dd/mm/yyyy";
+            color: #9CA3AF;
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+        
+        /* Consistent date format styling */
+        .date-display {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-variant-numeric: tabular-nums;
+        }
     </style>
 
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+    // Force dd/mm/yyyy format for all date inputs
+    const dateInputs = document.querySelectorAll('input[type="date"]');
+    dateInputs.forEach(function(input) {
+        // Set the locale to enforce dd/mm/yyyy format
+        input.setAttribute('lang', 'en-GB');
+        input.setAttribute('data-date-format', 'dd/mm/yyyy');
+        
+        // Add placeholder to show expected format
+        input.setAttribute('placeholder', 'dd/mm/yyyy');
+        
+        // Add title tooltip
+        input.setAttribute('title', 'Format: dd/mm/yyyy (contoh: 31/12/2025)');
+    });
+
     /**
      * A generic helper function to manage the state (enabled/disabled) of a text input
      * based on the selection of its corresponding radio button.

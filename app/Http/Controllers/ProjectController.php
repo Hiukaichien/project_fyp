@@ -457,11 +457,15 @@ public function exportPapers(Request $request, Project $project)
     $timestampColumns = ['created_at', 'updated_at'];
     
     // 4. Create the final, ordered list of database columns for the export.
-    // Start with all columns, then remove the timestamps to re-add them at the end.
-    $orderedColumns = array_diff($dbColumns, $timestampColumns);
-
-    // Re-add the timestamps to the end of the list to enforce order.
-    $orderedColumns = array_merge($orderedColumns, $timestampColumns);
+    // Force timestamps to be at the end regardless of database schema order
+    $orderedColumns = array_values(array_diff($dbColumns, $timestampColumns));
+    
+    // Ensure timestamps are always at the end
+    foreach ($timestampColumns as $timestamp) {
+        if (in_array($timestamp, $dbColumns)) {
+            $orderedColumns[] = $timestamp;
+        }
+    }
     
     // Also add any "appended" attributes from the model to the very end.
     $orderedColumns = array_merge($orderedColumns, $modelInstance->getAppends());

@@ -786,4 +786,17 @@
             </div>
         </div>
     </div>
+
+    <style>
+        /* Ensure consistent date format display */
+        .date-display {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-variant-numeric: tabular-nums;
+        }
+        
+        /* Force dd/mm/yyyy format for any date inputs if present */
+        input[type="date"] {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+    </style>
 </x-app-layout>
