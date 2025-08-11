@@ -63,7 +63,7 @@
                 }
                 
                 function show_json_list($json_data) {
-                    if (empty($json_data)) return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">-</span>';
+                    if (empty($json_data)) return '-';
                     
                     if (is_array($json_data)) {
                         // Already an array
@@ -72,24 +72,28 @@
                         if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
                             $json_data = $decoded;
                         } else {
-                            return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">' . htmlspecialchars($json_data) . '</span>';
+                            return htmlspecialchars($json_data);
                         }
                     } else {
-                        return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">' . htmlspecialchars((string) $json_data) . '</span>';
+                        return htmlspecialchars((string) $json_data);
                     }
                     
-                    if (!is_array($json_data)) return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">-</span>';
+                    if (!is_array($json_data)) return htmlspecialchars((string) $json_data);
                     
                     $items = array_filter($json_data, fn($value) => !empty($value) || $value === 0 || $value === false);
                     
-                    if (empty($items)) return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">-</span>';
+                    if (empty($items)) return '-';
                     
-                    $badges = [];
-                    foreach ($items as $item) {
-                        $badges[] = '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 mr-1 mb-1">' . htmlspecialchars($item) . '</span>';
+                    if (count($items) == 1 && !str_contains(reset($items), ':')) {
+                        return reset($items);
                     }
                     
-                    return '<div class="flex flex-wrap">' . implode(' ', $badges) . '</div>';
+                    $html = '<ul class="list-disc list-inside space-y-1">';
+                    foreach ($items as $item) {
+                        $html .= "<li>" . htmlspecialchars($item) . "</li>";
+                    }
+                    $html .= '</ul>';
+                    return $html;
                 }
             @endphp
 
