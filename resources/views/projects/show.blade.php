@@ -1134,7 +1134,7 @@
         
         // Watch for when the activeTab changes.
         $watch('activeTab', value => {
-            // 1. **Save the new tab's name to session storage.** This is the crucial fix.
+            // 1. **Save the new tab's name to session storage.
             sessionStorage.setItem('activeProjectTab', value);
 
             // 2. Initialize the DataTable for the newly selected tab.
@@ -2166,7 +2166,7 @@
                     return parsedData;
                 };
 
-                // *** FIX: Corrected the render function to use exact column names from migration ***
+                // *** render function to use exact column names from migration ***
                 const combinedRenderFunction = function(data, type, row, meta) {
                     if (!data || data === '-') return '-';
 
@@ -2220,7 +2220,13 @@
             className: "sticky left-0 bg-gray-50 dark:text-white dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600"
         }],
         fixedColumns: { left: 1 },
-        language: { /* ... language options ... */ },
+                            language: {
+                        search: "Cari:",
+                        lengthMenu: "Tunjukkan _MENU_ entri",
+                        info: "Menunjukkan _START_ hingga _END_ daripada _TOTAL_ entri",
+                        infoEmpty: "Menunjukkan 0 hingga 0 daripada 0 entri",
+                        emptyTable: "Tiada data tersedia dalam jadual"
+                    },
         "drawCallback": function( settings ) {
             if (panel.length) { panel.removeClass('datatable-container-loading'); }
         },
@@ -2418,7 +2424,7 @@
         return data || '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">-</span>';
     };
 
-    // *** FIX STARTS HERE: Use the complete rendering logic ***
+    // *** Use the complete rendering logic ***
     const combinedRenderFunction = function(data, type, row, meta) {
         if (!data || data === '-') return '-';
 
@@ -2456,7 +2462,6 @@
         
         return data + details;
     };
-    // *** FIX ENDS HERE ***
 
     // Step 3: Loop through the config and replace the placeholders
     dtColumnsConfig.forEach(function(column) {
@@ -2483,7 +2488,13 @@
             className: "sticky left-0 bg-gray-50 dark:text-white dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600"
         }],
         fixedColumns: { left: 1 },
-        language: { /* ... language options ... */ },
+                        language: {
+                        search: "Cari:",
+                        lengthMenu: "Tunjukkan _MENU_ entri",
+                        info: "Menunjukkan _START_ hingga _END_ daripada _TOTAL_ entri",
+                        infoEmpty: "Menunjukkan 0 hingga 0 daripada 0 entri",
+                        emptyTable: "Tiada data tersedia dalam jadual"
+                    },
         "drawCallback": function( settings ) {
             if (panel.length) { panel.removeClass('datatable-container-loading'); }
         },
