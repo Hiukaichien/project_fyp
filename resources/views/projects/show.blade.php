@@ -119,11 +119,11 @@
         'status_rj10b' => 'Status RJ10B',
         'tarikh_rj10b' => 'Tarikh RJ10B',
         'lain_lain_rj_dikesan' => 'Lain-lain RJ Dikesan',
-        'status_semboyan_pertama_wanted_person' => 'Semboyan WP 1',
+        'status_semboyan_pertama_wanted_person' => 'SEMBOYAN PEMAKLUMAN PERTAMA WANTED PERSON KE DAERAH UNTUK KESAN / TANGKAP',
         'tarikh_semboyan_pertama_wanted_person' => 'Tarikh Semboyan WP 1',
-        'status_semboyan_kedua_wanted_person' => 'Semboyan WP 2',
+        'status_semboyan_kedua_wanted_person' => 'SEMBOYAN PEMAKLUMAN KEDUA WANTED PERSON KE DAERAH UNTUK KESAN / TANGKAP',
         'tarikh_semboyan_kedua_wanted_person' => 'Tarikh Semboyan WP 2',
-        'status_semboyan_ketiga_wanted_person' => 'Semboyan WP 3',
+        'status_semboyan_ketiga_wanted_person' => 'SEMBOYAN PEMAKLUMAN KETIGA WANTED PERSON KE DAERAH UNTUK KESAN / TANGKAP',
         'tarikh_semboyan_ketiga_wanted_person' => 'Tarikh Semboyan WP 3',
         'ulasan_keseluruhan_pegawai_pemeriksa_borang' => 'Ulasan Pemeriksa (Borang)',
         'status_penandaan_kelas_warna' => 'Penandaan Kelas Warna',
@@ -133,6 +133,7 @@
         'tarikh_permohonan_laporan_pakar_judi' => 'Tarikh Mohon Pakar Judi',
         'status_laporan_penuh_pakar_judi' => 'Laporan Penuh Pakar Judi',
         'tarikh_laporan_penuh_pakar_judi' => 'Tarikh Laporan Pakar Judi',
+        'keputusan_laporan_pakar_judi' => 'Keputusan Laporan Pakar Judi',
         'status_permohonan_laporan_post_mortem_mayat' => 'Mohon Laporan Post Mortem',
         'tarikh_permohonan_laporan_post_mortem_mayat' => 'Tarikh Mohon Post Mortem',
         'status_laporan_penuh_bedah_siasat' => 'Laporan Penuh Bedah Siasat',
@@ -286,11 +287,11 @@
     'status_rj10b' => 'Status RJ10B',
     'tarikh_rj10b' => 'Tarikh RJ10B',
     'lain_lain_rj_dikesan' => 'Lain-lain RJ Dikesan',
-    'status_semboyan_pertama_wanted_person' => 'Semboyan Pertama Wanted Person',
+    'status_semboyan_pertama_wanted_person' => 'SEMBOYAN PEMAKLUMAN PERTAMA WANTED PERSON KE DAERAH UNTUK KESAN / TANGKAP',
     'tarikh_semboyan_pertama_wanted_person' => 'Tarikh Semboyan Pertama',
-    'status_semboyan_kedua_wanted_person' => 'Semboyan Kedua Wanted Person',
+    'status_semboyan_kedua_wanted_person' => 'SEMBOYAN PEMAKLUMAN KEDUA WANTED PERSON KE DAERAH UNTUK KESAN / TANGKAP',
     'tarikh_semboyan_kedua_wanted_person' => 'Tarikh Semboyan Kedua',
-    'status_semboyan_ketiga_wanted_person' => 'Semboyan Ketiga Wanted Person',
+    'status_semboyan_ketiga_wanted_person' => 'SEMBOYAN PEMAKLUMAN KETIGA WANTED PERSON KE DAERAH UNTUK KESAN / TANGKAP',
     'tarikh_semboyan_ketiga_wanted_person' => 'Tarikh Semboyan Ketiga',
     'status_penandaan_kelas_warna' => 'Penandaan Kelas Warna',
     'ulasan_keseluruhan_pegawai_pemeriksa_b6' => 'Ulasan Pegawai Pemeriksa B6',
@@ -688,11 +689,11 @@
         'no_saman_pdrm_s_257' => 'No. Saman PDRM S.257',
         'status_saman_pdrm_s_167' => 'Status Saman PDRM S.167',
         'no_saman_pdrm_s_167' => 'No. Saman PDRM S.167',
-        'status_semboyan_pertama_wanted_person' => 'Semboyan Usaha Pemakluman Pertama Wanted Person',
+        'status_semboyan_pertama_wanted_person' => 'SEMBOYAN PEMAKLUMAN PERTAMA WANTED PERSON KE DAERAH UNTUK KESAN / TANGKAP',
         'tarikh_semboyan_pertama_wanted_person' => 'Tarikh Semboyan Pertama Wanted Person',
-        'status_semboyan_kedua_wanted_person' => 'Semboyan Usaha Pemakluman Kedua Wanted Person',
+        'status_semboyan_kedua_wanted_person' => 'SEMBOYAN PEMAKLUMAN KEDUA WANTED PERSON KE DAERAH UNTUK KESAN / TANGKAP',
         'tarikh_semboyan_kedua_wanted_person' => 'Tarikh Semboyan Kedua Wanted Person',
-        'status_semboyan_ketiga_wanted_person' => 'Semboyan Usaha Pemakluman Ketiga Wanted Person',
+        'status_semboyan_ketiga_wanted_person' => 'SEMBOYAN PEMAKLUMAN KETIGA WANTED PERSON KE DAERAH UNTUK KESAN / TANGKAP',
         'tarikh_semboyan_ketiga_wanted_person' => 'Tarikh Semboyan Ketiga Wanted Person',
         'status_penandaan_kelas_warna' => 'Penandaan Kelas Warna',
         'ulasan_keseluruhan_pegawai_pemeriksa_bahagian_6' => 'Ulasan Keseluruhan Pegawai Pemeriksa (Borang)',
@@ -966,11 +967,11 @@
         'status_rj10b' => 'Status RJ10B',
         'tarikh_rj10b' => 'Tarikh RJ10B',
         'lain_lain_rj_dikesan' => 'Lain-lain RJ Dikesan',
-        'status_semboyan_pertama_wanted_person' => 'Semboyan Pertama Wanted Person',
+        'status_semboyan_pertama_wanted_person' => 'SEMBOYAN PEMAKLUMAN PERTAMA WANTED PERSON KE DAERAH UNTUK KESAN / TANGKAP',
         'tarikh_semboyan_pertama_wanted_person' => 'Tarikh Semboyan Pertama',
-        'status_semboyan_kedua_wanted_person' => 'Semboyan Kedua Wanted Person',
+        'status_semboyan_kedua_wanted_person' => 'SEMBOYAN PEMAKLUMAN KEDUA WANTED PERSON KE DAERAH UNTUK KESAN / TANGKAP',
         'tarikh_semboyan_kedua_wanted_person' => 'Tarikh Semboyan Kedua',
-        'status_semboyan_ketiga_wanted_person' => 'Semboyan Ketiga Wanted Person',
+        'status_semboyan_ketiga_wanted_person' => 'SEMBOYAN PEMAKLUMAN KETIGA WANTED PERSON KE DAERAH UNTUK KESAN / TANGKAP',
         'tarikh_semboyan_ketiga_wanted_person' => 'Tarikh Semboyan Ketiga',
         'ulasan_keseluruhan_pegawai_pemeriksa_borang' => 'Ulasan Pegawai Pemeriksa (Borang)',
         'status_penandaan_kelas_warna' => 'Penandaan Kelas Warna',
@@ -2122,7 +2123,8 @@
                         'barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan'
                     ];
                     $jsonFields = [
-                        'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan', 'status_pem', 'keputusan_akhir_mahkamah'
+                        // Fields handled by formatArrayField in controller should not be processed by jsonRenderFunction
+                        // Removed: 'adakah_arahan_tuduh_oleh_ya_tpr_diambil_tindakan', 'status_pem', 'keputusan_akhir_mahkamah'
                     ];
                     
                     foreach($komersilColumns as $column => $label) {
@@ -2362,7 +2364,7 @@
         
         $lainLainFields = [ 'lain_lain_permohonan_laporan' ];
 
-        $jsonFields = [ 'keputusan_akhir_mahkamah' ]; 
+        $jsonFields = [ 'keputusan_akhir_mahkamah' ]; // TrafikSeksyen working correctly 
         
         foreach($trafikSeksyenColumns as $column => $label) {
             $columnConfig = [
@@ -2390,18 +2392,25 @@
     };
 
     const jsonRenderFunction = function(data, type, row) {
-        if (data === null || data === undefined) return "-";
+        if (data === null || data === undefined) return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">-</span>';
         try {
             // Attempt to parse the data as JSON
             const parsedData = JSON.parse(data);
             if (Array.isArray(parsedData)) {
-                // If it's an array, join elements with a comma, or return "-" if empty
-                return parsedData.join(", ") || "-";
+                // If it's an array, create badges for each element
+                if (parsedData.length === 0) {
+                    return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">-</span>';
+                }
+                const badges = parsedData.map(item => 
+                    `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 mr-1 mb-1">${item}</span>`
+                );
+                return `<div class="flex flex-wrap">${badges.join(' ')}</div>`;
             }
         } catch (e) { 
-            // If it's not valid JSON, just return the data as is
+            // If it's not valid JSON, return as single badge
+            return `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">${data}</span>`;
         }
-        return data || "-";
+        return data || '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">-</span>';
     };
 
     // *** FIX STARTS HERE: Use the complete rendering logic ***

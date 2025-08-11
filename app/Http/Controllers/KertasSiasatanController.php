@@ -192,6 +192,31 @@ class KertasSiasatanController extends Controller
     }
     // --- END: SPECIAL HANDLING FOR LAPORAN MATI MENGEJUT JSON ARRAYS ---
 
+    // --- START: SPECIAL HANDLING FOR JENAYAH THREE-STATE RJ FIELDS ---
+    if ($paperType === 'Jenayah') {
+        // Handle three-state RJ fields (0=Tiada, 1=Ada, 2=Tidak Berkaitan)
+        $threeStateFields = [
+            'status_rj2',
+            'status_rj2b',
+            'status_rj9',
+            'status_rj99', 
+            'status_rj10a',
+            'status_rj10b'
+        ];
+
+        foreach ($threeStateFields as $field) {
+            if ($request->has($field)) {
+                $value = $request->input($field);
+                // Ensure the value is a valid integer (0, 1, or 2)
+                $data[$field] = in_array($value, ['0', '1', '2']) ? (int)$value : 0;
+            } else {
+                // Default to 0 (Tiada) if not provided
+                $data[$field] = 0;
+            }
+        }
+    }
+    // --- END: SPECIAL HANDLING FOR JENAYAH THREE-STATE RJ FIELDS ---
+
     // --- START: SPECIAL HANDLING FOR KOMERSIL JSON ARRAYS ---
     if ($paperType === 'Komersil') {
         // Handle JSON array fields that come from checkboxes
@@ -241,8 +266,20 @@ class KertasSiasatanController extends Controller
         // This loop ensures that any boolean field (from radio buttons or checkboxes)
         // is explicitly saved as true (1) or false (0), preventing nulls from
         // unchecked boxes or unselected radio options.
+        
+        // Special case: These Jenayah fields are now string/integer fields
+        $jenayahNonBooleanFields = [
+            'adakah_sijil_surat_kebenaran_ipo', 'adakah_gambar_pelupusan', // String fields with 3 options
+            'status_rj2', 'status_rj2b', 'status_rj9', 'status_rj99', 'status_rj10a', 'status_rj10b' // Integer fields with 3 states
+        ];
+        
         foreach ($paper->getCasts() as $field => $type) {
             if ($type === 'boolean') {
+                // Skip Jenayah fields that are no longer boolean
+                if ($paperType === 'Jenayah' && in_array($field, $jenayahNonBooleanFields)) {
+                    continue;
+                }
+                
                 // If the field is present in the request (value "1" or "0" was sent)
                 if ($request->has($field)) {
                     $data[$field] = (bool)$request->input($field);

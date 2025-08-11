@@ -36,8 +36,34 @@
                     return "{$status_html} | Tarikh: {$date_html}";
                 }
                 
+                function show_status_with_three_options($status, $date = null, $trueText = 'Ada / Cipta', $falseText = 'Tiada / Tidak Cipta', $notApplicableText = 'Tidak Berkaitan') {
+                    if (is_null($status)) {
+                        $status_html = '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">-</span>';
+                    } elseif ($status === 2 || $status === '2' || $status === 'Tidak Berkaitan') {
+                        $status_html = "<span class='px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800'>{$notApplicableText}</span>";
+                    } elseif ($status === true || $status === 1 || $status === '1' || $status === 'Ada / Cipta') {
+                        $status_html = "<span class='px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800'>{$trueText}</span>";
+                    } else {
+                        $status_html = "<span class='px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800'>{$falseText}</span>";
+                    }
+                    
+                    $date_html = ($status === 1 || $status === '1' || $status === true || $status === 'Ada / Cipta') && $date ? (is_string($date) ? $date : optional($date)->format('d/m/Y')) : '-';
+                    return "{$status_html} | Tarikh: {$date_html}";
+                }
+                
+                function show_three_state_badge($status, $adaText = 'Ada Dilampirkan', $tidakText = 'Tidak Dilampirkan', $tidakBerkaitanText = 'Tidak Berkaitan') {
+                    if (is_null($status)) return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">-</span>';
+                    
+                    return match($status) {
+                        'Ada Dilampirkan' => "<span class='px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800'>{$adaText}</span>",
+                        'Tidak Dilampirkan' => "<span class='px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800'>{$tidakText}</span>",
+                        'Tidak Berkaitan' => "<span class='px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800'>{$tidakBerkaitanText}</span>",
+                        default => "<span class='px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800'>-</span>"
+                    };
+                }
+                
                 function show_json_list($json_data) {
-                    if (empty($json_data)) return '-';
+                    if (empty($json_data)) return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">-</span>';
                     
                     if (is_array($json_data)) {
                         // Already an array
@@ -46,28 +72,24 @@
                         if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
                             $json_data = $decoded;
                         } else {
-                            return htmlspecialchars($json_data);
+                            return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">' . htmlspecialchars($json_data) . '</span>';
                         }
                     } else {
-                        return htmlspecialchars((string) $json_data);
+                        return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">' . htmlspecialchars((string) $json_data) . '</span>';
                     }
                     
-                    if (!is_array($json_data)) return htmlspecialchars((string) $json_data);
+                    if (!is_array($json_data)) return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">-</span>';
                     
                     $items = array_filter($json_data, fn($value) => !empty($value) || $value === 0 || $value === false);
                     
-                    if (empty($items)) return '-';
+                    if (empty($items)) return '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">-</span>';
                     
-                    if (count($items) == 1 && !str_contains(reset($items), ':')) {
-                        return reset($items);
-                    }
-                    
-                    $html = '<ul class="list-disc list-inside space-y-1">';
+                    $badges = [];
                     foreach ($items as $item) {
-                        $html .= "<li>" . htmlspecialchars($item) . "</li>";
+                        $badges[] = '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 mr-1 mb-1">' . htmlspecialchars($item) . '</span>';
                     }
-                    $html .= '</ul>';
-                    return $html;
+                    
+                    return '<div class="flex flex-wrap">' . implode(' ', $badges) . '</div>';
                 }
             @endphp
 
@@ -317,15 +339,47 @@
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">Borang Serah/Terima (Penyiasat, Pemilik, Saksi)</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_boolean_badge($paper->adakah_borang_serah_terima_pemilik_saksi, 'Ada Dilampirkan', 'Tidak Dilampirkan') !!}</dd>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_three_state_badge($paper->adakah_borang_serah_terima_pemilik_saksi, 'Ada Dilampirkan', 'Tidak Dilampirkan', 'Tidak Berkaitan') !!}</dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">Sijil / Surat Arahan Pelupusan Oleh IPD</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_boolean_badge($paper->adakah_sijil_surat_kebenaran_ipo, 'Ada Dilampirkan', 'Tidak Dilampirkan') !!}</dd>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                @php
+                                    $sijilValue = $paper->adakah_sijil_surat_kebenaran_ipo;
+                                    $sijilClass = '';
+                                    if ($sijilValue == 'Ada Dilampirkan') {
+                                        $sijilClass = 'bg-green-100 text-green-800';
+                                    } elseif ($sijilValue == 'Tidak Dilampirkan') {
+                                        $sijilClass = 'bg-red-100 text-red-800';
+                                    } elseif ($sijilValue == 'Tidak Berkaitan') {
+                                        $sijilClass = 'bg-gray-100 text-gray-800';
+                                    } else {
+                                        $sijilClass = 'bg-gray-100 text-gray-800';
+                                        $sijilValue = '-';
+                                    }
+                                @endphp
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $sijilClass }}">{{ $sijilValue }}</span>
+                            </dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">Gambar Pelupusan Dilampirkan</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_boolean_badge($paper->adakah_gambar_pelupusan, 'Ada Dilampirkan', 'Tidak Dilampirkan') !!}</dd>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                @php
+                                    $gambarValue = $paper->adakah_gambar_pelupusan;
+                                    $gambarClass = '';
+                                    if ($gambarValue == 'Ada Dilampirkan') {
+                                        $gambarClass = 'bg-green-100 text-green-800';
+                                    } elseif ($gambarValue == 'Tidak Dilampirkan') {
+                                        $gambarClass = 'bg-red-100 text-red-800';
+                                    } elseif ($gambarValue == 'Tidak Berkaitan') {
+                                        $gambarClass = 'bg-gray-100 text-gray-800';
+                                    } else {
+                                        $gambarClass = 'bg-gray-100 text-gray-800';
+                                        $gambarValue = '-';
+                                    }
+                                @endphp
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $gambarClass }}">{{ $gambarValue }}</span>
+                            </dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">Ulasan Keseluruhan Pegawai Pemeriksa (Barang Kes)</dt>
@@ -396,27 +450,27 @@
 
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">RJ 2</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_status_and_date($paper->status_rj2, $paper->tarikh_rj2, 'Cipta', 'Tidak') !!}</dd>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_status_with_three_options($paper->status_rj2, $paper->tarikh_rj2) !!}</dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">RJ 2B</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_status_and_date($paper->status_rj2b, $paper->tarikh_rj2b, 'Cipta', 'Tidak') !!}</dd>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_status_with_three_options($paper->status_rj2b, $paper->tarikh_rj2b) !!}</dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">RJ 9</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_status_and_date($paper->status_rj9, $paper->tarikh_rj9, 'Cipta', 'Tidak') !!}</dd>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_status_with_three_options($paper->status_rj9, $paper->tarikh_rj9) !!}</dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">RJ 99</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_status_and_date($paper->status_rj99, $paper->tarikh_rj99, 'Cipta', 'Tidak') !!}</dd>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_status_with_three_options($paper->status_rj99, $paper->tarikh_rj99) !!}</dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">RJ 10A</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_status_and_date($paper->status_rj10a, $paper->tarikh_rj10a, 'Cipta', 'Tidak') !!}</dd>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_status_with_three_options($paper->status_rj10a, $paper->tarikh_rj10a) !!}</dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">RJ 10B</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_status_and_date($paper->status_rj10b, $paper->tarikh_rj10b, 'Cipta', 'Tidak') !!}</dd>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_status_with_three_options($paper->status_rj10b, $paper->tarikh_rj10b) !!}</dd>
                         </div>
                         
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -425,16 +479,16 @@
                         </div>
                         
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">Semboyan Usaha Pemakluman Pertama Wanted Person</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_status_and_date($paper->status_semboyan_pertama_wanted_person, $paper->tarikh_semboyan_pertama_wanted_person, 'Dibuat', 'Tidak') !!}</dd>
+                            <dt class="text-sm font-medium text-gray-500">SEMBOYAN PEMAKLUMAN PERTAMA WANTED PERSON KE DAERAH UNTUK KESAN / TANGKAP</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_status_with_three_options($paper->status_semboyan_pertama_wanted_person, $paper->tarikh_semboyan_pertama_wanted_person, 'Ada / Cipta', 'Tiada / Tidak Cipta', 'Tidak Berkaitan') !!}</dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">Semboyan Usaha Pemakluman Kedua Wanted Person</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_status_and_date($paper->status_semboyan_kedua_wanted_person, $paper->tarikh_semboyan_kedua_wanted_person, 'Dibuat', 'Tidak') !!}</dd>
+                            <dt class="text-sm font-medium text-gray-500">SEMBOYAN PEMAKLUMAN KEDUA WANTED PERSON KE DAERAH UNTUK KESAN / TANGKAP</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_status_with_three_options($paper->status_semboyan_kedua_wanted_person, $paper->tarikh_semboyan_kedua_wanted_person, 'Ada / Cipta', 'Tiada / Tidak Cipta', 'Tidak Berkaitan') !!}</dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                            <dt class="text-sm font-medium text-gray-500">Semboyan Usaha Pemakluman Ketiga Wanted Person</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_status_and_date($paper->status_semboyan_ketiga_wanted_person, $paper->tarikh_semboyan_ketiga_wanted_person, 'Dibuat', 'Tidak') !!}</dd>
+                            <dt class="text-sm font-medium text-gray-500">SEMBOYAN PEMAKLUMAN KETIGA WANTED PERSON KE DAERAH UNTUK KESAN / TANGKAP</dt>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_status_with_three_options($paper->status_semboyan_ketiga_wanted_person, $paper->tarikh_semboyan_ketiga_wanted_person, 'Ada / Cipta', 'Tiada / Tidak Cipta', 'Tidak Berkaitan') !!}</dd>
                         </div>
                         
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -460,14 +514,47 @@
                         <!-- Pakar Judi -->
                         <div class="py-3 sm:py-4 sm:px-6 bg-gray-50">
                             <h4 class="text-sm font-semibold text-gray-700 mb-2">Pakar Judi</h4>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div>
                                     <dt class="text-sm font-medium text-gray-500 mb-1">Permohonan Laporan</dt>
                                     <dd class="text-sm text-gray-900">{!! show_status_and_date($paper->status_permohonan_laporan_pakar_judi, $paper->tarikh_permohonan_laporan_pakar_judi, 'Dibuat', 'Tidak') !!}</dd>
                                 </div>
                                 <div>
                                     <dt class="text-sm font-medium text-gray-500 mb-1">Laporan Penuh Diterima</dt>
-                                    <dd class="text-sm text-gray-900">{!! show_status_and_date($paper->status_laporan_penuh_pakar_judi, $paper->tarikh_laporan_penuh_pakar_judi, 'Diterima', 'Tidak') !!}</dd>
+                                    <dd class="text-sm text-gray-900">
+                                        @php
+                                            $status = $paper->status_laporan_penuh_pakar_judi;
+                                            $date = $paper->tarikh_laporan_penuh_pakar_judi;
+                                            
+                                            if ($status === 'Diterima') {
+                                                $badge = '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Diterima</span>';
+                                            } elseif ($status === 'Tidak Diterima') {
+                                                $badge = '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Tidak Diterima</span>';
+                                            } elseif ($status === 'Masih Menunggu Laporan Pakar Judi') {
+                                                $badge = '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Masih Menunggu Laporan Pakar Judi</span>';
+                                            } else {
+                                                $badge = '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">-</span>';
+                                            }
+                                            
+                                            $dateDisplay = ($status === 'Diterima' && $date) ? (is_string($date) ? $date : $date->format('d/m/Y')) : '-';
+                                            echo "{$badge} | Tarikh: {$dateDisplay}";
+                                        @endphp
+                                    </dd>
+                                </div>
+                                <div>
+                                    <dt class="text-sm font-medium text-gray-500 mb-1">Keputusan Laporan</dt>
+                                    <dd class="text-sm text-gray-900">
+                                        @php
+                                            $keputusan = $paper->keputusan_laporan_pakar_judi;
+                                            if ($keputusan === 'Positif Judi') {
+                                                echo '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Positif Judi</span>';
+                                            } elseif ($keputusan === 'Negatif Judi') {
+                                                echo '<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Negatif Judi</span>';
+                                            } else {
+                                                echo '-';
+                                            }
+                                        @endphp
+                                    </dd>
                                 </div>
                             </div>
                         </div>
@@ -604,6 +691,14 @@
                                     <dt class="text-sm font-medium text-gray-500 mb-1">Laporan Penuh Diterima</dt>
                                     <dd class="text-sm text-gray-900">{!! show_status_and_date($paper->status_laporan_penuh_forensik_pdrm, $paper->tarikh_laporan_penuh_forensik_pdrm, 'Diterima', 'Tidak') !!}</dd>
                                 </div>
+                                <div>
+                                    <dt class="text-sm font-medium text-gray-500 mb-1">Keputusan Laporan</dt>
+                                    <dd class="text-sm text-gray-900 whitespace-pre-wrap">{{ $paper->keputusan_laporan_forensik_pdrm ?? '-' }}</dd>
+                                </div>
+                                <div>
+                                    <dt class="text-sm font-medium text-gray-500 mb-1">Jenis Ujian Analisis Forensik</dt>
+                                    <dd class="text-sm text-gray-900">{{ $paper->jenis_ujian_analisis_forensik ?? '-' }}</dd>
+                                </div>
                             </div>
                         </div>
 
@@ -645,7 +740,7 @@
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">Keputusan Akhir Mahkamah Sebelum KS di KUS/FAIL</dt>
-                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{{ $paper->keputusan_akhir_mahkamah ?? '-' }}</dd>
+                            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{!! show_json_list($paper->keputusan_akhir_mahkamah) !!}</dd>
                         </div>
                         <div class="py-3 sm:py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                             <dt class="text-sm font-medium text-gray-500">Ulasan Keseluruhan Pegawai Pemeriksa (Fail)</dt>

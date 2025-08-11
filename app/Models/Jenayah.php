@@ -39,9 +39,11 @@ class Jenayah extends Model
 
         // BAHAGIAN 4
         'adakah_barang_kes_didaftarkan' => 'boolean',
-        'adakah_borang_serah_terima_pemilik_saksi' => 'boolean',
-        'adakah_sijil_surat_kebenaran_ipo' => 'boolean',
-        'adakah_gambar_pelupusan' => 'boolean',
+        // CHANGED from 'boolean' to no casting (string) to support 3 options: Ada Dilampirkan/Tidak Dilampirkan/Tidak Berkaitan
+        // 'adakah_borang_serah_terima_pemilik_saksi' => 'boolean',
+        // Note: adakah_sijil_surat_kebenaran_ipo and adakah_gambar_pelupusan are now string fields with 3 options
+        // 'adakah_sijil_surat_kebenaran_ipo' => 'boolean',
+        // 'adakah_gambar_pelupusan' => 'boolean',
 
         // BAHAGIAN 5
         'status_id_siasatan_dikemaskini' => 'boolean',
@@ -56,30 +58,26 @@ class Jenayah extends Model
 
         // BAHAGIAN 6
         'status_pem' => 'array',
-        'status_rj2' => 'boolean',
+        'status_rj2' => 'integer',
         'tarikh_rj2' => 'date:Y-m-d',
-        'status_rj2b' => 'boolean',
+        'status_rj2b' => 'integer',
         'tarikh_rj2b' => 'date:Y-m-d',
-        'status_rj9' => 'boolean',
+        'status_rj9' => 'integer',
         'tarikh_rj9' => 'date:Y-m-d',
-        'status_rj99' => 'boolean',
+        'status_rj99' => 'integer',
         'tarikh_rj99' => 'date:Y-m-d',
-        'status_rj10a' => 'boolean',
+        'status_rj10a' => 'integer',
         'tarikh_rj10a' => 'date:Y-m-d',
-        'status_rj10b' => 'boolean',
+        'status_rj10b' => 'integer',
         'tarikh_rj10b' => 'date:Y-m-d',
-        'status_semboyan_pertama_wanted_person' => 'boolean',
         'tarikh_semboyan_pertama_wanted_person' => 'date:Y-m-d',
-        'status_semboyan_kedua_wanted_person' => 'boolean',
         'tarikh_semboyan_kedua_wanted_person' => 'date:Y-m-d',
-        'status_semboyan_ketiga_wanted_person' => 'boolean',
         'tarikh_semboyan_ketiga_wanted_person' => 'date:Y-m-d',
         'status_penandaan_kelas_warna' => 'boolean',
 
         // BAHAGIAN 7
         'status_permohonan_laporan_pakar_judi' => 'boolean',
         'tarikh_permohonan_laporan_pakar_judi' => 'date:Y-m-d',
-        'status_laporan_penuh_pakar_judi' => 'boolean',
         'tarikh_laporan_penuh_pakar_judi' => 'date:Y-m-d',
         'status_permohonan_laporan_post_mortem_mayat' => 'boolean',
         'tarikh_permohonan_laporan_post_mortem_mayat' => 'date:Y-m-d',
@@ -120,6 +118,7 @@ class Jenayah extends Model
         'muka_surat_4_keputusan_kes_dicatat' => 'boolean',
         'fail_lmm_ada_keputusan_koroner' => 'boolean',
         'status_kus_fail' => 'boolean',
+        'keputusan_akhir_mahkamah' => 'array',
     ];
 
     protected $appends = [
@@ -162,6 +161,7 @@ class Jenayah extends Model
         'status_penandaan_kelas_warna_text',
         'status_permohonan_laporan_pakar_judi_text',
         'status_laporan_penuh_pakar_judi_text',
+        'keputusan_laporan_pakar_judi_text',
         'status_permohonan_laporan_post_mortem_mayat_text',
         'status_laporan_penuh_bedah_siasat_text',
         'status_permohonan_laporan_jabatan_kimia_text',
@@ -178,6 +178,8 @@ class Jenayah extends Model
         'status_laporan_penuh_kastam_text',
         'status_permohonan_laporan_forensik_pdrm_text',
         'status_laporan_penuh_forensik_pdrm_text',
+        'keputusan_laporan_forensik_pdrm_text',
+        'jenis_ujian_analisis_forensik_text',
         'muka_surat_4_barang_kes_ditulis_text',
         'muka_surat_4_dengan_arahan_tpr_text',
         'muka_surat_4_keputusan_kes_dicatat_text',
@@ -287,6 +289,26 @@ public function getTerbengkalaiStatusDcAttribute(): string
         return $value ? $trueText : $falseText;
     }
 
+    /**
+     * Helper function to format three-state integer values for RJ fields.
+     */
+    private function formatThreeStateToMalay(?int $value, string $adaText = 'Ada/Cipta', string $tiadaText = 'Tiada/Tidak Cipta', string $tidakBerkaitanText = 'Tidak Berkaitan', string $nullText = '-') : string
+    {
+        if (is_null($value)) {
+            return $nullText;
+        }
+        
+        switch ($value) {
+            case 1:
+                return $adaText;
+            case 2:
+                return $tidakBerkaitanText;
+            case 0:
+            default:
+                return $tiadaText;
+        }
+    }
+
     // --- B3 Accessors ---
     public function getArahanMinitOlehSioStatusTextAttribute(): string { return $this->formatBooleanToMalay($this->arahan_minit_oleh_sio_status, 'Ada', 'Tiada'); }
     public function getArahanMinitKetuaBahagianStatusTextAttribute(): string { return $this->formatBooleanToMalay($this->arahan_minit_ketua_bahagian_status, 'Ada', 'Tiada'); }
@@ -295,9 +317,34 @@ public function getTerbengkalaiStatusDcAttribute(): string
 
     // --- B4 Accessors ---
     public function getAdakahBarangKesDidaftarkanTextAttribute(): string { return $this->formatBooleanToMalay($this->adakah_barang_kes_didaftarkan); }
-    public function getAdakahBorangSerahTerimaPemilikSaksiTextAttribute(): string { return $this->formatBooleanToMalay($this->adakah_borang_serah_terima_pemilik_saksi, 'Ada Dilampirkan', 'Tidak Dilampirkan'); }
-    public function getAdakahSijilSuratKebenaranIpoTextAttribute(): string { return $this->formatBooleanToMalay($this->adakah_sijil_surat_kebenaran_ipo, 'Ada Dilampirkan', 'Tidak Dilampirkan'); }
-    public function getAdakahGambarPelupusanTextAttribute(): string { return $this->formatBooleanToMalay($this->adakah_gambar_pelupusan, 'Ada Dilampirkan', 'Tidak Dilampirkan'); }
+    
+    // CHANGED from formatBooleanToMalay to handle 3 string options: Ada Dilampirkan/Tidak Dilampirkan/Tidak Berkaitan
+    public function getAdakahBorangSerahTerimaPemilikSaksiTextAttribute(): string { 
+        return match($this->adakah_borang_serah_terima_pemilik_saksi) {
+            'Ada Dilampirkan' => 'Ada Dilampirkan',
+            'Tidak Dilampirkan' => 'Tidak Dilampirkan', 
+            'Tidak Berkaitan' => 'Tidak Berkaitan',
+            default => 'Tidak Dinyatakan'
+        };
+    }
+    
+    // These two fields now have 3 string options instead of boolean
+    public function getAdakahSijilSuratKebenaranIpoTextAttribute(): string { 
+        return match($this->adakah_sijil_surat_kebenaran_ipo) {
+            'Ada Dilampirkan' => 'Ada Dilampirkan',
+            'Tidak Dilampirkan' => 'Tidak Dilampirkan', 
+            'Tidak Berkaitan' => 'Tidak Berkaitan',
+            default => '-'
+        };
+    }
+    public function getAdakahGambarPelupusanTextAttribute(): string { 
+        return match($this->adakah_gambar_pelupusan) {
+            'Ada Dilampirkan' => 'Ada Dilampirkan',
+            'Tidak Dilampirkan' => 'Tidak Dilampirkan',
+            'Tidak Berkaitan' => 'Tidak Berkaitan', 
+            default => '-'
+        };
+    }
 
     // --- B5 Accessors ---
     public function getStatusIdSiasatanDikemaskiniTextAttribute(): string { return $this->formatBooleanToMalay($this->status_id_siasatan_dikemaskini, 'Dikemaskini', 'Tidak Dikemaskini'); }
@@ -311,20 +358,51 @@ public function getTerbengkalaiStatusDcAttribute(): string
     public function getStatusGambarBarangKesKontrabanTextAttribute(): string { return $this->formatBooleanToMalay($this->status_gambar_barang_kes_kontraban, 'Ada', 'Tiada'); }
 
     // --- B6 Accessors ---
-    public function getStatusRj2TextAttribute(): string { return $this->formatBooleanToMalay($this->status_rj2, 'Cipta', 'Tidak Cipta'); }
-    public function getStatusRj2bTextAttribute(): string { return $this->formatBooleanToMalay($this->status_rj2b, 'Cipta', 'Tidak Cipta'); }
-    public function getStatusRj9TextAttribute(): string { return $this->formatBooleanToMalay($this->status_rj9, 'Cipta', 'Tidak Cipta'); }
-    public function getStatusRj99TextAttribute(): string { return $this->formatBooleanToMalay($this->status_rj99, 'Cipta', 'Tidak Cipta'); }
-    public function getStatusRj10aTextAttribute(): string { return $this->formatBooleanToMalay($this->status_rj10a, 'Cipta', 'Tidak Cipta'); }
-    public function getStatusRj10bTextAttribute(): string { return $this->formatBooleanToMalay($this->status_rj10b, 'Cipta', 'Tidak Cipta'); }
-    public function getStatusSemboyanPertamaWantedPersonTextAttribute(): string { return $this->formatBooleanToMalay($this->status_semboyan_pertama_wanted_person, 'Ada', 'Tiada'); }
-    public function getStatusSemboyanKeduaWantedPersonTextAttribute(): string { return $this->formatBooleanToMalay($this->status_semboyan_kedua_wanted_person, 'Ada', 'Tiada'); }
-    public function getStatusSemboyanKetigaWantedPersonTextAttribute(): string { return $this->formatBooleanToMalay($this->status_semboyan_ketiga_wanted_person, 'Ada', 'Tiada'); }
+    public function getStatusRj2TextAttribute(): string { return $this->formatThreeStateToMalay($this->status_rj2); }
+    public function getStatusRj2bTextAttribute(): string { return $this->formatThreeStateToMalay($this->status_rj2b); }
+    public function getStatusRj9TextAttribute(): string { return $this->formatThreeStateToMalay($this->status_rj9); }
+    public function getStatusRj99TextAttribute(): string { return $this->formatThreeStateToMalay($this->status_rj99); }
+    public function getStatusRj10aTextAttribute(): string { return $this->formatThreeStateToMalay($this->status_rj10a); }
+    public function getStatusRj10bTextAttribute(): string { return $this->formatThreeStateToMalay($this->status_rj10b); }
+    public function getStatusSemboyanPertamaWantedPersonTextAttribute(): string { 
+        return match($this->status_semboyan_pertama_wanted_person) {
+            'Ada / Cipta' => 'Ada / Cipta',
+            'Tiada / Tidak Cipta' => 'Tiada / Tidak Cipta', 
+            'Tidak Berkaitan' => 'Tidak Berkaitan',
+            default => 'Tidak Dinyatakan'
+        };
+    }
+    public function getStatusSemboyanKeduaWantedPersonTextAttribute(): string { 
+        return match($this->status_semboyan_kedua_wanted_person) {
+            'Ada / Cipta' => 'Ada / Cipta',
+            'Tiada / Tidak Cipta' => 'Tiada / Tidak Cipta', 
+            'Tidak Berkaitan' => 'Tidak Berkaitan',
+            default => 'Tidak Dinyatakan'
+        };
+    }
+    public function getStatusSemboyanKetigaWantedPersonTextAttribute(): string { 
+        return match($this->status_semboyan_ketiga_wanted_person) {
+            'Ada / Cipta' => 'Ada / Cipta',
+            'Tiada / Tidak Cipta' => 'Tiada / Tidak Cipta', 
+            'Tidak Berkaitan' => 'Tidak Berkaitan',
+            default => 'Tidak Dinyatakan'
+        };
+    }
     public function getStatusPenandaanKelasWarnaTextAttribute(): string { return $this->formatBooleanToMalay($this->status_penandaan_kelas_warna); }
 
     // --- B7 Accessors ---
     public function getStatusPermohonanLaporanPakarJudiTextAttribute(): string { return $this->formatBooleanToMalay($this->status_permohonan_laporan_pakar_judi, 'Dibuat', 'Tidak'); }
-    public function getStatusLaporanPenuhPakarJudiTextAttribute(): string { return $this->formatBooleanToMalay($this->status_laporan_penuh_pakar_judi, 'Diterima', 'Tidak'); }
+    public function getStatusLaporanPenuhPakarJudiTextAttribute(): string { 
+        return match($this->status_laporan_penuh_pakar_judi) {
+            'Diterima' => 'Diterima',
+            'Tidak Diterima' => 'Tidak Diterima',
+            'Masih Menunggu Laporan Pakar Judi' => 'Masih Menunggu Laporan Pakar Judi',
+            default => '-'
+        };
+    }
+    public function getKeputusanLaporanPakarJudiTextAttribute(): string { 
+        return $this->keputusan_laporan_pakar_judi ?? '-';
+    }
     public function getStatusPermohonanLaporanPostMortemMayatTextAttribute(): string { return $this->formatBooleanToMalay($this->status_permohonan_laporan_post_mortem_mayat, 'Dibuat', 'Tidak'); }
     public function getStatusLaporanPenuhBedahSiasatTextAttribute(): string { return $this->formatBooleanToMalay($this->status_laporan_penuh_bedah_siasat, 'Diterima', 'Tidak'); }
     public function getStatusPermohonanLaporanJabatanKimiaTextAttribute(): string { return $this->formatBooleanToMalay($this->status_permohonan_laporan_jabatan_kimia, 'Dibuat', 'Tidak'); }
@@ -341,6 +419,8 @@ public function getTerbengkalaiStatusDcAttribute(): string
     public function getStatusLaporanPenuhKastamTextAttribute(): string { return $this->formatBooleanToMalay($this->status_laporan_penuh_kastam, 'Diterima', 'Tidak'); }
     public function getStatusPermohonanLaporanForensikPdrmTextAttribute(): string { return $this->formatBooleanToMalay($this->status_permohonan_laporan_forensik_pdrm, 'Dibuat', 'Tidak'); }
     public function getStatusLaporanPenuhForensikPdrmTextAttribute(): string { return $this->formatBooleanToMalay($this->status_laporan_penuh_forensik_pdrm, 'Diterima', 'Tidak'); }
+    public function getKeputusanLaporanForensikPdrmTextAttribute(): string { return $this->keputusan_laporan_forensik_pdrm ?? ''; }
+    public function getJenisUjianAnalisisForensikTextAttribute(): string { return $this->jenis_ujian_analisis_forensik ?? ''; }
 
     // --- B8 Accessors ---
     public function getMukaSurat4BarangKesDitulisTextAttribute(): string { return $this->formatBooleanToMalay($this->muka_surat_4_barang_kes_ditulis); }

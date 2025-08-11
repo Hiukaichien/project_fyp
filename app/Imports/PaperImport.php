@@ -154,6 +154,7 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
                 'tarikh_permohonan_laporan_pakar_judi' => 'tarikh_permohonan_laporan_pakar_judi',
                 'status_laporan_penuh_pakar_judi' => 'status_laporan_penuh_pakar_judi',
                 'tarikh_laporan_penuh_pakar_judi' => 'tarikh_laporan_penuh_pakar_judi',
+                'keputusan_laporan_pakar_judi' => 'keputusan_laporan_pakar_judi',
                 'status_permohonan_laporan_post_mortem_mayat' => 'status_permohonan_laporan_post_mortem_mayat',
                 'tarikh_permohonan_laporan_post_mortem_mayat' => 'tarikh_permohonan_laporan_post_mortem_mayat',
                 'status_laporan_penuh_bedah_siasat' => 'status_laporan_penuh_bedah_siasat',
@@ -188,6 +189,8 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
                 'tarikh_permohonan_laporan_forensik_pdrm' => 'tarikh_permohonan_laporan_forensik_pdrm',
                 'status_laporan_penuh_forensik_pdrm' => 'status_laporan_penuh_forensik_pdrm',
                 'tarikh_laporan_penuh_forensik_pdrm' => 'tarikh_laporan_penuh_forensik_pdrm',
+                'keputusan_laporan_forensik_pdrm' => 'keputusan_laporan_forensik_pdrm',
+                'jenis_ujian_analisis_forensik' => 'jenis_ujian_analisis_forensik',
                 'lain_lain_permohonan_laporan' => 'lain_lain_permohonan_laporan',
 
                 // BAHAGIAN 8: Status Fail
@@ -351,6 +354,8 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
                 'jenis_barang_kes_di_hantar' => 'jenis_barang_kes_di_hantar',
                 'status_laporan_penuh_forensik_pdrm' => 'status_laporan_penuh_forensik_pdrm',
                 'tarikh_laporan_penuh_forensik_pdrm' => 'tarikh_laporan_penuh_forensik_pdrm',
+                'keputusan_laporan_forensik_pdrm' => 'keputusan_laporan_forensik_pdrm',
+                'jenis_ujian_analisis_forensik' => 'jenis_ujian_analisis_forensik',
                 'lain_lain_permohonan_laporan' => 'lain_lain_permohonan_laporan',
 
                 // BAHAGIAN 8: Status Fail
@@ -555,6 +560,8 @@ class PaperImport implements ToCollection, WithHeadingRow, WithEvents
                 'tarikh_permohonan_laporan_forensik_pdrm' => 'tarikh_permohonan_laporan_forensik_pdrm',
                 'status_laporan_penuh_forensik_pdrm' => 'status_laporan_penuh_forensik_pdrm',
                 'tarikh_laporan_penuh_forensik_pdrm' => 'tarikh_laporan_penuh_forensik_pdrm',
+                'keputusan_laporan_forensik_pdrm' => 'keputusan_laporan_forensik_pdrm',
+                'jenis_ujian_analisis_forensik' => 'jenis_ujian_analisis_forensik',
                 'jenis_barang_kes_forensik' => 'jenis_barang_kes_forensik',
                 'lain_lain_permohonan_laporan' => 'lain_lain_permohonan_laporan',
 
@@ -1244,8 +1251,12 @@ public function collection(Collection $rows)
             if ($normalizedRow->has($excelHeaderKey) && !isset($dataForDb[$dbColumn])) {
                 $value = $normalizedRow->get($excelHeaderKey);
                 $castType = $modelCasts[$dbColumn] ?? 'string';
-                if (in_array($dbColumn, ['status_rj9', 'status_rj99', 'status_rj10a', 'status_rj10b'])) {
+                if (in_array($dbColumn, ['status_rj2', 'status_rj2b', 'status_rj9', 'status_rj99', 'status_rj10a', 'status_rj10b'])) {
                     $dataForDb[$dbColumn] = $this->transformThreeStateField($value);
+                } elseif (in_array($dbColumn, ['status_semboyan_pertama_wanted_person', 'status_semboyan_kedua_wanted_person', 'status_semboyan_ketiga_wanted_person'])) {
+                    $dataForDb[$dbColumn] = $this->transformThreeStateStringField($value);
+                } elseif ($dbColumn === 'status_laporan_penuh_pakar_judi') {
+                    $dataForDb[$dbColumn] = $this->transformPakarJudiLaporanField($value);
                 } else {
                     switch ($castType) {
                         case 'date:Y-m-d': case 'date': case 'datetime': $dataForDb[$dbColumn] = $this->transformDate($value); break;
@@ -1460,6 +1471,47 @@ private function transformDate($value)
         // Default to "Tiada/Tidak Cipta" (value = 0)
         return 0;
     }
+
+    private function transformThreeStateStringField($value)
+    {
+        if (is_null($value) || $value === '') return 'Tiada / Tidak Cipta'; // Default
+        
+        $value = is_string($value) ? trim(strtolower($value)) : $value;
+        
+        // Handle "Ada / Cipta" variants
+        if (in_array($value, ['ada', 'cipta', 'ya', 'yes', '1', 1, 'ada/cipta', 'ada / cipta', 'dicipta'])) {
+            return 'Ada / Cipta';
+        }
+        
+        // Handle "Tidak Berkaitan" variants
+        if (in_array($value, ['tidak berkaitan', 'tidak_berkaitan', 'tidak-berkaitan', '2', 2, 'n/a', 'na'])) {
+            return 'Tidak Berkaitan';
+        }
+        
+        // Default to "Tiada / Tidak Cipta"
+        return 'Tiada / Tidak Cipta';
+    }
+
+    private function transformPakarJudiLaporanField($value)
+    {
+        if (is_null($value) || $value === '') return 'Tidak Diterima'; // Default
+        
+        $value = is_string($value) ? trim(strtolower($value)) : $value;
+        
+        // Handle "Diterima" variants
+        if (in_array($value, ['diterima', 'ada', 'yes', 'ya', '1', 1, 'received'])) {
+            return 'Diterima';
+        }
+        
+        // Handle "Masih Menunggu" variants
+        if (in_array($value, ['masih menunggu laporan pakar judi', 'menunggu', 'pending', 'waiting', '2', 2, 'masih menunggu'])) {
+            return 'Masih Menunggu Laporan Pakar Judi';
+        }
+        
+        // Default to "Tidak Diterima"
+        return 'Tidak Diterima';
+    }
+
     private function valuesAreDifferent($oldValue, $newValue)
     {
         // Handle null comparisons
