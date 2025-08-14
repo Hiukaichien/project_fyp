@@ -103,12 +103,9 @@
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                                             <a href="{{ route('admin.users.edit', $user) }}" 
-                                               class="text-indigo-600 hover:text-indigo-900">
-                                                @if ($user->id === Auth::id())
-                                                    Edit Profil Sendiri
-                                                @else
-                                                    Edit
-                                                @endif
+                                               class="text-yellow-600 dark:text-yellow-400 hover:text-yellow-500"
+                                               title="@if ($user->id === Auth::id())Edit Profil Sendiri @else Edit @endif">
+                                                <i class="fas fa-edit fa-lg"></i>
                                             </a>
                                             
                                             @if ($user->can_be_deleted && $user->id !== Auth::id())
@@ -118,14 +115,19 @@
                                                       onsubmit="return confirm('Adakah anda pasti ingin memadam pengguna ini?')">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="text-red-600 hover:text-red-900 ml-2">
-                                                        Padam
+                                                    <button type="submit" class="text-red-600 dark:text-red-400 hover:text-red-500" 
+                                                            title="Padam Pengguna">
+                                                        <i class="fas fa-trash-alt fa-lg"></i>
                                                     </button>
                                                 </form>
                                             @elseif ($user->id === Auth::id())
-                                                <span class="text-gray-400 ml-2">Akaun Sendiri</span>
+                                                <span class="text-gray-400" title="Akaun Sendiri - Tidak Boleh Dipadam">
+                                                    <i class="fas fa-user fa-lg"></i>
+                                                </span>
                                             @else
-                                                <span class="text-gray-400 ml-2">Tidak Boleh Dipadam</span>
+                                                <span class="text-gray-400" title="Tidak Boleh Dipadam">
+                                                    <i class="fas fa-lock fa-lg"></i>
+                                                </span>
                                             @endif
                                         </td>
                                     </tr>
