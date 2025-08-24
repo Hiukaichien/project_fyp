@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('project_id')->constrained('projects')->onDelete('cascade');
 
-                        // MAKLUMAT IPRS (8 Standard Fields)
+            // MAKLUMAT IPRS (8 Standard Fields)
             $table->string('iprs_no_kertas_siasatan')->nullable()->comment('IPRS: No. Kertas Siasatan');
             $table->date('iprs_tarikh_ks')->nullable()->comment('IPRS: Tarikh KS');
             $table->string('iprs_no_repot')->nullable()->comment('IPRS: No. Repot');
@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('iprs_status_ks')->nullable()->comment('IPRS: Status KS');
             $table->string('iprs_status_kes')->nullable()->comment('IPRS: Status Kes');
             $table->string('iprs_seksyen')->nullable()->comment('IPRS: Seksyen');
-            
+
             // BAHAGIAN 1: Maklumat Asas (B1)
             $table->string('no_kertas_siasatan')->unique()->comment('no_kertas_siasatan: VARCHAR(255)');
             $table->string('no_repot_polis')->nullable()->comment('no_repot_polis: VARCHAR(255)');
@@ -75,10 +75,10 @@ return new class extends Migration
             $table->string('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan')->nullable()->comment('barang_kes_dilupusan_bagaimana_kaedah_pelupusan_dilaksanakan: VARCHAR(255)');
             $table->string('kaedah_pelupusan_barang_kes_lain')->nullable()->comment('kaedah_pelupusan_barang_kes_lain: VARCHAR(255)');
             $table->string('adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan')->nullable()->comment('adakah_pelupusan_barang_kes_wang_tunai_ke_perbendaharaan: VARCHAR(255)');
-            
+
             // +++ RENAMED THIS COLUMN +++
             $table->boolean('resit_kew38e_pelupusan_wang_tunai')->nullable()->comment('Resit Kew.38e bagi pelupusan wang tunai');
-            
+
             $table->boolean('adakah_borang_serah_terima_pegawai_tangkapan')->nullable()->comment('adakah_borang_serah_terima_pegawai_tangkapan: BOOLEAN');
             $table->boolean('adakah_borang_serah_terima_pemilik_saksi')->nullable()->comment('adakah_borang_serah_terima_pemilik_saksi: BOOLEAN');
             $table->boolean('adakah_sijil_surat_kebenaran_ipo')->nullable()->comment('adakah_sijil_surat_kebenaran_ipo: BOOLEAN');
@@ -115,11 +115,11 @@ return new class extends Migration
             $table->boolean('status_rj10b')->nullable()->comment('status_rj10b: BOOLEAN');
             $table->date('tarikh_rj10b')->nullable()->comment('tarikh_rj10b: DATE');
             $table->text('lain_lain_rj_dikesan')->nullable()->comment('lain_lain_rj_dikesan: TEXT');
-            $table->boolean('status_semboyan_pertama_wanted_person')->nullable()->comment('status_semboyan_pertama_wanted_person: BOOLEAN');
+            $table->string('status_semboyan_pertama_wanted_person')->nullable()->comment('status_semboyan_pertama_wanted_person: STRING');
             $table->date('tarikh_semboyan_pertama_wanted_person')->nullable()->comment('tarikh_semboyan_pertama_wanted_person: DATE');
-            $table->boolean('status_semboyan_kedua_wanted_person')->nullable()->comment('status_semboyan_kedua_wanted_person: BOOLEAN');
+            $table->string('status_semboyan_kedua_wanted_person')->nullable()->comment('status_semboyan_kedua_wanted_person: BOOLEAN');
             $table->date('tarikh_semboyan_kedua_wanted_person')->nullable()->comment('tarikh_semboyan_kedua_wanted_person: DATE');
-            $table->boolean('status_semboyan_ketiga_wanted_person')->nullable()->comment('status_semboyan_ketiga_wanted_person: BOOLEAN');
+            $table->string('status_semboyan_ketiga_wanted_person')->nullable()->comment('status_semboyan_ketiga_wanted_person: BOOLEAN');
             $table->date('tarikh_semboyan_ketiga_wanted_person')->nullable()->comment('tarikh_semboyan_ketiga_wanted_person: DATE');
             $table->text('ulasan_keseluruhan_pegawai_pemeriksa_b6')->nullable()->comment('ulasan_keseluruhan_pegawai_pemeriksa: TEXT');
             $table->boolean('status_penandaan_kelas_warna')->nullable()->comment('status_penandaan_kelas_warna: BOOLEAN');

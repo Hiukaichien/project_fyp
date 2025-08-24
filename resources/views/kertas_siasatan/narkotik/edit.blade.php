@@ -46,21 +46,22 @@
                         $html .= "</div>";
                     $html .= "<div x-show='status === \"1\"' x-transition class='mt-2'>";
                         $html .= "<label for='{$dateName}_{$id}' class='text-sm text-gray-600'>Jika Ada, nyatakan tarikh:</label>";
-                        $html .= "<input type='date' name='{$dateName}' id='{$dateName}_{$id}' value='" . old($dateName, optional($currentDate)->format(' Y-m-d')) . "' class='mt-1 block w-full form-input'>" ;
-                            $html .="</div></div>" ;
+                        $html .= "<input type='date' name='{$dateName}' id='{$dateName}_{$id}' value='" . old($dateName, optional($currentDate)->format('Y-m-d')) . "' class='mt-1 block w-full form-input'>" ;
+                            $html .="</div>" ;
+                            $html .="</div>" ;
                             return $html;
                             }
 
                             // Helper for JSON fields represented by checkboxes (for multi-select where still needed)
                             function render_json_checkboxes($name, $currentJson, $options) {
-                            $currentValues = old($name, $currentJson ?? []);
-                            
+                            $currentValues=old($name, $currentJson ?? []);
+
                             // Handle JSON strings from database
                             if (is_string($currentValues)) {
-                                $decoded = json_decode($currentValues, true);
-                                $currentValues = is_array($decoded) ? $decoded : [];
+                            $decoded=json_decode($currentValues, true);
+                            $currentValues=is_array($decoded) ? $decoded : [];
                             } elseif (!is_array($currentValues)) {
-                                $currentValues = [];
+                            $currentValues=[];
                             }
 
                             $html="<div class='mt-2 space-y-2 rounded-md border p-4 bg-gray-50'>" ;
@@ -73,15 +74,15 @@
                     }
                     @endphp
 
-                                    {{-- IPRS Standard Section --}}
-                 <x-iprs-section :paper="$paper" mode="view" />
+                    {{-- IPRS Standard Section --}}
+                    <x-iprs-section :paper="$paper" mode="view" />
                     <!-- BAHAGIAN 1 -->
                     <div>
                         <h3 class="text-lg font-bold mb-4 text-gray-800 border-b pb-2">BAHAGIAN 1</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             <div>
                                 <label class="block text-sm font-medium text-gray-500">No. Kertas Siasatan</label>
-                                                                <input type="text" name="no_kertas_siasatan" id="no_kertas_siasatan" value="{{ old('no_kertas_siasatan', $paper->no_kertas_siasatan) }}" class="mt-1 block w-full form-input">
+                                <input type="text" name="no_kertas_siasatan" id="no_kertas_siasatan" value="{{ old('no_kertas_siasatan', $paper->no_kertas_siasatan) }}" class="mt-1 block w-full form-input">
                             </div>
                             <div>
                                 <label for="no_repot_polis" class="block text-sm font-medium text-gray-700">No. Repot Polis</label>
@@ -558,7 +559,7 @@
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700">Semboyan Usaha Pemakluman Pertama Wanted Person</label>
-                                    {!! render_status_with_date_radio('wp1', 'status_semboyan_pertama_wanted_person', 'tarikh_semboyan_pertama_wanted_person', $paper->status_semboyan_pertama_wanted_person, $paper->tarikh_semboyan_pertama_wanted_person) !!}
+                                    {!! render_status_with_date_radio('wp1', 'status_semboyan_pertama_wanted_person', 'tarikh_semboyan_pertama_wanted_person', $paper->status_semboyan_pertama_wanted_person, $paper->tarikh_semboyan_pertama_wanted_person, 'Ada / Cipta', 'Tiada / Tidak Cipta', true) !!}
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700">Semboyan Usaha Pemakluman Kedua Wanted Person</label>

@@ -84,11 +84,11 @@ class Narkotik extends Model
         'tarikh_rj10a' => 'date:Y-m-d',
         'status_rj10b' => 'boolean',
         'tarikh_rj10b' => 'date:Y-m-d',
-        'status_semboyan_pertama_wanted_person' => 'boolean',
+        'status_semboyan_pertama_wanted_person' => 'string',
         'tarikh_semboyan_pertama_wanted_person' => 'date:Y-m-d',
-        'status_semboyan_kedua_wanted_person' => 'boolean',
+        'status_semboyan_kedua_wanted_person' => 'string',
         'tarikh_semboyan_kedua_wanted_person' => 'date:Y-m-d',
-        'status_semboyan_ketiga_wanted_person' => 'boolean',
+        'status_semboyan_ketiga_wanted_person' => 'string',
         'tarikh_semboyan_ketiga_wanted_person' => 'date:Y-m-d',
         'status_penandaan_kelas_warna' => 'boolean',
 
@@ -233,7 +233,7 @@ class Narkotik extends Model
         return null;
     }
 
-public function getTerbengkalaiStatusDcAttribute(): string
+    public function getTerbengkalaiStatusDcAttribute(): string
     {
         $tarikhC = $this->tarikh_edaran_minit_ks_sebelum_akhir;
         $tarikhD = $this->tarikh_edaran_minit_ks_akhir;
@@ -245,7 +245,7 @@ public function getTerbengkalaiStatusDcAttribute(): string
                 return 'TERBENGKALAI MELEBIHI 3 BULAN';
             }
         }
-        
+
         // Otherwise, it is not considered terbengkalai by this specific rule.
         return 'TIDAK';
     }
@@ -262,12 +262,12 @@ public function getTerbengkalaiStatusDcAttribute(): string
                 return 'TERBENGKALAI MELEBIHI 3 BULAN';
             }
         }
-        
+
         // Otherwise, it is not considered terbengkalai by this specific rule.
         return 'TIDAK';
     }
 
-        public function getBaruDikemaskiniStatusAttribute(): string
+    public function getBaruDikemaskiniStatusAttribute(): string
     {
         $tarikhD = $this->tarikh_edaran_minit_ks_akhir;
         $tarikhE = $this->tarikh_semboyan_pemeriksaan_jips_ke_daerah;
@@ -277,7 +277,7 @@ public function getTerbengkalaiStatusDcAttribute(): string
         }
 
         // The only other possibility is 'TIDAK' (or 'TIADA PERGERAKAN BARU')
-        return 'TIDAK'; 
+        return 'TIDAK';
     }
 
     public function getTempohDikemaskiniAttribute(): ?string
